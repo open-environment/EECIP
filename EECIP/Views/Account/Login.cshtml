@@ -1,0 +1,37 @@
+﻿@model EECIP.Models.vmAccountLogin
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "panel-body wrapper-lg", @id= "norepostform" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <!-- render the validation summary -->
+    @Html.Partial("~/Views/Shared/_ValidationSummary.cshtml")
+
+
+    <div class="form-group">
+        <label class="control-label">Email</label>
+        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control input-lg ", @type = "email", @placeholder = "", @data_required = "true" })
+        @Html.ValidationMessageFor(m => m.UserName)
+    </div>
+    <div class="form-group">
+        <label class="control-label">Password</label>
+        @Html.TextBoxFor(m => m.Password, new { @class = "form-control input-lg ", @type = "password", @placeholder = "" })
+        @Html.ValidationMessageFor(m => m.Password)
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.RememberMe) Remember me
+        </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Sign in</button>
+    @Html.ActionLink("Forgot Password?", "ResetPassword", new object { }, new { @class = "pull-right m-t-xs" })
+    <div class="line line-dashed"></div>
+    <p class="text-muted text-center"><small>Do not have an account?</small></p>
+    <a href="@Url.Action("Register", "Account") " class="btn btn-primary btn-block">Create an account</a>
+}
+

@@ -1,0 +1,1551 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EECIPModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="T_OE_APP_SETTINGS">
+          <Key>
+            <PropertyRef Name="SETTING_IDX" />
+          </Key>
+          <Property Name="SETTING_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SETTING_NAME" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="SETTING_DESC" Type="varchar" MaxLength="500" />
+          <Property Name="SETTING_VALUE" Type="varchar" MaxLength="200" />
+          <Property Name="ENCRYPT_IND" Type="bit" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_ORGANIZATION">
+          <Key>
+            <PropertyRef Name="ORG_IDX" />
+          </Key>
+          <Property Name="ORG_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORG_ABBR" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ORG_NAME" Type="varchar" MaxLength="200" />
+          <Property Name="STATE_CD" Type="varchar" MaxLength="5" />
+          <Property Name="EPA_REGION" Type="int" />
+          <Property Name="ALLOW_JOIN_IND" Type="bit" />
+          <Property Name="CLOUD" Type="varchar" MaxLength="250" />
+          <Property Name="API" Type="varchar" MaxLength="250" />
+          <Property Name="ACT_IND" Type="bit" Nullable="false" />
+          <Property Name="SYNC_IND" Type="bit" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
+          <Key>
+            <PropertyRef Name="ORG_IDX" />
+            <PropertyRef Name="EMAIL_STRING" />
+          </Key>
+          <Property Name="ORG_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="EMAIL_STRING" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_ORGANIZATION_ENT_SVCS">
+          <Key>
+            <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+          </Key>
+          <Property Name="ORG_ENT_SVCS_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ORG_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ENT_PLATFORM_IDX" Type="int" Nullable="false" />
+          <Property Name="PROJECT_NAME" Type="varchar" MaxLength="100" />
+          <Property Name="VENDOR" Type="varchar" MaxLength="100" />
+          <Property Name="IMPLEMENT_STATUS" Type="varchar" MaxLength="250" />
+          <Property Name="COMMENTS" Type="varchar(max)" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_ORGANIZATION_TAGS">
+          <Key>
+            <PropertyRef Name="ORG_IDX" />
+            <PropertyRef Name="ORG_ATTRIBUTE" />
+            <PropertyRef Name="ORG_TAG_IDX" />
+          </Key>
+          <Property Name="ORG_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORG_ATTRIBUTE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ORG_TAG_IDX" Type="int" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_PROJECT_TAGS">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+            <PropertyRef Name="PROJECT_ATTRIBUTE" />
+            <PropertyRef Name="PROJECT_TAG_NAME" />
+          </Key>
+          <Property Name="PROJECT_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PROJECT_ATTRIBUTE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PROJECT_TAG_NAME" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_PROJECTS">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+          </Key>
+          <Property Name="PROJECT_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORG_IDX" Type="uniqueidentifier" />
+          <Property Name="PROJ_NAME" Type="varchar" MaxLength="150" />
+          <Property Name="PROJ_DESC" Type="varchar(max)" />
+          <Property Name="MEDIA_TAG" Type="int" />
+          <Property Name="START_YEAR" Type="int" />
+          <Property Name="PROJ_STATUS" Type="varchar" MaxLength="100" />
+          <Property Name="DATE_LAST_UPDATE" Type="int" />
+          <Property Name="RECORD_SOURCE" Type="varchar" MaxLength="50" />
+          <Property Name="PROJECT_URL" Type="varchar" MaxLength="200" />
+          <Property Name="MOBILE_IND" Type="int" />
+          <Property Name="MOBILE_DESC" Type="varchar" MaxLength="100" />
+          <Property Name="ADV_MON_IND" Type="int" />
+          <Property Name="ADV_MON_DESC" Type="varchar" MaxLength="100" />
+          <Property Name="BP_MODERN_IND" Type="int" />
+          <Property Name="BP_MODERN_DESC" Type="varchar" MaxLength="100" />
+          <Property Name="COTS" Type="varchar" MaxLength="100" />
+          <Property Name="VENDOR" Type="varchar" MaxLength="100" />
+          <Property Name="ACT_IND" Type="bit" Nullable="false" />
+          <Property Name="SYNC_IND" Type="bit" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
+          <Key>
+            <PropertyRef Name="ENT_PLATFORM_IDX" />
+          </Key>
+          <Property Name="ENT_PLATFORM_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ENT_PLATFORM_NAME" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="ENT_PLATFORM_DESC" Type="varchar" MaxLength="500" />
+          <Property Name="ENT_PLATFORM_EXAMPLE" Type="varchar" MaxLength="100" />
+          <Property Name="SEQ_NO" Type="int" />
+          <Property Name="ACT_IND" Type="bit" Nullable="false" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_REGION">
+          <Key>
+            <PropertyRef Name="EPA_REGION" />
+          </Key>
+          <Property Name="EPA_REGION" Type="int" Nullable="false" />
+          <Property Name="EPA_REGION_NAME" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_STATE">
+          <Key>
+            <PropertyRef Name="STATE_CD" />
+          </Key>
+          <Property Name="STATE_CD" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="STATE_NAME" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_TAG_CATEGORIES">
+          <Key>
+            <PropertyRef Name="TAG_CAT_NAME" />
+          </Key>
+          <Property Name="TAG_CAT_NAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TAG_CAT_DESCRIPTION" Type="varchar" MaxLength="200" />
+          <Property Name="TAG_CAT_COLOR" Type="varchar" MaxLength="6" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_TAGS">
+          <Key>
+            <PropertyRef Name="TAG_IDX" />
+          </Key>
+          <Property Name="TAG_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TAG_NAME" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="TAG_CAT_NAME" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="USER_CREATE_IND" Type="bit" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_ROLES">
+          <Key>
+            <PropertyRef Name="ROLE_IDX" />
+          </Key>
+          <Property Name="ROLE_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ROLE_NAME" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="ROLE_DESC" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_SYS_EMAIL_LOG">
+          <Key>
+            <PropertyRef Name="EMAIL_LOG_ID" />
+          </Key>
+          <Property Name="EMAIL_LOG_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOG_DT" Type="datetime2" Precision="0" />
+          <Property Name="LOG_FROM" Type="varchar" MaxLength="200" />
+          <Property Name="LOG_TO" Type="varchar" MaxLength="200" />
+          <Property Name="LOG_CC" Type="varchar" MaxLength="200" />
+          <Property Name="LOG_SUBJ" Type="varchar" MaxLength="200" />
+          <Property Name="LOG_MSG" Type="varchar" MaxLength="2000" />
+          <Property Name="EMAIL_TYPE" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="T_OE_SYS_LOG">
+          <Key>
+            <PropertyRef Name="SYS_LOG_ID" />
+          </Key>
+          <Property Name="SYS_LOG_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LOG_DT" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="LOG_USERIDX" Type="int" />
+          <Property Name="LOG_TYPE" Type="varchar" MaxLength="15" />
+          <Property Name="LOG_MSG" Type="varchar" MaxLength="2000" />
+        </EntityType>
+        <EntityType Name="T_OE_USER_EXPERTISE">
+          <Key>
+            <PropertyRef Name="USER_IDX" />
+            <PropertyRef Name="EXPERTISE_TAG_IDX" />
+          </Key>
+          <Property Name="USER_IDX" Type="int" Nullable="false" />
+          <Property Name="EXPERTISE_TAG_IDX" Type="int" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_USER_NOTIFICATION">
+          <Key>
+            <PropertyRef Name="NOTIFICATION_IDX" />
+          </Key>
+          <Property Name="NOTIFICATION_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="USER_IDX" Type="int" Nullable="false" />
+          <Property Name="NOTIFY_DT" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="NOTIFY_TYPE" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="NOTIFY_TITLE" Type="varchar" MaxLength="50" />
+          <Property Name="NOTIFY_DESC" Type="varchar" MaxLength="200" />
+          <Property Name="READ_IND" Type="bit" />
+          <Property Name="FROM_USER_IDX" Type="int" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_USER_ROLES">
+          <Key>
+            <PropertyRef Name="USER_ROLE_IDX" />
+          </Key>
+          <Property Name="USER_ROLE_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="USER_IDX" Type="int" Nullable="false" />
+          <Property Name="ROLE_IDX" Type="int" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_USERS">
+          <Key>
+            <PropertyRef Name="USER_IDX" />
+          </Key>
+          <Property Name="USER_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="USER_ID" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="PWD_HASH" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="PWD_SALT" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="FNAME" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="LNAME" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="EMAIL" Type="varchar" MaxLength="150" />
+          <Property Name="INITAL_PWD_FLAG" Type="bit" Nullable="false" />
+          <Property Name="EFFECTIVE_DT" Type="datetime2" Precision="0" Nullable="false" />
+          <Property Name="LASTLOGIN_DT" Type="datetime2" Precision="0" />
+          <Property Name="PHONE" Type="varchar" MaxLength="12" />
+          <Property Name="PHONE_EXT" Type="varchar" MaxLength="4" />
+          <Property Name="JOB_TITLE" Type="varchar" MaxLength="40" />
+          <Property Name="NODE_ADMIN" Type="bit" Nullable="false" />
+          <Property Name="USER_AVATAR" Type="varbinary(max)" />
+          <Property Name="LOG_ATMPT" Type="int" />
+          <Property Name="LOCKOUT_END_DATE_UTC" Type="datetime2" Precision="7" />
+          <Property Name="LOCKOUT_ENABLED" Type="bit" Nullable="false" />
+          <Property Name="ORG_IDX" Type="uniqueidentifier" />
+          <Property Name="ACT_IND" Type="bit" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <Association Name="FK__T_OE_ORGA__ENT_P__25518C17">
+          <End Role="T_OE_REF_ENTERPRISE_PLATFORM" Type="Self.T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_ENTERPRISE_PLATFORM">
+              <PropertyRef Name="ENT_PLATFORM_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ENT_PLATFORM_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__EPA_R__1DB06A4F">
+          <End Role="T_OE_REF_REGION" Type="Self.T_OE_REF_REGION" Multiplicity="0..1" />
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_REGION">
+              <PropertyRef Name="EPA_REGION" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="EPA_REGION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__208CD6FA">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_ORGANIZATION_TAGS" Type="Self.T_OE_ORGANIZATION_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_TAGS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__245D67DE">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__282DF8C2">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1" />
+          <End Role="T_OE_ORGANIZATION_EMAIL_RULE" Type="Self.T_OE_ORGANIZATION_EMAIL_RULE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_EMAIL_RULE">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_T__2180FB33">
+          <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_ORGANIZATION_TAGS" Type="Self.T_OE_ORGANIZATION_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_TAGS">
+              <PropertyRef Name="ORG_TAG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__STATE__1CBC4616">
+          <End Role="T_OE_REF_STATE" Type="Self.T_OE_REF_STATE" Multiplicity="0..1" />
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_STATE">
+              <PropertyRef Name="STATE_CD" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="STATE_CD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__ADV_M__6EC0713C">
+          <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="ADV_MON_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__BP_MO__6FB49575">
+          <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="BP_MODERN_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__MEDIA__6CD828CA">
+          <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="MEDIA_TAG" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__MOBIL__6DCC4D03">
+          <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="MOBILE_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__73852659">
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="1" />
+          <End Role="T_OE_PROJECT_TAGS" Type="Self.T_OE_PROJECT_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_TAGS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_REF___TAG_C__6B24EA82">
+          <End Role="T_OE_REF_TAG_CATEGORIES" Type="Self.T_OE_REF_TAG_CATEGORIES" Multiplicity="1" />
+          <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAG_CATEGORIES">
+              <PropertyRef Name="TAG_CAT_NAME" />
+            </Principal>
+            <Dependent Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_CAT_NAME" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_USER__EXPER__3587F3E0">
+          <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_USER_EXPERTISE" Type="Self.T_OE_USER_EXPERTISE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_EXPERTISE">
+              <PropertyRef Name="EXPERTISE_TAG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_USER__ORG_I__2CF2ADDF">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="0..1" />
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USERS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_USER__ROLE___30C33EC3">
+          <End Role="T_OE_ROLES" Type="Self.T_OE_ROLES" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_USER_ROLES" Type="Self.T_OE_USER_ROLES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ROLES">
+              <PropertyRef Name="ROLE_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_ROLES">
+              <PropertyRef Name="ROLE_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_USER__USER___31B762FC">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_USER_ROLES" Type="Self.T_OE_USER_ROLES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_ROLES">
+              <PropertyRef Name="USER_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_USER__USER___3493CFA7">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_USER_EXPERTISE" Type="Self.T_OE_USER_EXPERTISE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_EXPERTISE">
+              <PropertyRef Name="USER_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EECIPModelStoreContainer">
+          <EntitySet Name="T_OE_APP_SETTINGS" EntityType="Self.T_OE_APP_SETTINGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_ORGANIZATION" EntityType="Self.T_OE_ORGANIZATION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="Self.T_OE_ORGANIZATION_EMAIL_RULE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_ORGANIZATION_ENT_SVCS" EntityType="Self.T_OE_ORGANIZATION_ENT_SVCS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_ORGANIZATION_TAGS" EntityType="Self.T_OE_ORGANIZATION_TAGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_PROJECT_TAGS" EntityType="Self.T_OE_PROJECT_TAGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_PROJECTS" EntityType="Self.T_OE_PROJECTS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_REF_ENTERPRISE_PLATFORM" EntityType="Self.T_OE_REF_ENTERPRISE_PLATFORM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_REF_REGION" EntityType="Self.T_OE_REF_REGION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_REF_STATE" EntityType="Self.T_OE_REF_STATE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_REF_TAG_CATEGORIES" EntityType="Self.T_OE_REF_TAG_CATEGORIES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_REF_TAGS" EntityType="Self.T_OE_REF_TAGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_ROLES" EntityType="Self.T_OE_ROLES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_SYS_EMAIL_LOG" EntityType="Self.T_OE_SYS_EMAIL_LOG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_SYS_LOG" EntityType="Self.T_OE_SYS_LOG" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_USER_EXPERTISE" EntityType="Self.T_OE_USER_EXPERTISE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_USER_NOTIFICATION" EntityType="Self.T_OE_USER_NOTIFICATION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_USER_ROLES" EntityType="Self.T_OE_USER_ROLES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_USERS" EntityType="Self.T_OE_USERS" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__T_OE_ORGA__ENT_P__25518C17" Association="Self.FK__T_OE_ORGA__ENT_P__25518C17">
+            <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__EPA_R__1DB06A4F" Association="Self.FK__T_OE_ORGA__EPA_R__1DB06A4F">
+            <End Role="T_OE_REF_REGION" EntitySet="T_OE_REF_REGION" />
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__208CD6FA" Association="Self.FK__T_OE_ORGA__ORG_I__208CD6FA">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__245D67DE" Association="Self.FK__T_OE_ORGA__ORG_I__245D67DE">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__282DF8C2" Association="Self.FK__T_OE_ORGA__ORG_I__282DF8C2">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_EMAIL_RULE" EntitySet="T_OE_ORGANIZATION_EMAIL_RULE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_T__2180FB33" Association="Self.FK__T_OE_ORGA__ORG_T__2180FB33">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__STATE__1CBC4616" Association="Self.FK__T_OE_ORGA__STATE__1CBC4616">
+            <End Role="T_OE_REF_STATE" EntitySet="T_OE_REF_STATE" />
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__ADV_M__6EC0713C" Association="Self.FK__T_OE_PROJ__ADV_M__6EC0713C">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__BP_MO__6FB49575" Association="Self.FK__T_OE_PROJ__BP_MO__6FB49575">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__MEDIA__6CD828CA" Association="Self.FK__T_OE_PROJ__MEDIA__6CD828CA">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__MOBIL__6DCC4D03" Association="Self.FK__T_OE_PROJ__MOBIL__6DCC4D03">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6BE40491" Association="Self.FK__T_OE_PROJ__ORG_I__6BE40491">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__73852659" Association="Self.FK__T_OE_PROJ__PROJE__73852659">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_TAGS" EntitySet="T_OE_PROJECT_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_REF___TAG_C__6B24EA82" Association="Self.FK__T_OE_REF___TAG_C__6B24EA82">
+            <End Role="T_OE_REF_TAG_CATEGORIES" EntitySet="T_OE_REF_TAG_CATEGORIES" />
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_USER__EXPER__3587F3E0" Association="Self.FK__T_OE_USER__EXPER__3587F3E0">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_USER_EXPERTISE" EntitySet="T_OE_USER_EXPERTISE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_USER__ORG_I__2CF2ADDF" Association="Self.FK__T_OE_USER__ORG_I__2CF2ADDF">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_USER__ROLE___30C33EC3" Association="Self.FK__T_OE_USER__ROLE___30C33EC3">
+            <End Role="T_OE_ROLES" EntitySet="T_OE_ROLES" />
+            <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_USER__USER___31B762FC" Association="Self.FK__T_OE_USER__USER___31B762FC">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_USER__USER___3493CFA7" Association="Self.FK__T_OE_USER__USER___3493CFA7">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="T_OE_USER_EXPERTISE" EntitySet="T_OE_USER_EXPERTISE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EECIPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="T_OE_ROLES">
+          <Key>
+            <PropertyRef Name="ROLE_IDX" />
+          </Key>
+          <Property Name="ROLE_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ROLE_NAME" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ROLE_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_USER_ROLES" Relationship="Self.FK__T_OE_USER__ROLE___1BFD2C07" FromRole="T_OE_ROLES" ToRole="T_OE_USER_ROLES" />
+        </EntityType>
+        <EntityType Name="T_OE_SYS_EMAIL_LOG">
+          <Key>
+            <PropertyRef Name="EMAIL_LOG_ID" />
+          </Key>
+          <Property Name="EMAIL_LOG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOG_DT" Type="DateTime" Precision="0" />
+          <Property Name="LOG_FROM" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_TO" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_CC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_SUBJ" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_MSG" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="EMAIL_TYPE" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_OE_SYS_LOG">
+          <Key>
+            <PropertyRef Name="SYS_LOG_ID" />
+          </Key>
+          <Property Name="SYS_LOG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOG_DT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="LOG_USERIDX" Type="Int32" />
+          <Property Name="LOG_TYPE" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_MSG" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_OE_USER_ROLES">
+          <Key>
+            <PropertyRef Name="USER_ROLE_IDX" />
+          </Key>
+          <Property Name="USER_ROLE_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
+          <Property Name="ROLE_IDX" Type="Int32" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ROLES" Relationship="Self.FK__T_OE_USER__ROLE___1BFD2C07" FromRole="T_OE_USER_ROLES" ToRole="T_OE_ROLES" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__USER___6477ECF3" FromRole="T_OE_USER_ROLES" ToRole="T_OE_USERS" />
+        </EntityType>
+        <Association Name="FK__T_OE_USER__ROLE___1BFD2C07">
+          <End Role="T_OE_ROLES" Type="Self.T_OE_ROLES" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_USER_ROLES" Type="Self.T_OE_USER_ROLES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ROLES">
+              <PropertyRef Name="ROLE_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_ROLES">
+              <PropertyRef Name="ROLE_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EECIPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="T_OE_ROLES" EntityType="Self.T_OE_ROLES" />
+          <EntitySet Name="T_OE_SYS_EMAIL_LOG" EntityType="Self.T_OE_SYS_EMAIL_LOG" />
+          <EntitySet Name="T_OE_SYS_LOG" EntityType="Self.T_OE_SYS_LOG" />
+          <EntitySet Name="T_OE_USER_ROLES" EntityType="Self.T_OE_USER_ROLES" />
+          <AssociationSet Name="FK__T_OE_USER__ROLE___1BFD2C07" Association="Self.FK__T_OE_USER__ROLE___1BFD2C07">
+            <End Role="T_OE_ROLES" EntitySet="T_OE_ROLES" />
+            <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
+          </AssociationSet>
+          <EntitySet Name="T_OE_APP_SETTINGS" EntityType="EECIPModel.T_OE_APP_SETTINGS" />
+          <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" />
+          <EntitySet Name="T_OE_REF_ENTERPRISE_PLATFORM" EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" />
+          <EntitySet Name="T_OE_REF_REGION" EntityType="EECIPModel.T_OE_REF_REGION" />
+          <EntitySet Name="T_OE_REF_STATE" EntityType="EECIPModel.T_OE_REF_STATE" />
+          <EntitySet Name="T_OE_USERS" EntityType="EECIPModel.T_OE_USERS" />
+          <AssociationSet Name="FK__T_OE_USER__USER___6477ECF3" Association="EECIPModel.FK__T_OE_USER__USER___6477ECF3">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
+          </AssociationSet>
+          <EntitySet Name="T_OE_REF_TAG_CATEGORIES" EntityType="EECIPModel.T_OE_REF_TAG_CATEGORIES" />
+          <EntitySet Name="T_OE_REF_TAGS" EntityType="EECIPModel.T_OE_REF_TAGS" />
+          <AssociationSet Name="FK__T_OE_REF___TAG_C__6B24EA82" Association="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82">
+            <End Role="T_OE_REF_TAG_CATEGORIES" EntitySet="T_OE_REF_TAG_CATEGORIES" />
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+          </AssociationSet>
+          <EntitySet Name="T_OE_USER_EXPERTISE" EntityType="EECIPModel.T_OE_USER_EXPERTISE" />
+          <AssociationSet Name="FK__T_OE_USER__EXPER__6FE99F9F" Association="EECIPModel.FK__T_OE_USER__EXPER__6FE99F9F">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_USER_EXPERTISE" EntitySet="T_OE_USER_EXPERTISE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_USER__USER___6EF57B66" Association="EECIPModel.FK__T_OE_USER__USER___6EF57B66">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="T_OE_USER_EXPERTISE" EntitySet="T_OE_USER_EXPERTISE" />
+          </AssociationSet>
+          <EntitySet Name="T_OE_ORGANIZATION_TAGS" EntityType="EECIPModel.T_OE_ORGANIZATION_TAGS" />
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_T__03F0984C" Association="EECIPModel.FK__T_OE_ORGA__ORG_T__03F0984C">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
+          </AssociationSet>
+          <EntitySet Name="T_OE_ORGANIZATION_ENT_SVCS" EntityType="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" />
+          <AssociationSet Name="FK__T_OE_ORGA__ENT_P__17036CC0" Association="EECIPModel.FK__T_OE_ORGA__ENT_P__17036CC0">
+            <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+          </AssociationSet>
+          <EntitySet Name="T_OE_ORGANIZATION" EntityType="EECIPModel.T_OE_ORGANIZATION" />
+          <AssociationSet Name="FK__T_OE_ORGA__EPA_R__1DB06A4F" Association="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F">
+            <End Role="T_OE_REF_REGION" EntitySet="T_OE_REF_REGION" />
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__208CD6FA" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__208CD6FA">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__245D67DE" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__282DF8C2" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__282DF8C2">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_EMAIL_RULE" EntitySet="T_OE_ORGANIZATION_EMAIL_RULE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__STATE__1CBC4616" Association="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616">
+            <End Role="T_OE_REF_STATE" EntitySet="T_OE_REF_STATE" />
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_USER__ORG_I__2CF2ADDF" Association="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+          </AssociationSet>
+          <EntitySet Name="T_OE_USER_NOTIFICATION" EntityType="EECIPModel.T_OE_USER_NOTIFICATION" />
+          <EntitySet Name="T_OE_PROJECT_TAGS" EntityType="EECIPModel.T_OE_PROJECT_TAGS" />
+          <EntitySet Name="T_OE_PROJECTS" EntityType="EECIPModel.T_OE_PROJECTS" />
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6BE40491" Association="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__73852659" Association="EECIPModel.FK__T_OE_PROJ__PROJE__73852659">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_TAGS" EntitySet="T_OE_PROJECT_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__ADV_M__6EC0713C" Association="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__BP_MO__6FB49575" Association="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__MEDIA__6CD828CA" Association="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__MOBIL__6DCC4D03" Association="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="T_OE_APP_SETTINGS">
+          <Key>
+            <PropertyRef Name="SETTING_IDX" />
+          </Key>
+          <Property Name="SETTING_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SETTING_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SETTING_DESC" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SETTING_VALUE" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ENCRYPT_IND" Type="Boolean" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
+          <Key>
+            <PropertyRef Name="ORG_IDX" />
+            <PropertyRef Name="EMAIL_STRING" />
+          </Key>
+          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="EMAIL_STRING" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__282DF8C2" FromRole="T_OE_ORGANIZATION_EMAIL_RULE" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
+          <Key>
+            <PropertyRef Name="ENT_PLATFORM_IDX" />
+          </Key>
+          <Property Name="ENT_PLATFORM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ENT_PLATFORM_NAME" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="ENT_PLATFORM_DESC" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ENT_PLATFORM_EXAMPLE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SEQ_NO" Type="Int32" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_ORGA__ENT_P__17036CC0" FromRole="T_OE_REF_ENTERPRISE_PLATFORM" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_REGION">
+          <Key>
+            <PropertyRef Name="EPA_REGION" />
+          </Key>
+          <Property Name="EPA_REGION" Type="Int32" Nullable="false" />
+          <Property Name="EPA_REGION_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F" FromRole="T_OE_REF_REGION" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_STATE">
+          <Key>
+            <PropertyRef Name="STATE_CD" />
+          </Key>
+          <Property Name="STATE_CD" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="STATE_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_REF_STATE" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <EntityType Name="T_OE_USERS">
+          <Key>
+            <PropertyRef Name="USER_IDX" />
+          </Key>
+          <Property Name="USER_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="PWD_HASH" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PWD_SALT" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="LNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="EMAIL" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="INITAL_PWD_FLAG" Type="Boolean" Nullable="false" />
+          <Property Name="EFFECTIVE_DT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="LASTLOGIN_DT" Type="DateTime" Precision="0" />
+          <Property Name="PHONE" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PHONE_EXT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="JOB_TITLE" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="NODE_ADMIN" Type="Boolean" Nullable="false" />
+          <Property Name="USER_AVATAR" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="LOG_ATMPT" Type="Int32" />
+          <Property Name="LOCKOUT_END_DATE_UTC" Type="DateTime" Precision="7" />
+          <Property Name="LOCKOUT_ENABLED" Type="Boolean" Nullable="false" />
+          <Property Name="ORG_IDX" Type="Guid" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_USER_ROLES" Relationship="EECIPModel.FK__T_OE_USER__USER___6477ECF3" FromRole="T_OE_USERS" ToRole="T_OE_USER_ROLES" />
+          <NavigationProperty Name="T_OE_USER_EXPERTISE" Relationship="EECIPModel.FK__T_OE_USER__USER___6EF57B66" FromRole="T_OE_USERS" ToRole="T_OE_USER_EXPERTISE" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_USERS" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <Association Name="FK__T_OE_USER__USER___6477ECF3">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_USER_ROLES" Role="T_OE_USER_ROLES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_ROLES">
+              <PropertyRef Name="USER_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_OE_REF_TAG_CATEGORIES">
+          <Key>
+            <PropertyRef Name="TAG_CAT_NAME" />
+          </Key>
+          <Property Name="TAG_CAT_NAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TAG_CAT_DESCRIPTION" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TAG_CAT_COLOR" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAG_CATEGORIES" ToRole="T_OE_REF_TAGS" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_TAGS">
+          <Key>
+            <PropertyRef Name="TAG_IDX" />
+          </Key>
+          <Property Name="TAG_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TAG_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TAG_CAT_NAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USER_CREATE_IND" Type="Boolean" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_REF_TAG_CATEGORIES" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAGS" ToRole="T_OE_REF_TAG_CATEGORIES" />
+          <NavigationProperty Name="T_OE_USER_EXPERTISE" Relationship="EECIPModel.FK__T_OE_USER__EXPER__6FE99F9F" FromRole="T_OE_REF_TAGS" ToRole="T_OE_USER_EXPERTISE" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_TAGS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_T__03F0984C" FromRole="T_OE_REF_TAGS" ToRole="T_OE_ORGANIZATION_TAGS" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_PROJECTS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_PROJECTS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_PROJECTS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
+          </EntityType>
+        <Association Name="FK__T_OE_REF___TAG_C__6B24EA82">
+          <End Type="EECIPModel.T_OE_REF_TAG_CATEGORIES" Role="T_OE_REF_TAG_CATEGORIES" Multiplicity="1" />
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAG_CATEGORIES">
+              <PropertyRef Name="TAG_CAT_NAME" />
+            </Principal>
+            <Dependent Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_CAT_NAME" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_OE_USER_EXPERTISE">
+          <Key>
+            <PropertyRef Name="USER_IDX" />
+            <PropertyRef Name="EXPERTISE_TAG_IDX" />
+          </Key>
+          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
+          <Property Name="EXPERTISE_TAG_IDX" Type="Int32" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_USER__EXPER__6FE99F9F" FromRole="T_OE_USER_EXPERTISE" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__USER___6EF57B66" FromRole="T_OE_USER_EXPERTISE" ToRole="T_OE_USERS" />
+        </EntityType>
+        <Association Name="FK__T_OE_USER__EXPER__6FE99F9F">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_USER_EXPERTISE" Role="T_OE_USER_EXPERTISE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_EXPERTISE">
+              <PropertyRef Name="EXPERTISE_TAG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_USER__USER___6EF57B66">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_USER_EXPERTISE" Role="T_OE_USER_EXPERTISE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_EXPERTISE">
+              <PropertyRef Name="USER_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_OE_ORGANIZATION_TAGS">
+          <Key>
+            <PropertyRef Name="ORG_IDX" />
+            <PropertyRef Name="ORG_ATTRIBUTE" />
+            <PropertyRef Name="ORG_TAG_IDX" />
+          </Key>
+          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ORG_ATTRIBUTE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ORG_TAG_IDX" Type="Int32" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_T__03F0984C" FromRole="T_OE_ORGANIZATION_TAGS" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__208CD6FA" FromRole="T_OE_ORGANIZATION_TAGS" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <Association Name="FK__T_OE_ORGA__ORG_T__03F0984C">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_TAGS" Role="T_OE_ORGANIZATION_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_TAGS">
+              <PropertyRef Name="ORG_TAG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_OE_ORGANIZATION_ENT_SVCS">
+          <Key>
+            <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+          </Key>
+          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ENT_PLATFORM_IDX" Type="Int32" Nullable="false" />
+          <Property Name="PROJECT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="VENDOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IMPLEMENT_STATUS" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="COMMENTS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_REF_ENTERPRISE_PLATFORM" Relationship="EECIPModel.FK__T_OE_ORGA__ENT_P__17036CC0" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_REF_ENTERPRISE_PLATFORM" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <Association Name="FK__T_OE_ORGA__ENT_P__17036CC0">
+          <End Type="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Role="T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_ENTERPRISE_PLATFORM">
+              <PropertyRef Name="ENT_PLATFORM_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ENT_PLATFORM_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_OE_ORGANIZATION">
+          <Key>
+            <PropertyRef Name="ORG_IDX" />
+          </Key>
+          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ORG_ABBR" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ORG_NAME" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="STATE_CD" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="EPA_REGION" Type="Int32" />
+          <Property Name="ALLOW_JOIN_IND" Type="Boolean" />
+          <Property Name="CLOUD" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="API" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_REF_REGION" Relationship="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_REGION" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_TAGS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__208CD6FA" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_TAGS" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_EMAIL_RULE" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__282DF8C2" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_EMAIL_RULE" />
+          <NavigationProperty Name="T_OE_REF_STATE" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_STATE" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECTS" />
+        </EntityType>
+        <Association Name="FK__T_OE_ORGA__EPA_R__1DB06A4F">
+          <End Type="EECIPModel.T_OE_REF_REGION" Role="T_OE_REF_REGION" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_REGION">
+              <PropertyRef Name="EPA_REGION" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="EPA_REGION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__208CD6FA">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_TAGS" Role="T_OE_ORGANIZATION_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_TAGS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__245D67DE">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__282DF8C2">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1" />
+          <End Type="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Role="T_OE_ORGANIZATION_EMAIL_RULE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_EMAIL_RULE">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__STATE__1CBC4616">
+          <End Type="EECIPModel.T_OE_REF_STATE" Role="T_OE_REF_STATE" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_STATE">
+              <PropertyRef Name="STATE_CD" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="STATE_CD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_USER__ORG_I__2CF2ADDF">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USERS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_OE_USER_NOTIFICATION">
+          <Key>
+            <PropertyRef Name="NOTIFICATION_IDX" />
+          </Key>
+          <Property Name="NOTIFICATION_IDX" Type="Guid" Nullable="false" />
+          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
+          <Property Name="NOTIFY_DT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="NOTIFY_TYPE" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="NOTIFY_TITLE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NOTIFY_DESC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="READ_IND" Type="Boolean" />
+          <Property Name="FROM_USER_IDX" Type="Int32" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_PROJECT_TAGS">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+            <PropertyRef Name="PROJECT_ATTRIBUTE" />
+            <PropertyRef Name="PROJECT_TAG_NAME" />
+          </Key>
+          <Property Name="PROJECT_IDX" Type="Guid" Nullable="false" />
+          <Property Name="PROJECT_ATTRIBUTE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_TAG_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__73852659" FromRole="T_OE_PROJECT_TAGS" ToRole="T_OE_PROJECTS" />
+        </EntityType>
+        <EntityType Name="T_OE_PROJECTS">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+          </Key>
+          <Property Name="PROJECT_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ORG_IDX" Type="Guid" />
+          <Property Name="PROJ_NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="PROJ_DESC" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="MEDIA_TAG" Type="Int32" />
+          <Property Name="START_YEAR" Type="Int32" />
+          <Property Name="PROJ_STATUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DATE_LAST_UPDATE" Type="Int32" />
+          <Property Name="RECORD_SOURCE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_URL" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="MOBILE_IND" Type="Int32" />
+          <Property Name="MOBILE_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ADV_MON_IND" Type="Int32" />
+          <Property Name="ADV_MON_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BP_MODERN_IND" Type="Int32" />
+          <Property Name="BP_MODERN_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="COTS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="VENDOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_PROJECTS" ToRole="T_OE_ORGANIZATION" />
+          <NavigationProperty Name="T_OE_PROJECT_TAGS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__73852659" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_TAGS" />
+          <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_REF_TAGS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_REF_TAGS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_REF_TAGS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+        </EntityType>
+        <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__73852659">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="1" />
+          <End Type="EECIPModel.T_OE_PROJECT_TAGS" Role="T_OE_PROJECT_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_TAGS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__ADV_M__6EC0713C">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="ADV_MON_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__BP_MO__6FB49575">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="BP_MODERN_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__MEDIA__6CD828CA">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="MEDIA_TAG" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__MOBIL__6DCC4D03">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="MOBILE_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EECIPModelStoreContainer" CdmEntityContainer="EECIPEntities">
+          <EntitySetMapping Name="T_OE_ROLES">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ROLES">
+              <MappingFragment StoreEntitySet="T_OE_ROLES">
+                <ScalarProperty Name="ROLE_IDX" ColumnName="ROLE_IDX" />
+                <ScalarProperty Name="ROLE_NAME" ColumnName="ROLE_NAME" />
+                <ScalarProperty Name="ROLE_DESC" ColumnName="ROLE_DESC" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_SYS_EMAIL_LOG">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_SYS_EMAIL_LOG">
+              <MappingFragment StoreEntitySet="T_OE_SYS_EMAIL_LOG">
+                <ScalarProperty Name="EMAIL_LOG_ID" ColumnName="EMAIL_LOG_ID" />
+                <ScalarProperty Name="LOG_DT" ColumnName="LOG_DT" />
+                <ScalarProperty Name="LOG_FROM" ColumnName="LOG_FROM" />
+                <ScalarProperty Name="LOG_TO" ColumnName="LOG_TO" />
+                <ScalarProperty Name="LOG_CC" ColumnName="LOG_CC" />
+                <ScalarProperty Name="LOG_SUBJ" ColumnName="LOG_SUBJ" />
+                <ScalarProperty Name="LOG_MSG" ColumnName="LOG_MSG" />
+                <ScalarProperty Name="EMAIL_TYPE" ColumnName="EMAIL_TYPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_SYS_LOG">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_SYS_LOG">
+              <MappingFragment StoreEntitySet="T_OE_SYS_LOG">
+                <ScalarProperty Name="SYS_LOG_ID" ColumnName="SYS_LOG_ID" />
+                <ScalarProperty Name="LOG_DT" ColumnName="LOG_DT" />
+                <ScalarProperty Name="LOG_USERIDX" ColumnName="LOG_USERIDX" />
+                <ScalarProperty Name="LOG_TYPE" ColumnName="LOG_TYPE" />
+                <ScalarProperty Name="LOG_MSG" ColumnName="LOG_MSG" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_USER_ROLES">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_ROLES">
+              <MappingFragment StoreEntitySet="T_OE_USER_ROLES">
+                <ScalarProperty Name="USER_ROLE_IDX" ColumnName="USER_ROLE_IDX" />
+                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
+                <ScalarProperty Name="ROLE_IDX" ColumnName="ROLE_IDX" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_APP_SETTINGS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_APP_SETTINGS">
+              <MappingFragment StoreEntitySet="T_OE_APP_SETTINGS">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="ENCRYPT_IND" ColumnName="ENCRYPT_IND" />
+                <ScalarProperty Name="SETTING_VALUE" ColumnName="SETTING_VALUE" />
+                <ScalarProperty Name="SETTING_DESC" ColumnName="SETTING_DESC" />
+                <ScalarProperty Name="SETTING_NAME" ColumnName="SETTING_NAME" />
+                <ScalarProperty Name="SETTING_IDX" ColumnName="SETTING_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_ORGANIZATION_EMAIL_RULE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE">
+              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_EMAIL_RULE">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="EMAIL_STRING" ColumnName="EMAIL_STRING" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_REF_ENTERPRISE_PLATFORM">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM">
+              <MappingFragment StoreEntitySet="T_OE_REF_ENTERPRISE_PLATFORM">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
+                <ScalarProperty Name="SEQ_NO" ColumnName="SEQ_NO" />
+                <ScalarProperty Name="ENT_PLATFORM_EXAMPLE" ColumnName="ENT_PLATFORM_EXAMPLE" />
+                <ScalarProperty Name="ENT_PLATFORM_DESC" ColumnName="ENT_PLATFORM_DESC" />
+                <ScalarProperty Name="ENT_PLATFORM_NAME" ColumnName="ENT_PLATFORM_NAME" />
+                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_REF_REGION">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_REGION">
+              <MappingFragment StoreEntitySet="T_OE_REF_REGION">
+                <ScalarProperty Name="EPA_REGION_NAME" ColumnName="EPA_REGION_NAME" />
+                <ScalarProperty Name="EPA_REGION" ColumnName="EPA_REGION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_REF_STATE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_STATE">
+              <MappingFragment StoreEntitySet="T_OE_REF_STATE">
+                <ScalarProperty Name="STATE_NAME" ColumnName="STATE_NAME" />
+                <ScalarProperty Name="STATE_CD" ColumnName="STATE_CD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_USERS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_USERS">
+              <MappingFragment StoreEntitySet="T_OE_USERS">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+                <ScalarProperty Name="LOCKOUT_ENABLED" ColumnName="LOCKOUT_ENABLED" />
+                <ScalarProperty Name="LOCKOUT_END_DATE_UTC" ColumnName="LOCKOUT_END_DATE_UTC" />
+                <ScalarProperty Name="LOG_ATMPT" ColumnName="LOG_ATMPT" />
+                <ScalarProperty Name="USER_AVATAR" ColumnName="USER_AVATAR" />
+                <ScalarProperty Name="NODE_ADMIN" ColumnName="NODE_ADMIN" />
+                <ScalarProperty Name="JOB_TITLE" ColumnName="JOB_TITLE" />
+                <ScalarProperty Name="PHONE_EXT" ColumnName="PHONE_EXT" />
+                <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+                <ScalarProperty Name="LASTLOGIN_DT" ColumnName="LASTLOGIN_DT" />
+                <ScalarProperty Name="EFFECTIVE_DT" ColumnName="EFFECTIVE_DT" />
+                <ScalarProperty Name="INITAL_PWD_FLAG" ColumnName="INITAL_PWD_FLAG" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="LNAME" ColumnName="LNAME" />
+                <ScalarProperty Name="FNAME" ColumnName="FNAME" />
+                <ScalarProperty Name="PWD_SALT" ColumnName="PWD_SALT" />
+                <ScalarProperty Name="PWD_HASH" ColumnName="PWD_HASH" />
+                <ScalarProperty Name="USER_ID" ColumnName="USER_ID" />
+                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_REF_TAG_CATEGORIES">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_TAG_CATEGORIES">
+              <MappingFragment StoreEntitySet="T_OE_REF_TAG_CATEGORIES">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="TAG_CAT_COLOR" ColumnName="TAG_CAT_COLOR" />
+                <ScalarProperty Name="TAG_CAT_DESCRIPTION" ColumnName="TAG_CAT_DESCRIPTION" />
+                <ScalarProperty Name="TAG_CAT_NAME" ColumnName="TAG_CAT_NAME" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_REF_TAGS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_TAGS">
+              <MappingFragment StoreEntitySet="T_OE_REF_TAGS">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="USER_CREATE_IND" ColumnName="USER_CREATE_IND" />
+                <ScalarProperty Name="TAG_CAT_NAME" ColumnName="TAG_CAT_NAME" />
+                <ScalarProperty Name="TAG_NAME" ColumnName="TAG_NAME" />
+                <ScalarProperty Name="TAG_IDX" ColumnName="TAG_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_USER_EXPERTISE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_EXPERTISE">
+              <MappingFragment StoreEntitySet="T_OE_USER_EXPERTISE">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="EXPERTISE_TAG_IDX" ColumnName="EXPERTISE_TAG_IDX" />
+                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_ORGANIZATION_TAGS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_TAGS">
+              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_TAGS">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="ORG_TAG_IDX" ColumnName="ORG_TAG_IDX" />
+                <ScalarProperty Name="ORG_ATTRIBUTE" ColumnName="ORG_ATTRIBUTE" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_ORGANIZATION_ENT_SVCS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS">
+              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_ENT_SVCS">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="COMMENTS" ColumnName="COMMENTS" />
+                <ScalarProperty Name="IMPLEMENT_STATUS" ColumnName="IMPLEMENT_STATUS" />
+                <ScalarProperty Name="VENDOR" ColumnName="VENDOR" />
+                <ScalarProperty Name="PROJECT_NAME" ColumnName="PROJECT_NAME" />
+                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+                <ScalarProperty Name="ORG_ENT_SVCS_IDX" ColumnName="ORG_ENT_SVCS_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_ORGANIZATION">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION">
+              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
+                <ScalarProperty Name="API" ColumnName="API" />
+                <ScalarProperty Name="CLOUD" ColumnName="CLOUD" />
+                <ScalarProperty Name="ALLOW_JOIN_IND" ColumnName="ALLOW_JOIN_IND" />
+                <ScalarProperty Name="EPA_REGION" ColumnName="EPA_REGION" />
+                <ScalarProperty Name="STATE_CD" ColumnName="STATE_CD" />
+                <ScalarProperty Name="ORG_NAME" ColumnName="ORG_NAME" />
+                <ScalarProperty Name="ORG_ABBR" ColumnName="ORG_ABBR" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_USER_NOTIFICATION">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_NOTIFICATION">
+              <MappingFragment StoreEntitySet="T_OE_USER_NOTIFICATION">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="FROM_USER_IDX" ColumnName="FROM_USER_IDX" />
+                <ScalarProperty Name="READ_IND" ColumnName="READ_IND" />
+                <ScalarProperty Name="NOTIFY_DESC" ColumnName="NOTIFY_DESC" />
+                <ScalarProperty Name="NOTIFY_TITLE" ColumnName="NOTIFY_TITLE" />
+                <ScalarProperty Name="NOTIFY_TYPE" ColumnName="NOTIFY_TYPE" />
+                <ScalarProperty Name="NOTIFY_DT" ColumnName="NOTIFY_DT" />
+                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
+                <ScalarProperty Name="NOTIFICATION_IDX" ColumnName="NOTIFICATION_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_PROJECT_TAGS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECT_TAGS">
+              <MappingFragment StoreEntitySet="T_OE_PROJECT_TAGS">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="PROJECT_TAG_NAME" ColumnName="PROJECT_TAG_NAME" />
+                <ScalarProperty Name="PROJECT_ATTRIBUTE" ColumnName="PROJECT_ATTRIBUTE" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_PROJECTS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECTS">
+              <MappingFragment StoreEntitySet="T_OE_PROJECTS">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
+                <ScalarProperty Name="VENDOR" ColumnName="VENDOR" />
+                <ScalarProperty Name="COTS" ColumnName="COTS" />
+                <ScalarProperty Name="BP_MODERN_DESC" ColumnName="BP_MODERN_DESC" />
+                <ScalarProperty Name="BP_MODERN_IND" ColumnName="BP_MODERN_IND" />
+                <ScalarProperty Name="ADV_MON_DESC" ColumnName="ADV_MON_DESC" />
+                <ScalarProperty Name="ADV_MON_IND" ColumnName="ADV_MON_IND" />
+                <ScalarProperty Name="MOBILE_DESC" ColumnName="MOBILE_DESC" />
+                <ScalarProperty Name="MOBILE_IND" ColumnName="MOBILE_IND" />
+                <ScalarProperty Name="PROJECT_URL" ColumnName="PROJECT_URL" />
+                <ScalarProperty Name="RECORD_SOURCE" ColumnName="RECORD_SOURCE" />
+                <ScalarProperty Name="DATE_LAST_UPDATE" ColumnName="DATE_LAST_UPDATE" />
+                <ScalarProperty Name="PROJ_STATUS" ColumnName="PROJ_STATUS" />
+                <ScalarProperty Name="START_YEAR" ColumnName="START_YEAR" />
+                <ScalarProperty Name="MEDIA_TAG" ColumnName="MEDIA_TAG" />
+                <ScalarProperty Name="PROJ_DESC" ColumnName="PROJ_DESC" />
+                <ScalarProperty Name="PROJ_NAME" ColumnName="PROJ_NAME" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

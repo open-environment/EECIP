@@ -1,0 +1,106 @@
+﻿@model EECIP.Models.vmDashboardSearch
+@{
+    ViewBag.Title = "Search";
+    ViewBag.SubTitle = "Find projects, agencies, people, or discussions that match your interests";
+}
+
+
+<div class="row">
+
+    <div class="col-sm-3" style="border-right-width:1px; border-right-style:solid; border-color:#ccc; min-height:500px;">
+@using (Html.BeginForm("Index", "Dashboard", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
+{
+    <div class="input-group">
+        <span class="input-group-btn">
+            <a id="clearSearch" href="#" class="btn btn-danger" style="display:none">
+                <span class="glyphicon glyphicon-remove"></span>
+            </a>
+        </span>
+        @Html.TextBoxFor(model => model.searchStr, new { @class = "form-control", @id = "txtSearch", @placeholder = "...enter search terms here" })
+        <span class="input-group-btn">
+            <button class="btn btn-success" type="submit">
+                <i class="clip-search-2"> </i>Search
+            </button>
+        </span>
+    </div>
+}
+<a href="#">Advanced Search</a>
+@if (Model.searchResults != null)
+{
+        <div>
+            @foreach (var item in Model.searchResults.Facets)
+            {
+                <h4>@Html.DisplayFor(modelItem => item.Key)</h4>
+                foreach (var subitem in item.Value)
+                {
+                    <div>@Html.DisplayFor(modelItem => subitem.Value) ( )</div>
+                }
+            }
+        </div>
+}
+    </div>
+    <div class="col-sm-9">
+        @if (Model.searchResults != null)
+        {
+        <div class="table-responsive">
+            <table class="table table-striped m-b-none" data-ride="datatables">
+                <tr>
+                    <th></th>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Record Source</th>
+                    <th>Media</th>
+                    <th>Start Year</th>
+                    <th>Status</th>
+                    <th>Score</th>
+                </tr>
+
+                @foreach (var item in Model.searchResults.Results)
+                {
+                    <tr>
+                        <td style="min-width: 68px;">
+                            <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="clip-info"></i></a>
+                        </td>
+                        <td>
+                            <span class="label label-beige">@Html.DisplayFor(modelItem => item.Document.DataType)</span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Document.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Document.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Document.RecordSource)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Document.Media)
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Score)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        }
+
+    </div>
+</div>
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //make left small
+            if ($("#txtSearch").val().length > 0) {
+                $('body').addClass("navigation-small");
+            }
+        });
+    </script>
+}

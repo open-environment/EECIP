@@ -1,0 +1,36 @@
+﻿@model EECIP.Models.vmAccountVerify
+@{
+    ViewBag.Title = "Set Permanent Password";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+@using (Html.BeginForm("Verify", "Account", FormMethod.Post, new { @class = "panel-body wrapper-lg", @id = "norepostform" }))
+{
+    @Html.HiddenFor(model => model.OAuth)
+
+    if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <h4><i class="fa fa-ok-sign"></i>Unable to Verify Account</h4>
+            <br />
+            @TempData["Error"]
+        </div>
+    }
+
+    if (TempData["Error"] == null || (TempData["Error"].ToString() ?? "") == "Change password failed.")
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password, new { @class = "" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control  input-lg focus"})
+            @Html.ValidationMessageFor(m => m.Password)
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "" })
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control  input-lg"})
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    }
+}
+

@@ -1,0 +1,161 @@
+﻿@model EECIP.Models.vmAdminAgencyEdit
+@{
+    ViewBag.Title = "Agency Details";
+    ViewBag.SubTitle = "";
+}
+
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Agency Details
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+
+            @using (Html.BeginForm("RefAgencyEdit", "Admin", FormMethod.Post, new { @class = "" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.agency.ORG_IDX)
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Agency Name</label>
+                                @Html.TextBoxFor(model => model.agency.ORG_NAME, new { @class = "form-control", @placeholder = "" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Abbreviation</label>
+                                @Html.TextBoxFor(model => model.agency.ORG_ABBR, new { @class = "form-control", @placeholder = "" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>State</label>
+                                @Html.DropDownListFor(x => x.agency.STATE_CD, Model.ddl_States, "", new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>EPA Region</label>
+                                @Html.DropDownListFor(x => x.agency.EPA_REGION, Model.ddl_Regions, "", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+                            <a href="@Url.Action("RefAgencies", "Admin")" class="btn btn-default">Close</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </section>
+    </div>
+</div>
+
+<!-- start: AGENCY EMAIL RULES -->
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Email Rules
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <tr>
+                            <th></th>
+                            <th>Email Rule</th>
+                        </tr>
+                        @foreach (var item in Model.agency_emails)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="delete-section" style="display:inline">
+                                        <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                        <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.ORG_IDX" data-delete-id2="@item.EMAIL_STRING" data-delete-p="/Admin/RefAgencyEditEmailDelete"><b>Confirm Delete</b></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EMAIL_STRING)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <p>
+                    <a id="add-it" href="#modal-form" data-toggle="modal" class="add-it btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add Email Rule</a>
+                </p>
+
+            </div>
+        </div>
+        <!-- end: AGENCY EMAIL RULES -->
+    </div>
+</div>
+
+
+
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("RefAgencyEditEmail", "Admin", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.agency.ORG_IDX)
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-tital">Add Email Rule</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Email Rule</label>
+                                            @Html.TextBoxFor(model => model.new_email, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.new_email)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- END MODAL FORM -->
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/confirmdelete")
+}

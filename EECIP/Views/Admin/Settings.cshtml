@@ -1,0 +1,116 @@
+﻿@model EECIP.Models.vmAdminSettings
+@{
+    ViewBag.Title = "Global Settings";
+    ViewBag.SubTitle = "Manage global application settings.";
+}
+
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th>Edit</th>
+                        <th>Setting Name</th>
+                        <th>Setting Description</th>
+                        <th>Setting Value</th>
+                    </tr>
+
+                    @foreach (var item in Model.app_settings)
+                    {
+                        <tr>
+                            <td>
+                                <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                @Html.HiddenFor(modelItem => item.SETTING_IDX)
+                                @Html.HiddenFor(modelItem => item.SETTING_NAME)
+                                @if (item.ENCRYPT_IND != true)
+                                {
+                                @Html.HiddenFor(modelItem => item.SETTING_VALUE)
+                                }
+                                @Html.HiddenFor(modelItem => item.ENCRYPT_IND)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SETTING_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SETTING_DESC)
+                            </td>
+                            <td>
+                                @(item.ENCRYPT_IND != true ? item.SETTING_VALUE : "*********************")
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <h3 class="m-t-none m-b">Edit Setting</h3>
+
+                        @using (Html.BeginForm("Settings", "Admin", FormMethod.Post, new { @class = "" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.edit_app_setting.SETTING_IDX)
+
+                            <div class="panel-body" >
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Global Setting Name</label>
+                                            @Html.TextBoxFor(model => model.edit_app_setting.SETTING_NAME, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Global Setting Value</label>
+                                            @Html.TextBoxFor(model => model.edit_app_setting.SETTING_VALUE, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.edit_app_setting.SETTING_VALUE)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button id="btnSave" type="submit" class="btn btn-sm btn-primary">Save</button>
+                                        <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- END MODAL FORM -->
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //create an event when button is clicked to display modal
+            $(".modal-it").click(function () {
+                $('#edit_app_setting_SETTING_IDX').val($(this).parent('td').find('#item_SETTING_IDX').val());
+                $('#edit_app_setting_SETTING_NAME').val($(this).parent('td').find('#item_SETTING_NAME').val());
+                if ($(this).parent('td').find('#item_ENCRYPT_IND').val() != 'True') 
+                    $('#edit_app_setting_SETTING_VALUE').val($(this).parent('td').find('#item_SETTING_VALUE').val());
+                else
+                    $('#edit_app_setting_SETTING_VALUE').val('');
+
+            });
+        });
+    </script>
+}

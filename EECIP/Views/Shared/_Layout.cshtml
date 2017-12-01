@@ -1,42 +1,160 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
+    <meta name="description" content="e-Enterprise Community Inventory Platform" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - eEnterprise Community Information Platform</title>
+    <link rel="icon" type="image/png" sizes="96x96" href="@Url.Content("~/Content/Images/favicon-96x96.png")">
+    <link rel="icon" type="image/png" sizes="48x48" href="@Url.Content("~/Content/Images/favicon-48x48.png")">
+    <link rel="icon" type="image/png" sizes="32x32" href="@Url.Content("~/Content/Images/favicon-32x32.png")" >
+    <link rel="icon" type="image/png" sizes="16x16" href="@Url.Content("~/Content/Images/favicon-16x16.png")" >
+    <link rel="shortcut icon" href="@Url.Content("~/favicon.ico")">
+    @Styles.Render("~/Content/styles")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<body>
+<body class=" @ViewBag.LeftMenuExpand">
+    <!-- start: HEADER -->
     <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
+        <!-- start: TOP NAVIGATION CONTAINER -->
+        <div class="container-fluid" >
+            <div class="navbar-header" >
+                <!-- start: RESPONSIVE MENU TOGGLER -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="background-color: whitesmoke;">
+                    <span class="glyphicon glyphicon-align-justify light-grey"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <!-- start: HEADER LOGO -->
+@if (Request.IsAuthenticated)
+{
+                <a class="navbar-brand" href="~/Dashboard">
+                    <img src="~/Content/Images/seal.png" style="width:30px; float:left; padding-right:10px;" />
+                    e-Enterprise Community Inventory Platform
+                </a>
+}
+else
+{
+                <a class="navbar-brand" href="~/Home">
+                    <img src="~/Content/Images/seal.png" style="width:30px; float:left; padding-right:10px;" />
+                    e-Enterprise Community Inventory Platform
+                </a>
+}
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+            <div class="navbar-tools">
+                <!-- start: RIGHT NAVIGATION BANNER (ACCOUNT STUFF)-->
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- start: USER DROPDOWN -->
+                    @if (Request.IsAuthenticated)
+                    {
+                        @Html.Action("_PartialHeadNotification", "Shared")
+
+                        <li class="dropdown current-user">
+                            <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+                                <i class="clip-user-3"></i>
+                                <span class="username"> @User.Identity.Name </span>
+                                <i class="clip-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="@Url.Action("UserProfile", "Account") ">
+                                        <i class="glyphicon glyphicon-user"></i>&nbsp;My Profile
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                    }
+                                    <a href="javascript:document.getElementById('logoutForm').submit()">
+                                        <i class="clip-exit"></i>
+                                        Log Out
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    <!-- end: USER DROPDOWN -->
+                    }
+                    else
+                    {
+                        <li class="">
+                            <a class="dropdown-toggle" href="@Url.Action("Login","Account")">
+                                <i class="glyphicon glyphicon-cog"></i>
+                                <span class="">Log In / Register</span>
+                            </a>
+                        </li>
+                    }
                 </ul>
+                <!-- end: TOP NAVIGATION MENU -->
+
+            </div>
+
+        </div>
+    </div>
+    <!-- end: HEADER -->
+    <!-- start: MAIN CONTAINER -->
+    <div class="main-container">
+@if (Request.IsAuthenticated)
+{
+        <div class="navbar-content">
+            <!-- start: LEFT MENU -->
+            @Html.Partial("_LeftMenu")
+            <!-- end: LEFT MENU -->
+        </div>
+}
+        <div class="main-content">
+            <div class="container" style="min-height: 760px;">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- start: PAGE TITLE & BREADCRUMB -->
+                        @*<ol class="breadcrumb">
+                            <li>
+                                <i class="clip-home"></i>
+                                <a href="@Url.Action("Index","Home")">Home</a>
+                            </li>
+                            <li class="active">
+                                @ViewBag.Title
+                            </li>
+                        </ol>*@
+                        <div class="page-header">
+                            <h1>@ViewBag.Title <small>@ViewBag.SubTitle</small></h1>
+                        </div>
+                        <!-- end: PAGE TITLE & BREADCRUMB -->
+                    </div>
+                </div>
+
+                @RenderBody()
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+    <!-- start: FOOTER -->
+    <div class="footer clearfix" style="background-color:#e5e5e5 !important;">
+        <div class="footer-inner">
+            <a href="https://e-enterprisefortheenvironment.net">
+                <img src="~/Content/Images/footer-logo.png" />
+            </a>
+            <a href="http://www.exchangenetwork.net/">
+                <img src="~/Content/Images/footer-logo2-bw.png" />
+            </a>
+        </div>
+        <div class="footer-items">
+            <span class="go-top"><i class="clip-chevron-up"></i></span>
+        </div>
     </div>
+    <!-- end: FOOTER -->
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/toastr")
+    @Scripts.Render("~/bundles/clip-main")
+    <script>
+        jQuery(document).ready(function () {
+            Main.init();
+        });
+    </script>
+    @Html.Partial("_Alerts")
     @RenderSection("scripts", required: false)
+
 </body>
 </html>

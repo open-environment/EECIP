@@ -1,0 +1,104 @@
+﻿@model EECIP.Models.vmDashboardProjects
+@{
+    ViewBag.Title = "Projects";
+    ViewBag.SubTitle = "View and edit the projects for an agency";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Project Overview
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <tr>
+                            <th></th>
+                            <th>Project Name</th>
+                            <th>Description</th>
+                            <th>Media</th>
+                            <th>Start Year</th>
+                            <th>Status</th>
+                            <th>Record Source</th>
+                            <th>Program Area</th>
+                            <th>Features</th>
+                            <th>More Info</th>
+                        </tr>
+
+                        @foreach (var item in Model.projects)
+                        {
+                            <tr>
+                                <td style="min-width: 68px;">
+                                    <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <div class="delete-section" style="display:inline">
+                                        <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                        <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_DESC)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.T_OE_REF_TAGS.TAG_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.START_YEAR)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_STATUS)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RECORD_SOURCE)
+                                </td>
+                                <td>
+                                    @foreach (var subitem in item.T_OE_PROJECT_TAGS)
+                                    {
+                                        if (subitem.PROJECT_ATTRIBUTE == "Program Area")
+                                        {
+                                            <span class="select2-selection__choice">@Html.DisplayFor(modelItem => subitem.PROJECT_TAG_NAME)</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @foreach (var subitem in item.T_OE_PROJECT_TAGS)
+                                    {
+                                        if (subitem.PROJECT_ATTRIBUTE == "Project Feature")
+                                        {
+                                            <span class="select2-selection__choice">@Html.DisplayFor(modelItem => subitem.PROJECT_TAG_NAME)</span>
+                                        }
+                                    }
+                                </td>
+                                <td>                                    
+                                    @if (item.PROJECT_URL != null && item.PROJECT_URL.Length > 5)
+                                    {
+                                        <a href="@Html.DisplayFor(modelItem => item.PROJECT_URL)" target="_blank" >Project URL</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <p>
+                    <a href="@Url.Action("ProjectDetails", "Dashboard")" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+                </p>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/confirmdelete")
+}

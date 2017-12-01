@@ -1,6 +1,10 @@
-﻿body {
+﻿/****************MSFT ASP DEFAULT CSS *****************************/
+body {
+    /*height: 100%;*/
+    margin: 0;
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: #393939;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -17,8 +21,208 @@
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
+/*input,
 select,
 textarea {
     max-width: 280px;
+}*/
+
+
+/****************SITE CUSTOM CSS *****************************/
+html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
+
+
+.light-grey {
+    color: #9d9d9d;
+}
+
+@media (max-width: 767px) {
+    .navbar-header {
+        background-color: #fff;
+    }
+}
+
+@media (min-width: 768px) {
+    .modal-dialog {
+        margin-top: 100px;
+    }
+}
+
+.navbar-inverse {
+background-color: #393939;
+}
+
+/* EENTERPRISE STYLING 
+    #82B9DE  blue
+    #199C98 blue-green
+    #A9D2A2 green
+    #383838 dark grey header
+
+*/
+
+ul.main-navigation-menu > li a > i {
+    color: #199C98;
+}
+
+ul.main-navigation-menu > li.active > a {
+    background-color: #82B9DE;
+    /*border-top: none !important;
+     color: #fff;*/
+}
+
+.navbar-inverse .navbar-brand i, .navbar-inverse .navbar-brand:hover i {
+    color: #A9D2A2;
+}
+
+ul.main-navigation-menu > li.active > a .selected:before {
+    color: #82B9DE !important;
+}
+
+.panel-tools .btn.expand:before {
+    content: "\e161";
+    display: inline;
+    float: right;
+    font-family: 'clip-font';
+    font-weight: 300;
+    height: auto;
+    text-shadow: none;
+}
+
+.panel-tools .btn.collapses:before {
+    content: "\e164";
+    display: inline;
+    float: right;
+    font-family: 'clip-font';
+    font-weight: 300;
+    height: auto;
+    text-shadow: none;
+}
+
+
+.clip-chevron-left {
+    color: #199C98;
+}
+
+
+.clip-chevron-right {
+    color: #199C98;
+}
+
+.footer-inner > a > img {
+    height: 40px;
+    padding-right: 20px;
+}
+
+.validation-summary-errors {
+    color: darkred;
+    background-color: pink;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: darkred;
+    border-style: solid;
+}
+
+.field-validation-error {
+    color: red;
+}
+
+.nav > li.dropdown .dropdown-toggle .badge-green {
+    background-color: #097e00;
+    border: none;
+}
+
+
+/***************     TAG STYLING     ******************/
+
+.select2-selection__choice {
+    border: none !important;
+    background-color: #6fa8e3 !important;
+    color: #fff !important;
+    border-radius: 0 3px 3px 0 !important;
+    text-transform: uppercase !important;
+    font-size: 12px !important;
+    margin-right: 6px !important;
+    margin-left: 6px !important;
+    padding: 0 4px 0 2px !important;
+    display: inline-block !important;
+    /*line-height: 19px !important;
+    height: 19px !important;*/
+    position: relative !important;
+    margin-right: 10px !important;
+}
+    .select2-selection__choice:hover {
+        background-color: #4891dc !important;
+    }
+    .select2-selection__choice:before {
+        content: "";
+        float: left;
+        position: absolute;
+        top: 0;
+        left: -6px;
+        width: 0;
+        height: 0;
+        border-color: transparent #6fa8e3 transparent transparent;
+        border-style: solid;
+        border-width: 9px 6px 9px 0;
+    }
+    .select2-selection__choice:hover::before {
+        border-color: transparent #4891dc transparent transparent;
+    }
+
+.select2-selection__choice__remove {
+    color:#fff !important;
+}
+
+
+/*     TOASTR CUSTOM STYLING     */
+.toast-top-right {
+    top: 62px;
+}
+
+
+/***************     PANEL REDESIGN     ******************/
+
+.panel-default {
+    border-color: #337ab7;
+    background-color:#fcfcfc;
+}
+    .panel-default > .panel-heading {
+        background-color: #82B9DE;
+        background-image: linear-gradient(to bottom, #c3e1f4 0%, #82B9DE 100%);
+        font-size: 14px;
+        padding-top: 8px;
+        font-weight: bold;
+        border-radius: 3px 3px 0 0;
+        box-shadow: 0 0 0 #FFFFFF inset;
+    }
+
+.btn-primary {
+    background-color: #82B9DE;
+    border-color: #2e6da4;
+}
+
+
+/************************SELECT 2 STYLING  ******************/
+.select2 {
+    display:block;
+}
+
+/*.form-group .select2-container {
+    position: relative;
+    z-index: 2;
+    float: left;
+    width: 100%;
+    margin-bottom: 0;
+    display: table;
+    table-layout: fixed;
+}
+
+@media screen and (max-width: 767px) {
+    .select2 {
+        width: 100% !important;
+    }
+}*/

@@ -1,0 +1,314 @@
+﻿@model EECIP.Models.vmDashboardAgency
+@{
+    ViewBag.Title = Model.agency.ORG_NAME;
+    ViewBag.SubTitle = "";
+}
+
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Agency Details
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+
+            @using (Html.BeginForm("AgencyEdit", "Dashboard", FormMethod.Post, new { @class = "", @id="norepostform" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.agency.ORG_IDX)
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Abbreviation</label>
+                                @Html.TextBoxFor(model => model.agency.ORG_ABBR, new { @class = "form-control", @placeholder = "", @readonly = "false" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>State</label>
+                                @Html.DropDownListFor(x => x.agency.STATE_CD, Model.ddl_States, "", new { @class = "form-control", @readonly = "false" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>EPA Region</label>
+                                @Html.DropDownListFor(x => x.agency.EPA_REGION, Model.ddl_Regions, "", new { @class = "form-control", @readonly = "false" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Application Development Framework</label>
+                                @Html.ListBoxFor(model => model.SelectedAppFramework, Model.AllAppFramework, new { multiple = "multiple", @class = "form-control search-select" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Primary Database Platform</label>
+                                @Html.ListBoxFor(model => model.SelectedDatabase, Model.AllDatabase, new { multiple = "multiple", @class = "form-control search-select" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Are you using/considering cloud applications?</label>
+                                @Html.DropDownListFor(model => model.agency.CLOUD, Model.ddl_Cloud, "", new { @class = "form-control search-select-single" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Do you have Internal/External APIs and/or an Agency Strategy for APIs?</label>
+                                @Html.DropDownListFor(model => model.agency.API, Model.ddl_API, "", new { @class = "form-control search-select-single" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+                            <a href="@Url.Action("RefAgencies", "Admin")" class="btn btn-default">Close</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </section>
+    </div>
+    <!-- AGENCY USERS -->
+    <div class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Agency Users
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped m-b-none" data-ride="datatables">
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Job Title</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                </tr>
+
+                                @foreach (var item in Model.users)
+                                {
+                                    <tr>
+                                        <td>
+                                            @*<a href="@Url.Action("UserProfile","Account", new { id=item.USER_IDX, a="o" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>*@
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.FNAME)
+                                            &nbsp;
+                                            @Html.DisplayFor(modelItem => item.LNAME)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.JOB_TITLE)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.EMAIL)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PHONE)
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+</div>
+<div class="row"> 
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Enterprise Services
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <tr>
+                            <th></th>
+                            <th>Enterprise Service</th>
+                            <th>Project Name</th>
+                            <th>Vendor</th>
+                            <th>Current Implementation Status</th>
+                            <th>Comments</th>
+                        </tr>
+
+                        @foreach (var item in Model.org_ent_services)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
+                                    @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
+                                    @Html.HiddenFor(modelItem => item.PROJECT_NAME)
+                                    @Html.HiddenFor(modelItem => item.VENDOR)
+                                    @Html.HiddenFor(modelItem => item.IMPLEMENT_STATUS)
+                                    @Html.HiddenFor(modelItem => item.COMMENTS)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ENT_PLATFORM_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJECT_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VENDOR)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IMPLEMENT_STATUS)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.COMMENTS)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("AgencyEntServiceEdit", "Dashboard", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.agency.ORG_IDX)
+            @Html.HiddenFor(model => model.edit_ent_services.ENT_PLATFORM_IDX)
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-title">Edit Enterprise Service</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Enterprise Service</label>
+                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_NAME, new { @class = "form-control", @readonly="readonly" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Project Name</label>
+                                            @Html.TextAreaFor(model => model.edit_ent_services.PROJECT_NAME, new { @class = "form-control", @maxlength = "100" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.PROJECT_NAME)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Vendor</label>
+                                            @Html.TextAreaFor(model => model.edit_ent_services.VENDOR, new { @class = "form-control", @maxlength = "100" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.VENDOR)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Implementation Status</label>
+                                            @Html.TextAreaFor(model => model.edit_ent_services.IMPLEMENT_STATUS, new { @class = "form-control", @maxlength = "250", @rows = "5" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.IMPLEMENT_STATUS)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Comments</label>
+                                            @Html.TextAreaFor(model => model.edit_ent_services.COMMENTS, new { @class = "form-control", @rows = "5" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.COMMENTS)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- END MODAL FORM -->
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/select2")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //function to initiate Select2
+            $(".search-select").select2({
+                placeholder: "Select one or more",
+                allowClear: true,
+                tags: true
+            });
+
+            $(".search-select-single").select2({
+                placeholder: "Select",
+                tags: true
+            });
+
+            //create an event when button is clicked to display modal
+            $(".modal-it").click(function () {
+                $('#edit_ent_services_ENT_PLATFORM_IDX').val($(this).parent('td').find('#item_ENT_PLATFORM_IDX').val());
+                $('#edit_ent_services_ENT_PLATFORM_NAME').val($(this).parent('td').find('#item_ENT_PLATFORM_NAME').val());
+                $('#edit_ent_services_PROJECT_NAME').val($(this).parent('td').find('#item_PROJECT_NAME').val());
+                $('#edit_ent_services_VENDOR').val($(this).parent('td').find('#item_VENDOR').val());
+                $('#edit_ent_services_IMPLEMENT_STATUS').val($(this).parent('td').find('#item_IMPLEMENT_STATUS').val());
+                $('#edit_ent_services_COMMENTS').val($(this).parent('td').find('#item_COMMENTS').val());
+            });
+        });
+    </script>
+}

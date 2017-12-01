@@ -1,0 +1,32 @@
+﻿@model EECIP.Models.vmAdminSearch
+@{
+    ViewBag.Title = "Search Configuration";
+    ViewBag.SubTitle = "Configure the Search Service.";
+}
+
+
+<div class="row">
+    <div class="col-sm-12">
+
+        @using (Html.BeginForm("SearchAdminDeleteIndex", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style= "display: inline; padding-right:10px" }))
+        {
+            <button type="submit" name="submitButton" value="Delete" class="btn btn-danger">Delete Search Index</button>
+        }
+
+        @using (Html.BeginForm("SearchAdminCreateIndex", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
+        {
+            <button type="submit" name="submitButton" value="Create" class="btn btn-primary">Create Search Index</button>
+        }
+
+        @using (Html.BeginForm("SearchAdminPopulateIndex", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
+        {
+            <button type="submit" name="submitButton" value="Populate" class="btn btn-primary">Populate Search Index</button>
+        }
+
+        @using (Html.BeginForm("SearchAdminQueryIndex", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
+        {
+            <button type="submit" name="submitButton" value="Query" class="btn btn-primary">Query Index</button>
+        }
+
+    </div>
+</div>

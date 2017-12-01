@@ -1,0 +1,155 @@
+﻿@model EECIP.Models.vmAccountUserProfile
+@{
+    ViewBag.Title = "User Profile";
+}
+
+@using (Html.BeginForm("UserProfile", "Account", FormMethod.Post, new { @class = "hbox stretch", enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.UserIDX)
+    @Html.HiddenFor(model => model.uListInd)
+
+    <div class="row">
+        <div class="col-md-6">
+            <section class="panel panel-default ">
+                <div class="panel-heading">
+                    <i class="fa-e clip-grid-4"></i> Basic Info
+                    <div class="panel-tools">
+                        <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                        </a>
+                        <a class="btn btn-xs btn-link panel-expand" href="#">
+                            <i class="fa-e clip-fullscreen"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>First Name</label>
+                                        @Html.TextBoxFor(model => model.FName, new { @class = "form-control", @placeholder = "" })
+                                        @Html.ValidationMessageFor(model => model.FName)
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Last Name</label>
+                                        @Html.TextBoxFor(model => model.LName, new { @class = "form-control", @placeholder = "" })
+                                        @Html.ValidationMessageFor(model => model.LName)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "" })
+                                        @Html.ValidationMessageFor(model => model.Email)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Primary Phone</label>
+                                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", data_format = "(ddd) ddd-dddd" })
+                                        @Html.ValidationMessageFor(model => model.Phone)
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Phone Ext</label>
+                                        @Html.TextBoxFor(model => model.PhoneExt, new { @class = "form-control", @placeholder = "" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Your Avatar (please use 100px x 100px)</label>
+                                @*@if (Model.GetImage != null)
+                                {
+                                    <img src="data:image;base64,@System.Convert.ToBase64String(Model.GetImage)" class="form-control" style="width:100px; height: 100px;" />
+                                }*@
+                                <input type="file" name="uploadImage" accept="image/*" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-md-6">
+            <section class="panel panel-default ">
+                <div class="panel-heading">
+                    <i class="fa-e clip-grid-4"></i> Professional Info
+                    <div class="panel-tools">
+                        <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                        </a>
+                        <a class="btn btn-xs btn-link panel-expand" href="#">
+                            <i class="fa-e clip-fullscreen"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Agency</label>
+                                @Html.DropDownListFor(model => model.OrgIDX, Model.ddl_Agencies, "-Please Select-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.FName)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                @Html.TextBoxFor(model => model.JobTitle, new { @class = "form-control", @placeholder = "" })
+                                @Html.ValidationMessageFor(model => model.JobTitle)
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="form-field-select-4">Expertise</label>
+                                @Html.ListBoxFor(model => model.SelectedExpertise, Model.AllExpertise, new { multiple = "multiple", @id = "form-field-select-4", @class="form-control search-select" })
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+    if (Model.uListInd == "a")
+    {
+        <a class="btn btn-default" href="@Url.Action("Users", "Admin")">Close</a>
+    }
+    else
+    {
+        <a class="btn btn-default" href="@Url.Action("Index", "Dashboard")">Close</a>
+        <a class=" btn btn-orange pull-right" href="@Url.Action("SetPermPassword" )">Change Password</a>
+    }
+    <button type="submit" class="btn btn-primary">Save</button>
+
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/select2")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //function to initiate Select2
+            $(".search-select").select2({
+                placeholder: "Select expertise",
+                allowClear: true
+            });
+        });
+    </script>
+}
+

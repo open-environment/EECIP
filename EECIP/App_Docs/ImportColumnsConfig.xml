@@ -1,0 +1,28 @@
+﻿<FieldConfig>
+  <Fields>
+    <!-- ENTERPRISE SERVICES -->
+
+    
+    <!-- PROJECT -->
+    <Field Level="P" FieldName="ORG_NAME" ReqInd="Y" Length="200" UniqueInd="Y" FKey="" DataType=""><Alias>Agency Name</Alias></Field>
+    <Field Level="P" FieldName="RECORD_SOURCE" ReqInd="Y" Length="50" UniqueInd="Y" FKey="" DataType=""><Alias>Record Source</Alias></Field>
+    <Field Level="P" FieldName="PROJ_NAME" ReqInd="Y" Length="150" UniqueInd="Y" FKey="" DataType=""><Alias>Project Name</Alias></Field>
+    <Field Level="P" FieldName="PROJ_DESC" ReqInd="N" Length="5000" UniqueInd="N" FKey="" DataType=""><Alias>Project Description</Alias></Field>
+    <Field Level="P" FieldName="MEDIA_TAG" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Media</Alias></Field>
+    <Field Level="P" FieldName="START_YEAR" ReqInd="N" Length="" UniqueInd="N" FKey="" DataType="int"><Alias>Start Year</Alias></Field>
+    <Field Level="P" FieldName="PROJ_STATUS" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Project Status</Alias></Field>
+    <Field Level="P" FieldName="DATE_LAST_UPDATE" ReqInd="N" Length="" UniqueInd="N" FKey="" DataType="int"><Alias>Year Last Updated</Alias></Field>
+    <Field Level="P" FieldName="PROJECT_URL" ReqInd="N" Length="200" UniqueInd="N" FKey="" DataType=""><Alias>Project URL</Alias></Field>
+    <Field Level="P" FieldName="MOBILE_IND" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Mobile Ind</Alias></Field>
+    <Field Level="P" FieldName="MOBILE_DESC" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Mobile Description</Alias></Field>
+    <Field Level="P" FieldName="ADV_MON_IND" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Adv Mon Ind</Alias></Field>
+    <Field Level="P" FieldName="ADV_MON_DESC" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Adv Mon Description</Alias></Field>
+    <Field Level="P" FieldName="BP_MODERN_IND" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>BP Improvement Ind</Alias></Field>
+    <Field Level="P" FieldName="BP_MODERN_DESC" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>BP Improvement Desc</Alias></Field>
+    <Field Level="P" FieldName="COTS" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>COTS</Alias></Field> 
+    <Field Level="P" FieldName="VENDOR" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Vendor</Alias></Field>
+    <Field Level="P" FieldName="PROGRAM_AREAS" ReqInd="N" Length="250" UniqueInd="N" FKey="" DataType=""><Alias>Program Areas</Alias></Field>
+    <Field Level="P" FieldName="FEATURES" ReqInd="N" Length="250" UniqueInd="N" FKey="" DataType=""><Alias>Features</Alias></Field>
+
+</Fields>
+</FieldConfig>

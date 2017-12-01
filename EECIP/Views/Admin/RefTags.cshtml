@@ -1,0 +1,64 @@
+﻿@model EECIP.Models.vmAdminRefTags
+@{
+    ViewBag.Title = "Tags";
+    ViewBag.SubTitle = "Edit the tags that are used site wide.";
+}
+
+<!-- render the main content -->
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-1 control-label" for="form-field-1">
+            Tag Category: 
+        </label>
+        <div class="col-sm-3">
+            @Html.DropDownListFor(model => model.sel_tag_cat, Model.ddl_tag_cats, "", new { @class = "form-control" })
+        </div>
+
+    </div>
+</form>
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th style="min-width: 70px;">Edit</th>
+                        <th>Tag Name</th>
+                        <th>Tag Category</th>
+                        <th>User Created</th>
+                    </tr>
+
+                    @foreach (var item in Model.tags)
+                    {
+                        <tr>
+                            <td>
+                                <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <div class="delete-section" style="display:inline">
+                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.TAG_IDX" data-delete-p="/Admin/RefTagsDelete"><b>Confirm Delete</b></div>
+                                </div>
+
+                                @Html.HiddenFor(modelItem => item.TAG_IDX)
+                                @Html.HiddenFor(modelItem => item.TAG_NAME)
+                                @Html.HiddenFor(modelItem => item.TAG_CAT_NAME)
+                                @Html.HiddenFor(modelItem => item.USER_CREATE_IND)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TAG_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TAG_CAT_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.USER_CREATE_IND)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+        <p>
+            <a id="add-it" href="#modal-form" data-toggle="modal" class="add-it btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+        </p>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+﻿@model EECIP.Models.vmAdminAgencies
+@{
+    ViewBag.Title = "Agencies";
+    ViewBag.SubTitle = "Manage the agencies to which people can belong.";
+}
+
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th>Edit</th>
+                        <th>Agency Name</th>
+                        <th>Agency Abbreviation</th>
+                        <th>State</th>
+                        <th>Region</th>
+                    </tr>
+
+                    @foreach (var item in Model.agencies)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("RefAgencyEdit","Admin", new { id=item.ORG_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ORG_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ORG_ABBR)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.STATE_CD)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EPA_REGION)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+        <p>
+            <a href="@Url.Action("RefAgencyEdit", "Admin")" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+        </p>
+
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="e-Enterprise Community Inventory Platform" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - EECIP</title>
+    <link rel="icon" type="image/png" sizes="96x96" href="@Url.Content("~/Content/Images/favicon-96x96.png")">
+    <link rel="icon" type="image/png" sizes="48x48" href="@Url.Content("~/Content/Images/favicon-48x48.png")">
+    <link rel="icon" type="image/png" sizes="32x32" href="@Url.Content("~/Content/Images/favicon-32x32.png")">
+    <link rel="icon" type="image/png" sizes="16x16" href="@Url.Content("~/Content/Images/favicon-16x16.png")">
+    <link rel="shortcut icon" href="@Url.Content("~/favicon.ico")">
+    @Styles.Render("~/Content/styles")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body class="login example1"  >
+    <div class="main-login col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+        <div class="logo">EECIP</div>
+        <div class="box-login" style="display: block;">
+            <section class="panel panel-default bg-white m-t-lg">
+                <header class="panel-heading text-center">
+                    <strong>@ViewBag.Title</strong>
+                </header>
+                @RenderBody()
+            </section>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/clip-main")
+    <script>
+        jQuery(document).ready(function () {
+            Main.init();
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

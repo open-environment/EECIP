@@ -1,0 +1,256 @@
+﻿@model EECIP.Models.vmDashboardProjectDetails
+@{
+    ViewBag.Title = "Project Details";
+}
+
+@using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @class = "" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.project.ORG_IDX)
+    @Html.HiddenFor(model => model.project.PROJECT_IDX)
+
+<div class="row">
+    <div class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Project Overview
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Project Name</label>
+                                        @Html.TextBoxFor(model => model.project.PROJ_NAME, new { @class = "form-control", @maxlength = "150" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Project Description</label>
+                                        @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "5" })
+                                        @Html.ValidationMessageFor(model => model.project.PROJ_DESC)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Media</label>
+                                        @Html.DropDownListFor(model => model.project.MEDIA_TAG, Model.ddl_Media, "", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.project.MEDIA_TAG)
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Program Area(s)</label>
+                                        @Html.ListBoxFor(model => model.SelectedProgramAreas, Model.AllProgramAreas, new { multiple = "multiple", @class = "form-control search-select" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Start Year</label>
+                                        @Html.TextBoxFor(model => model.project.START_YEAR, new { @class = "form-control", @maxlength = "4" })
+                                        @Html.ValidationMessageFor(model => model.project.START_YEAR)
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Year Most Recently Active</label>
+                                        @Html.TextBoxFor(model => model.project.DATE_LAST_UPDATE, new { @class = "form-control", @maxlength = "4" })
+                                        @Html.ValidationMessageFor(model => model.project.DATE_LAST_UPDATE)
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Current Status</label>
+                                        @Html.DropDownListFor(model => model.project.PROJ_STATUS, Model.ddl_Status, "", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.project.PROJ_STATUS)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Project Attributes
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Features</label>
+                                        @Html.ListBoxFor(model => model.SelectedFeatures, Model.AllFeatures, new { multiple = "multiple", @class = "form-control search-select", @style = "display: block;" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Commercial Off the Shelf (COTS)/In-House?</label>
+                                        @Html.DropDownListFor(model => model.project.COTS, Model.ddl_COTS, "", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.project.COTS)
+                                    </div>
+                                </div>
+                                <div id="cotsdesc" class="col-md-6" style="display: none;">
+                                    <div class="form-group">
+                                        <label>Vendor</label>
+                                        @Html.TextBoxFor(model => model.project.VENDOR, new { @class = "form-control", @maxlength = "100" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Was business process modernization a part of this project?</label>
+                                        @Html.DropDownListFor(model => model.project.BP_MODERN_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.project.BP_MODERN_IND)
+                                    </div>
+                                </div>
+                                <div id="bpdesc" class="col-md-6" style="display: none;">
+                                    <div class="form-group">
+                                        <label>Describe</label>
+                                        @Html.TextBoxFor(model => model.project.BP_MODERN_DESC, new { @class = "form-control", @maxlength = "100" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Is there a mobile component?</label>
+                                        @Html.DropDownListFor(model => model.project.MOBILE_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.project.MOBILE_IND)
+                                    </div>
+                                </div>
+                                <div id="mobiledesc" class="col-md-6" style="display: none;" >
+                                    <div class="form-group">
+                                        <label>Describe</label>
+                                        @Html.TextBoxFor(model => model.project.MOBILE_DESC, new { @class = "form-control", @maxlength = "100" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Does this involve advanced monitoring?</label>
+                                        @Html.DropDownListFor(model => model.project.ADV_MON_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.project.ADV_MON_IND)
+                                    </div>
+                                </div>
+                                <div id="advmondesc" class="col-md-6" style="display: none;">
+                                    <div class="form-group">
+                                        <label>Describe</label>
+                                        @Html.TextBoxFor(model => model.project.ADV_MON_DESC, new { @class = "form-control", @maxlength = "100" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Project URL</label>
+                                        @Html.TextBoxFor(model => model.project.PROJECT_URL, new { @class = "form-control", @maxlength = "200" })
+                                        @Html.ValidationMessageFor(model => model.project.PROJECT_URL)
+                                        <span class="help-block"><i class="clip-info"></i> Provide a link to the project's website</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+        <a href="@Url.Action("Projects", "Dashboard")" class="btn btn-default">Close</a>
+    </div>
+</div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            toggleDIV('#project_MOBILE_IND option:selected', '#mobiledesc');
+            toggleDIV('#project_ADV_MON_IND option:selected', '#advmondesc');
+            toggleDIV('#project_BP_MODERN_IND option:selected', '#bpdesc');
+            toggleCOTS();
+
+            //function to initiate Select2
+            $(".search-select").select2({
+                placeholder: "",
+                allowClear: true,
+                tags: true,
+                width: ''
+            });
+
+            //visible divs
+            $('#project_MOBILE_IND').change(function () {
+                toggleDIV('#project_MOBILE_IND option:selected', '#mobiledesc');
+            });
+
+            $('#project_ADV_MON_IND').change(function () {
+                toggleDIV('#project_ADV_MON_IND option:selected', '#advmondesc');
+            });
+
+            $('#project_BP_MODERN_IND').change(function () {
+                toggleDIV('#project_BP_MODERN_IND option:selected', '#bpdesc');
+            });
+
+            $('#project_COTS').change(function () {
+                toggleCOTS();
+            });
+
+            function toggleCOTS() {
+                if ($('#project_COTS option:selected').text() == 'COTS' || $('#project_COTS option:selected').text() == 'Modified COTS' || $('#project_COTS option:selected').text() == 'Custom Built by Vendor') {
+                    $('#cotsdesc').show();
+                }
+                else {
+                    $('#cotsdesc').hide();
+                }
+            }
+
+            function toggleDIV(a, b) {
+                if ($(a).text() == 'Yes: Major Component' || $(a).text() == 'Yes: Minor Component') {
+                    $(b).show();
+                }
+                else {
+                    $(b).hide();
+                }
+            }
+
+        });
+    </script>
+}

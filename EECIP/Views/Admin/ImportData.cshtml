@@ -1,0 +1,117 @@
+﻿@model EECIP.Models.vmAdminImportData
+@{
+    ViewBag.Title = "Import Data";
+    ViewBag.SubTitle = "Import project data or enterprise services.";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+@using (Html.BeginForm("ImportData", "Admin", FormMethod.Post, new { @class = "", enctype = "multipart/form-data", @id = "norepostform" }))
+{
+    @Html.AntiForgeryToken()
+
+        <section class="panel panel-default ">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Paste Data Below to Import
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.TextAreaFor(model => model.IMPORT_BLOCK, new { @class = "form-control", @placeholder = "(make sure to include column headers when pasting...)", @rows="10" })
+                            @Html.ValidationMessageFor(model => model.IMPORT_BLOCK)
+                        </div>
+                        <button type="submit" class="btn btn-primary">Import Data</button>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+            </div>
+        </section>
+}
+    </div>
+</div>
+@if (Model.projects != null)
+{
+<h3>Validation Summary</h3>
+    <span class="">Some records have import validation errors. Please fix and reimport the entire data set.</span>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" data-ride="datatables">
+                <tr>
+                    <th>Validation Message</th>
+                    <th>Agency</th>
+                    <th>Record Source</th>
+                    <th>Project Name</th>
+                    <th>Project Description</th>
+                    <th>Media</th>
+                    <th>Start Year</th>
+                    <th>Project Status</th>
+                    <th>Last Update</th>
+                    <th>URL</th>
+                    <th>Mobile</th>
+                    <th>Adv Mon</th>
+                    <th>BP Improve</th>
+                </tr>
+
+                @foreach (var item in Model.projects)
+                {
+                    <tr class="@(item.VALIDATE_CD ? "success":"danger")">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VALIDATE_MSG)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ORG_NAME)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.RECORD_SOURCE)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.PROJ_NAME)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.PROJ_DESC)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MEDIA_NAME)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.START_YEAR)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.PROJ_STATUS)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.DATE_LAST_UPDATE)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.PROJECT_URL)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.MOBILE_IND)
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.MOBILE_DESC)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.ADV_MON_IND)
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.ADV_MON_DESC)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.BP_MODERN_IND)
+                            @Html.DisplayFor(modelItem => item.T_OE_PROJECT.BP_MODERN_DESC)
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+}

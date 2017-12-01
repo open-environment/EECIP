@@ -1,0 +1,151 @@
+﻿@model EECIP.Models.vmAdminRefEntServices
+@{
+    ViewBag.Title = "Enterprise Services";
+    ViewBag.SubTitle = "Update the master list of agency enterprise service types.";
+
+}
+    <!-- render the main content -->
+    <div class="row">
+        <div class="col-sm-12">
+            <section class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <tr>
+                            <th style="min-width: 70px;">Edit</th>
+                            <th>Enterprise Service Name</th>
+                            <th>Service Description</th>
+                            <th>Examples</th>
+                            <th>Display Sequence</th>
+                        </tr>
+
+                        @foreach (var item in Model.ent_services)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <div class="delete-section" style="display:inline">
+                                        <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                        <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.ENT_PLATFORM_IDX" data-delete-p="/Admin/RefEntServicesDelete"><b>Confirm Delete</b></div>
+                                    </div>
+
+                                    @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
+                                    @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
+                                    @Html.HiddenFor(modelItem => item.ENT_PLATFORM_DESC)
+                                    @Html.HiddenFor(modelItem => item.ENT_PLATFORM_EXAMPLE)
+                                    @Html.HiddenFor(modelItem => item.SEQ_NO)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ENT_PLATFORM_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ENT_PLATFORM_DESC)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ENT_PLATFORM_EXAMPLE)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SEQ_NO)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </section>
+            <p>
+                <a id="add-it" href="#modal-form"  data-toggle="modal" class="add-it btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+            </p>
+        </div>
+    </div>
+
+
+
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("RefEntServices", "Admin", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.edit_ent_services.ENT_PLATFORM_IDX)
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-tital">Edit Enterprise Service</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Platform Name</label>
+                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_NAME, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.ENT_PLATFORM_NAME)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Platform Description</label>
+                                            @Html.TextAreaFor(model => model.edit_ent_services.ENT_PLATFORM_DESC, new { @class = "form-control", @rows="5" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.ENT_PLATFORM_DESC)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Example</label>
+                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_EXAMPLE, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.ENT_PLATFORM_EXAMPLE)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Sequence</label>
+                                            @Html.TextBoxFor(model => model.edit_ent_services.SEQ_NO, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.SEQ_NO)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- END MODAL FORM -->
+
+@section Scripts {
+@Scripts.Render("~/bundles/confirmdelete")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //create an event when button is clicked to display modal
+            $(".modal-it").click(function () {
+                $('#edit_ent_services_ENT_PLATFORM_IDX').val($(this).parent('td').find('#item_ENT_PLATFORM_IDX').val());
+                $('#edit_ent_services_ENT_PLATFORM_NAME').val($(this).parent('td').find('#item_ENT_PLATFORM_NAME').val());
+                $('#edit_ent_services_ENT_PLATFORM_DESC').val($(this).parent('td').find('#item_ENT_PLATFORM_DESC').val());
+                $('#edit_ent_services_ENT_PLATFORM_EXAMPLE').val($(this).parent('td').find('#item_ENT_PLATFORM_EXAMPLE').val());
+                $('#edit_ent_services_SEQ_NO').val($(this).parent('td').find('#item_SEQ_NO').val());
+            });
+
+            $(".add-it").click(function () {
+                $('#edit_ent_services_ENT_PLATFORM_IDX').val(-1);
+                $('#edit_ent_services_ENT_PLATFORM_NAME').val('');
+                $('#edit_ent_services_ENT_PLATFORM_DESC').val('');
+                $('#edit_ent_services_ENT_PLATFORM_EXAMPLE').val('');
+                $('#edit_ent_services_SEQ_NO').val('');
+            });
+        });
+    </script>
+}

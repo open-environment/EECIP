@@ -1,0 +1,42 @@
+﻿@model IEnumerable<EECIP.App_Logic.DataAccessLayer.T_OE_ROLES>
+@{
+    ViewBag.Title = "Roles";
+    ViewBag.SubTitle = "View all users that belong to an application role.";
+}
+
+
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th></th>
+                        <th>Role ID</th>
+                        <th>Role Name</th>
+                        <th>Role Desc</th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("RoleEdit","Admin", new { id=item.ROLE_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ROLE_IDX)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ROLE_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ROLE_DESC)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
