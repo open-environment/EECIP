@@ -4,45 +4,43 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="88843ed140a34e73b5b4bd5a921c00f0" Name="Diagram1">
-        <EntityTypeShape EntityType="EECIPModel.T_OE_ROLES" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_EMAIL_LOG" Width="1.5" PointX="7" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_LOG" Width="1.5" PointX="10" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_USER_ROLES" Width="1.5" PointX="2.625" PointY="0.625" IsExpanded="true" />
+      <Diagram DiagramId="88843ed140a34e73b5b4bd5a921c00f0" Name="Diagram1" ZoomLevel="55">
+        <EntityTypeShape EntityType="EECIPModel.T_OE_ROLES" Width="1.5" PointX="1" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_EMAIL_LOG" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_LOG" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_USER_ROLES" Width="1.5" PointX="3.25" PointY="8.75" IsExpanded="true" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__ROLE___1BFD2C07" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_APP_SETTINGS" Width="1.5" PointX="4.75" PointY="0.625" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Width="1.5" PointX="9.625" PointY="4.375" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Width="1.5" PointX="11.625" PointY="5.625" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_REGION" Width="1.5" PointX="6.875" PointY="5.75" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_STATE" Width="1.5" PointX="11.625" PointY="3.75" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_USERS" Width="1.5" PointX="1" PointY="3.5" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_APP_SETTINGS" Width="1.5" PointX="14.125" PointY="4" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Width="1.5" PointX="0.625" PointY="4.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_REGION" Width="1.5" PointX="0.625" PointY="0.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_STATE" Width="1.5" PointX="0.625" PointY="2.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_USERS" Width="1.5" PointX="6.25" PointY="5.75" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__USER___6477ECF3" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAG_CATEGORIES" Width="1.5" PointX="3.375" PointY="9" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAGS" Width="1.5" PointX="5.625" PointY="9" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAG_CATEGORIES" Width="1.5" PointX="14.5" PointY="8" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAGS" Width="1.5" PointX="11.625" PointY="5" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_USER_EXPERTISE" Width="1.5" PointX="7.875" PointY="8.5" />
-        <AssociationConnector Association="EECIPModel.FK__T_OE_USER__EXPER__6FE99F9F" />
-        <AssociationConnector Association="EECIPModel.FK__T_OE_USER__USER___6EF57B66" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_TAGS" Width="1.5" PointX="10.875" PointY="9.5" />
-        <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_T__03F0984C" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Width="1.5" PointX="13.875" PointY="4.125" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Width="1.5" PointX="6.5" PointY="0.75" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ENT_P__17036CC0" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION" Width="1.5" PointX="16.875" PointY="3.125" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION" Width="1.5" PointX="3.25" PointY="0.75" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F" />
-        <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__208CD6FA" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__282DF8C2" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_USER_NOTIFICATION" Width="1.5" PointX="3.375" PointY="3.75" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECT_TAGS" Width="1.5" PointX="21.375" PointY="6.75" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECTS" Width="1.5" PointX="19.125" PointY="4.375" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_USER_NOTIFICATION" Width="1.5" PointX="10.875" PointY="0.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECT_TAGS" Width="1.5" PointX="11.875" PointY="9.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECTS" Width="1.5" PointX="9.25" PointY="5" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__PROJE__73852659" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_USER_EXPERTISE" Width="1.5" PointX="1.125" PointY="10.5" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_USER__USER___1C873BEC" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_TAGS" Width="1.5" PointX="3.25" PointY="6.125" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

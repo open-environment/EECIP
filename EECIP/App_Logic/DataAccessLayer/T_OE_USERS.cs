@@ -45,11 +45,12 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<System.DateTime> CREATE_DT { get; set; }
         public Nullable<int> MODIFY_USERIDX { get; set; }
         public Nullable<System.DateTime> MODIFY_DT { get; set; }
+        public bool SYNC_IND { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_USER_ROLES> T_OE_USER_ROLES { get; set; }
+        public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_USER_EXPERTISE> T_OE_USER_EXPERTISE { get; set; }
-        public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
     }
 }

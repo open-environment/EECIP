@@ -17,11 +17,11 @@ namespace EECIP.App_Logic.DataAccessLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public T_OE_ORGANIZATION()
         {
-            this.T_OE_ORGANIZATION_TAGS = new HashSet<T_OE_ORGANIZATION_TAGS>();
             this.T_OE_ORGANIZATION_ENT_SVCS = new HashSet<T_OE_ORGANIZATION_ENT_SVCS>();
             this.T_OE_ORGANIZATION_EMAIL_RULE = new HashSet<T_OE_ORGANIZATION_EMAIL_RULE>();
             this.T_OE_USERS = new HashSet<T_OE_USERS>();
             this.T_OE_PROJECTS = new HashSet<T_OE_PROJECTS>();
+            this.T_OE_ORGANIZATION_TAGS = new HashSet<T_OE_ORGANIZATION_TAGS>();
         }
     
         public System.Guid ORG_IDX { get; set; }
@@ -41,8 +41,6 @@ namespace EECIP.App_Logic.DataAccessLayer
     
         public virtual T_OE_REF_REGION T_OE_REF_REGION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_OE_ORGANIZATION_TAGS> T_OE_ORGANIZATION_TAGS { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_ORGANIZATION_ENT_SVCS> T_OE_ORGANIZATION_ENT_SVCS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_ORGANIZATION_EMAIL_RULE> T_OE_ORGANIZATION_EMAIL_RULE { get; set; }
@@ -51,5 +49,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual ICollection<T_OE_USERS> T_OE_USERS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_PROJECTS> T_OE_PROJECTS { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_OE_ORGANIZATION_TAGS> T_OE_ORGANIZATION_TAGS { get; set; }
     }
 }

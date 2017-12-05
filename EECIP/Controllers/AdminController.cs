@@ -302,7 +302,9 @@ namespace EECIP.Controllers
                 err = ex.ToString();
             }
 
-            TempData["Error"] = err;
+            if (err.Length > 0)
+                TempData["Error"] = err;
+
             return RedirectToAction("SearchAdmin", "Admin");
         }
 
@@ -321,7 +323,9 @@ namespace EECIP.Controllers
                 err = ex.ToString();
             }
 
-            TempData["Error"] = err;
+            if (err.Length > 0)
+                TempData["Error"] = err;
+
             return RedirectToAction("SearchAdmin", "Admin");
         }
 
@@ -332,7 +336,36 @@ namespace EECIP.Controllers
             string err = "";
             try
             {
+                //***********PROJECTS **************************
+                //first reset all projects to unsynced
+                db_EECIP.ResetT_OE_PROJECTS_Unsynced();
+
+                //then send all unsynced projects to Azure
                 AzureSearch.PopulateSearchIndexProject(null);
+
+
+                //***********AGENCIES  **************************
+                //reset all agencies to unsynced
+                db_Ref.ResetT_OE_ORGANIZATION_Unsynced();
+
+                //then send all unsynced agencies to Azure
+                AzureSearch.PopulateSearchIndexOrganization(null);
+
+
+                //***********ENT SERVICES  **************************
+                db_EECIP.ResetT_OE_ORGANIZATION_ENT_SVCS_Unsynced();
+
+                //then send all unsynced agencies to Azure
+                AzureSearch.PopulateSearchIndexEntServices(null);
+
+
+                //***********PEOPLE  **************************
+                db_Accounts.ResetT_OE_USERS_Unsynced();
+
+                //then send all unsynced agencies to Azure
+                AzureSearch.PopulateSearchIndexUsers(null);
+
+
                 TempData["Success"] = "Search index populated.";
             }
             catch (Exception ex)
@@ -340,7 +373,8 @@ namespace EECIP.Controllers
                 err = ex.ToString();
             }
 
-            TempData["Error"] = err;
+            if (err.Length > 0)
+                TempData["Error"] = err;
             return RedirectToAction("SearchAdmin", "Admin");
         }
 
@@ -361,6 +395,29 @@ namespace EECIP.Controllers
 
             TempData["Error"] = err;
             return RedirectToAction("SearchAdmin", "Admin");
+        }
+
+
+        [HttpGet]
+        public ActionResult SearchAdminSuggest(string term, bool fuzzy = true)
+        {
+            // Call suggest query and return results
+            var response = AzureSearch.Suggest(term, fuzzy);
+            List<string> suggestions = new List<string>();
+            foreach (var result in response.Results)
+            {
+                suggestions.Add(result.Text);
+            }
+
+            // Get unique items
+            List<string> uniqueItems = suggestions.Distinct().ToList();
+
+            return new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = uniqueItems
+            };
+
         }
 
 

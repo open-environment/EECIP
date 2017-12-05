@@ -44,7 +44,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
         public static List<T_OE_USERS> GetT_OE_USERS()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -169,6 +168,63 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static bool ResetT_OE_USERS_Unsynced()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_USERS
+                               where a.SYNC_IND == true
+                               select a).ToList();
+
+                    xxx.ForEach(a => a.SYNC_IND = false);
+                    ctx.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
+        public static List<EECIP_Index> GetT_OE_USERS_ReadyToSync(int? UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_USERS
+                               join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                               where a.SYNC_IND == false
+                               && (UserIDX == null ? true : a.USER_IDX == UserIDX)
+                               select new EECIP_Index
+                               {
+                                   Agency = o.ORG_NAME,
+                                   KeyID = a.USER_IDX.ToString(),
+                                   DataType = "User",
+                                   RecordSource = "Agency supplied",
+                                   Name = a.FNAME + " " + a.LNAME,
+                                   Description = a.JOB_TITLE,
+                               }).ToList();
+
+                    foreach (EECIP_Index e in xxx)
+                        e.Tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(e.KeyID.ConvertOrDefault<int>()).ToArray();
+
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static int GetUserIDX()
         {
             try
@@ -181,6 +237,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 return 0;
             }
         }
+
 
         //*****************ROLES **********************************
         public static int CreateT_OE_ROLES(global::System.String rOLE_NAME, global::System.String rOLE_DESC, int? cREATE_USER = 0)

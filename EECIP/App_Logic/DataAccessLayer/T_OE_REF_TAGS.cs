@@ -17,8 +17,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public T_OE_REF_TAGS()
         {
-            this.T_OE_USER_EXPERTISE = new HashSet<T_OE_USER_EXPERTISE>();
-            this.T_OE_ORGANIZATION_TAGS = new HashSet<T_OE_ORGANIZATION_TAGS>();
             this.T_OE_PROJECTS = new HashSet<T_OE_PROJECTS>();
             this.T_OE_PROJECTS1 = new HashSet<T_OE_PROJECTS>();
             this.T_OE_PROJECTS2 = new HashSet<T_OE_PROJECTS>();
@@ -33,10 +31,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<System.DateTime> CREATE_DT { get; set; }
     
         public virtual T_OE_REF_TAG_CATEGORIES T_OE_REF_TAG_CATEGORIES { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_OE_USER_EXPERTISE> T_OE_USER_EXPERTISE { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_OE_ORGANIZATION_TAGS> T_OE_ORGANIZATION_TAGS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_PROJECTS> T_OE_PROJECTS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

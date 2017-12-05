@@ -74,7 +74,6 @@ namespace EECIP.Models
         public vmAccountUserProfile()
         {
             ddl_Agencies = ddlHelpers.get_ddl_organizations_all_active();
-            AllExpertise = ddlHelpers.get_ddl_tags_by_category("Expertise");
         }
     }
 

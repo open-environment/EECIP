@@ -25,6 +25,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<System.DateTime> CREATE_DT { get; set; }
         public Nullable<int> MODIFY_USERIDX { get; set; }
         public Nullable<System.DateTime> MODIFY_DT { get; set; }
+        public bool SYNC_IND { get; set; }
+        public string RECORD_SOURCE { get; set; }
     
         public virtual T_OE_REF_ENTERPRISE_PLATFORM T_OE_REF_ENTERPRISE_PLATFORM { get; set; }
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }

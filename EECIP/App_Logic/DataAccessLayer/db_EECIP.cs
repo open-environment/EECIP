@@ -72,7 +72,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     return (from a in ctx.T_OE_USER_EXPERTISE
                             where a.USER_IDX == id
-                            select a.EXPERTISE_TAG_IDX.ToString()).ToList();
+                            select a.EXPERTISE_TAG).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -82,8 +82,32 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<string> GetT_OE_USER_EXPERTISE_ByUserIDX_All(int id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xx1 = (from a in ctx.T_OE_USER_EXPERTISE
+                               where a.USER_IDX == id
+                               select a.EXPERTISE_TAG);
 
-        public static int InsertT_OE_USER_EXPERTISE(int uSER_IDX, int eXPERTISE_TAG_IDX, int? cREATE_USER = 0)
+                    var xx2 = (from a in ctx.T_OE_REF_TAGS
+                               where a.TAG_CAT_NAME == "Expertise"
+                               select a.TAG_NAME);
+
+                    return xx1.Union(xx2).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int InsertT_OE_USER_EXPERTISE(int uSER_IDX, string eXPERTISE_TAG, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -91,7 +115,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     T_OE_USER_EXPERTISE e = new T_OE_USER_EXPERTISE();
                     e.USER_IDX = uSER_IDX;
-                    e.EXPERTISE_TAG_IDX = eXPERTISE_TAG_IDX;
+                    e.EXPERTISE_TAG = eXPERTISE_TAG;
                     e.CREATE_DT = System.DateTime.Now;
                     e.CREATE_USERIDX = cREATE_USER;
 
@@ -107,7 +131,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
 
         public static int DeleteT_OE_USER_EXPERTISE(int UserIDX)
         {
@@ -138,6 +161,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     return (from a in ctx.T_OE_REF_ENTERPRISE_PLATFORM
                             join b in ctx.T_OE_ORGANIZATION_ENT_SVCS on a.ENT_PLATFORM_IDX equals b.ENT_PLATFORM_IDX
                                 into sr from x in sr.DefaultIfEmpty()  //left join
+                            where (x == null ? true : x.ORG_IDX == OrgID)
                             select new OrganizationEntServicesDisplayType
                             {
                                 ORG_ENT_SVCS_IDX = x.ORG_ENT_SVCS_IDX,
@@ -217,6 +241,60 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static bool ResetT_OE_ORGANIZATION_ENT_SVCS_Unsynced()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_ORGANIZATION_ENT_SVCS
+                               where a.SYNC_IND == true
+                               select a).ToList();
+
+                    xxx.ForEach(a => a.SYNC_IND = false);
+                    ctx.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
+        public static List<EECIP_Index> GetT_OE_ORGANIZATION_ENT_SVCS_ReadyToSync(int? EntSvcIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_ORGANIZATION_ENT_SVCS
+                               join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                               join e in ctx.T_OE_REF_ENTERPRISE_PLATFORM on a.ENT_PLATFORM_IDX equals e.ENT_PLATFORM_IDX
+                               where a.SYNC_IND == false
+                               && (EntSvcIDX == null ? true : a.ORG_ENT_SVCS_IDX == EntSvcIDX)
+                               select new EECIP_Index
+                               {
+                                   Agency = o.ORG_NAME,
+                                   KeyID = a.ORG_ENT_SVCS_IDX.ToString(),
+                                   DataType = "Enterprise Service",
+                                   RecordSource = a.RECORD_SOURCE,
+                                   Name = e.ENT_PLATFORM_NAME,
+                                   Description = a.PROJECT_NAME,
+                               }).ToList();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
 
         //***************************PROJECTS****************************************
         public static List<T_OE_PROJECTS> GetT_OE_PROJECTS_ByOrgIDX(Guid OrgID)
@@ -267,14 +345,13 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
         public static List<EECIP_Index> GetT_OE_PROJECTS_ReadyToSync(Guid? ProjectIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
-                    return (from a in ctx.T_OE_PROJECTS
+                    var xxx = (from a in ctx.T_OE_PROJECTS
                             join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
                             join b in ctx.T_OE_REF_TAGS on a.MEDIA_TAG equals b.TAG_IDX into sr from x in sr.DefaultIfEmpty()  //left join
                             where a.SYNC_IND == false
@@ -289,6 +366,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 Description = a.PROJ_DESC,
                                 Media = x.TAG_NAME
                             }).ToList();
+
+                    foreach (EECIP_Index e in xxx)
+                        e.Tags = GetT_OE_PROJECT_TAGS_ByTwoAttributeSelected(new Guid(e.KeyID), "Project Feature", "Program Area").ToArray();
+
+                    return xxx;
                 }
                 catch (Exception ex)
                 {
@@ -297,6 +379,30 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+        public static bool ResetT_OE_PROJECTS_Unsynced()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_PROJECTS
+                               where a.ACT_IND == true
+                               select a).ToList();
+
+                    xxx.ForEach(a => a.SYNC_IND = false);
+                    ctx.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
 
 
         public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, int? mEDIA_TAG, int? sTART_YEAR,
@@ -556,6 +662,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             catch (Exception ex) {  }
         }
 
+
         //***************************PROJECT TAGS****************************************
         public static List<string> GetT_OE_PROJECT_TAGS_ByAttributeSelected(Guid ProjectIDX, string aTTRIBUTE)
         {
@@ -576,6 +683,26 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<string> GetT_OE_PROJECT_TAGS_ByTwoAttributeSelected(Guid ProjectIDX, string aTTRIBUTE, string aTTRIBUTE2)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_PROJECT_TAGS
+                            where a.PROJECT_IDX == ProjectIDX
+                            && (a.PROJECT_ATTRIBUTE == aTTRIBUTE || a.PROJECT_ATTRIBUTE == aTTRIBUTE2)
+                            select a.PROJECT_TAG_NAME.ToString()).ToList();
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static List<string> GetT_OE_PROJECT_TAGS_ByAttributeAll(Guid ProjectIDX, string aTTRIBUTE)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -585,11 +712,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                     var xx1 = (from a in ctx.T_OE_PROJECT_TAGS
                             where a.PROJECT_IDX == ProjectIDX
                             && a.PROJECT_ATTRIBUTE == aTTRIBUTE
-                            select a.PROJECT_TAG_NAME.ToString());
+                            select a.PROJECT_TAG_NAME);
 
                     var xx2 = (from a in ctx.T_OE_REF_TAGS
                                where a.TAG_CAT_NAME == aTTRIBUTE
-                               select a.TAG_NAME.ToString());
+                               select a.TAG_NAME);
 
                     return xx1.Union(xx2).ToList();
 
@@ -601,7 +728,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
 
         public static int InsertT_OE_PROJECT_TAGS(Guid pROJECT_IDX, string aTTRIBUTE, string pROJECT_TAG_NAME, int? cREATE_USER = 0)
         {
@@ -628,7 +754,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
 
         public static int DeleteT_OE_PROJECT_TAGS(Guid ProjectID, string aTTRIBUTE)
         {

@@ -15,11 +15,10 @@ namespace EECIP.App_Logic.DataAccessLayer
     public partial class T_OE_USER_EXPERTISE
     {
         public int USER_IDX { get; set; }
-        public int EXPERTISE_TAG_IDX { get; set; }
+        public string EXPERTISE_TAG { get; set; }
         public Nullable<int> CREATE_USERIDX { get; set; }
         public Nullable<System.DateTime> CREATE_DT { get; set; }
     
-        public virtual T_OE_REF_TAGS T_OE_REF_TAGS { get; set; }
         public virtual T_OE_USERS T_OE_USERS { get; set; }
     }
 }

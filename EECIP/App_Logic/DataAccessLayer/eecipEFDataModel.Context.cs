@@ -37,12 +37,12 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<T_OE_USERS> T_OE_USERS { get; set; }
         public virtual DbSet<T_OE_REF_TAG_CATEGORIES> T_OE_REF_TAG_CATEGORIES { get; set; }
         public virtual DbSet<T_OE_REF_TAGS> T_OE_REF_TAGS { get; set; }
-        public virtual DbSet<T_OE_USER_EXPERTISE> T_OE_USER_EXPERTISE { get; set; }
-        public virtual DbSet<T_OE_ORGANIZATION_TAGS> T_OE_ORGANIZATION_TAGS { get; set; }
         public virtual DbSet<T_OE_ORGANIZATION_ENT_SVCS> T_OE_ORGANIZATION_ENT_SVCS { get; set; }
         public virtual DbSet<T_OE_ORGANIZATION> T_OE_ORGANIZATION { get; set; }
         public virtual DbSet<T_OE_USER_NOTIFICATION> T_OE_USER_NOTIFICATION { get; set; }
         public virtual DbSet<T_OE_PROJECT_TAGS> T_OE_PROJECT_TAGS { get; set; }
         public virtual DbSet<T_OE_PROJECTS> T_OE_PROJECTS { get; set; }
+        public virtual DbSet<T_OE_USER_EXPERTISE> T_OE_USER_EXPERTISE { get; set; }
+        public virtual DbSet<T_OE_ORGANIZATION_TAGS> T_OE_ORGANIZATION_TAGS { get; set; }
     }
 }

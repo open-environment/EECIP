@@ -239,6 +239,7 @@ namespace EECIP.Controllers
 
                 //expertise
                 model.SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(id ?? 0);
+                model.AllExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX_All(id ?? 0).Select(x => new SelectListItem { Value = x, Text = x });
             }
 
             return View(model);
@@ -264,7 +265,7 @@ namespace EECIP.Controllers
                     db_EECIP.DeleteT_OE_USER_EXPERTISE(model.UserIDX);
                     foreach (string expertise in model.SelectedExpertise ?? new List<string>())
                     {
-                        db_EECIP.InsertT_OE_USER_EXPERTISE(model.UserIDX, expertise.ConvertOrDefault<int>());
+                        db_EECIP.InsertT_OE_USER_EXPERTISE(model.UserIDX, expertise);
                     }
 
                     ////avatar handling
@@ -283,6 +284,9 @@ namespace EECIP.Controllers
                     //    }
                     //    db_Accounts.UpdateT_OE_USERS_Avatar(model.UserIDX, buffer);
                     //}
+
+                    //update azure search
+                    AzureSearch.PopulateSearchIndexUsers(model.UserIDX);
 
                     if (SuccID > 0)
                         TempData["Success"] = "Update successful.";

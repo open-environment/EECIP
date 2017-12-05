@@ -215,6 +215,63 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static bool ResetT_OE_ORGANIZATION_Unsynced()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_ORGANIZATION
+                               where a.ACT_IND == true
+                               && a.SYNC_IND == true
+                               select a).ToList();
+
+                    xxx.ForEach(a => a.SYNC_IND = false);
+                    ctx.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
+        public static List<EECIP_Index> GetT_OE_ORGANIZATION_ReadyToSync(Guid? OrgIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_ORGANIZATION
+                               where a.SYNC_IND == false
+                               && a.ACT_IND == true
+                               && (OrgIDX == null ? true : a.ORG_IDX == OrgIDX)
+                               select new EECIP_Index
+                               {
+                                   Agency = a.ORG_NAME,
+                                   KeyID = a.ORG_IDX.ToString(),
+                                   DataType = "Agency",
+                                   RecordSource = "EECIP Supplied",
+                                   Name = a.ORG_ABBR,
+                                   Description = a.ORG_NAME,
+                                   Media = ""
+                               }).ToList();
+
+                    foreach (EECIP_Index e in xxx)
+                        e.Tags = GetT_OE_ORGANIZATION_TAGS_ByOrg(new Guid(e.KeyID)).ToArray();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
         //***************** ORGANZIATION TAGS ******************************
         public static List<string> GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(Guid OrgIDX, string aTTRIBUTE)
@@ -226,7 +283,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     return (from a in ctx.T_OE_ORGANIZATION_TAGS
                             where a.ORG_IDX == OrgIDX
                             && a.ORG_ATTRIBUTE== aTTRIBUTE
-                            select a.ORG_TAG_IDX.ToString()).ToList();
+                            select a.ORG_TAG).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -236,7 +293,51 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static int InsertT_OE_ORGANIZATION_TAGS(Guid oRG_IDX, string aTTRIBUTE, int oRG_TAG_IDX, int? cREATE_USER = 0)
+        public static List<string> GetT_OE_ORGANIZATION_TAGS_ByOrg(Guid OrgIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_ORGANIZATION_TAGS
+                            where a.ORG_IDX == OrgIDX
+                            select a.ORG_TAG).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<string> GetT_OE_ORGANIZATION_TAGS_ByAttributeAll(Guid OrgIDX, string aTTRIBUTE)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xx1 = (from a in ctx.T_OE_ORGANIZATION_TAGS
+                               where a.ORG_IDX == OrgIDX
+                               && a.ORG_ATTRIBUTE == aTTRIBUTE
+                               select a.ORG_TAG);
+
+                    var xx2 = (from a in ctx.T_OE_REF_TAGS
+                               where a.TAG_CAT_NAME == aTTRIBUTE
+                               select a.TAG_NAME);
+
+                    return xx1.Union(xx2).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int InsertT_OE_ORGANIZATION_TAGS(Guid oRG_IDX, string aTTRIBUTE, string oRG_TAG, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -245,7 +346,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     T_OE_ORGANIZATION_TAGS e = new T_OE_ORGANIZATION_TAGS();
                     e.ORG_IDX = oRG_IDX;
                     e.ORG_ATTRIBUTE = aTTRIBUTE;
-                    e.ORG_TAG_IDX = oRG_TAG_IDX;
+                    e.ORG_TAG = oRG_TAG;
                     e.CREATE_DT = System.DateTime.Now;
                     e.CREATE_USERIDX = cREATE_USER;
 
@@ -448,6 +549,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+
 
 
         //******************REF_REGION*********************************

@@ -31,6 +31,7 @@ namespace EECIP.Controllers
         }
 
 
+
         // GET: Agency
         public ActionResult Agency()
         {
@@ -43,8 +44,10 @@ namespace EECIP.Controllers
                 model.users = db_Accounts.GetT_OE_USERSByAgency(u.ORG_IDX.ConvertOrDefault<Guid>());
                 //database
                 model.SelectedDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(u.ORG_IDX.ConvertOrDefault<Guid>(), "Database");
-                //database
+                model.AllDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByAttributeAll(u.ORG_IDX.ConvertOrDefault<Guid>(), "Database").Select(x => new SelectListItem { Value = x, Text = x });
+                //app framework
                 model.SelectedAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(u.ORG_IDX.ConvertOrDefault<Guid>(), "App Framework");
+                model.AllAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByAttributeAll(u.ORG_IDX.ConvertOrDefault<Guid>(), "App Framework").Select(x => new SelectListItem { Value = x, Text = x });
                 //ent services
                 model.org_ent_services = db_EECIP.GetT_OE_ORGANIZATION_ENTERPRISE_PLATFORM(u.ORG_IDX.ConvertOrDefault<Guid>());
 
@@ -67,14 +70,17 @@ namespace EECIP.Controllers
 
             //update database tags
             db_Ref.DeleteT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "Database");
-            foreach (string expertise in model.SelectedDatabase)
-                db_Ref.InsertT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "Database", expertise.ConvertOrDefault<int>());
+            foreach (string expertise in model.SelectedDatabase ?? new List<string>())
+                db_Ref.InsertT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "Database", expertise);
 
 
             //update app framework tags
             db_Ref.DeleteT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "App Framework");
-            foreach (string expertise in model.SelectedAppFramework)
-                db_Ref.InsertT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "App Framework", expertise.ConvertOrDefault<int>());
+            foreach (string expertise in model.SelectedAppFramework ?? new List<string>())
+                db_Ref.InsertT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "App Framework", expertise);
+
+            //now update the Azure search
+            AzureSearch.PopulateSearchIndexOrganization(SuccID);
 
 
             if (SuccID != null)
@@ -84,7 +90,6 @@ namespace EECIP.Controllers
 
             return RedirectToAction("Agency");
         }
-
 
         [HttpPost]
         public ActionResult AgencyEntServiceEdit(vmDashboardAgency model)
@@ -104,6 +109,7 @@ namespace EECIP.Controllers
         }
 
 
+
         // GET: Projects
         public ActionResult Projects()
         {
@@ -121,6 +127,7 @@ namespace EECIP.Controllers
             return RedirectToAction("AccessDenied", "Home");
 
         }
+
 
         // GET: ProjectDetails/1
         public ActionResult ProjectDetails(Guid? id)
@@ -173,20 +180,24 @@ namespace EECIP.Controllers
                 model.project.MOBILE_DESC, model.project.ADV_MON_IND, model.project.ADV_MON_DESC, model.project.BP_MODERN_IND,
                 model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, true, false, UserIDX);
 
-            //update program area tags
-            db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area");
-            foreach (string expertise in model.SelectedProgramAreas ?? new List<string>())
-                db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area", expertise);
-
-
-            //update feature tags
-            db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature");
-            foreach (string feature in model.SelectedFeatures ?? new List<string>())
-                db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature", feature);
-
-
             if (SuccID != null)
+            {
+                //update program area tags
+                db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area");
+                foreach (string expertise in model.SelectedProgramAreas ?? new List<string>())
+                    db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area", expertise);
+
+
+                //update feature tags
+                db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature");
+                foreach (string feature in model.SelectedFeatures ?? new List<string>())
+                    db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature", feature);
+
+                //now update the Azure search
+                AzureSearch.PopulateSearchIndexProject(SuccID);
+
                 TempData["Success"] = "Update successful.";
+            }
             else
                 TempData["Error"] = "Error updating data.";
 
@@ -204,6 +215,22 @@ namespace EECIP.Controllers
             return RedirectToAction("Projects", "Dashboard");
         }
 
+
+        // GET: ProjectDetails/1
+        public ActionResult ProjectCard(string strid)
+        {
+            Guid id = Guid.Parse(strid);
+            var model = new vmDashboardProjectCard();
+            model.project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
+            if (model.project != null)
+            {
+                model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
+                model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
+            }
+            return View(model);
+
+
+        }
 
     }
 }

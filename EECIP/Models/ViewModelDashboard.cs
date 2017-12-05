@@ -39,8 +39,6 @@ namespace EECIP.Models
             ddl_Regions = ddlHelpers.get_ddl_regions();
             ddl_Cloud = ddlHelpers.get_ddl_tags_by_category_stringy("Cloud");
             ddl_API = ddlHelpers.get_ddl_tags_by_category_stringy("API");
-            AllDatabase = ddlHelpers.get_ddl_tags_by_category("Database");
-            AllAppFramework = ddlHelpers.get_ddl_tags_by_category("App Framework");
         }
 
     }
@@ -48,25 +46,7 @@ namespace EECIP.Models
 
     public class vmDashboardProjects
     {
-        //public Guid ORG_IDX { get; set; }
         public List<T_OE_PROJECTS> projects { get; set; }
-        //public T_OE_PROJECTS edit_project { get; set; }
-        //public IEnumerable<SelectListItem> ddl_Media { get; set; }
-        //public IEnumerable<SelectListItem> ddl_Status { get; set; }
-        //public IEnumerable<SelectListItem> AllProgramAreas { get; set; }
-        //public List<string> SelectedProgramAreas { get; set; }
-        //public IEnumerable<SelectListItem> AllFeatures { get; set; }
-        //public List<string> SelectedFeatures { get; set; }
-
-
-        //initialize
-        //public vmDashboardProjects()
-        //{
-        //    ddl_Media = ddlHelpers.get_ddl_tags_by_category("Project Media");
-        //    ddl_Status = ddlHelpers.get_ddl_tags_by_category_stringy("Project Status");
-        //    AllProgramAreas = ddlHelpers.get_ddl_tags_by_category("Program Area");
-        //    AllFeatures = ddlHelpers.get_ddl_tags_by_category("Project Feature");
-        //}
     }
 
     public class vmDashboardProjectDetails {
@@ -87,6 +67,15 @@ namespace EECIP.Models
             ddl_UseAmount = ddlHelpers.get_ddl_tags_by_category("Use Amount");
             ddl_COTS = ddlHelpers.get_ddl_tags_by_category_stringy("COTS");
         }
+
+    }
+
+
+    public class vmDashboardProjectCard
+    {
+        public T_OE_PROJECTS project { get; set; }
+        public List<string> SelectedProgramAreas { get; set; }
+        public List<string> SelectedFeatures { get; set; }
 
     }
 }

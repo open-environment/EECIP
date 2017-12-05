@@ -1,6 +1,26 @@
-﻿@model EECIP.Models.vmDashboardProjectDetails
+﻿@model EECIP.Models.vmDashboardProjectCard
 @{
     ViewBag.Title = "Project Details";
 }
 
+
+Project Description (testing URL auto link creation):
+
+<br/>
+<div id="desc">
+    @Html.Raw(Model.project.PROJ_DESC)
+</div>
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/anchorme")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#desc').html(anchorme($('#desc').text(), { }));
+        });
+    </script>
+}
 

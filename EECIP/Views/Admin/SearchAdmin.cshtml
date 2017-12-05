@@ -20,13 +20,9 @@
 
         @using (Html.BeginForm("SearchAdminPopulateIndex", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
         {
-            <button type="submit" name="submitButton" value="Populate" class="btn btn-primary">Populate Search Index</button>
+            <button type="submit" name="submitButton" value="Populate" class="btn btn-primary">Repopulate Search Index</button>
         }
 
-        @using (Html.BeginForm("SearchAdminQueryIndex", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
-        {
-            <button type="submit" name="submitButton" value="Query" class="btn btn-primary">Query Index</button>
-        }
 
     </div>
 </div>

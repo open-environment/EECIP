@@ -278,6 +278,7 @@
       <DependentUpon>eecipEFDataModel.edmx</DependentUpon>
       <LastGenOutput>eecipEFDataModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Content\auto-complete.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -328,6 +329,10 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Scripts\anchorme.js" />
+    <Content Include="Scripts\anchorme.min.js" />
+    <Content Include="Scripts\auto-complete.js" />
+    <Content Include="Scripts\auto-complete.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\clip-font.eot" />

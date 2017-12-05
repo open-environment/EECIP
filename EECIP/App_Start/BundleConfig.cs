@@ -25,6 +25,8 @@ namespace EECIP
             bundles.Add(new ScriptBundle("~/bundles/confirmdelete").Include("~/Scripts/confirm_delete.js"));
             bundles.Add(new ScriptBundle("~/bundles/select2").Include("~/Scripts/select2.js"));
             bundles.Add(new ScriptBundle("~/bundles/toastr").Include("~/Scripts/toastr.js"));
+            bundles.Add(new ScriptBundle("~/bundles/autocomplete").Include("~/Scripts/auto-complete.js"));
+            bundles.Add(new ScriptBundle("~/bundles/anchorme").Include("~/Scripts/anchorme.js"));
 
             //****************** CSS ***********************************
             //****************** CSS ***********************************
@@ -36,6 +38,7 @@ namespace EECIP
                 "~/Content/main-responsive.css",
                 "~/Content/theme_dark.css",
                 "~/Content/css/select2.css",
+                "~/Content/auto-complete.css",
                 "~/Content/toastr.css",
                 "~/Content/site.css"));
         }
