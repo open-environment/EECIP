@@ -23,6 +23,8 @@
     <Field Level="P" FieldName="VENDOR" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Vendor</Alias></Field>
     <Field Level="P" FieldName="PROGRAM_AREAS" ReqInd="N" Length="250" UniqueInd="N" FKey="" DataType=""><Alias>Program Areas</Alias></Field>
     <Field Level="P" FieldName="FEATURES" ReqInd="N" Length="250" UniqueInd="N" FKey="" DataType=""><Alias>Features</Alias></Field>
+    <Field Level="P" FieldName="PROJECT_IDX" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>EECIP Project ID</Alias></Field>
+    <Field Level="P" FieldName="IMPORT_ID" ReqInd="N" Length="20" UniqueInd="N" FKey="" DataType=""><Alias>Import ID</Alias></Field>
 
 </Fields>
 </FieldConfig>

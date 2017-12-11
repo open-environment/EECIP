@@ -135,6 +135,12 @@ INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('COTS', 'Indicate if a project is developed inhouse or not', 'c91010', 0, GetDate());
 
 
+--****************REF_SYNONYMS  *****************************************************************************************
+INSERT into [T_OE_REF_SYNONYMS] (SYNONYM_TEXT, [CREATE_USERIDX], [CREATE_DT]) values ('water quality,wqx,storet',0,GetDate());
+INSERT into [T_OE_REF_SYNONYMS] (SYNONYM_TEXT, [CREATE_USERIDX], [CREATE_DT]) values ('attains,303d',0,GetDate());
+INSERT into [T_OE_REF_SYNONYMS] (SYNONYM_TEXT, [CREATE_USERIDX], [CREATE_DT]) values ('electronic reporting rule,cromerr',0,GetDate());
+INSERT into [T_OE_REF_SYNONYMS] (SYNONYM_TEXT, [CREATE_USERIDX], [CREATE_DT]) values ('frs,facility',0,GetDate());
+INSERT into [T_OE_REF_SYNONYMS] (SYNONYM_TEXT, [CREATE_USERIDX], [CREATE_DT]) values ('ust,underground storage tank',0,GetDate());
 
 
 --****************REF_TAGS  *****************************************************************************************

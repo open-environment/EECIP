@@ -280,7 +280,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Agency = o.ORG_NAME,
                                    KeyID = a.ORG_ENT_SVCS_IDX.ToString(),
                                    DataType = "Enterprise Service",
-                                   RecordSource = a.RECORD_SOURCE,
+                                   Record_Source = a.RECORD_SOURCE,
                                    Name = e.ENT_PLATFORM_NAME,
                                    Description = a.PROJECT_NAME,
                                }).ToList();
@@ -345,6 +345,29 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static T_OE_PROJECTS GetT_OE_PROJECTS_ByIMPORT_ID(string ImportID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(ImportID))
+                        return null;
+                    else
+                        return (from a in ctx.T_OE_PROJECTS
+                               where a.IMPORT_ID == ImportID
+                               select a).FirstOrDefault();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
         public static List<EECIP_Index> GetT_OE_PROJECTS_ReadyToSync(Guid? ProjectIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -361,7 +384,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 Agency = o.ORG_NAME,
                                 KeyID = a.PROJECT_IDX.ToString(),
                                 DataType = "Project",
-                                RecordSource = a.RECORD_SOURCE,
+                                Record_Source = a.RECORD_SOURCE,
                                 Name = a.PROJ_NAME,
                                 Description = a.PROJ_DESC,
                                 Media = x.TAG_NAME
@@ -408,7 +431,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, int? mEDIA_TAG, int? sTART_YEAR,
             string pROJ_STATUS, int? dATE_LAST_UPDATE, string rECORD_SOURCE, string pROJECT_URL, int? mOBILE_IND, string mOBILE_DESC, int? aDV_MON_IND, 
             string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
-            bool? updateSearch = false)
+            bool? updateSearch = false, string iMPORT_ID = null)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -455,6 +478,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (vENDOR != null) e.VENDOR = vENDOR;
                     e.ACT_IND = aCT_IND;
                     if (sYNC_IND != null) e.SYNC_IND = sYNC_IND ?? false;
+                    if (iMPORT_ID != null) e.IMPORT_ID = iMPORT_ID;
 
                     if (insInd)
                         ctx.T_OE_PROJECTS.Add(e);
@@ -505,11 +529,44 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
-                    //Boolean insInd = true;
                     ProjectImportType e = new ProjectImportType();
-                    e.T_OE_PROJECT.PROJECT_IDX = Guid.NewGuid();
-                    e.T_OE_PROJECT.CREATE_DT = System.DateTime.Now;
-                    e.T_OE_PROJECT.CREATE_USERIDX = UserIDX;
+
+                    //determine if new Project record or updating existing one
+                    Boolean insInd = true;
+
+                    //try to get existing project based on PROJECT_IDX
+                    Guid projIDX;
+                    string ProjIDXStr = Utils.GetValueOrDefault(colVals, "PROJECT_IDX");
+                    if (Guid.TryParse(ProjIDXStr, out projIDX))
+                    {
+                        T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(projIDX);
+                        if (p != null)
+                        {
+                            insInd = false;
+                            e.T_OE_PROJECT.PROJECT_IDX = p.PROJECT_IDX;
+                        }
+                    }
+
+                    //then try to get based on supplied IMPORT_ID 
+                    T_OE_PROJECTS p2 = db_EECIP.GetT_OE_PROJECTS_ByIMPORT_ID(Utils.GetValueOrDefault(colVals, "IMPORT_ID"));
+                    if (p2 != null)
+                    {
+                        insInd = false;
+                        e.T_OE_PROJECT.PROJECT_IDX = p2.PROJECT_IDX;
+                    }
+
+                    if (insInd)
+                    {
+                        e.T_OE_PROJECT.PROJECT_IDX = Guid.NewGuid();
+                        e.T_OE_PROJECT.CREATE_DT = System.DateTime.Now;
+                        e.T_OE_PROJECT.CREATE_USERIDX = UserIDX;
+                    }
+                    else
+                    {
+                        e.T_OE_PROJECT.MODIFY_DT = System.DateTime.Now;
+                        e.T_OE_PROJECT.MODIFY_USERIDX = UserIDX;
+                    }
+
 
                     //get import config rules
                     List<ConfigInfoType> _allRules = Utils.GetAllColumnInfo("P");
@@ -537,15 +594,17 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     //MEDIA
                     e.MEDIA_NAME = Utils.GetValueOrDefault(colVals, "MEDIA_TAG");
-                    T_OE_REF_TAGS media1 = db_Ref.GetT_OE_REF_TAGS_ByCategoryAndName("Project Media", e.MEDIA_NAME);
-                    if (media1 != null)
-                        e.T_OE_PROJECT.MEDIA_TAG = media1.TAG_IDX;
-                    else
+                    if (!string.IsNullOrEmpty(e.MEDIA_NAME))
                     {
-                        e.VALIDATE_CD = false;
-                        e.VALIDATE_MSG += "Invalid Media name.";
+                        T_OE_REF_TAGS media1 = db_Ref.GetT_OE_REF_TAGS_ByCategoryAndName("Project Media", e.MEDIA_NAME);
+                        if (media1 != null)
+                            e.T_OE_PROJECT.MEDIA_TAG = media1.TAG_IDX;
+                        else
+                        {
+                            e.VALIDATE_CD = false;
+                            e.VALIDATE_MSG += "Invalid Media name.";
+                        }
                     }
-
 
                     //MOBILE
                     e.MOBILE_IND_NAME = Utils.GetValueOrDefault(colVals, "MOBILE_IND");

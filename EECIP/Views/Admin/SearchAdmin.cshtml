@@ -18,6 +18,11 @@
             <button type="submit" name="submitButton" value="Create" class="btn btn-primary">Create Search Index</button>
         }
 
+        @using (Html.BeginForm("SearchAdminUploadSynonyms", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
+        {
+            <button type="submit" name="submitButton" value="Populate" class="btn btn-primary">Upload Synonym Rules</button>
+        }
+
         @using (Html.BeginForm("SearchAdminPopulateIndex", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
         {
             <button type="submit" name="submitButton" value="Populate" class="btn btn-primary">Repopulate Search Index</button>
@@ -26,3 +31,112 @@
 
     </div>
 </div>
+<h3>Synonyms</h3>
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th style="min-width: 70px;">Edit</th>
+                        <th>Synonyms (Comma separated)</th>
+                        <th>Created</th>
+                        <th>Modified</th>
+                    </tr>
+
+                    @foreach (var item in Model.synonyms)
+                    {
+                        <tr>
+                            <td>
+                                <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <div class="delete-section" style="display:inline">
+                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.SYNONYM_IDX" data-delete-p="/Admin/SearchAdminSynonymDelete"><b>Confirm Delete</b></div>
+                                </div>
+
+                                @Html.HiddenFor(modelItem => item.SYNONYM_IDX)
+                                @Html.HiddenFor(modelItem => item.SYNONYM_TEXT)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SYNONYM_TEXT)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CREATE_DT)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MODIFY_DT)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+        <p>
+            <a id="add-it" href="#modal-form" data-toggle="modal" class="add-it btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+        </p>
+    </div>
+</div>
+
+
+
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("SearchAdminSynonymEdit", "Admin", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.edit_synonym_idx)
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-tital">Add Synonym Rule</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Synonym (comma separate values)</label>
+                                            @Html.TextBoxFor(model => model.edit_synonym_text, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.edit_synonym_text)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- END MODAL FORM -->
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/confirmdelete")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //create an event when button is clicked to display modal
+            $(".modal-it").click(function () {
+                $('#edit_synonym_idx').val($(this).parent('td').find('#item_SYNONYM_IDX').val());
+                $('#edit_synonym_text').val($(this).parent('td').find('#item_SYNONYM_TEXT').val());
+            });
+
+            $(".add-it").click(function () {
+                $('#edit_synonym_idx').val(null);
+                $('#edit_synonym_text').val('');
+            });
+        });
+    </script>
+}

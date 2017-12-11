@@ -104,24 +104,23 @@ else
         <div class="main-content">
             <div class="container" style="min-height: 760px;">
 
+@if (!(ViewBag.HideTitle ?? false))
+{
                 <div class="row">
                     <div class="col-sm-12">
+                        @if (ViewBag.ShowBack == true)
+                        {
+                            <button type="button" class="btn btn-default pull-right" style="margin-top:20px;" onclick="history.go(-1);">Back</button>
+                        }
                         <!-- start: PAGE TITLE & BREADCRUMB -->
-                        @*<ol class="breadcrumb">
-                            <li>
-                                <i class="clip-home"></i>
-                                <a href="@Url.Action("Index","Home")">Home</a>
-                            </li>
-                            <li class="active">
-                                @ViewBag.Title
-                            </li>
-                        </ol>*@
                         <div class="page-header">
                             <h1>@ViewBag.Title <small>@ViewBag.SubTitle</small></h1>
                         </div>
                         <!-- end: PAGE TITLE & BREADCRUMB -->
                     </div>
+
                 </div>
+}
 
                 @RenderBody()
             </div>
@@ -134,11 +133,20 @@ else
                 <img src="~/Content/Images/footer-logo.png" />
             </a>
             <a href="http://www.exchangenetwork.net/">
-                <img src="~/Content/Images/footer-logo2-bw.png" />
+                <img src="~/Content/Images/footer-logo2-bw.png"/>
             </a>
         </div>
         <div class="footer-items">
-            <span class="go-top"><i class="clip-chevron-up"></i></span>
+            <span class="go-top" style="margin-left:20px;"><i class="clip-chevron-up"></i></span>
+        </div>
+        <div class=" footer-items footer-right">
+            <a href="">Terms & Conditions </a>
+        </div>
+        <div class=" footer-items footer-right">
+            <a href="">Contact</a> |
+        </div>
+        <div class="footer-items footer-right">
+            <a href="">About</a> |
         </div>
     </div>
     <!-- end: FOOTER -->

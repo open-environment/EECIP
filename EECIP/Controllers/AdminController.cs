@@ -269,14 +269,51 @@ namespace EECIP.Controllers
 
         //*************************************** REF TAGS **********************************************************
         // GET: /Admin/RefTags
-        public ActionResult RefTags(string TagCat)
+        public ActionResult RefTags(string selTag)
         {
             var model = new vmAdminRefTags
             {
-                tags = db_Ref.GetT_OE_REF_TAGS_ByCategory(TagCat)
+                tags = db_Ref.GetT_OE_REF_TAGS_ByCategory(selTag),
             };
+            if (!string.IsNullOrEmpty(selTag))
+                model.sel_tag_cat = selTag;
+
             return View(model);
         }
+
+
+        // POST: /Admin/RefTagEdit
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult RefTagEdit(vmAdminRefTags model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            int SuccID = db_Ref.InsertUpdatetT_OE_REF_TAGS(model.edit_tag_idx, model.edit_tag, model.sel_tag_cat, UserIDX);
+
+            if (SuccID > 0)
+                TempData["Success"] = "Update successful.";
+            else
+                TempData["Error"] = "Error updating data.";
+
+            //return View(model);
+            return RedirectToAction("RefTags", new { selTag = model.sel_tag_cat });
+
+        }
+
+
+
+        // POST: /Admin/RefTagsDelete
+        [HttpPost]
+        public ActionResult RefTagsDelete(int id)
+        {
+            int SuccID = db_Ref.DeleteT_OE_REF_TAGS(id);
+            if (SuccID == 0)
+                TempData["Error"] = "Unable to delete record.";
+
+            return RedirectToAction("RefTags", "Admin");
+        }
+
+
 
 
         //*************************************** SEARCH ADMIN **********************************************************
@@ -285,7 +322,10 @@ namespace EECIP.Controllers
         {
             var model = new vmAdminSearch
             {
+                synonyms = db_Ref.GetT_OE_REF_SYNONYMS()
             };
+
+
             return View(model);
         }
 
@@ -380,13 +420,16 @@ namespace EECIP.Controllers
 
 
         [HttpPost]
-        public ActionResult SearchAdminQueryIndex()
+        public ActionResult SearchAdminUploadSynonyms()
         {
             string err = "";
             try
             {
-                AzureSearch.QuerySearchIndex("wef");
-                TempData["Success"] = "Search index populated.";
+                AzureSearch.UploadSynonyms();
+
+                AzureSearch.EnableSynonyms();
+
+                TempData["Success"] = "Synonyms uploaded and enabled.";
             }
             catch (Exception ex)
             {
@@ -419,6 +462,47 @@ namespace EECIP.Controllers
             };
 
         }
+
+
+        // POST: /Admin/SearchAdminSynonymDelete
+        [HttpPost]
+        public ActionResult SearchAdminSynonymDelete(int id)
+        {
+            int SuccID = db_Ref.DeleteT_OE_REF_SYNONYMS(id);
+            if (SuccID == 0)
+                TempData["Error"] = "Unable to delete record.";
+            else
+            {
+                AzureSearch.UploadSynonyms();
+                AzureSearch.EnableSynonyms();
+            }
+            return RedirectToAction("SearchAdmin", "Admin");
+        }
+
+
+        // POST: /Admin/SearchAdminSynonymEdit
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult SearchAdminSynonymEdit(vmAdminSearch model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            int SuccID = db_Ref.InsertUpdatetT_OE_REF_SYNONYMS(model.edit_synonym_idx, model.edit_synonym_text, UserIDX);
+
+            if (SuccID > 0)
+            {
+                AzureSearch.UploadSynonyms();
+                AzureSearch.EnableSynonyms();
+                TempData["Success"] = "Update successful.";
+
+            }
+            else
+                TempData["Error"] = "Error updating data.";
+
+            //return View(model);
+            return RedirectToAction("SearchAdmin");
+
+        }
+
 
 
         // ***************************************** IMPORT DATA *************************************************************
@@ -499,17 +583,22 @@ namespace EECIP.Controllers
                     T_OE_PROJECTS x = ps.T_OE_PROJECT;
                     Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, x.ORG_IDX, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS, 
                         x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
-                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, true, false, UserIDX);
+                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, true, false, UserIDX, null, x.IMPORT_ID);
 
-                    //import tags
-                    foreach (string f in ps.FEATURES.Split('|')) {
-                        db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Project Feature", f, UserIDX);
+                    //import features
+                    if (ps.FEATURES != null)
+                    {
+                        foreach (string f in ps.FEATURES.Split('|'))
+                            if (f.Length > 0)
+                                db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Project Feature", f, UserIDX);
                     }
 
-                    //import tags
-                    foreach (string f in ps.PROGRAM_AREAS.Split('|'))
+                    //import program areas
+                    if (ps.PROGRAM_AREAS != null)
                     {
-                        db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Program Area", f, UserIDX);
+                        foreach (string f in ps.PROGRAM_AREAS.Split('|'))
+                            if (f.Length > 0)
+                                db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Program Area", f, UserIDX);
                     }
                 }
 

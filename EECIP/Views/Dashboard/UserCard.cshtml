@@ -1,0 +1,33 @@
+﻿
+@model EECIP.Models.vmDashboardUserCard
+@{
+    ViewBag.Title = Model.User.FNAME + " " + Model.User.LNAME;
+    ViewBag.ShowBack = true;
+}
+
+<div class="row">
+    <div class="col-sm-3">
+        Image
+    </div>
+    <div class="col-sm-6">
+        Member of the 
+        <div class="row">
+            Expertise:
+        </div>
+        <div class="row">
+            @foreach (var item in Model.SelectedExpertise)
+            {
+                <span class="select2-selection__choice">@Html.DisplayFor(modelItem => item)</span>
+            }
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <h4>Badges</h4>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <h4>Latest Activity</h4>
+    </div>
+</div>

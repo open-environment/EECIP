@@ -3,15 +3,17 @@
 {
     <div class="errorHandler alert alert-danger">
         <button data-dismiss="alert" class="close">×</button>
-        <i class="fa fa-info-circle"></i> @TempData["Error"]
+        <i class="fa fa-info-circle"></i> @TempData["Error"] 
     </div>
 }
 
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success ">
-        <button data-dismiss="alert" class="close">×</button>
+        <button data-dismiss="alert" class="close">x×</button>
         <i class="fa fa-check-circle"></i> @TempData["Success"]
     </div>
 }
+
+
 <!-- END: VALIDATION SUMMARY -->

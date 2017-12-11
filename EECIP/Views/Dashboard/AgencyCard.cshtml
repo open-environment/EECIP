@@ -1,0 +1,171 @@
+﻿
+@model EECIP.Models.vmDashboardAgencyCard
+@{
+    ViewBag.Title = Model.agency.ORG_NAME;
+    ViewBag.ShowBack = true;
+}
+
+<div class="row">
+    <div class="col-sm-3">
+        <div class="user-left">
+            <div class="center" style="padding-bottom:20px">
+                <div class="user-image">
+                    <img src="@Url.Content(String.Format("~/Content/Images/Agencies/{0}.png", Model.agency.ORG_ABBR))" alt="logo" width="200px" />
+                </div>
+                <h4>@Html.Raw(Model.agency.ORG_ABBR)</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="well">
+            <div class="row">
+                State: @Html.Raw(Model.agency.STATE_CD)
+            </div>
+            <div class="row">
+                EPA Region: @Html.Raw(Model.agency.EPA_REGION)
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <h3>Tech Details</h3>
+    </div>
+</div>
+
+<h3>Agency Members</h3>
+<div class="row">
+</div>
+
+<h3>Enterprise Services</h3>
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Enterprise Services
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <tr>
+                            <th>Enterprise Service</th>
+                            <th>Project Name</th>
+                            <th>Vendor</th>
+                            <th>Current Implementation Status</th>
+                            <th>Comments</th>
+                        </tr>
+
+                        @foreach (var item in Model.org_ent_services)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ENT_PLATFORM_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJECT_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VENDOR)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IMPLEMENT_STATUS)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.COMMENTS)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<h3>Projects</h3>
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa-e clip-grid-4"></i> Projects
+                <div class="panel-tools">
+                    <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                    </a>
+                    <a class="btn btn-xs btn-link panel-expand" href="#">
+                        <i class="fa-e clip-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Description</th>
+                            <th>Media</th>
+                            <th>Start Year</th>
+                            <th>Status</th>
+                            <th>Record Source</th>
+                            <th>Program Area</th>
+                            <th>Features</th>
+                            <th>More Info</th>
+                        </tr>
+
+                        @foreach (var item in Model.projects)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_DESC)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.T_OE_REF_TAGS.TAG_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.START_YEAR)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_STATUS)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RECORD_SOURCE)
+                                </td>
+                                <td>
+                                    @foreach (var subitem in item.T_OE_PROJECT_TAGS)
+                                    {
+                                        if (subitem.PROJECT_ATTRIBUTE == "Program Area")
+                                        {
+                                            <span class="select2-selection__choice">@Html.DisplayFor(modelItem => subitem.PROJECT_TAG_NAME)</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @foreach (var subitem in item.T_OE_PROJECT_TAGS)
+                                    {
+                                        if (subitem.PROJECT_ATTRIBUTE == "Project Feature")
+                                        {
+                                            <span class="select2-selection__choice">@Html.DisplayFor(modelItem => subitem.PROJECT_TAG_NAME)</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.PROJECT_URL != null && item.PROJECT_URL.Length > 5)
+                                    {
+                                        <a href="@Html.DisplayFor(modelItem => item.PROJECT_URL)" target="_blank">Project URL</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using EECIP.App_Logic.BusinessLogicLayer;
 using EECIP.App_Logic.DataAccessLayer;
 using EECIP.Models;
-using System.Web.Security;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
-using EECIP.App_Logic.BusinessLogicLayer;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Security;
 
 namespace EECIP.Controllers
 {
@@ -234,7 +237,8 @@ namespace EECIP.Controllers
                 model.PhoneExt = u.PHONE_EXT;
                 model.OrgIDX = u.ORG_IDX;
                 model.JobTitle = u.JOB_TITLE;
-                model.GetImage = u.USER_AVATAR;
+                //model.GetImage = u.USER_AVATAR;
+                model.HasAvatar = (u.USER_AVATAR != null);
                 model.uListInd = a;
 
                 //expertise
@@ -243,6 +247,45 @@ namespace EECIP.Controllers
             }
 
             return View(model);
+        }
+
+
+        public ActionResult ImageUpload(vmAccountUserProfile model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            var file = model.ImageFile;
+            if (file != null)
+            {
+                // ******************** VALIDATION START ********************************
+                //File too big check
+                if (file.ContentLength > 10240)
+                {
+                    TempData["Error"] = "File cannot exceed 10MB";
+                    return RedirectToAction("UserProfile", new { a = model.uListInd });
+                }
+
+                //invalid file extension check
+                var fileExtension = Path.GetExtension(file.FileName);
+                List<string> allowedExtensions = new List<string> { ".jpg", ".jpeg", ".png", ".bmp" };
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    TempData["Error"] = "Invalid file type";
+                    return RedirectToAction("UserProfile", new { a = model.uListInd });
+                }
+                // ******************** VALIDATION END ********************************
+
+
+                // Convert to Png
+                var outputStream = file.InputStream.ConvertImage(ImageFormat.Png);
+
+                //save to db
+                db_Accounts.UpdateT_OE_USERS_Avatar(UserIDX, Utils.ConvertGenericStreamToByteArray(outputStream));
+
+                //save to file system
+                file.SaveAs(Server.MapPath("/Content/Images/Users/" + UserIDX.ToString() + ".png"));
+            }
+            return RedirectToAction("UserProfile", new { a = model.uListInd });
         }
 
 
@@ -269,21 +312,36 @@ namespace EECIP.Controllers
                     }
 
                     ////avatar handling
-                    //if (model.UploadImage != null)
-                    //{
-                    //    byte[] buffer;
-                    //    using (Stream inputStream = model.UploadImage.InputStream)
-                    //    {
-                    //        MemoryStream memoryStream = inputStream as MemoryStream;
-                    //        if (memoryStream == null)
-                    //        {
-                    //            memoryStream = new MemoryStream();
-                    //            inputStream.CopyTo(memoryStream);
-                    //        }
-                    //        buffer = memoryStream.ToArray();
-                    //    }
-                    //    db_Accounts.UpdateT_OE_USERS_Avatar(model.UserIDX, buffer);
-                    //}
+                    if (model.imageBrowes != null)
+                    {
+                        // ******************** VALIDATION START ********************************
+                        //File too big check
+                        if (model.imageBrowes.ContentLength > 10485760)
+                        {
+                            TempData["Error"] = "File cannot exceed 10MB";
+                            return RedirectToAction("UserProfile", new { a = model.uListInd });
+                        }
+
+                        //invalid file extension check
+                        var fileExtension = Path.GetExtension(model.imageBrowes.FileName);
+                        List<string> allowedExtensions = new List<string> { ".jpg", ".jpeg", ".png", ".bmp" };
+                        if (!allowedExtensions.Contains(fileExtension))
+                        {
+                            TempData["Error"] = "Invalid file type";
+                            return RedirectToAction("UserProfile", new { a = model.uListInd });
+                        }
+                        // ******************** VALIDATION END ********************************
+
+                        // Convert to Png
+                        var outputStream = model.imageBrowes.InputStream.ConvertImage(ImageFormat.Png);
+
+                        //save to db
+                        db_Accounts.UpdateT_OE_USERS_Avatar(model.UserIDX, Utils.ConvertGenericStreamToByteArray(outputStream));
+
+                        //save to file system
+                        model.imageBrowes.SaveAs(Server.MapPath("/Content/Images/Users/" + model.UserIDX.ToString() + ".png"));
+
+                    }
 
                     //update azure search
                     AzureSearch.PopulateSearchIndexUsers(model.UserIDX);

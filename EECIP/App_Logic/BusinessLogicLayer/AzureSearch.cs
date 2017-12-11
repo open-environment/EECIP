@@ -6,13 +6,14 @@ using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using EECIP.App_Logic.DataAccessLayer;
 using Newtonsoft.Json;
+using Microsoft.Rest.Azure;
 
 namespace EECIP.App_Logic.BusinessLogicLayer
 {
     // The SerializePropertyNamesAsCamelCase attribute is defined in the Azure Search .NET SDK.
     // It ensures that Pascal-case property names in the model class are mapped to camel-case
     // field names in the index.
-    [SerializePropertyNamesAsCamelCase]
+   // [SerializePropertyNamesAsCamelCase]
     public partial class EECIP_Index
     {
         [System.ComponentModel.DataAnnotations.Key]
@@ -23,9 +24,9 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         public string DataType { get; set; }
 
         [IsFilterable, IsFacetable]
-        public string RecordSource { get; set; }
+        public string Record_Source { get; set; }
 
-        [IsSearchable, IsFacetable]
+        [IsSearchable, IsFilterable, IsFacetable]
         public string Agency { get; set; }
 
         [IsSearchable]
@@ -56,6 +57,9 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
                 if (serviceClient.Indexes.Exists("eecip"))
                     serviceClient.Indexes.Delete("eecip");
+
+                if (serviceClient.SynonymMaps.Exists(""))
+                    serviceClient.SynonymMaps.Delete("");
             }
             catch (Exception ex)
             {
@@ -73,8 +77,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //defining the suggester
                 Suggester sg = new Suggester();
                 sg.Name = "eecip_suggest";
-                sg.SearchMode = SuggesterSearchMode.AnalyzingInfixMatching;
-                sg.SourceFields = new List<string>() { "name" };
+                //sg.SearchMode = SuggesterSearchMode.AnalyzingInfixMatching;
+                sg.SourceFields = new List<string>() { "Name" };
 
 
                 var definition = new Index()
@@ -91,7 +95,85 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 throw ex;
             }
         }
-    
+
+
+        public static void UploadSynonyms()
+        {
+            try
+            {
+                //connect to Azure Search
+                SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+                //grabbing synonyms
+                string synstr = "";
+                List<T_OE_REF_SYNONYMS> synlist = db_Ref.GetT_OE_REF_SYNONYMS();
+                foreach (T_OE_REF_SYNONYMS syn in synlist)
+                    synstr += syn.SYNONYM_TEXT + "\n";
+
+                synstr = synstr.TrimEnd('\n');
+
+                //adding synonyms
+                var synonymMap = new SynonymMap()
+                {
+                    Name = "desc-synonymmap",
+                    Format = "solr",
+                    Synonyms = synstr
+                };
+
+                serviceClient.SynonymMaps.CreateOrUpdate(synonymMap);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private static Index AddSynonymMapsToFields(Index index)
+        {
+            index.Fields.First(f => f.Name == "Name").SynonymMaps = new[] { "desc-synonymmap" };
+            index.Fields.First(f => f.Name == "Description").SynonymMaps = new[] { "desc-synonymmap" };
+            return index;
+        }
+
+        public static void EnableSynonyms()
+        {
+            try
+            {
+                int MaxNumTries = 3;
+
+                for (int i = 0; i < MaxNumTries; ++i)
+                {
+                    try
+                    {
+                        //connect to Azure Search
+                        SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+                        Index index = serviceClient.Indexes.Get("eecip");
+                        index = AddSynonymMapsToFields(index);
+
+                        // The IfNotChanged condition ensures that the index is updated only if the ETags match.
+                        serviceClient.Indexes.CreateOrUpdate(index, accessCondition: AccessCondition.IfNotChanged(index));
+
+                        Console.WriteLine("Updated the index successfully.\n");
+                        break;
+                    }
+                    catch (CloudException e) when (e.IsAccessConditionFailed())
+                    {
+                        Console.WriteLine($"Index update failed : {e.Message}. Attempt({i}/{MaxNumTries}).\n");
+                    }
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         private static SearchServiceClient CreateSearchServiceClient()
         {
             string searchServiceName = db_Ref.GetT_OE_APP_SETTING("AZURE_SEARCH_SVC_NAME");
@@ -260,7 +342,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
 
         //******************************** METHODS FOR QUERYING INDEX ******************************************
-        public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr)
+        public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr, string dataTypeFacet = "", string mediaFacet = "", 
+            string recordSourceFacet = "", string agencyFacet = "", string tagsFacet = "")
         {
             try
             {
@@ -271,10 +354,23 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //Search the entire index 
                 SearchParameters parameters = new SearchParameters()
                 {
-                    Facets = new List<string> { "dataType", "recordSource", "agency", "media", "tags" },
-                    Select = new[] { "keyID", "dataType", "recordSource", "agency", "name", "description", "media", "tags" }
+                    Facets = new List<string> { "DataType", "Record_Source", "Agency", "Media", "Tags" },
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "Name", "Description", "Media", "Tags" },
                 };
 
+                //facet handling
+                if ((dataTypeFacet ?? "").Length > 0)
+                    parameters.Filter = "DataType eq '" + dataTypeFacet + "' ";
+                if ((mediaFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Media eq '" + mediaFacet + "' ";
+                if ((recordSourceFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Record_Source eq '" + recordSourceFacet + "' ";
+                if ((agencyFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Agency eq '" + agencyFacet + "' ";
+                if ((tagsFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Tags/any(t: t eq '" + tagsFacet + "') ";
+
+                parameters.IncludeTotalResultCount = true;
                 try
                 {
                     DocumentSearchResult<EECIP_Index> results = indexClient.Documents.Search<EECIP_Index>(searchStr, parameters);

@@ -17,16 +17,14 @@ namespace EECIP.Controllers
         public ActionResult Index()
         {
             var model = new vmDashboardSearch();
+            model.activeTab = "1";
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Index(vmDashboardSearch model)
         {
-            //int UserIDX = db_Accounts.GetUserIDX();
-
-            model.searchResults = AzureSearch.QuerySearchIndex(model.searchStr);
-
+            model.searchResults = AzureSearch.QuerySearchIndex(model.searchStr, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetTags);
             return View(model);
         }
 
@@ -108,6 +106,24 @@ namespace EECIP.Controllers
             return RedirectToAction("Agency", "Dashboard");
         }
 
+        public ActionResult AgencyCard(string strid)
+        {
+            Guid id;
+            if (Guid.TryParse(strid, out id))
+            {
+                var model = new vmDashboardAgencyCard();
+                model.agency = db_Ref.GetT_OE_ORGANIZATION_ByID(id);
+                model.org_ent_services = db_EECIP.GetT_OE_ORGANIZATION_ENTERPRISE_PLATFORM(id);
+                model.SelectedDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(id, "Database");
+                model.SelectedAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(id, "App Framework");
+                model.projects = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(id);
+
+                if (model.agency != null)
+                    return View(model);
+            }
+
+            return RedirectToAction("Index", "Dashboard");
+        }
 
 
         // GET: Projects
@@ -219,18 +235,46 @@ namespace EECIP.Controllers
         // GET: ProjectDetails/1
         public ActionResult ProjectCard(string strid)
         {
-            Guid id = Guid.Parse(strid);
-            var model = new vmDashboardProjectCard();
-            model.project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
-            if (model.project != null)
+            //testing remove this line
+            //strid = "40bc4a06-1fda-46ea-b161-44dbd37212bb";
+
+            Guid id;
+            if (Guid.TryParse(strid, out id))
             {
-                model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
-                model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
+                var model = new vmDashboardProjectCard();
+                model.project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
+                if (model.project != null)
+                {
+                    model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
+                    model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
+                }
+
+                if (model.project != null)
+                    return View(model);
+
+
             }
-            return View(model);
 
 
+            return RedirectToAction("Index", "Dashboard");
         }
+
+
+
+        public ActionResult UserCard(string strid)
+        {
+            int UserIDX = strid.ConvertOrDefault<int>();
+
+            var model = new vmDashboardUserCard();
+            model.User = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+            model.SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
+
+            if (model.User != null)
+                return View(model);
+
+            return RedirectToAction("Index", "Dashboard");
+        }
+
 
     }
 }

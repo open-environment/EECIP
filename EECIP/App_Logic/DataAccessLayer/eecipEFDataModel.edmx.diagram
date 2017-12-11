@@ -41,6 +41,7 @@
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__USER___1C873BEC" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_TAGS" Width="1.5" PointX="3.25" PointY="6.125" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_SYNONYMS" Width="1.5" PointX="16.625" PointY="0.625" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

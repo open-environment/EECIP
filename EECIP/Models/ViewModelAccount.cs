@@ -66,8 +66,12 @@ namespace EECIP.Models
         public List<string> SelectedExpertise { get; set; }
         public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
         public Guid? OrgIDX { get; set; }
-        public HttpPostedFileBase UploadImage { get; set; }
+
+        public HttpPostedFileBase imageBrowes { get; set; }
+        public HttpPostedFileBase ImageFile { get; set; }
         public byte[] GetImage { get; set; }
+        public bool HasAvatar { get; set; }
+
         public string uListInd { get; set; }
 
         //initialize

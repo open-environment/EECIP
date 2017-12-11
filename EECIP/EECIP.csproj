@@ -79,8 +79,8 @@
     <Reference Include="Microsoft.AspNet.TelemetryCorrelation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.0\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Azure.Search, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Azure.Search.3.0.4\lib\net452\Microsoft.Azure.Search.dll</HintPath>
+    <Reference Include="Microsoft.Azure.Search, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.Search.4.0.1-preview\lib\net452\Microsoft.Azure.Search.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -218,6 +218,9 @@
     <Compile Include="App_Logic\DataAccessLayer\T_OE_REF_STATE.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\T_OE_REF_SYNONYMS.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_REF_TAGS.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -286,6 +289,63 @@
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.min.css" />
     <Content Include="Content\fonts.css" />
+    <Content Include="Content\Images\Agencies\ADEC.png" />
+    <Content Include="Content\Images\Agencies\ADEM.png" />
+    <Content Include="Content\Images\Agencies\ARDEQ.png" />
+    <Content Include="Content\Images\Agencies\ASEPA.png" />
+    <Content Include="Content\Images\Agencies\AZDEQ.png" />
+    <Content Include="Content\Images\Agencies\CALEPA.png" />
+    <Content Include="Content\Images\Agencies\CDPHE.png" />
+    <Content Include="Content\Images\Agencies\CTDEEP.png" />
+    <Content Include="Content\Images\Agencies\DLNR.png" />
+    <Content Include="Content\Images\Agencies\DNREC.png" />
+    <Content Include="Content\Images\Agencies\DOEE.png" />
+    <Content Include="Content\Images\Agencies\FLDEP.png" />
+    <Content Include="Content\Images\Agencies\GDNR.png" />
+    <Content Include="Content\Images\Agencies\GEPA.png" />
+    <Content Include="Content\Images\Agencies\IDEM.png" />
+    <Content Include="Content\Images\Agencies\IDEQ.png" />
+    <Content Include="Content\Images\Agencies\IEPA.png" />
+    <Content Include="Content\Images\Agencies\Iowa DNR.png" />
+    <Content Include="Content\Images\Agencies\KDEP.png" />
+    <Content Include="Content\Images\Agencies\KDHE.png" />
+    <Content Include="Content\Images\Agencies\LDEQ.png" />
+    <Content Include="Content\Images\Agencies\Maine DEP.png" />
+    <Content Include="Content\Images\Agencies\MassDEP.png" />
+    <Content Include="Content\Images\Agencies\MDE.png" />
+    <Content Include="Content\Images\Agencies\MDNR.png" />
+    <Content Include="Content\Images\Agencies\Michigan DEQ.png" />
+    <Content Include="Content\Images\Agencies\Missouri DNR.png" />
+    <Content Include="Content\Images\Agencies\MS.jpg" />
+    <Content Include="Content\Images\Agencies\MTDEQ.png" />
+    <Content Include="Content\Images\Agencies\NCDEQ.png" />
+    <Content Include="Content\Images\Agencies\ND DOH.png" />
+    <Content Include="Content\Images\Agencies\Nebraska DEQ.png" />
+    <Content Include="Content\Images\Agencies\Nevada DEP.png" />
+    <Content Include="Content\Images\Agencies\NHDES.png" />
+    <Content Include="Content\Images\Agencies\NJDEP.png" />
+    <Content Include="Content\Images\Agencies\NM ED.png" />
+    <Content Include="Content\Images\Agencies\Northern Mariana Islands.png" />
+    <Content Include="Content\Images\Agencies\NYSDEC.png" />
+    <Content Include="Content\Images\Agencies\OEPA.png" />
+    <Content Include="Content\Images\Agencies\OKDEQ.png" />
+    <Content Include="Content\Images\Agencies\OR DEQ.png" />
+    <Content Include="Content\Images\Agencies\Pennsylvania DEP.png" />
+    <Content Include="Content\Images\Agencies\Puerto Rico.jpg" />
+    <Content Include="Content\Images\Agencies\RIDEM.png" />
+    <Content Include="Content\Images\Agencies\SC DHEC.png" />
+    <Content Include="Content\Images\Agencies\SD DENR.png" />
+    <Content Include="Content\Images\Agencies\TCEQ.png" />
+    <Content Include="Content\Images\Agencies\TN DEC.png" />
+    <Content Include="Content\Images\Agencies\Utah DEQ.png" />
+    <Content Include="Content\Images\Agencies\Virgin Islands.png" />
+    <Content Include="Content\Images\Agencies\Virginia DEQ.png" />
+    <Content Include="Content\Images\Agencies\VT ANR.png" />
+    <Content Include="Content\Images\Agencies\VTDEC.png" />
+    <Content Include="Content\Images\Agencies\WA ECY.png" />
+    <Content Include="Content\Images\Agencies\Wisconsin DNR.png" />
+    <Content Include="Content\Images\Agencies\WV DEP.png" />
+    <Content Include="Content\Images\Agencies\Wyoming DEQ.png" />
     <Content Include="Content\Images\bg.png" />
     <Content Include="Content\Images\favicon-16x16.png" />
     <Content Include="Content\Images\favicon-32x32.png" />
@@ -298,6 +358,7 @@
     <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\Images\menu-white-arrow.png" />
     <Content Include="Content\Images\seal.png" />
+    <Content Include="Content\Images\Users\dummy.txt" />
     <Content Include="Content\main-responsive.css" />
     <Content Include="Content\main.css" />
     <Content Include="Content\Scripts\bootstrap-hover-dropdown.js" />
@@ -342,6 +403,7 @@
     <Content Include="Content\toastr.scss" />
     <Content Include="Content\toastr.less" />
     <Content Include="App_Docs\ProjectImportTemplate.xlsx" />
+    <Content Include="App_Docs\EntServicesImportTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\clip-main.js" />
@@ -407,6 +469,8 @@
     <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.2.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.twbsPagination.js" />
+    <Content Include="Scripts\jquery.twbsPagination.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -462,6 +526,10 @@
     <Content Include="Views\Shared\_PartialHeadNotification.cshtml" />
     <Content Include="Views\Dashboard\ProjectCard.cshtml" />
     <Content Include="Views\Admin\ImportData.cshtml" />
+    <Content Include="Views\Dashboard\AgencyCard.cshtml" />
+    <Content Include="Views\Dashboard\UserCard.cshtml" />
+    <Content Include="Views\Shared\_PartialUserCard.cshtml" />
+    <Content Include="Views\Account\ImageUpload.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -206,7 +206,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Agency = o.ORG_NAME,
                                    KeyID = a.USER_IDX.ToString(),
                                    DataType = "User",
-                                   RecordSource = "Agency supplied",
+                                   Record_Source = "Agency supplied",
                                    Name = a.FNAME + " " + a.LNAME,
                                    Description = a.JOB_TITLE,
                                }).ToList();
@@ -225,6 +225,25 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int UpdateT_OE_USERS_Avatar(int idx, Byte[] UserAvatar)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_USERS row = (from c in ctx.T_OE_USERS where c.USER_IDX == idx select c).First();
+                    if (UserAvatar != null) row.USER_AVATAR = UserAvatar;
+                    ctx.SaveChanges();
+                    return row.USER_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
         public static int GetUserIDX()
         {
             try
@@ -237,6 +256,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                 return 0;
             }
         }
+
+
 
 
         //*****************ROLES **********************************

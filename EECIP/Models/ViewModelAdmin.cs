@@ -73,7 +73,9 @@ namespace EECIP.Models
     {
         public List<T_OE_REF_TAGS> tags { get; set; }
         public IEnumerable<SelectListItem> ddl_tag_cats { get; set; }
-        public T_OE_REF_TAG_CATEGORIES sel_tag_cat { get; set; }
+        public string sel_tag_cat { get; set; }
+        public int? edit_tag_idx { get; set; }
+        public string edit_tag { get; set; }
 
 
         //INITIALIZE
@@ -85,6 +87,9 @@ namespace EECIP.Models
 
 
     public class vmAdminSearch {
+        public List<T_OE_REF_SYNONYMS> synonyms { get; set; }
+        public int? edit_synonym_idx { get; set; }
+        public string edit_synonym_text { get; set; }
     }
 
     public class vmAdminImportData {

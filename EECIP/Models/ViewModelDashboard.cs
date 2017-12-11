@@ -11,8 +11,16 @@ namespace EECIP.Models
     {
         public DocumentSearchResult<EECIP_Index> searchResults { get; set; }
         public string searchStr { get; set; }
-    }
+        public string facetDataType { get; set; }
+        public string facetMedia { get; set; }
+        public string facetRecordSource { get; set; }
+        public string facetAgency { get; set; }
+        public string facetTags { get; set; }
+        public string activeTab { get; set; }
 
+        public List<T_OE_ORGANIZATION> active_agencies { get; set; }
+        public List<T_OE_PROJECTS> active_projects { get; set; }
+    }
 
     public class vmDashboardAgency
     {
@@ -43,6 +51,15 @@ namespace EECIP.Models
 
     }
 
+    public class vmDashboardAgencyCard
+    {
+        public T_OE_ORGANIZATION agency { get; set; }
+        public List<T_OE_USERS> users { get; set; }
+        public List<string> SelectedDatabase { get; set; }
+        public List<string> SelectedAppFramework { get; set; }
+        public List<OrganizationEntServicesDisplayType> org_ent_services { get; set; }
+        public List<T_OE_PROJECTS> projects { get; set; }
+    }
 
     public class vmDashboardProjects
     {
@@ -70,12 +87,17 @@ namespace EECIP.Models
 
     }
 
-
     public class vmDashboardProjectCard
     {
         public T_OE_PROJECTS project { get; set; }
         public List<string> SelectedProgramAreas { get; set; }
         public List<string> SelectedFeatures { get; set; }
+
+    }
+
+    public class vmDashboardUserCard {
+        public T_OE_USERS User { get; set; }
+        public List<string> SelectedExpertise { get; set; }
 
     }
 }

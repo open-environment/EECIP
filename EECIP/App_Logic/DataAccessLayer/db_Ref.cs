@@ -254,7 +254,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Agency = a.ORG_NAME,
                                    KeyID = a.ORG_IDX.ToString(),
                                    DataType = "Agency",
-                                   RecordSource = "EECIP Supplied",
+                                   Record_Source = "EECIP Supplied",
                                    Name = a.ORG_ABBR,
                                    Description = a.ORG_NAME,
                                    Media = ""
@@ -272,6 +272,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+
 
         //***************** ORGANZIATION TAGS ******************************
         public static List<string> GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(Guid OrgIDX, string aTTRIBUTE)
@@ -383,8 +385,6 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
 
-
-
         //***************** ORGANZIATION EMAIL RULE ******************************
         public static List<T_OE_ORGANIZATION_EMAIL_RULE> GetT_OE_ORGANIZATION_EMAIL_RULES_ByID(Guid id)
         {
@@ -448,6 +448,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
 
 
         //*****************ENTERPRISE_SERVICES**********************************
@@ -552,7 +553,6 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
 
-
         //******************REF_REGION*********************************
         public static List<T_OE_REF_REGION> GetT_OE_REF_REGION()
         {
@@ -591,6 +591,91 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+
+        //******************REF_SYNONYMS*********************************
+        public static List<T_OE_REF_SYNONYMS> GetT_OE_REF_SYNONYMS()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_SYNONYMS
+                            orderby a.SYNONYM_IDX
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int DeleteT_OE_REF_SYNONYMS(int id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_REF_SYNONYMS rec = new T_OE_REF_SYNONYMS { SYNONYM_IDX = id };
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int InsertUpdatetT_OE_REF_SYNONYMS(int? sYNONYM_IDX, string sYNONYM_TEXT, int? cREATE_USER = 0)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Boolean insInd = false;
+
+                    T_OE_REF_SYNONYMS e = (from c in ctx.T_OE_REF_SYNONYMS
+                                           where c.SYNONYM_IDX == sYNONYM_IDX
+                                           select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_REF_SYNONYMS();
+                        e.CREATE_DT = System.DateTime.Now;
+                        e.CREATE_USERIDX = cREATE_USER;
+                    }
+                    else
+                    {
+                        e.MODIFY_DT = System.DateTime.Now;
+                        e.MODIFY_USERIDX = cREATE_USER;
+                    }
+
+
+                    if (sYNONYM_TEXT != null) e.SYNONYM_TEXT = sYNONYM_TEXT.ToLower();
+
+
+                    if (insInd)
+                        ctx.T_OE_REF_SYNONYMS.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.SYNONYM_IDX;
+                }
+                catch (Exception ex)
+                {
+                    LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
 
 
         //******************REF_TAGS*********************************
@@ -649,6 +734,70 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+        public static int DeleteT_OE_REF_TAGS(int id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_REF_TAGS rec = new T_OE_REF_TAGS { TAG_IDX = id };
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int InsertUpdatetT_OE_REF_TAGS(int? tAG_IDX, string tAG_NAME, string tAG_CAT_NAME, int? cREATE_USER = 0)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Boolean insInd = false;
+
+                    T_OE_REF_TAGS e = (from c in ctx.T_OE_REF_TAGS
+                                       where c.TAG_IDX == tAG_IDX
+                                           select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_REF_TAGS();
+                        e.CREATE_DT = System.DateTime.Now;
+                        e.CREATE_USERIDX = cREATE_USER;
+                    }
+
+
+                    if (tAG_NAME != null) e.TAG_NAME = tAG_NAME;
+                    if (tAG_CAT_NAME != null) e.TAG_CAT_NAME = tAG_CAT_NAME;
+
+
+                    if (insInd)
+                        ctx.T_OE_REF_TAGS.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.TAG_IDX;
+                }
+                catch (Exception ex)
+                {
+                    LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
+
+
+
 
         //*****************SYS_LOG**********************************
         public static int InsertT_OE_SYS_LOG(string logType, string logMsg)
