@@ -117,6 +117,7 @@
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
           <Property Name="IMPORT_ID" Type="varchar" MaxLength="20" />
+          <Property Name="PROJECT_CONTACT" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
           <Key>
@@ -1067,6 +1068,7 @@
           <NavigationProperty Name="T_OE_REF_TAGS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <NavigationProperty Name="T_OE_REF_TAGS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <Property Name="IMPORT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
           <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
@@ -1436,6 +1438,7 @@
           <EntitySetMapping Name="T_OE_PROJECTS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECTS">
               <MappingFragment StoreEntitySet="T_OE_PROJECTS">
+                <ScalarProperty Name="PROJECT_CONTACT" ColumnName="PROJECT_CONTACT" />
                 <ScalarProperty Name="IMPORT_ID" ColumnName="IMPORT_ID" />
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
                 <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />

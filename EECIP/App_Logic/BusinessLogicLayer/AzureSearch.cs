@@ -58,8 +58,9 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 if (serviceClient.Indexes.Exists("eecip"))
                     serviceClient.Indexes.Delete("eecip");
 
-                if (serviceClient.SynonymMaps.Exists(""))
-                    serviceClient.SynonymMaps.Delete("");
+                if (serviceClient.SynonymMaps.Exists("desc-synonymmap"))
+                    serviceClient.SynonymMaps.Delete("desc-synonymmap");
+
             }
             catch (Exception ex)
             {
@@ -277,21 +278,24 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 List<EECIP_Index> _ps = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_ReadyToSync(EntSvcIDX);
                 if (_ps != null)
                 {
-                    var batch = IndexBatch.Upload(_ps);
+                    if (_ps.Count > 0)
+                    {
+                        var batch = IndexBatch.Upload(_ps);
 
-                    try
-                    {
-                        ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
-                        indexClient.Documents.Index(batch);
-                    }
-                    catch (IndexBatchException e)
-                    {
-                        // Sometimes when your Search service is under load, indexing will fail for some of the documents in
-                        // the batch. Depending on your application, you can take compensating actions like delaying and
-                        // retrying. For this simple demo, we just log the failed document keys and continue.
-                        Console.WriteLine(
-                            "Failed to index some of the documents: {0}",
-                            String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                        try
+                        {
+                            ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                            indexClient.Documents.Index(batch);
+                        }
+                        catch (IndexBatchException e)
+                        {
+                            // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                            // the batch. Depending on your application, you can take compensating actions like delaying and
+                            // retrying. For this simple demo, we just log the failed document keys and continue.
+                            Console.WriteLine(
+                                "Failed to index some of the documents: {0}",
+                                String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                        }
                     }
                 }
 
@@ -341,9 +345,46 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         }
 
 
+        //******************************** METHODS FOR DELETE ROW FROM INDEX ******************************************
+        public static void DeleteSearchIndexProject(Guid? ProjectIDX)
+        {
+            try
+            {
+                //connect to Azure Search
+                SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+                //get project needing to delete sync
+                IEnumerable<string> ss = new List<string>() { ProjectIDX.ToString() };
+                var batch = IndexBatch.Delete("KeyID", ss);
+
+                try
+                {
+                    ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                    indexClient.Documents.Index(batch);
+                }
+                catch (IndexBatchException e)
+                {
+                    // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                    // the batch. Depending on your application, you can take compensating actions like delaying and
+                    // retrying. For this simple demo, we just log the failed document keys and continue.
+                    Console.WriteLine(
+                        "Failed to index some of the documents: {0}",
+                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
         //******************************** METHODS FOR QUERYING INDEX ******************************************
         public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr, string dataTypeFacet = "", string mediaFacet = "", 
-            string recordSourceFacet = "", string agencyFacet = "", string tagsFacet = "")
+            string recordSourceFacet = "", string agencyFacet = "", string tagsFacet = "", int? currentPage = 1)
         {
             try
             {
@@ -354,8 +395,11 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //Search the entire index 
                 SearchParameters parameters = new SearchParameters()
                 {
+                    Top = 50,
+                    Skip = ((currentPage ?? 1) - 1) * 50,
                     Facets = new List<string> { "DataType", "Record_Source", "Agency", "Media", "Tags" },
                     Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "Name", "Description", "Media", "Tags" },
+                    IncludeTotalResultCount = true
                 };
 
                 //facet handling
@@ -370,7 +414,6 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 if ((tagsFacet ?? "").Length > 0)
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Tags/any(t: t eq '" + tagsFacet + "') ";
 
-                parameters.IncludeTotalResultCount = true;
                 try
                 {
                     DocumentSearchResult<EECIP_Index> results = indexClient.Documents.Search<EECIP_Index>(searchStr, parameters);

@@ -4,6 +4,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using EECIP.App_Logic.BusinessLogicLayer;
 using System.Text.RegularExpressions;
+using System.Web.Mvc;
 
 namespace EECIP.App_Logic.DataAccessLayer
 {
@@ -689,6 +690,32 @@ namespace EECIP.App_Logic.DataAccessLayer
                             where (CatName == null ? true : a.TAG_CAT_NAME == CatName)
                             orderby a.TAG_CAT_NAME, a.TAG_NAME
                             select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static IEnumerable<SelectListItem> GetT_OE_REF_TAGS_ByCategory_ProjStatus(bool ExcludeNotUnderConsider)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_REF_TAGS
+                            where (ExcludeNotUnderConsider ? a.TAG_NAME != "Not under consideration" : true)
+                            && a.TAG_CAT_NAME == "Project Status"
+                            orderby a.TAG_IDX
+                            select a).ToList();
+
+                    return xxx.Select(x => new SelectListItem
+                    {
+                        Value = x.TAG_NAME,
+                        Text = x.TAG_NAME
+                    });
                 }
                 catch (Exception ex)
                 {

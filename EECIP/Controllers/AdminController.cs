@@ -325,25 +325,20 @@ namespace EECIP.Controllers
                 synonyms = db_Ref.GetT_OE_REF_SYNONYMS()
             };
 
-
             return View(model);
         }
 
         [HttpPost]
         public ActionResult SearchAdminDeleteIndex()
         {
-            string err = "";
             try
             {
                 AzureSearch.DeleteSearchIndex();
                 TempData["Success"] = "Search index deleted.";
             }
             catch (Exception ex) {
-                err = ex.ToString();
+                TempData["Error"] = ex.ToString().SubStringPlus(0, 100);
             }
-
-            if (err.Length > 0)
-                TempData["Error"] = err;
 
             return RedirectToAction("SearchAdmin", "Admin");
         }
@@ -352,7 +347,6 @@ namespace EECIP.Controllers
         [HttpPost]
         public ActionResult SearchAdminCreateIndex()
         {
-            string err = "";
             try
             {
                 AzureSearch.CreateSearchIndex();
@@ -360,11 +354,8 @@ namespace EECIP.Controllers
             }
             catch (Exception ex)
             {
-                err = ex.ToString();
+                TempData["Error"] = ex.ToString().SubStringPlus(0,100);
             }
-
-            if (err.Length > 0)
-                TempData["Error"] = err;
 
             return RedirectToAction("SearchAdmin", "Admin");
         }
@@ -373,7 +364,6 @@ namespace EECIP.Controllers
         [HttpPost]
         public ActionResult SearchAdminPopulateIndex()
         {
-            string err = "";
             try
             {
                 //***********PROJECTS **************************
@@ -410,11 +400,9 @@ namespace EECIP.Controllers
             }
             catch (Exception ex)
             {
-                err = ex.ToString();
+                TempData["Error"] = ex.ToString().SubStringPlus(0, 100);
             }
 
-            if (err.Length > 0)
-                TempData["Error"] = err;
             return RedirectToAction("SearchAdmin", "Admin");
         }
 
@@ -422,7 +410,6 @@ namespace EECIP.Controllers
         [HttpPost]
         public ActionResult SearchAdminUploadSynonyms()
         {
-            string err = "";
             try
             {
                 AzureSearch.UploadSynonyms();
@@ -433,10 +420,9 @@ namespace EECIP.Controllers
             }
             catch (Exception ex)
             {
-                err = ex.ToString();
+                TempData["Error"] = ex.ToString().SubStringPlus(0, 100);
             }
 
-            TempData["Error"] = err;
             return RedirectToAction("SearchAdmin", "Admin");
         }
 
@@ -583,7 +569,7 @@ namespace EECIP.Controllers
                     T_OE_PROJECTS x = ps.T_OE_PROJECT;
                     Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, x.ORG_IDX, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS, 
                         x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
-                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, true, false, UserIDX, null, x.IMPORT_ID);
+                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, true, false, UserIDX, null, x.IMPORT_ID);
 
                     //import features
                     if (ps.FEATURES != null)

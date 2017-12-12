@@ -278,7 +278,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                select new EECIP_Index
                                {
                                    Agency = o.ORG_NAME,
-                                   KeyID = a.ORG_ENT_SVCS_IDX.ToString(),
+                                   KeyID = (a.ORG_ENT_SVCS_IDX + 100000).ToString(),
                                    DataType = "Enterprise Service",
                                    Record_Source = a.RECORD_SOURCE,
                                    Name = e.ENT_PLATFORM_NAME,
@@ -430,7 +430,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
         public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, int? mEDIA_TAG, int? sTART_YEAR,
             string pROJ_STATUS, int? dATE_LAST_UPDATE, string rECORD_SOURCE, string pROJECT_URL, int? mOBILE_IND, string mOBILE_DESC, int? aDV_MON_IND, 
-            string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
+            string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, string pROJECT_CONTACT, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
             bool? updateSearch = false, string iMPORT_ID = null)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -476,6 +476,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (bP_MODERN_DESC != null) e.BP_MODERN_DESC = bP_MODERN_DESC;
                     if (cOTS != null) e.COTS = cOTS;
                     if (vENDOR != null) e.VENDOR = vENDOR;
+                    if (pROJECT_CONTACT != null) e.PROJECT_CONTACT = pROJECT_CONTACT;
+
                     e.ACT_IND = aCT_IND;
                     if (sYNC_IND != null) e.SYNC_IND = sYNC_IND ?? false;
                     if (iMPORT_ID != null) e.IMPORT_ID = iMPORT_ID;

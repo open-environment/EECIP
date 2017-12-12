@@ -310,6 +310,7 @@ CREATE TABLE [dbo].[T_OE_PROJECTS](
 	[BP_MODERN_DESC] [varchar](100) NULL,
 	[COTS] [varchar](100) NULL,
 	[VENDOR] [varchar](100) NULL,
+	[PROJECT_CONTACT] [varchar](100) NULL,
 	[IMPORT_ID] [varchar](20) NULL,
 	[ACT_IND] [bit] NOT NULL DEFAULT 1,
 	[SYNC_IND] [bit] NOT NULL DEFAULT 0,
@@ -328,6 +329,7 @@ CREATE TABLE [dbo].[T_OE_PROJECTS](
 GO	 
 
 --  alter table T_OE_PROJECTS add IMPORT_ID [varchar](20) NULL;
+--  alter table T_OE_PROJECTS add PROJECT_CONTACT [varchar](100) NULL;
 
 
 CREATE TABLE [dbo].[T_OE_PROJECT_TAGS](

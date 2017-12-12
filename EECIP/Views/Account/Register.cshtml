@@ -68,7 +68,59 @@
         @Html.ValidationMessageFor(m => m.suggestAgency)
     </div>
     }
-    <button type="submit" class="btn btn-primary">Register</button>
+
+    <div class="checkbox">
+        <label>
+            <input id="terms" name="terms" type="checkbox" value="false">
+            I accept the Terms And Conditions
+        </label>
+    </div>
+    
+    <div class="panel-group accordion-custom accordion-teal" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true">
+                        <i class="clip-arrow-down"></i>
+                        Terms and Conditions (click to view)
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse" aria-expanded="true" style="">
+                <div class="panel-body" style="max-height: 120px; overflow-y: scroll;">
+                    <p>
+                        The access and use of EECIP requires the creation of a user ID and password that I must maintain and keep confidential.
+                    </p>
+                    <p>
+                        <b>Privacy Statement</b>
+                        <br/>
+                        Personal identifying information you provide will be used for the expressed purpose of registration to this site and for updating and correcting agency information as necessary.
+                        This information will not be made available for other purposes unless required by law. Your information will not be sold or otherwise transferred to an outside third party.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <button id="formsubmit" type="submit" class="btn btn-primary" disabled="disabled">Register</button>
     @Html.ActionLink("Already have an account?", "Login", new object { }, new { @class = "pull-right m-t-xs" })
 
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#terms').click(function () {
+                if ($(this).is(':checked')) {
+                    $('#formsubmit').removeAttr('disabled');
+                } else {
+                    $('#formsubmit').attr('disabled', 'disabled');
+                }
+            });
+        });
+
+    </script>
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Web.Mvc;
 using EECIP.App_Logic.BusinessLogicLayer;
 using Microsoft.Azure.Search.Models;
+using System.Linq;
 
 namespace EECIP.Models
 {
@@ -17,6 +18,7 @@ namespace EECIP.Models
         public string facetAgency { get; set; }
         public string facetTags { get; set; }
         public string activeTab { get; set; }
+        public int? currentPage { get; set; }
 
         public List<T_OE_ORGANIZATION> active_agencies { get; set; }
         public List<T_OE_PROJECTS> active_projects { get; set; }
@@ -35,10 +37,12 @@ namespace EECIP.Models
         public IEnumerable<SelectListItem> AllAppFramework { get; set; }
         public List<string> SelectedAppFramework { get; set; }
 
-
-
+        //enterprise service portion
         public List<OrganizationEntServicesDisplayType> org_ent_services { get; set; }
         public OrganizationEntServicesDisplayType edit_ent_services { get; set; }
+        public IEnumerable<SelectListItem> ddl_Status { get; set; }
+
+
 
         //initialize
         public vmDashboardAgency()
@@ -47,6 +51,7 @@ namespace EECIP.Models
             ddl_Regions = ddlHelpers.get_ddl_regions();
             ddl_Cloud = ddlHelpers.get_ddl_tags_by_category_stringy("Cloud");
             ddl_API = ddlHelpers.get_ddl_tags_by_category_stringy("API");
+            ddl_Status = db_Ref.GetT_OE_REF_TAGS_ByCategory_ProjStatus(false);
         }
 
     }
@@ -80,7 +85,7 @@ namespace EECIP.Models
         public vmDashboardProjectDetails()
         {
             ddl_Media = ddlHelpers.get_ddl_tags_by_category("Project Media");
-            ddl_Status = ddlHelpers.get_ddl_tags_by_category_stringy("Project Status");
+            ddl_Status = db_Ref.GetT_OE_REF_TAGS_ByCategory_ProjStatus(true);
             ddl_UseAmount = ddlHelpers.get_ddl_tags_by_category("Use Amount");
             ddl_COTS = ddlHelpers.get_ddl_tags_by_category_stringy("COTS");
         }

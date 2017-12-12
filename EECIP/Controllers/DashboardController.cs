@@ -18,13 +18,17 @@ namespace EECIP.Controllers
         {
             var model = new vmDashboardSearch();
             model.activeTab = "1";
+            model.currentPage = 1;
             return View(model);
         }
 
         [HttpPost]
         public ActionResult Index(vmDashboardSearch model)
         {
-            model.searchResults = AzureSearch.QuerySearchIndex(model.searchStr, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetTags);
+            if (model.currentPage == null)
+                model.currentPage = 1;
+
+            model.searchResults = AzureSearch.QuerySearchIndex(model.searchStr, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetTags, model.currentPage);
             return View(model);
         }
 
@@ -98,7 +102,12 @@ namespace EECIP.Controllers
                 int SuccID = db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(z.ENT_PLATFORM_IDX, model.agency.ORG_IDX, z.ENT_PLATFORM_IDX, z.PROJECT_NAME, z.VENDOR, z.IMPLEMENT_STATUS,
                     z.COMMENTS, db_Accounts.GetUserIDX());
                 if (SuccID > 0)
+                {
+                    //sync to search service
+                    AzureSearch.PopulateSearchIndexEntServices(SuccID);
                     TempData["Success"] = "Data Saved.";
+
+                }
                 else
                     TempData["Error"] = "Data Not Saved.";
             }
@@ -194,7 +203,7 @@ namespace EECIP.Controllers
                 model.project.PROJ_DESC, model.project.MEDIA_TAG, model.project.START_YEAR, model.project.PROJ_STATUS, 
                 model.project.DATE_LAST_UPDATE, model.project.RECORD_SOURCE, model.project.PROJECT_URL, model.project.MOBILE_IND,
                 model.project.MOBILE_DESC, model.project.ADV_MON_IND, model.project.ADV_MON_DESC, model.project.BP_MODERN_IND,
-                model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, true, false, UserIDX);
+                model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, model.project.PROJECT_CONTACT, true, false, UserIDX);
 
             if (SuccID != null)
             {
@@ -225,7 +234,10 @@ namespace EECIP.Controllers
         public ActionResult ProjectsDelete(Guid id)
         {
             int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
-            if (SuccID == 0)
+            if (SuccID > 0)
+                //now delete from Aszure
+                AzureSearch.DeleteSearchIndexProject(id);
+            else
                 TempData["Error"] = "Unable to delete record.";
 
             return RedirectToAction("Projects", "Dashboard");

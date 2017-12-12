@@ -164,7 +164,7 @@
                             <th>Project Name</th>
                             <th>Vendor</th>
                             <th>Current Implementation Status</th>
-                            <th>Comments</th>
+                            <th>Description</th>
                         </tr>
 
                         @foreach (var item in Model.org_ent_services)
@@ -252,7 +252,8 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Implementation Status</label>
-                                            @Html.TextAreaFor(model => model.edit_ent_services.IMPLEMENT_STATUS, new { @class = "form-control", @maxlength = "250", @rows = "5" })
+                                            @Html.DropDownListFor(model => model.edit_ent_services.IMPLEMENT_STATUS, Model.ddl_Status, "", new { @class = "form-control" })
+
                                             @Html.ValidationMessageFor(model => model.edit_ent_services.IMPLEMENT_STATUS)
                                         </div>
                                     </div>
@@ -260,7 +261,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Comments</label>
+                                            <label>Description</label>
                                             @Html.TextAreaFor(model => model.edit_ent_services.COMMENTS, new { @class = "form-control", @rows = "5" })
                                             @Html.ValidationMessageFor(model => model.edit_ent_services.COMMENTS)
                                         </div>

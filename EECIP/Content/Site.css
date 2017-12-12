@@ -199,7 +199,7 @@ ul.main-navigation-menu > li.active > a .selected:before {
 
 /***************     PANEL REDESIGN     ******************/
 
-.panel-default {
+/*.panel-default {
     border-color: #337ab7;
     background-color:#fcfcfc;
 }
@@ -216,7 +216,7 @@ ul.main-navigation-menu > li.active > a .selected:before {
 .btn-primary {
     background-color: #82B9DE;
     border-color: #2e6da4;
-}
+}*/
 
 
 /************************SELECT 2 STYLING  ******************/

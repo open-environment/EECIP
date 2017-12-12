@@ -75,9 +75,18 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Current Status</label>
+                                        <label>Current Implementation Status</label>
                                         @Html.DropDownListFor(model => model.project.PROJ_STATUS, Model.ddl_Status, "", new { @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.project.PROJ_STATUS)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Project Contact</label>
+                                        @Html.TextBoxFor(model => model.project.PROJECT_CONTACT, new { @class = "form-control", @maxlength = "100" })
+                                        @Html.ValidationMessageFor(model => model.project.PROJECT_CONTACT)
                                     </div>
                                 </div>
                             </div>

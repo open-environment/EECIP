@@ -107,16 +107,17 @@ INSERT INTO [T_OE_REF_ENTERPRISE_PLATFORM] values
 ('Document Management System','An enterprise-level system used to track, manage and store documents in a consistent manner across departments (also known as Enterprise Document Management or Enterprise Content Management','Hyland Onbase, MS SharePoint',1,1,0,GetDate()),
 ('Business Analytics/Report Generation','Software designed to analyze governmental datasets to better understand the data and present using reports, graphs and charts (also known as Business Intelligence - BI)','SAS, Tableau, Crystal Reports Server',2,1,0,GetDate()),
 ('eReporting','An enterprise-level system that allows the agency to collect a variety of different data from the public and regulated communities. Reporting activities could include Discharge Monitoring Reports (DMR), drinking water sampling data, monthly operating reports,etc.','',3,1,0,GetDate()),
-('Enterprise Portal','An enterprise level web portal that brings information together from various departments and displays to the public in a uniform way.','',4,1,0,GetDate()),
-('Exchange Network Node','Software that uses standard web services to securely initiate and respond to Exchange Network requests for information. A Node is most commonly used for initiating submission of data to EPA and for providing a web service for data requests.','OpenNode, EN-Node, CGI Node',5,1,0,GetDate()),
-('Identity Management System','A standardized tool or API used by the agency across multiple applications for the authentication and authorization of application users.','Thinktecture Identity Server',6,1,0,GetDate()),
-('Online Payment System','A standard tool or API used by the agency and used by multiple departments for the collection of payments from the public or regulated community','',7,1,0,GetDate()),
-('Forms management','Forms automation software that allows the agency to use in-house staff to quickly develop data entry forms; typically used for internal applications','Oracle Forms',8,1,0,GetDate()),
-('Public Comment','Enterprise software used to collect public comments.','',9,1,0,GetDate()),
-('FOIA Response Management','Enterprise software used to record and respond to FOIA requests','SmartComment',10,1,0,GetDate()),
-('Integration of Geospatial capabilities into business applications','A standard tool or API used by the agency across multiple applications for the integration of GIS capabilities (i.e., displaying map layers, selecting sites, etc.) with existing applications.','ArcGIS for Javascript, Google Maps API, OpenLaters.org',11,1,0,GetDate()),
-('Mobile Enterprise Application Platform','A suite of products and services that enable development of mobile applications. This term is still immature, we are interested if you are considering/using any software/service across mobile applications that is unique to development and operation mobile applications.','',12,1,0,GetDate()),
-('API Hosting/Management Platform','API management platforms can act as a proxy between external users and internal systems and typically include analytics and usage reporting, API key and authorization management and live updated documentation integration.','Umbrella',13,1,0,GetDate());
+('ePermitting','An enterprise-level system that allows the agency to issue permits and authorizations accross multiple programs from a common plateform, often including forms development and regulated entity consolidation.','',4,1,0,GetDate()),
+('Enterprise Portal','An enterprise level web portal that brings information together from various departments and displays to the public in a uniform way.','',5,1,0,GetDate()),
+('Exchange Network Node','Software that uses standard web services to securely initiate and respond to Exchange Network requests for information. A Node is most commonly used for initiating submission of data to EPA and for providing a web service for data requests.','OpenNode, EN-Node, CGI Node',6,1,0,GetDate()),
+('Identity Management System','A standardized tool or API used by the agency across multiple applications for the authentication and authorization of application users.','Thinktecture Identity Server',7,1,0,GetDate()),
+('Online Payment System','A standard tool or API used by the agency and used by multiple departments for the collection of payments from the public or regulated community','',8,1,0,GetDate()),
+('Forms management','Forms automation software that allows the agency to use in-house staff to quickly develop data entry forms; typically used for internal applications','Oracle Forms',9,1,0,GetDate()),
+('Public Comment','Enterprise software used to collect public comments.','',10,1,0,GetDate()),
+('FOIA Response Management','Enterprise software used to record and respond to FOIA requests','SmartComment',11,1,0,GetDate()),
+('Integration of Geospatial capabilities into business applications','A standard tool or API used by the agency across multiple applications for the integration of GIS capabilities (i.e., displaying map layers, selecting sites, etc.) with existing applications.','ArcGIS for Javascript, Google Maps API, OpenLaters.org',12,1,0,GetDate()),
+('Mobile Enterprise Application Platform','A suite of products and services that enable development of mobile applications. This term is still immature, we are interested if you are considering/using any software/service across mobile applications that is unique to development and operation mobile applications.','',13,1,0,GetDate()),
+('API Hosting/Management Platform','API management platforms can act as a proxy between external users and internal systems and typically include analytics and usage reporting, API key and authorization management and live updated documentation integration.','Umbrella',14,1,0,GetDate());
 
 
 
@@ -199,9 +200,11 @@ INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREA
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Health & Safety','Project Media',0,GetDate());
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Cross Program','Project Media',0,GetDate());
 
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Planning or on our radar','Project Status',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Mostly funded but not started','Project Status',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Currently in development','Project Status',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Not under consideration','Project Status',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Interested but no firm plans','Project Status',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Planning/on our radar','Project Status',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Funded but not started','Project Status',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('In development','Project Status',0,GetDate());
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('In production','Project Status',0,GetDate());
 
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Billing','Project Feature',0,GetDate());
