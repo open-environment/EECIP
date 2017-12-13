@@ -111,7 +111,29 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE)
+        public static bool UserCanEditOrgIDX(int idx, Guid orgIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    int c =  (from a in ctx.T_OE_USERS
+                            where a.ORG_IDX == orgIDX
+                            select a).Count();
+
+                    return (c > 0);
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    throw ex;
+                }
+            }
+        }
+
+
+
+        public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE, string lINKED_IN)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -135,6 +157,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (LogAtmpt != null) row.LOG_ATMPT = LogAtmpt;
                     if (oRG_IDX != null) row.ORG_IDX = oRG_IDX;
                     if (jOB_TITLE != null) row.JOB_TITLE = jOB_TITLE;
+                    if (lINKED_IN != null) row.LINKEDIN = lINKED_IN;
 
                     row.MODIFY_DT = System.DateTime.Now;
 
@@ -209,6 +232,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Record_Source = "Agency supplied",
                                    Name = a.FNAME + " " + a.LNAME,
                                    Description = a.JOB_TITLE,
+                                   PersonPhone = a.PHONE,
+                                   PersonEmail = a.EMAIL,
+                                   PersonLinkedIn = a.LINKEDIN
                                }).ToList();
 
                     foreach (EECIP_Index e in xxx)

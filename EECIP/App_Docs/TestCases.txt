@@ -1,6 +1,8 @@
 ﻿Test Cases
 -----------------
 
+
+**********REGISTRATION **************
 1. User registers using a non .gov /.us email
 		Account not created
 2. User registers using a .gov/.us email for which no agency exists in EECIP

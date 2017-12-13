@@ -46,6 +46,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<int> MODIFY_USERIDX { get; set; }
         public Nullable<System.DateTime> MODIFY_DT { get; set; }
         public bool SYNC_IND { get; set; }
+        public string LINKEDIN { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_USER_ROLES> T_OE_USER_ROLES { get; set; }

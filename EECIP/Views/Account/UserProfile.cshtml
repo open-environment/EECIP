@@ -29,14 +29,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>First Name</label>
-                                        @Html.TextBoxFor(model => model.FName, new { @class = "form-control", @placeholder = "" })
+                                        @Html.TextBoxFor(model => model.FName, new { @class = "form-control", @placeholder = "", @maxlength = "40" })
                                         @Html.ValidationMessageFor(model => model.FName)
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Last Name</label>
-                                        @Html.TextBoxFor(model => model.LName, new { @class = "form-control", @placeholder = "" })
+                                        @Html.TextBoxFor(model => model.LName, new { @class = "form-control", @placeholder = "", @maxlength = "40" })
                                         @Html.ValidationMessageFor(model => model.LName)
                                     </div>
                                 </div>
@@ -45,7 +45,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Email</label>
-                                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "" })
+                                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @placeholder = "", @maxlength = "150" })
                                         @Html.ValidationMessageFor(model => model.Email)
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Phone Ext</label>
-                                        @Html.TextBoxFor(model => model.PhoneExt, new { @class = "form-control", @placeholder = "" })
+                                        @Html.TextBoxFor(model => model.PhoneExt, new { @class = "form-control", @placeholder = "", @maxlength = "4" })
                                     </div>
                                 </div>
                             </div>
@@ -122,13 +122,21 @@
                                 @Html.ValidationMessageFor(model => model.FName)
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Job Title</label>
-                                @Html.TextBoxFor(model => model.JobTitle, new { @class = "form-control", @placeholder = "" })
+                                @Html.TextBoxFor(model => model.JobTitle, new { @class = "form-control", @placeholder = "", @maxlength = "40" })
                                 @Html.ValidationMessageFor(model => model.JobTitle)
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>LinkedIn</label>
+                                @Html.TextBoxFor(model => model.LinkedIn, new { @class = "form-control", @placeholder = "", @maxlength = "100" })
+                                @Html.ValidationMessageFor(model => model.LinkedIn)
+                            </div>
+                        </div>
+
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="form-field-select-4">Expertise</label>

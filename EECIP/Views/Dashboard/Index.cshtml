@@ -47,7 +47,6 @@
 
                 </span>
         </div>
-
     </div>
 </div>
 <!-- end: PAGE TITLE -->
@@ -62,6 +61,8 @@
 @Html.HiddenFor(model => model.currentPage)
 
 <div class="row">
+
+    <!-- ******************************* LEFT PANEL FACETS **********************************-->
     @if (Model.searchResults != null) {
     <div id="leftFacets" class="col-sm-2" style="border-right-width:1px; border-right-style:solid; border-color:#ccc; min-height:500px; ">
         <div>
@@ -82,11 +83,14 @@
         </div>
     </div>
     }
+    <!-- ******************************* END LEFT PANEL FACETS **********************************-->
 
 
 
 
     <div id="job_details_div" class="@(Model.searchResults != null ? @Html.Raw("col-sm-10") : @Html.Raw("col-sm-12"))" >
+        
+        <!-- *********************** START TABS ****************************************** -->
         <div id="tabs" class="tabbable">
             <ul id="myTab" class="nav nav-tabs tab-blue">
                 <li><a href="#tab1" data-toggle="tab">All</a></li>
@@ -98,11 +102,12 @@
                     </a>
                 </li>
                 <li><a href="#tab3" data-toggle="tab">Enterprise Services
-    @if (Model.searchResults != null && Model.searchResults.Facets != null && Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Enterprise Service") != null)
-    {
-        <span class="badge badge-eecip-bluegreen">@Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Enterprise Service").Count</span>
-    }
-</a></li>
+                    @if (Model.searchResults != null && Model.searchResults.Facets != null && Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Enterprise Service") != null)
+                    {
+                        <span class="badge badge-eecip-bluegreen">@Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Enterprise Service").Count</span>
+                    }
+                    </a>
+                </li>
                 <li><a href="#tab4" data-toggle="tab">People
                         @if (Model.searchResults != null && Model.searchResults.Facets != null && Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "User") != null)
                         {
@@ -134,14 +139,15 @@
                 <div class="tab-pane" id="tab5">
                 </div>
             </div>
-
-
-
         </div>
+        <!-- *********************** END TABS ****************************************** -->
 
 
         @if (Model.searchResults != null)
         {
+            if (Model.activeTab != "4")
+            {
+
             <div class="table-responsive">
                 <table class="table table-striped m-b-none" data-ride="datatables">
                     <tr>
@@ -216,6 +222,57 @@
                 }
 
             </div>
+            }
+            else
+            {
+                <!-- ************** PEOPLE ****************************-->
+                <div class="row aligned-row">
+                    @foreach (var item in Model.searchResults.Results)
+                    {
+                        <div class="col-lg-3 col-sm-6">
+                            <div class="circle-tile">
+                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })">
+                                    <div class="circle-tile-heading" style="background-image:url(/Content/Images/Users/@(item.Document.KeyID).png)" >
+                                    </div>
+                                </a>
+                                <div class="circle-tile-content dark-blue">
+                                    <div class="circle-tile-description text-faded">
+                                        @item.Document.Agency
+                                    </div>
+                                    <div class="circle-tile-number text-faded">
+                                        @item.Document.Name
+                                    </div>
+                                    <div class="circle-tile-title text-faded">
+                                        @item.Document.Description
+                                    </div>
+                                    <div class="circle-tile-buttons text-faded">
+                                        <a href="tel:@(item.Document.PersonPhone)" class="btn btn-primary">
+                                            <i class="clip-phone"></i>
+                                        </a>
+                                        <a href="mailto:@(item.Document.PersonEmail)" class="btn btn-primary">
+                                            <i class="glyphicon glyphicon-envelope"></i>
+                                        </a>
+                                        <a href="https://www.linkedin.com/in/@(item.Document.PersonLinkedIn)" class="btn btn-primary" target="_blank">
+                                            <i class="clip-linkedin"></i>
+                                        </a>
+                                    </div>
+                                    @if (item.Document.Tags != null)
+                                    {
+                                        <div style="padding-bottom:10px; ">
+                                            @foreach (string tag in item.Document.Tags)
+                                            {
+                                                <span class="select2-selection__choice" style="font-size:12px !important">@Html.DisplayFor(modelItem => tag)</span>
+                                            }
+
+                                        </div>
+                                    }
+                                    <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
         }
         else
         {
@@ -225,24 +282,25 @@
                     <hr>
                 </div>
             </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Most Liked Answers</h3>
-                        <hr>
-                    </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Most Liked Answers</h3>
+                    <hr>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Newly Added Projects</h3>
-                        <hr>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Newly Added Projects</h3>
+                    <hr>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Most Active Users</h3>
-                        <hr>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Most Active Users</h3>
+                    <hr>
                 </div>
+            </div>
+
             if (Model.active_agencies != null)
             {
                 <div class="row">

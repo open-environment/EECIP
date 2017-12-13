@@ -40,6 +40,10 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
         [IsSearchable, IsFacetable, IsFilterable]
         public string[] Tags { get; set; }
+
+        public string PersonPhone { get; set; }
+        public string PersonEmail { get; set; }
+        public string PersonLinkedIn { get; set; }
     }
 
 
@@ -398,7 +402,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     Top = 50,
                     Skip = ((currentPage ?? 1) - 1) * 50,
                     Facets = new List<string> { "DataType", "Record_Source", "Agency", "Media", "Tags" },
-                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "Name", "Description", "Media", "Tags" },
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "Name", "Description", "Media", "Tags", "PersonPhone", "PersonEmail", "PersonLinkedIn" },
                     IncludeTotalResultCount = true
                 };
 

@@ -1,14 +1,27 @@
 ﻿@model EECIP.Models.vmDashboardProjects
 @{
     ViewBag.Title = "Projects";
-    ViewBag.SubTitle = "View and edit the projects for an agency";
+    ViewBag.SubTitle = "View and edit the projects for " + Model.selAgencyName;
 }
-
+@if (User.IsInRole("Admins"))
+{
+    using (Html.BeginForm("RefTags", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+    <div class="form-group">
+        <label class="col-sm-1 control-label" for="form-field-1">
+            Agency:
+        </label>
+        <div class="col-sm-5">
+            @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Projects?selAgency=' + this.options[this.selectedIndex].value;" })
+        </div>
+    </div>
+    }
+}
 <div class="row">
     <div class="col-sm-12">
         <section class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa-e clip-grid-4"></i> Project Overview
+                <i class="fa-e clip-grid-4"></i> Projects
                 <div class="panel-tools">
                     <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
                     </a>
@@ -37,7 +50,7 @@
                         {
                             <tr>
                                 <td style="min-width: 68px;">
-                                    <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
                                     <div class="delete-section" style="display:inline">
                                         <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
                                         <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
@@ -50,7 +63,7 @@
                                     @Html.DisplayFor(modelItem => item.PROJ_DESC)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.T_OE_REF_TAGS.TAG_NAME)
+                                    @Html.DisplayFor(modelItem => item.T_OE_REF_TAGS2.TAG_NAME)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.START_YEAR)
@@ -90,7 +103,7 @@
                     </table>
                 </div>
                 <p>
-                    <a href="@Url.Action("ProjectDetails", "Dashboard")" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+                    <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency  })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
                 </p>
             </div>
         </section>

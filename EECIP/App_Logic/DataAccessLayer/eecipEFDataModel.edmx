@@ -279,6 +279,7 @@
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
           <Property Name="SYNC_IND" Type="bit" Nullable="false" />
+          <Property Name="LINKEDIN" Type="varchar" MaxLength="100" />
         </EntityType>
         <Association Name="FK__T_OE_ORGA__ENT_P__25518C17">
           <End Role="T_OE_REF_ENTERPRISE_PLATFORM" Type="Self.T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
@@ -827,6 +828,7 @@
           <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_USERS" ToRole="T_OE_ORGANIZATION" />
           <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="T_OE_USER_EXPERTISE" Relationship="EECIPModel.FK__T_OE_USER__USER___1C873BEC" FromRole="T_OE_USERS" ToRole="T_OE_USER_EXPERTISE" />
+          <Property Name="LINKEDIN" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK__T_OE_USER__USER___6477ECF3">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1">
@@ -1316,6 +1318,7 @@
           <EntitySetMapping Name="T_OE_USERS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_USERS">
               <MappingFragment StoreEntitySet="T_OE_USERS">
+                <ScalarProperty Name="LINKEDIN" ColumnName="LINKEDIN" />
                 <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
                 <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />

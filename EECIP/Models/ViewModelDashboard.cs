@@ -69,6 +69,15 @@ namespace EECIP.Models
     public class vmDashboardProjects
     {
         public List<T_OE_PROJECTS> projects { get; set; }
+        public Guid? selAgency { get; set; }
+        public string selAgencyName { get; set; }
+        public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
+
+        //initialize
+        public vmDashboardProjects()
+        {
+            ddl_Agencies = ddlHelpers.get_ddl_organizations_all_active();
+        }
     }
 
     public class vmDashboardProjectDetails {

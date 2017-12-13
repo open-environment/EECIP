@@ -12,7 +12,7 @@
             Tag Category: 
         </label>
         <div class="col-sm-3">
-            @Html.DropDownListFor(model => model.sel_tag_cat, Model.ddl_tag_cats, Model.sel_tag_cat, new { @class = "form-control", @onchange = "document.location.href = '/Admin/RefTags?selTag=' + this.options[this.selectedIndex].value;" })
+            @Html.DropDownListFor(model => model.sel_tag_cat, Model.ddl_tag_cats, "", new { @class = "form-control", @onchange = "document.location.href = '/Admin/RefTags?selTag=' + this.options[this.selectedIndex].value;" })
         </div>
     </div>
 }

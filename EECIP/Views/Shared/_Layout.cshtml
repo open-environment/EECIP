@@ -110,7 +110,7 @@ else
                     <div class="col-sm-12">
                         @if (ViewBag.ShowBack == true)
                         {
-                            <button type="button" class="btn btn-default pull-right" style="margin-top:20px;" onclick="history.go(-1);">Back</button>
+                            <button type="button" class="btn btn-return pull-right" style="margin-top:20px;" onclick="history.go(-1);">Back</button>
                         }
                         <!-- start: PAGE TITLE & BREADCRUMB -->
                         <div class="page-header">
@@ -143,7 +143,10 @@ else
             <a href="">Terms & Conditions </a>
         </div>
         <div class=" footer-items footer-right">
-            <a href="https://e-enterprisefortheenvironment.net/our-projects/shared-services-projects/ee_inventory/" target="_blank">Contact | About</a> |
+            <a href="https://e-enterprisefortheenvironment.net/our-projects/shared-services-projects/ee_inventory/" target="_blank">Contact </a> |
+        </div>
+        <div class=" footer-items footer-right">
+            <a href="https://e-enterprisefortheenvironment.net/our-projects/shared-services-projects/ee_inventory/" target="_blank">About</a> |
         </div>
     </div>
     <!-- end: FOOTER -->

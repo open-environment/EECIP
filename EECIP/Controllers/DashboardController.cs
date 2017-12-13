@@ -136,44 +136,56 @@ namespace EECIP.Controllers
 
 
         // GET: Projects
-        public ActionResult Projects()
+        public ActionResult Projects(Guid? selAgency)
         {
-            // get the agency for which the logged in user is associated
-            T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(db_Accounts.GetUserIDX());
-            if (u != null && u.ORG_IDX != null)
-            {
-                var model = new vmDashboardProjects();
-                model.projects = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(u.ORG_IDX.ConvertOrDefault<Guid>());
+            int UserIDX = db_Accounts.GetUserIDX();
 
-                return View(model);
+            if (selAgency == null || selAgency == Guid.Empty)
+            {
+                // get agency for which the logged in user is associated
+                T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+                if (u != null && u.ORG_IDX != null)
+                    selAgency = u.ORG_IDX.ConvertOrDefault<Guid>();                    
             }
 
-            TempData["Error"] = "You are not associated with an agency.";
-            return RedirectToAction("AccessDenied", "Home");
+            //if still no agency
+            if (selAgency == null || selAgency == Guid.Empty)
+            {
+                TempData["Error"] = "You are not associated with an agency.";
+                return RedirectToAction("AccessDenied", "Home");
+            }
 
+            if (!User.IsInRole("Admins") && !db_Accounts.UserCanEditOrgIDX(UserIDX, selAgency.ConvertOrDefault<Guid>()))
+            {
+                TempData["Error"] = "You are not associated with an agency.";
+                return RedirectToAction("AccessDenied", "Home");
+            }
+
+
+            var model = new vmDashboardProjects();
+            T_OE_ORGANIZATION o = db_Ref.GetT_OE_ORGANIZATION_ByID(selAgency.ConvertOrDefault<Guid>());
+                if (o != null)
+                    model.selAgencyName = o.ORG_NAME;
+
+            model.projects = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(selAgency.ConvertOrDefault<Guid>());
+            model.selAgency = selAgency;
+            return View(model);
         }
-
+            
 
         // GET: ProjectDetails/1
-        public ActionResult ProjectDetails(Guid? id)
+        public ActionResult ProjectDetails(Guid? id, Guid? orgIDX)
         {
-            // get the agency for which the logged in user is associated
-            T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(db_Accounts.GetUserIDX());
-            if (u != null)
+            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), orgIDX.ConvertOrDefault<Guid>()))
             {
-                if (u.ORG_IDX == null)
-                {
-                    TempData["Error"] = "You are not associated with an agency.";
-                    return RedirectToAction("AccessDenied", "Home");
-                }
-
                 var model = new vmDashboardProjectDetails();
                 model.project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
                 if (model.project == null)
                 {
+                    //case: new project
                     model.project = new T_OE_PROJECTS
                     {
-                        ORG_IDX = u.ORG_IDX,
+                        ORG_IDX = orgIDX,
                         PROJECT_IDX = Guid.NewGuid()
                     };
                 }
@@ -185,11 +197,12 @@ namespace EECIP.Controllers
                 model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
                 model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
                 return View(model);
-
             }
-
-            TempData["Error"] = "You are unauthorized to edit projects.";
-            return RedirectToAction("AccessDenied", "Home");
+            else
+            {
+                TempData["Error"] = "You cannot edit projects for this agency.";
+                return RedirectToAction("AccessDenied", "Home");
+            }
         }
 
         // POST: /Dashboard/ProjectEdit
@@ -226,7 +239,7 @@ namespace EECIP.Controllers
             else
                 TempData["Error"] = "Error updating data.";
 
-            return RedirectToAction("Projects");
+            return RedirectToAction("Projects", new { selAgency = model.project.ORG_IDX } );
         }
 
 

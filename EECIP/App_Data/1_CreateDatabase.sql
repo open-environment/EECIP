@@ -214,6 +214,7 @@ CREATE TABLE [dbo].[T_OE_USERS](
 	[JOB_TITLE] [varchar](40) NULL,
 	[NODE_ADMIN] [bit] NOT NULL DEFAULT 0,
 	[USER_AVATAR] [varbinary](max) NULL,
+	[LINKEDIN] [varchar](100) NULL,
 	[LOG_ATMPT] [int] NULL,
 	[LOCKOUT_END_DATE_UTC] [datetime2] NULL,
 	[LOCKOUT_ENABLED] [bit] NOT NULL DEFAULT 0,
@@ -229,6 +230,7 @@ CREATE TABLE [dbo].[T_OE_USERS](
 ) ON [PRIMARY]
 
 --  alter table [T_OE_USERS] add SYNC_IND [bit] NOT NULL DEFAULT 0;
+--  alter table [T_OE_USERS] add LINKEDIN [varchar](100) NULL;
 
 
 

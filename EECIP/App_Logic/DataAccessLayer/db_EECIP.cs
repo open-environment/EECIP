@@ -304,7 +304,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     var xxx = (from a in ctx.T_OE_PROJECTS
-                               .Include(x => x.T_OE_REF_TAGS)
+                               .Include(x => x.T_OE_REF_TAGS2) //media
                                .Include(x => x.T_OE_PROJECT_TAGS)//.Select(b => b.T_OE_REF_TAGS))
 //                               .Include(x => x.T_OE_PROJECT_TAGS)
 //                               .Where(a => a.T_OE_PROJECT_TAGS != null)

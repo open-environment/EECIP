@@ -97,38 +97,53 @@
                     </a>
                 </div>
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="min-height:270px">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="table-responsive">
                             <table class="table table-striped m-b-none" data-ride="datatables">
                                 <tr>
-                                    <th></th>
+                                    <th style="width:80px"></th>
                                     <th>Name</th>
                                     <th>Job Title</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
+                                    <th>Contact</th>
+                                    <th>More Info</th>
                                 </tr>
 
                                 @foreach (var item in Model.users)
                                 {
-                                    <tr>
+                                    <tr >
                                         <td>
-                                            @*<a href="@Url.Action("UserProfile","Account", new { id=item.USER_IDX, a="o" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>*@
+                                            <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(item.USER_IDX).png" />
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.FNAME)
-                                            &nbsp;
-                                            @Html.DisplayFor(modelItem => item.LNAME)
+
+                                                @Html.DisplayFor(modelItem => item.FNAME)
+                                                &nbsp;
+                                                @Html.DisplayFor(modelItem => item.LNAME)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.JOB_TITLE)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.EMAIL)
+                                            @if (item.PHONE.Length > 0)
+                                            {
+                                                <a href="tel:@(item.PHONE)" class="btn btn-xs btn-info">
+                                                    <i class="clip-phone"></i>
+                                                </a>
+                                            }
+                                            <a href="mailto:@(item.EMAIL)" class="btn btn-xs btn-info">
+                                                <i class="glyphicon glyphicon-envelope"></i>
+                                            </a>
+                                            @if (item.LINKEDIN != null)
+                                            {
+                                                <a href="https://www.linkedin.com/in/@(item.LINKEDIN)" class="btn btn-xs btn-info" target="_blank">
+                                                    <i class="clip-linkedin"></i>
+                                                </a>
+                                            }
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.PHONE)
+                                            <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.USER_IDX })" class="btn btn-xs btn-info">More Info </a>
                                         </td>
                                     </tr>
                                 }
@@ -162,9 +177,9 @@
                             <th></th>
                             <th>Enterprise Service</th>
                             <th>Project Name</th>
+                            <th>Description</th>
                             <th>Vendor</th>
                             <th>Current Implementation Status</th>
-                            <th>Description</th>
                         </tr>
 
                         @foreach (var item in Model.org_ent_services)
@@ -175,9 +190,9 @@
                                     @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
                                     @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
                                     @Html.HiddenFor(modelItem => item.PROJECT_NAME)
+                                    @Html.HiddenFor(modelItem => item.COMMENTS)
                                     @Html.HiddenFor(modelItem => item.VENDOR)
                                     @Html.HiddenFor(modelItem => item.IMPLEMENT_STATUS)
-                                    @Html.HiddenFor(modelItem => item.COMMENTS)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ENT_PLATFORM_NAME)
@@ -186,13 +201,13 @@
                                     @Html.DisplayFor(modelItem => item.PROJECT_NAME)
                                 </td>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.COMMENTS)
+                                </td>
+                                <td>
                                     @Html.DisplayFor(modelItem => item.VENDOR)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.IMPLEMENT_STATUS)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.COMMENTS)
                                 </td>
                             </tr>
                         }

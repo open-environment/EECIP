@@ -686,6 +686,8 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
+                    if (CatName == "") CatName = null;
+
                     return (from a in ctx.T_OE_REF_TAGS
                             where (CatName == null ? true : a.TAG_CAT_NAME == CatName)
                             orderby a.TAG_CAT_NAME, a.TAG_NAME
