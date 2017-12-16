@@ -37,7 +37,7 @@ namespace EECIP.Controllers
                 {
                     int UserIDX = (int)Membership.GetUser(model.newUserEmail).ProviderUserKey;
                     //update first name and last name
-                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null);
+                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null);
                     TempData["Success"] = "User created and verification email sent to user.";
                 }
                 else
@@ -197,6 +197,26 @@ namespace EECIP.Controllers
 
         }
 
+        // POST: /Admin/RefAgencyDelete
+        [HttpPost]
+        public JsonResult RefAgencyDelete(string id)
+        {
+            Guid org = new Guid(id);
+            int SuccID = db_Ref.DeleteT_OE_ORGANIZATION(org);
+
+            string response = "Success";
+            if (SuccID == -1)
+                response = "Cannot delete agency because agency users exist.";
+            else if (SuccID == -2)
+                response = "Cannot delete agency because agency projects exist.";
+            else if (SuccID == -3)
+                response = "Cannot delete agency because agency enterprise services exist.";
+
+            return Json(response);
+            //return RedirectToAction("RefAgencyEdit", "Admin", new { id });
+        }
+
+
         // POST: /Admin/RefAgencyEditEmail
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult RefAgencyEditEmail(vmAdminAgencyEdit model)
@@ -215,14 +235,14 @@ namespace EECIP.Controllers
 
         // POST: /Admin/RefAgencyEditEmailDelete
         [HttpPost]
-        public ActionResult RefAgencyEditEmailDelete(string id, string id2)
+        public JsonResult RefAgencyEditEmailDelete(string id, string id2)
         {
             Guid org = new Guid(id);
             int SuccID = db_Ref.DeleteT_OE_ORGANIZATION_EMAIL_RULE(org, id2);
             if (SuccID == 0)
-                TempData["Error"] = "Unable to delete record.";
-
-            return RedirectToAction("RefAgencyEdit", "Admin", new { id = id });
+                return Json("Unable to delete record.");
+            else
+                return Json("Success");
         }
 
 
@@ -257,13 +277,13 @@ namespace EECIP.Controllers
 
         // POST: /Admin/RefEntServicesDelete
         [HttpPost]
-        public ActionResult RefEntServicesDelete(int id)
+        public JsonResult RefEntServicesDelete(int id)
         {
             int SuccID = db_Ref.DeleteT_OE_REF_ENTERPRISE_PLATFORM(id);
             if (SuccID == 0)
-                TempData["Error"] = "Unable to delete record.";
-
-            return RedirectToAction("RefEntServices", "Admin");
+                return Json("Unable to delete record.");
+            else
+                return Json("Success");
         }
 
 
@@ -304,13 +324,13 @@ namespace EECIP.Controllers
 
         // POST: /Admin/RefTagsDelete
         [HttpPost]
-        public ActionResult RefTagsDelete(int id)
+        public JsonResult RefTagsDelete(int id)
         {
             int SuccID = db_Ref.DeleteT_OE_REF_TAGS(id);
             if (SuccID == 0)
-                TempData["Error"] = "Unable to delete record.";
-
-            return RedirectToAction("RefTags", "Admin");
+                return Json("Unable to delete record.");
+            else
+                return Json("Success");
         }
 
 
@@ -452,17 +472,17 @@ namespace EECIP.Controllers
 
         // POST: /Admin/SearchAdminSynonymDelete
         [HttpPost]
-        public ActionResult SearchAdminSynonymDelete(int id)
+        public JsonResult SearchAdminSynonymDelete(int id)
         {
             int SuccID = db_Ref.DeleteT_OE_REF_SYNONYMS(id);
             if (SuccID == 0)
-                TempData["Error"] = "Unable to delete record.";
+                return Json("Unable to delete record.");
             else
             {
                 AzureSearch.UploadSynonyms();
                 AzureSearch.EnableSynonyms();
+                return Json("Success");
             }
-            return RedirectToAction("SearchAdmin", "Admin");
         }
 
 

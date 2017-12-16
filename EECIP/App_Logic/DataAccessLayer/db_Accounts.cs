@@ -133,7 +133,9 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
 
-        public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE, string lINKED_IN)
+        public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, 
+            DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE, 
+            string lINKED_IN, bool? NodeAdmin)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -158,6 +160,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (oRG_IDX != null) row.ORG_IDX = oRG_IDX;
                     if (jOB_TITLE != null) row.JOB_TITLE = jOB_TITLE;
                     if (lINKED_IN != null) row.LINKEDIN = lINKED_IN;
+                    if (NodeAdmin != null) row.NODE_ADMIN = NodeAdmin ?? false;
 
                     row.MODIFY_DT = System.DateTime.Now;
 

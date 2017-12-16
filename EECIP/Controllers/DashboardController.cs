@@ -244,16 +244,17 @@ namespace EECIP.Controllers
 
 
         [HttpPost]
-        public ActionResult ProjectsDelete(Guid id)
+        public JsonResult ProjectsDelete(Guid id)
         {
             int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
-            if (SuccID > 0)
-                //now delete from Aszure
-                AzureSearch.DeleteSearchIndexProject(id);
+            if (SuccID == 0)
+                return Json("Unable to delete record.");
             else
-                TempData["Error"] = "Unable to delete record.";
-
-            return RedirectToAction("Projects", "Dashboard");
+            {
+                //now delete from Azure
+                AzureSearch.DeleteSearchIndexProject(id);
+                return Json("Success");
+            }
         }
 
 
@@ -272,6 +273,9 @@ namespace EECIP.Controllers
                 {
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
                     model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
+                    T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(model.project.MODIFY_USERIDX ?? model.project.CREATE_USERIDX ?? -1);
+                    if (u != null)
+                        model.LastUpdatedUser = u.FNAME + " " + u.LNAME;
                 }
 
                 if (model.project != null)
@@ -292,6 +296,7 @@ namespace EECIP.Controllers
 
             var model = new vmDashboardUserCard();
             model.User = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+            model.UserOrg = db_Ref.GetT_OE_ORGANIZATION_ByID(model.User.ORG_IDX.ConvertOrDefault<Guid>());
             model.SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
 
             if (model.User != null)

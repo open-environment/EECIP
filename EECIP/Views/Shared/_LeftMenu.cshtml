@@ -43,7 +43,7 @@
         </li>
 
         <li>
-            <a href="@Url.Action("Index","MVCForum")">
+            <a href="@Url.Action("Index","Forum")">
                 <i class="clip-question"></i>
                 <span class="title">Forum </span><span class="selected"></span>
             </a>
@@ -87,6 +87,25 @@
                             <li class="lvl3 @Html.ActivePage("Admin", "RefTags")">
                                 <a href="@Url.Action("RefTags","Admin")">
                                     <span class="title">Tags </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="@Html.ActivePage("Admin", "Forum")">
+                        <a href="javascript:;">
+                            <span class="title">Forum Admin</span>
+                            <i class="icon-arrow"></i>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="lvl3 @Html.ActivePage("ForumAdmin", "Category")">
+                                <a href="@Url.Action("Category","ForumAdmin")">
+                                    <span class="title">Categories</span>
+                                </a>
+                            </li>
+                            <li class="lvl3 @Html.ActivePage("ForumAdmin", "Settings")">
+                                <a href="@Url.Action("Settings","ForumAdmin")">
+                                    <span class="title">Forum Settings</span>
                                 </a>
                             </li>
                         </ul>

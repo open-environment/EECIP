@@ -281,6 +281,38 @@
           <Property Name="SYNC_IND" Type="bit" Nullable="false" />
           <Property Name="LINKEDIN" Type="varchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="IsLocked" Type="bit" Nullable="false" />
+          <Property Name="ModerateTopics" Type="bit" Nullable="false" />
+          <Property Name="ModeratePosts" Type="bit" Nullable="false" />
+          <Property Name="SortOrder" Type="int" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="Slug" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="PageTitle" Type="nvarchar" MaxLength="80" />
+          <Property Name="Path" Type="nvarchar" MaxLength="2500" />
+          <Property Name="MetaDescription" Type="nvarchar" MaxLength="200" />
+          <Property Name="Colour" Type="nvarchar" MaxLength="50" />
+          <Property Name="Image" Type="nvarchar" MaxLength="200" />
+          <Property Name="Category_Id" Type="uniqueidentifier" />
+        </EntityType>
+        <Association Name="FK__Category__Catego__41B8C09B">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Category1" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__T_OE_ORGA__ENT_P__25518C17">
           <End Role="T_OE_REF_ENTERPRISE_PLATFORM" Type="Self.T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -518,6 +550,11 @@
           <EntitySet Name="T_OE_USER_NOTIFICATION" EntityType="Self.T_OE_USER_NOTIFICATION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_USER_ROLES" EntityType="Self.T_OE_USER_ROLES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_USERS" EntityType="Self.T_OE_USERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="forum" store:Type="Tables" />
+          <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="Self.FK__Category__Catego__41B8C09B">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Category1" EntitySet="Category" />
+          </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__ENT_P__25518C17" Association="Self.FK__T_OE_ORGA__ENT_P__25518C17">
             <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
@@ -742,6 +779,11 @@
             <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
           </AssociationSet>
           <EntitySet Name="T_OE_REF_SYNONYMS" EntityType="EECIPModel.T_OE_REF_SYNONYMS" />
+          <EntitySet Name="Categories" EntityType="EECIPModel.Category" />
+          <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="EECIPModel.FK__Category__Catego__41B8C09B">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Category1" EntitySet="Categories" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="T_OE_APP_SETTINGS">
           <Key>
@@ -1207,6 +1249,40 @@
           <Property Name="MODIFY_USERIDX" Type="Int32" />
           <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
         </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
+          <Property Name="ModerateTopics" Type="Boolean" Nullable="false" />
+          <Property Name="ModeratePosts" Type="Boolean" Nullable="false" />
+          <Property Name="SortOrder" Type="Int32" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="PageTitle" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+          <Property Name="Path" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" />
+          <Property Name="MetaDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Colour" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Image" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Category_Id" Type="Guid" />
+          <NavigationProperty Name="Category1" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category" ToRole="Category1" />
+          <NavigationProperty Name="Category2" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category1" ToRole="Category" />
+        </EntityType>
+        <Association Name="FK__Category__Catego__41B8C09B">
+          <End Type="EECIPModel.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="EECIPModel.Category" Role="Category1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1500,6 +1576,27 @@
                 <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
                 <ScalarProperty Name="SYNONYM_TEXT" ColumnName="SYNONYM_TEXT" />
                 <ScalarProperty Name="SYNONYM_IDX" ColumnName="SYNONYM_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="EECIPModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Colour" ColumnName="Colour" />
+                <ScalarProperty Name="MetaDescription" ColumnName="MetaDescription" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="PageTitle" ColumnName="PageTitle" />
+                <ScalarProperty Name="Slug" ColumnName="Slug" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="ModeratePosts" ColumnName="ModeratePosts" />
+                <ScalarProperty Name="ModerateTopics" ColumnName="ModerateTopics" />
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

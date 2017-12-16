@@ -13,71 +13,66 @@
                 <div class="panel-tools">
                     <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
                     </a>
-                    <a class="btn btn-xs btn-link panel-expand" href="#">
-                        <i class="fa-e clip-fullscreen"></i>
-                    </a>
                 </div>
             </div>
 
-            @using (Html.BeginForm("AgencyEdit", "Dashboard", FormMethod.Post, new { @class = "", @id="norepostform" }))
+            @using (Html.BeginForm("AgencyEdit", "Dashboard", FormMethod.Post, new { @class = "panel-body", @id="norepostform" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.agency.ORG_IDX)
 
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Abbreviation</label>
-                                @Html.TextBoxFor(model => model.agency.ORG_ABBR, new { @class = "form-control", @placeholder = "", @readonly = "false" })
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>State</label>
-                                @Html.DropDownListFor(x => x.agency.STATE_CD, Model.ddl_States, "", new { @class = "form-control", @readonly = "false" })
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>EPA Region</label>
-                                @Html.DropDownListFor(x => x.agency.EPA_REGION, Model.ddl_Regions, "", new { @class = "form-control", @readonly = "false" })
-                            </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Abbreviation</label>
+                            @Html.TextBoxFor(model => model.agency.ORG_ABBR, new { @class = "form-control", @placeholder = "", @readonly = "false" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Application Development Framework</label>
-                                @Html.ListBoxFor(model => model.SelectedAppFramework, Model.AllAppFramework, new { multiple = "multiple", @class = "form-control search-select" })
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Primary Database Platform</label>
-                                @Html.ListBoxFor(model => model.SelectedDatabase, Model.AllDatabase, new { multiple = "multiple", @class = "form-control search-select" })
-                            </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>State</label>
+                            @Html.DropDownListFor(x => x.agency.STATE_CD, Model.ddl_States, "", new { @class = "form-control", @readonly = "false" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Are you using/considering cloud applications?</label>
-                                @Html.DropDownListFor(model => model.agency.CLOUD, Model.ddl_Cloud, "", new { @class = "form-control search-select-single" })
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Do you have Internal/External APIs and/or an Agency Strategy for APIs?</label>
-                                @Html.DropDownListFor(model => model.agency.API, Model.ddl_API, "", new { @class = "form-control search-select-single" })
-                            </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>EPA Region</label>
+                            @Html.DropDownListFor(x => x.agency.EPA_REGION, Model.ddl_Regions, "", new { @class = "form-control", @readonly = "false" })
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
-                            <a href="@Url.Action("RefAgencies", "Admin")" class="btn btn-default">Close</a>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Application Development Framework</label>
+                            @Html.ListBoxFor(model => model.SelectedAppFramework, Model.AllAppFramework, new { multiple = "multiple", @class = "form-control search-select" })
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Primary Database Platform</label>
+                            @Html.ListBoxFor(model => model.SelectedDatabase, Model.AllDatabase, new { multiple = "multiple", @class = "form-control search-select" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Are you using/considering cloud applications?</label>
+                            @Html.DropDownListFor(model => model.agency.CLOUD, Model.ddl_Cloud, "", new { @class = "form-control search-select-single" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Do you have Internal/External APIs and/or an Agency Strategy for APIs?</label>
+                            @Html.DropDownListFor(model => model.agency.API, Model.ddl_API, "", new { @class = "form-control search-select-single" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+                        <a href="@Url.Action("RefAgencies", "Admin")" class="btn btn-default">Close</a>
                     </div>
                 </div>
             }
@@ -91,9 +86,6 @@
                 <i class="fa-e clip-grid-4"></i> Agency Users
                 <div class="panel-tools">
                     <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
-                    </a>
-                    <a class="btn btn-xs btn-link panel-expand" href="#">
-                        <i class="fa-e clip-fullscreen"></i>
                     </a>
                 </div>
             </div>
@@ -164,9 +156,6 @@
                 <i class="fa-e clip-grid-4"></i> Enterprise Services
                 <div class="panel-tools">
                     <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
-                    </a>
-                    <a class="btn btn-xs btn-link panel-expand" href="#">
-                        <i class="fa-e clip-fullscreen"></i>
                     </a>
                 </div>
             </div>

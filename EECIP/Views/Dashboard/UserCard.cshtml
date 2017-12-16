@@ -6,22 +6,52 @@
 }
 
 <div class="row">
-    <div class="col-sm-3">
-        Image
-    </div>
-    <div class="col-sm-6">
-        Member of the 
-        <div class="row">
-            Expertise:
+    <div class="col-lg-4 col-sm-6">
+        <div class="circle-tile">
+            <div class="circle-tile-heading" style="background-image:url(/Content/Images/Users/@(Model.User.USER_IDX).png)">
+            </div>
+            <div class="circle-tile-content dark-blue">
+                <div class="circle-tile-description text-faded">
+                    @Model.UserOrg.ORG_NAME
+                </div>
+                <div class="circle-tile-number text-faded">
+                    @Model.User.FNAME @Model.User.LNAME
+                </div>
+                <div class="circle-tile-title text-faded">
+                    @Model.User.JOB_TITLE
+                </div>
+                <div class="circle-tile-buttons text-faded">
+                    <a href="tel:@(Model.User.PHONE)" class="btn btn-primary">
+                        <i class="clip-phone"></i>
+                    </a>
+                    <a href="mailto:@(Model.User.EMAIL)" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-envelope"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/@(Model.User.LINKEDIN)" class="btn btn-primary" target="_blank">
+                        <i class="clip-linkedin"></i>
+                    </a>
+                </div>
+                <br />
+            </div>
         </div>
-        <div class="row">
+    </div>
+    <div class="col-lg-4">
+        <h4>Expertise</h4>
             @foreach (var item in Model.SelectedExpertise)
             {
                 <span class="select2-selection__choice">@Html.DisplayFor(modelItem => item)</span>
             }
+        <br/>
+
+        <br/>
+        <div class="form-group">
+            @Html.CheckBoxFor(model => model.User.NODE_ADMIN, new { @class = "" })
+            <label>Node Administrator</label>
         </div>
+
+        <br />
     </div>
-    <div class="col-sm-3">
+    <div class="col-lg-4">
         <h4>Badges</h4>
     </div>
 

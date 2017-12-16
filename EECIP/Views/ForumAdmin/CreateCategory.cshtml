@@ -1,0 +1,23 @@
+﻿@model EECIP.Models.vmForumAdminCategory
+@{
+    ViewBag.Title = "Create Category";
+}
+
+@Html.Partial("_CategoryTopNav")
+
+<div class="panel">
+    <div class="panel-content">
+        @using (Html.BeginForm("CreateCategory", "ForumAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(false)
+            @Html.AntiForgeryToken()
+
+            @Html.Partial("_CategoryFields", Model)
+
+            <div class="submit-holder">
+                <input type="submit" class="btn btn-primary" value="Create" />
+            </div>
+        }
+    </div>
+</div>
+

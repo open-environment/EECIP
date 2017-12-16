@@ -9,6 +9,10 @@ using System.Web;
 using System.Linq;
 using System.Drawing.Imaging;
 using System.Drawing;
+using HtmlAgilityPack;
+using System.Text.RegularExpressions;
+using System.Text;
+using System.Globalization;
 
 namespace EECIP.App_Logic.BusinessLogicLayer
 {
@@ -25,6 +29,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
     public static class Utils
     {
+        #region TYPE CONVERSION
 
         /// <summary>
         ///  Generic data type converter 
@@ -136,21 +141,10 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
+        #endregion
 
-        /// <summary>
-        ///  Better than built-in SubString by handling cases where string is too short
-        /// </summary>
-        public static string SubStringPlus(this string str, int index, int length)
-        {
-            if (index >= str.Length)
-                return String.Empty;
 
-            if (index + length > str.Length)
-                return str.Substring(index);
-
-            return str.Substring(index, length);
-        }
-
+        #region EMAIL HELPERS
 
         /// <summary>
         /// Sends out an email from the application. Returns true if successful. Supports multiple CC, BCC
@@ -242,6 +236,324 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
+        #endregion
+
+
+        #region STRING CONTENT HELPERS
+
+        /// <summary>
+        ///  Better than built-in SubString by handling cases where string is too short
+        /// </summary>
+        public static string SubStringPlus(this string str, int index, int length)
+        {
+            if (index >= str.Length)
+                return String.Empty;
+
+            if (index + length > str.Length)
+                return str.Substring(index);
+
+            return str.Substring(index, length);
+        }
+
+        /// <summary>
+        /// Strips all non alpha/numeric charators from a string
+        /// </summary>
+        public static string StripNonAlphaNumeric(string strInput, string replaceWith)
+        {
+            strInput = Regex.Replace(strInput, "[^\\w]", replaceWith);
+            strInput = strInput.Replace(string.Concat(replaceWith, replaceWith, replaceWith), replaceWith)
+                                .Replace(string.Concat(replaceWith, replaceWith), replaceWith)
+                                .TrimStart(Convert.ToChar(replaceWith))
+                                .TrimEnd(Convert.ToChar(replaceWith));
+            return strInput;
+        }
+
+        /// <summary>
+        /// Used to pass all string input in the system  - Strips all nasties from a string/html
+        /// </summary>
+        public static string GetSafeHtml(string html, bool useXssSantiser = false)
+        {
+            // Scrub html
+            html = ScrubHtml(html, useXssSantiser);
+
+            // remove unwanted html
+            html = RemoveUnwantedTags(html);
+
+            return html;
+        }
+
+        /// <summary>
+        /// Takes in HTML and returns santized Html/string
+        /// </summary>
+        /// <param name="html"></param>
+        /// <param name="useXssSantiser"></param>
+        /// <returns></returns>
+        public static string ScrubHtml(string html, bool useXssSantiser = false)
+        {
+            if (string.IsNullOrEmpty(html))
+            {
+                return html;
+            }
+
+            // clear the flags on P so unclosed elements in P will be auto closed.
+            HtmlNode.ElementsFlags.Remove("p");
+
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            var finishedHtml = html;
+
+            // Embed Urls
+            if (doc.DocumentNode != null)
+            {
+                // Get all the links we are going to 
+                var tags = doc.DocumentNode.SelectNodes("//a[contains(@href, 'youtube.com')]|//a[contains(@href, 'youtu.be')]|//a[contains(@href, 'vimeo.com')]|//a[contains(@href, 'screenr.com')]|//a[contains(@href, 'instagram.com')]");
+
+                if (tags != null)
+                {
+                    // find formatting tags
+                    foreach (var item in tags)
+                    {
+                        if (item.PreviousSibling == null)
+                        {
+                            // Prepend children to parent node in reverse order
+                            foreach (var node in item.ChildNodes.Reverse())
+                            {
+                                item.ParentNode.PrependChild(node);
+                            }
+                        }
+                        else
+                        {
+                            // Insert children after previous sibling
+                            foreach (var node in item.ChildNodes)
+                            {
+                                item.ParentNode.InsertAfter(node, item.PreviousSibling);
+                            }
+                        }
+
+                        // remove from tree
+                        item.Remove();
+                    }
+                }
+
+
+                //Remove potentially harmful elements
+                var nc = doc.DocumentNode.SelectNodes("//script|//link|//iframe|//frameset|//frame|//applet|//object|//embed");
+                if (nc != null)
+                {
+                    foreach (var node in nc)
+                    {
+                        node.ParentNode.RemoveChild(node, false);
+
+                    }
+                }
+
+                //remove hrefs to java/j/vbscript URLs
+                nc = doc.DocumentNode.SelectNodes("//a[starts-with(translate(@href, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'javascript')]|//a[starts-with(translate(@href, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'jscript')]|//a[starts-with(translate(@href, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'vbscript')]");
+                if (nc != null)
+                {
+
+                    foreach (var node in nc)
+                    {
+                        node.SetAttributeValue("href", "#");
+                    }
+                }
+
+                //remove img with refs to java/j/vbscript URLs
+                nc = doc.DocumentNode.SelectNodes("//img[starts-with(translate(@src, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'javascript')]|//img[starts-with(translate(@src, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'jscript')]|//img[starts-with(translate(@src, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'vbscript')]");
+                if (nc != null)
+                {
+                    foreach (var node in nc)
+                    {
+                        node.SetAttributeValue("src", "#");
+                    }
+                }
+
+                //remove on<Event> handlers from all tags
+                nc = doc.DocumentNode.SelectNodes("//*[@onclick or @onmouseover or @onfocus or @onblur or @onmouseout or @ondblclick or @onload or @onunload or @onerror]");
+                if (nc != null)
+                {
+                    foreach (var node in nc)
+                    {
+                        node.Attributes.Remove("onFocus");
+                        node.Attributes.Remove("onBlur");
+                        node.Attributes.Remove("onClick");
+                        node.Attributes.Remove("onMouseOver");
+                        node.Attributes.Remove("onMouseOut");
+                        node.Attributes.Remove("onDblClick");
+                        node.Attributes.Remove("onLoad");
+                        node.Attributes.Remove("onUnload");
+                        node.Attributes.Remove("onError");
+                    }
+                }
+
+                // remove any style attributes that contain the word expression (IE evaluates this as script)
+                nc = doc.DocumentNode.SelectNodes("//*[contains(translate(@style, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'expression')]");
+                if (nc != null)
+                {
+                    foreach (var node in nc)
+                    {
+                        node.Attributes.Remove("stYle");
+                    }
+                }
+
+                // build a list of nodes ordered by stream position
+                var pos = new NodePositions(doc);
+
+                // browse all tags detected as not opened
+                foreach (var error in doc.ParseErrors.Where(e => e.Code == HtmlParseErrorCode.TagNotOpened))
+                {
+                    // find the text node just before this error
+                    var last = pos.Nodes.OfType<HtmlTextNode>().LastOrDefault(n => n.StreamPosition < error.StreamPosition);
+                    if (last != null)
+                    {
+                        // fix the text; reintroduce the broken tag
+                        last.Text = error.SourceText.Replace("/", "") + last.Text + error.SourceText;
+                    }
+                }
+
+                finishedHtml = doc.DocumentNode.WriteTo();
+            }
+
+
+            return finishedHtml;
+        }
+
+        public static string RemoveUnwantedTags(string html)
+        {
+
+            var unwantedTagNames = new List<string>
+            {
+                "div",
+                "font",
+                "table",
+                "tbody",
+                "tr",
+                "td",
+                "th",
+                "thead"
+            };
+
+            return RemoveUnwantedTags(html, unwantedTagNames);
+        }
+
+        public static string RemoveUnwantedTags(string html, List<string> unwantedTagNames)
+        {
+            if (string.IsNullOrEmpty(html))
+            {
+                return html;
+            }
+
+            var htmlDoc = new HtmlDocument();
+
+            // load html
+            htmlDoc.LoadHtml(html);
+
+            var tags = (from tag in htmlDoc.DocumentNode.Descendants()
+                        where unwantedTagNames.Contains(tag.Name)
+                        select tag).Reverse();
+
+
+            // find formatting tags
+            foreach (var item in tags)
+            {
+                if (item.PreviousSibling == null)
+                {
+                    // Prepend children to parent node in reverse order
+                    foreach (var node in item.ChildNodes.Reverse())
+                    {
+                        item.ParentNode.PrependChild(node);
+                    }
+                }
+                else
+                {
+                    // Insert children after previous sibling
+                    foreach (var node in item.ChildNodes)
+                    {
+                        item.ParentNode.InsertAfter(node, item.PreviousSibling);
+                    }
+                }
+
+                // remove from tree
+                item.Remove();
+            }
+
+            // return transformed doc
+            return htmlDoc.DocumentNode.WriteContentTo().Trim();
+        }
+
+        /// <summary>
+        /// Uses regex to strip HTML from a string
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string StripHtmlFromString(string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                input = Regex.Replace(input, @"</?\w+((\s+\w+(\s*=\s*(?:"".*?""|'.*?'|[^'"">\s]+))?)+\s*|\s*)/?>", string.Empty, RegexOptions.Singleline);
+                input = Regex.Replace(input, @"\[[^]]+\]", "");
+            }
+            return input;
+        }
+
+        /// <summary>
+        /// Returns safe plain text using XSS library
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string SafePlainText(string input)
+        {
+            if (!string.IsNullOrEmpty(input))
+            {
+                input = StripHtmlFromString(input);
+                input = GetSafeHtml(input, true);
+            }
+            return input;
+        }
+
+
+        #endregion
+
+
+        #region URL / WEB HELPERS
+
+
+        /// <summary>
+        /// Creates a URL friendly string, good for SEO
+        /// </summary>
+        public static string CreateUrl(string strInput, string replaceWith)
+        {
+            // Doing this to stop the urls having amp from &amp;
+            strInput = HttpUtility.HtmlDecode(strInput);
+            // Doing this to stop the urls getting encoded
+            var url = RemoveAccents(strInput);
+            return StripNonAlphaNumeric(url, replaceWith).ToLower();
+        }
+
+        public static string RemoveAccents(string input)
+        {
+            // Replace accented characters for the closest ones:
+            var stFormD = input.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (var t in stFormD)
+            {
+                var uc = CharUnicodeInfo.GetUnicodeCategory(t);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(t);
+                }
+            }
+
+            return (sb.ToString().Normalize(NormalizationForm.FormC));
+
+        }
+
+        #endregion
+
+
+        #region DATA IMPORT HELPERS
 
         //******************* DATA IMPORT HELPERS**********************************
         public static Dictionary<string, int> GetColumnMapping(string ImportType, string[] headerCols)
@@ -327,6 +639,11 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             dict.TryGetValue(key, out ret);
             return ret;
         }
+
+        #endregion
+
+
+
 
 
     }

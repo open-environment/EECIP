@@ -8,11 +8,13 @@
 <h3>Project Contact</h3>
 <div class="row">
     <div class="col-md-3">
-        <div class="div-card"></div>
+        <div class="div-card">
+            @Model.project.PROJECT_CONTACT
+        </div>
     </div>
-    <div class="col-md-6">
+    @*<div class="col-md-6">
         <div class="div-card"></div>
-    </div>
+    </div>*@
 </div>
 
 
@@ -53,6 +55,7 @@
                     Last Updated:
                 </dt>
                 <dd>
+                    @Model.LastUpdatedUser
                     @(Model.project.MODIFY_DT ?? Model.project.CREATE_DT)
                </dd>
                 <dt>
@@ -68,24 +71,18 @@
 
     <div class="col-md-6">
         <div class="div-card">
-            <dl class="dl-horizontal">
-                <dt>
-                    Media:
-                </dt>
-                <dd>
-                </dd>
-                <hr />
-                <dt>
-                    Program Area(s):
-                </dt>
-                <dd>
-                    @foreach (string pa in Model.SelectedProgramAreas)
-                    {
-                         @pa
-                    }
-                </dd>
+            <h4>Media:</h4>
+            @if (Model.project.T_OE_REF_TAGS2 != null)
+            {
+                @Model.project.T_OE_REF_TAGS2.TAG_NAME
+            }
+            <hr />
+            <h4>Program Area(s):</h4>
+            @foreach (string pa in Model.SelectedProgramAreas)
+            {
+                <div class="select2-selection__choice">@pa</div>
+            }
 
-            </dl>
         </div>
     </div>
     <div class="clearfix visible-sm"></div>
@@ -108,7 +105,7 @@
     <div class="col-md-12">
         <div class="div-card">
             <dl class="dl-horizontal">
-                <dt>
+                <dt style="width:30%">
                     Features:
                 </dt>
                 <dd>
@@ -118,24 +115,40 @@
                     }
                 </dd>
                 <hr />
-                <dt>
+                <dt style="width:30%">
                     Commercial Off the Shelf/In House:
                 </dt>
                 <dd>
                     @Model.project.COTS
                 </dd>
-                <dt>
+                <dt style="width:30%">
                     Business Process Modernization:
                 </dt>
                 <dd>
-                    @Model.project.BP_MODERN_IND
+                    @if (Model.project.T_OE_REF_TAGS1 != null)
+                    {
+                        @Model.project.T_OE_REF_TAGS1.TAG_NAME
+                    }
                     @Model.project.BP_MODERN_DESC
                 </dd>
-                <dt>
-                    Advanced Monitoring:
+                <dt style="width:30%">
+                    Is there a Mobile component?:
                 </dt>
                 <dd>
-                    @Model.project.ADV_MON_IND
+                    @if (Model.project.T_OE_REF_TAGS3 != null)
+                    {
+                        @Model.project.T_OE_REF_TAGS3.TAG_NAME
+                    }
+                    @Model.project.MOBILE_DESC
+                </dd>
+                <dt style="width:30%">
+                    Involve Advanced Monitoring:
+                </dt>
+                <dd>
+                    @if (Model.project.T_OE_REF_TAGS != null)
+                    {
+                        @Model.project.T_OE_REF_TAGS.TAG_NAME
+                    }
                     @Model.project.ADV_MON_DESC
                 </dd>
             </dl>

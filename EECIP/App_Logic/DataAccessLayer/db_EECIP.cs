@@ -332,6 +332,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     var xxx = (from a in ctx.T_OE_PROJECTS
                                .Include(x => x.T_OE_REF_TAGS)
+                               .Include(x => x.T_OE_REF_TAGS1)
+                               .Include(x => x.T_OE_REF_TAGS2)
+                               .Include(x => x.T_OE_REF_TAGS3)
                                where a.PROJECT_IDX == ProjectIDX
                                select a).FirstOrDefault();
 

@@ -7,11 +7,16 @@
     <title>@ViewBag.Title - eEnterprise Community Information Platform</title>
     <link rel="icon" type="image/png" sizes="96x96" href="@Url.Content("~/Content/Images/favicon-96x96.png")">
     <link rel="icon" type="image/png" sizes="48x48" href="@Url.Content("~/Content/Images/favicon-48x48.png")">
-    <link rel="icon" type="image/png" sizes="32x32" href="@Url.Content("~/Content/Images/favicon-32x32.png")" >
-    <link rel="icon" type="image/png" sizes="16x16" href="@Url.Content("~/Content/Images/favicon-16x16.png")" >
+    <link rel="icon" type="image/png" sizes="32x32" href="@Url.Content("~/Content/Images/favicon-32x32.png")">
+    <link rel="icon" type="image/png" sizes="16x16" href="@Url.Content("~/Content/Images/favicon-16x16.png")">
     <link rel="shortcut icon" href="@Url.Content("~/favicon.ico")">
     @Styles.Render("~/Content/styles")
     @Scripts.Render("~/bundles/modernizr")
+
+    @if (IsSectionDefined("HeaderJS"))
+    {
+        @RenderSection("HeaderJS");
+    }
 </head>
 <body class=" @ViewBag.LeftMenuExpand">
     <!-- start: HEADER -->
@@ -93,19 +98,19 @@ else
     <!-- end: HEADER -->
     <!-- start: MAIN CONTAINER -->
     <div class="main-container">
-@if (Request.IsAuthenticated)
-{
+        @if (Request.IsAuthenticated)
+        {
         <div class="navbar-content">
             <!-- start: LEFT MENU -->
             @Html.Partial("_LeftMenu")
             <!-- end: LEFT MENU -->
         </div>
-}
+        }
         <div class="main-content">
             <div class="container" style="min-height: 760px;">
 
-@if (!(ViewBag.HideTitle ?? false))
-{
+                @if (!(ViewBag.HideTitle ?? false))
+                {
                 <div class="row">
                     <div class="col-sm-12">
                         @if (ViewBag.ShowBack == true)
@@ -118,9 +123,8 @@ else
                         </div>
                         <!-- end: PAGE TITLE & BREADCRUMB -->
                     </div>
-
                 </div>
-}
+                }
 
                 @RenderBody()
             </div>

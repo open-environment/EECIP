@@ -7,14 +7,14 @@
 {
     using (Html.BeginForm("RefTags", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
     {
-    <div class="form-group">
-        <label class="col-sm-1 control-label" for="form-field-1">
-            Agency:
-        </label>
-        <div class="col-sm-5">
-            @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Projects?selAgency=' + this.options[this.selectedIndex].value;" })
+        <div class="form-group">
+            <label class="col-sm-1 control-label" for="form-field-1">
+                Agency:
+            </label>
+            <div class="col-sm-5">
+                @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Projects?selAgency=' + this.options[this.selectedIndex].value;" })
+            </div>
         </div>
-    </div>
     }
 }
 <div class="row">
@@ -24,9 +24,6 @@
                 <i class="fa-e clip-grid-4"></i> Projects
                 <div class="panel-tools">
                     <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
-                    </a>
-                    <a class="btn btn-xs btn-link panel-expand" href="#">
-                        <i class="fa-e clip-fullscreen"></i>
                     </a>
                 </div>
             </div>

@@ -1,0 +1,48 @@
+﻿@model EECIP.Models.vmForumAdminCategories
+@{
+    var mainCategories = Model.Categories.Where(x => x.Category_Id == null).ToList();
+}
+
+<div class="panel">
+    <div class="panel-heading">
+        <h5>All Categories</h5>
+    </div>
+    <div class="panel-content">
+        <div id="container">
+            <ul>
+                @foreach (var cat in mainCategories)
+                {
+                    <li class="maincategory">
+                        <a href="@Url.Action("EditCategory", new { id = cat.Id })">
+                            @Html.Raw(cat.Name)
+                        </a>
+                        @GetSubCategories(cat)
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+@helper GetSubCategories(EECIP.App_Logic.DataAccessLayer.Category cat)
+{
+    var subCategories = Model.Categories.Where(x => x.Category_Id != null && x.Category_Id == cat.Id).ToList();
+    if (subCategories.Any())
+    {
+        <ul>
+            @foreach (var subCat in subCategories)
+            {
+                <li>
+                    <a href="@Url.Action("EditCategory", new { id = subCat.Id })">
+                        @Html.Raw(subCat.Name)
+                    </a>
+                    @GetSubCategories(subCat)
+                </li>
+            }
+        </ul>
+    }
+}
+

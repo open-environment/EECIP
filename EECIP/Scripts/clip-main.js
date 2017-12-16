@@ -142,37 +142,37 @@ var Main = function () {
 
     //function to activate the panel tools
     var runModuleTools = function () {
-        $('.panel-tools .panel-expand').bind('click', function (e) {
-            $('.panel-tools a').not(this).hide();
-            $('body').append('<div class="full-white-backdrop"></div>');
-            $('.main-container').removeAttr('style');
-            backdrop = $('.full-white-backdrop');
-            wbox = $(this).parents('.panel');
-            wbox.removeAttr('style');
-            if (wbox.hasClass('panel-full-screen')) {
-                backdrop.fadeIn(200, function () {
-                    $('.panel-tools a').show();
-                    wbox.removeClass('panel-full-screen');
-                    backdrop.fadeOut(200, function () {
-                        backdrop.remove();
-                    });
-                });
-            } else {
-                $('body').append('<div class="full-white-backdrop"></div>');
-                backdrop.fadeIn(200, function () {
-                    $('.main-container').css({
-                        'max-height': $(window).outerHeight() - $('header').outerHeight() - $('.footer').outerHeight() - 100,
-                        'overflow': 'hidden'
-                    });
-                    backdrop.fadeOut(200);
-                    backdrop.remove();
-                    wbox.addClass('panel-full-screen').css({
-                        'max-height': $(window).height(),
-                        'overflow': 'auto'
-                    });
-                });
-            }
-        });
+        //$('.panel-tools .panel-expand').bind('click', function (e) {
+        //    $('.panel-tools a').not(this).hide();
+        //    $('body').append('<div class="full-white-backdrop"></div>');
+        //    $('.main-container').removeAttr('style');
+        //    backdrop = $('.full-white-backdrop');
+        //    wbox = $(this).parents('.panel');
+        //    wbox.removeAttr('style');
+        //    if (wbox.hasClass('panel-full-screen')) {
+        //        backdrop.fadeIn(200, function () {
+        //            $('.panel-tools a').show();
+        //            wbox.removeClass('panel-full-screen');
+        //            backdrop.fadeOut(200, function () {
+        //                backdrop.remove();
+        //            });
+        //        });
+        //    } else {
+        //        $('body').append('<div class="full-white-backdrop"></div>');
+        //        backdrop.fadeIn(200, function () {
+        //            $('.main-container').css({
+        //                'max-height': $(window).outerHeight() - $('header').outerHeight() - $('.footer').outerHeight() - 100,
+        //                'overflow': 'hidden'
+        //            });
+        //            backdrop.fadeOut(200);
+        //            backdrop.remove();
+        //            wbox.addClass('panel-full-screen').css({
+        //                'max-height': $(window).height(),
+        //                'overflow': 'auto'
+        //            });
+        //        });
+        //    }
+        //});
         $('.panel-tools .panel-close').bind('click', function (e) {
             $(this).parents(".panel").remove();
             e.preventDefault();

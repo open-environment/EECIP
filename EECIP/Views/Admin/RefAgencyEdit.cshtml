@@ -13,9 +13,6 @@
                 <div class="panel-tools">
                     <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
                     </a>
-                    <a class="btn btn-xs btn-link panel-expand" href="#">
-                        <i class="fa-e clip-fullscreen"></i>
-                    </a>
                 </div>
             </div>
 
@@ -29,7 +26,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Agency Name</label>
-                                @Html.TextBoxFor(model => model.agency.ORG_NAME, new { @class = "form-control", @placeholder = "" })
+                                @Html.TextBoxFor(model => model.agency.ORG_NAME, new { @class = "form-control", @placeholder = "", @maxlength = "200" })
                             </div>
                         </div>
                     </div>
@@ -37,7 +34,7 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Abbreviation</label>
-                                @Html.TextBoxFor(model => model.agency.ORG_ABBR, new { @class = "form-control", @placeholder = "" })
+                                @Html.TextBoxFor(model => model.agency.ORG_ABBR, new { @class = "form-control", @placeholder = "", @maxlength = "100" })
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -74,9 +71,6 @@
                 <i class="fa-e clip-grid-4"></i> Email Rules
                 <div class="panel-tools">
                     <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
-                    </a>
-                    <a class="btn btn-xs btn-link panel-expand" href="#">
-                        <i class="fa-e clip-fullscreen"></i>
                     </a>
                 </div>
             </div>
@@ -136,7 +130,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Email Rule</label>
-                                            @Html.TextBoxFor(model => model.new_email, new { @class = "form-control" })
+                                            @Html.TextBoxFor(model => model.new_email, new { @class = "form-control", @maxlength = "100" })
                                             @Html.ValidationMessageFor(model => model.new_email)
                                         </div>
                                     </div>

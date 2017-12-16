@@ -45,5 +45,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<T_OE_USER_EXPERTISE> T_OE_USER_EXPERTISE { get; set; }
         public virtual DbSet<T_OE_ORGANIZATION_TAGS> T_OE_ORGANIZATION_TAGS { get; set; }
         public virtual DbSet<T_OE_REF_SYNONYMS> T_OE_REF_SYNONYMS { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
     }
 }

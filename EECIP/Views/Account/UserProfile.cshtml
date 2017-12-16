@@ -9,16 +9,14 @@
     @Html.HiddenFor(model => model.UserIDX)
     @Html.HiddenFor(model => model.uListInd)
 
-    <div class="row">
+    <div class="row aligned-row ">
         <div class="col-md-6">
             <section class="panel panel-default ">
                 <div class="panel-heading">
-                    <i class="fa-e clip-grid-4"></i> Basic Info
+                    <i class="clip-grid-4"></i>
+                    Basic Info
                     <div class="panel-tools">
                         <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
-                        </a>
-                        <a class="btn btn-xs btn-link panel-expand" href="#">
-                            <i class="fa-e clip-fullscreen"></i>
                         </a>
                     </div>
                 </div>
@@ -53,7 +51,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Primary Phone</label>
+                                        <label>Phone</label>
                                         @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", data_format = "(ddd) ddd-dddd" })
                                         @Html.ValidationMessageFor(model => model.Phone)
                                     </div>
@@ -68,31 +66,31 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-
-                                <div class="btn btn-primary">
+                                <label>Profile Picture</label>
+                                <div class="btn-primary">
                                     @Html.TextBox("imageBrowes", "", new { type = "file" })
                                 </div>
                                 <hr />
-                                    @if (Model.HasAvatar == false)
-                                    {
-                                        <div id="imgPreview" class="thumbnail" style="display:none">
-                                            <img class="img-responsive" id="targetImg" />
-                                            <div class="caption">
-                                                <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
-                                                <span id="description"></span>
-                                            </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div id="imgPreview" class="thumbnail" >
-                                            <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(Model.UserIDX).png" />
-                                            <div class="caption">
-                                                <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
-                                                <span id="description"></span>
-                                            </div>
-                                        </div>
-                                    }
+                                @if (Model.HasAvatar == false)
+    {
+                            <div id="imgPreview" class="thumbnail" style="display:none">
+                                <img class="img-responsive" id="targetImg" />
+                                <div class="caption">
+                                    <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
+                                    <span id="description"></span>
+                                </div>
+                            </div>
+}
+else
+{
+                            <div id="imgPreview" class="thumbnail" style="max-width:200px">
+                                <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(Model.UserIDX).png" />
+                                <div class="caption">
+                                    <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
+                                    <span id="description"></span>
+                                </div>
+                            </div>
+}
 
                             </div>
                         </div>
@@ -107,9 +105,6 @@
                     <i class="fa-e clip-grid-4"></i> Professional Info
                     <div class="panel-tools">
                         <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
-                        </a>
-                        <a class="btn btn-xs btn-link panel-expand" href="#">
-                            <i class="fa-e clip-fullscreen"></i>
                         </a>
                     </div>
                 </div>
@@ -141,11 +136,15 @@
                             <div class="form-group">
                                 <label for="form-field-select-4">Expertise</label>
                                 @Html.ListBoxFor(model => model.SelectedExpertise, Model.AllExpertise, new { multiple = "multiple", @id = "form-field-select-4", @class="form-control search-select" })
-
-
                             </div>
                         </div>
 
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="form-field-select-4">Node Admin</label>
+                                @Html.CheckBox("NodeAdmin", Model.NodeAdmin ?? false, new { @class = "form-control" })
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>

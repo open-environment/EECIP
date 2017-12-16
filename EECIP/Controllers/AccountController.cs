@@ -58,7 +58,7 @@ namespace EECIP.Controllers
                         return RedirectToAction("SetPermPassword");
                     else
                     {
-                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, null, null, null, null);
+                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, null, null, null, null, null);
                         return RedirectToAction("Index", "Dashboard");
                     }
 
@@ -179,7 +179,7 @@ namespace EECIP.Controllers
                             }
 
                             //update first name, last name, and agency
-                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null);
+                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null);
 
                             //redirect user to registration success view
                             return RedirectToAction("RegisterSuccess", "Account");
@@ -238,6 +238,7 @@ namespace EECIP.Controllers
                 model.OrgIDX = u.ORG_IDX;
                 model.JobTitle = u.JOB_TITLE;
                 model.LinkedIn = u.LINKEDIN;
+                model.NodeAdmin = u.NODE_ADMIN;
                 //model.GetImage = u.USER_AVATAR;
                 model.HasAvatar = (u.USER_AVATAR != null);
                 model.uListInd = a;
@@ -303,7 +304,7 @@ namespace EECIP.Controllers
                 {
                     var strippedPhone = Regex.Replace(model.Phone ?? "", "[^0-9]", "");
 
-                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, null, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn);
+                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, null, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin);
 
                     //update user experience
                     db_EECIP.DeleteT_OE_USER_EXPERTISE(model.UserIDX);

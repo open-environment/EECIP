@@ -106,11 +106,13 @@ namespace EECIP.Models
         public T_OE_PROJECTS project { get; set; }
         public List<string> SelectedProgramAreas { get; set; }
         public List<string> SelectedFeatures { get; set; }
+        public string LastUpdatedUser { get; set; }
 
     }
 
     public class vmDashboardUserCard {
         public T_OE_USERS User { get; set; }
+        public T_OE_ORGANIZATION UserOrg { get; set; }
         public List<string> SelectedExpertise { get; set; }
 
     }

@@ -63,6 +63,7 @@ namespace EECIP.Models
         public string PhoneExt { get; set; }
         public string JobTitle { get; set; }
         public string LinkedIn { get; set; }
+        public bool? NodeAdmin { get; set; }
         public IEnumerable<SelectListItem> AllExpertise { get; set; }
         public List<string> SelectedExpertise { get; set; }
         public IEnumerable<SelectListItem> ddl_Agencies { get; set; }

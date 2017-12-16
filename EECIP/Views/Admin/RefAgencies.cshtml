@@ -23,6 +23,11 @@
                         <tr>
                             <td>
                                 <a href="@Url.Action("RefAgencyEdit","Admin", new { id=item.ORG_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <div class="delete-section" style="display:inline">
+                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.ORG_IDX" data-delete-p="/Admin/RefAgencyDelete"><b>Confirm Delete</b></div>
+                                </div>
+
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ORG_NAME)
@@ -47,3 +52,15 @@
 
     </div>
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/confirmdelete")
+    
+    @{
+        if (TempData["Error"] != null)
+        {
+            @:alert('@(TempData["Error"])');
+        }
+    }
+
+}

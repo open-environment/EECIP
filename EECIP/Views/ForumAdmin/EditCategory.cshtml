@@ -1,0 +1,25 @@
+﻿@model EECIP.Models.vmForumAdminCategory
+@{
+    ViewBag.Title = "Edit Category";
+}
+
+@Html.Partial("_CategoryTopNav")
+
+<div class="panel">
+    <div class="panel-content">
+        @using (Html.BeginForm("EditCategory", "ForumAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.ValidationSummary(false)
+            @Html.HiddenFor(model => model.Id)
+
+            @Html.Partial("_CategoryFields", Model)
+
+            <div class="submit-holder">
+                <input type="submit" class="btn btn-primary" value="Update" />
+                <a href="@Url.Action("DeleteCategoryConfirmation", new { id = Model.Id })" class="btn btn-danger" role="button">Delete</a>
+            </div>
+        }
+
+    </div>
+</div>
+

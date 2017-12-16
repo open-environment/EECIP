@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Manage Categories";
+}
+
+@section HeaderJS
+{
+    <link href="@Url.Content("~/Content/jstree/themes/proton/style.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/Content/jstree/jstree.min.js")"></script>
+    <script>
+        $(function () {
+            $('#container').jstree({
+                'core': {
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true
+                    },
+                    'check_callback': true
+                }
+            }).bind("select_node.jstree", function (e, data) {
+                var href = data.node.a_attr.href;
+                document.location.href = href;
+            });
+        });
+    </script>
+
+}
+
+@Html.Partial("_CategoryTopNav")
+
+
+@Html.Action("GetMainCategories")
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+﻿@model EECIP.Models.vmForumAdminCategories
+@{
+    var mainCategories = Model.Categories.Where(x => x.Category_Id == null).ToList();
+}
+
+
+<div class="side-box categories-box">
+    <h5>CATEGORIES</h5>
+
+    <ul>
+        <li><a href="@Url.Action("Index")">All Categories</a></li>
+        @foreach (var category in mainCategories)
+        {
+            var subCats = Model.Categories.Where(x => x.Category_Id != null && x.Category_Id == category.Id).ToList();
+            <li class="catitem">
+                <a style="border-color: @(string.IsNullOrEmpty(category.Colour) ? "#ced1d1" : category.Colour)" href="#">@Html.Raw(category.Name)</a>
+                @if (subCats.Any())
+                {
+                    <ul>
+                        @foreach (var subCat in subCats)
+                        {
+                            <li class="catitem">
+                                <a style="border-color: @(string.IsNullOrEmpty(subCat.Colour) ? "#ced1d1" : subCat.Colour)" href="#">@Html.Raw(subCat.Name)</a>
+                            </li>
+                        }
+                    </ul>
+                }
+
+            </li>
+        }
+    </ul>
+
+
+
+</div>

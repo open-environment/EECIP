@@ -274,6 +274,38 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int DeleteT_OE_ORGANIZATION(Guid id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    //***************** VALIDATION (DONT DELETE ORG IF ANY USERS) **********************
+                    List<T_OE_USERS> u = db_Accounts.GetT_OE_USERSByAgency(id);
+                    if (u != null && u.Count > 0)
+                        return -1;
+
+                    List<T_OE_PROJECTS> p = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(id);
+                    if (p != null && p.Count > 0)
+                        return -2;
+
+                    List<OrganizationEntServicesDisplayType> es = db_EECIP.GetT_OE_ORGANIZATION_ENTERPRISE_PLATFORM(id);
+                    if (es != null && es.Count > 0)
+                        return -3;
+
+                    T_OE_ORGANIZATION rec = new T_OE_ORGANIZATION { ORG_IDX = id };
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
 
         //***************** ORGANZIATION TAGS ******************************

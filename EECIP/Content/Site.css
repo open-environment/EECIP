@@ -247,8 +247,9 @@ ul.main-navigation-menu > li.active > a .selected:before {
     padding: 5px;
     background-color: rgba(25, 156, 152, 0.26);
     border: 1px solid rgba(25, 156, 152, 1);
-    min-height:120px;
+    min-height: 120px;
     font-size: 14px;
+    border-radius: 8px;
     /*height: 120px;*/
 }
 
@@ -402,3 +403,61 @@ ul.main-navigation-menu > li.active > a .selected:before {
 }
 
 
+/***********************FORUM ********************************/
+
+/* Side Boxes */
+.side-box {
+    padding: 0 0 20px 0;
+}
+
+    .side-box a, .side-box a:visited {
+        color: #3b3b3b;
+    }
+
+    .side-box h5 {
+        font-size: 12px;
+        color: #636267;
+        text-transform: uppercase;
+        border-bottom: 1px solid #ecf0f1;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+    }
+
+@media (max-width: 991px) {
+    .side-box {
+        float: left;
+        width: 50%;
+    }
+}
+
+@media (max-width: 600px) {
+    .side-box {
+        float: none;
+        width: auto;
+        padding: 0 0 25px 0;
+    }
+}
+
+/* Side Boxes - Category */
+.categories-box ul {
+    padding: 0;
+    margin: 0;
+}
+
+    .categories-box ul li {
+        margin: 2px 0;
+        list-style: none;
+    }
+
+        .categories-box ul li a, .categories-box ul li a:visited {
+            border-left: 5px #ecf0f1 solid;
+            padding-left: 8px;
+        }
+
+        .categories-box ul li ul {
+            padding-left: 15px;
+        }
+
+            .categories-box ul li ul li a, .categories-box ul li ul li a:visited {
+                font-size: 12px;
+            }

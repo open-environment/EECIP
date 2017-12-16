@@ -24,7 +24,7 @@ $(function () {
         //appPath needed to overcome difference in localhost path versus deployed in MVC envirionment 
         var appPath = (window.location.pathname.split("/")[1] == confirmButton.attr('data-delete-p').split("/")[1] ? '' : window.location.pathname.split("/")[1]);
         var delPath = window.location.protocol + "//" + window.location.host + "/" + appPath + confirmButton.attr('data-delete-p');
-        console.log(delPath);
+
         var deleteItem = function () {
             removeEvents();
             confirmButton.fadeOut(700);
@@ -32,20 +32,24 @@ $(function () {
             $.post(
                 delPath,
                 AddAntiForgeryToken({ id: confirmButton.attr('data-delete-id'), id2: confirmButton.attr('data-delete-id2') }))
-               .done(function () {
+                .done(function (response) {
+                    if (response == "Success") {
+                        var idType = confirmButton.attr('data-delete-type');
+                        var parentRow = deleteLink.parents("tr:first");
 
-                   var idType = confirmButton.attr('data-delete-type');
-                   var parentRow = deleteLink.parents("tr:first");
+                        if (idType === 'team') //special handling for team control
+                            parentRow = deleteLink.parents(".treecont:first");
 
-                   if (idType === 'team') //special handling for team control
-                       parentRow = deleteLink.parents(".treecont:first");
-
-                   parentRow.fadeOut('slow', function () {
-                       parentRow.remove();
-                   });
+                        parentRow.fadeOut('slow', function () {
+                            parentRow.remove();
+                        });
+                    }
+                    else {
+                        toastr.warning(response);
+                    }
 
                 }).fail(function (data) {
-                   alert("Record cannot be deleted.");
+                    toastr.warning("Record cannot be deleted.");
                });
             return false;
         };
