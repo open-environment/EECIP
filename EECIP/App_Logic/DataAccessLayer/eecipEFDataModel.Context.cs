@@ -30,7 +30,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<T_OE_SYS_LOG> T_OE_SYS_LOG { get; set; }
         public virtual DbSet<T_OE_USER_ROLES> T_OE_USER_ROLES { get; set; }
         public virtual DbSet<T_OE_APP_SETTINGS> T_OE_APP_SETTINGS { get; set; }
-        public virtual DbSet<T_OE_ORGANIZATION_EMAIL_RULE> T_OE_ORGANIZATION_EMAIL_RULE { get; set; }
         public virtual DbSet<T_OE_REF_ENTERPRISE_PLATFORM> T_OE_REF_ENTERPRISE_PLATFORM { get; set; }
         public virtual DbSet<T_OE_REF_REGION> T_OE_REF_REGION { get; set; }
         public virtual DbSet<T_OE_REF_STATE> T_OE_REF_STATE { get; set; }
@@ -46,5 +45,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<T_OE_ORGANIZATION_TAGS> T_OE_ORGANIZATION_TAGS { get; set; }
         public virtual DbSet<T_OE_REF_SYNONYMS> T_OE_REF_SYNONYMS { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<T_OE_ORGANIZATION_EMAIL_RULE> T_OE_ORGANIZATION_EMAIL_RULE { get; set; }
+        public virtual DbSet<Poll> Polls { get; set; }
     }
 }

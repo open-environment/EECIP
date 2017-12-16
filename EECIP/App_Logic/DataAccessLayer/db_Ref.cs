@@ -289,7 +289,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (p != null && p.Count > 0)
                         return -2;
 
-                    List<OrganizationEntServicesDisplayType> es = db_EECIP.GetT_OE_ORGANIZATION_ENTERPRISE_PLATFORM(id);
+                    List<OrganizationEntServicesDisplayType> es = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_NoLeftJoin(id);
                     if (es != null && es.Count > 0)
                         return -3;
 

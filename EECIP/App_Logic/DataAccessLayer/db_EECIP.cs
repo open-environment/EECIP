@@ -184,6 +184,37 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<OrganizationEntServicesDisplayType> GetT_OE_ORGANIZATION_ENT_SVCS_NoLeftJoin(Guid OrgID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_ENTERPRISE_PLATFORM
+                            join b in ctx.T_OE_ORGANIZATION_ENT_SVCS on a.ENT_PLATFORM_IDX equals b.ENT_PLATFORM_IDX
+                            where b.ORG_IDX == OrgID
+                            select new OrganizationEntServicesDisplayType
+                            {
+                                ORG_ENT_SVCS_IDX = b.ORG_ENT_SVCS_IDX,
+                                ORG_IDX = b.ORG_IDX,
+                                ENT_PLATFORM_IDX = a.ENT_PLATFORM_IDX,
+                                ENT_PLATFORM_NAME = a.ENT_PLATFORM_NAME,
+                                PROJECT_NAME = b.PROJECT_NAME,
+                                VENDOR = b.VENDOR,
+                                IMPLEMENT_STATUS = b.IMPLEMENT_STATUS,
+                                COMMENTS = b.COMMENTS,
+                                CREATE_DT = b.CREATE_DT,
+                                MODIFY_DT = b.MODIFY_DT
+                            }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static int InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(int? oRG_ENT_SVCS_IDX, Guid? oRG_IDX, int? eNT_PLATFORM_IDX, string pROJECT_NAME, 
             string vENDOR, string iMPLEMENT_STATUS, string cOMMENTS, int? cREATE_USER = 0)
         {

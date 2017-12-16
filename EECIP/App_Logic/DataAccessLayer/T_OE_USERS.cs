@@ -19,6 +19,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         {
             this.T_OE_USER_ROLES = new HashSet<T_OE_USER_ROLES>();
             this.T_OE_USER_EXPERTISE = new HashSet<T_OE_USER_EXPERTISE>();
+            this.Polls = new HashSet<Poll>();
         }
     
         public int USER_IDX { get; set; }
@@ -53,5 +54,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_USER_EXPERTISE> T_OE_USER_EXPERTISE { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Poll> Polls { get; set; }
     }
 }

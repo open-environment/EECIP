@@ -188,7 +188,10 @@ namespace EECIP.Controllers
             Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(agency.ORG_IDX, agency.ORG_ABBR, agency.ORG_NAME, agency.STATE_CD, agency.EPA_REGION, null, null, true, UserIDX);
 
             if (SuccID != null)
+            {
+                AzureSearch.PopulateSearchIndexOrganization(SuccID);
                 TempData["Success"] = "Update successful.";
+            }
             else
                 TempData["Error"] = "Error updating data.";
 
@@ -204,6 +207,9 @@ namespace EECIP.Controllers
             Guid org = new Guid(id);
             int SuccID = db_Ref.DeleteT_OE_ORGANIZATION(org);
 
+            //now delete from Azure
+            AzureSearch.DeleteSearchIndexAgency(id);
+
             string response = "Success";
             if (SuccID == -1)
                 response = "Cannot delete agency because agency users exist.";
@@ -213,7 +219,6 @@ namespace EECIP.Controllers
                 response = "Cannot delete agency because agency enterprise services exist.";
 
             return Json(response);
-            //return RedirectToAction("RefAgencyEdit", "Admin", new { id });
         }
 
 

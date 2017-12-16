@@ -385,6 +385,41 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         }
 
 
+        public static void DeleteSearchIndexAgency(string OrgIDX)
+        {
+            try
+            {
+                //connect to Azure Search
+                SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+                //get project needing to delete sync
+                IEnumerable<string> ss = new List<string>() { OrgIDX };
+                var batch = IndexBatch.Delete("KeyID", ss);
+
+                try
+                {
+                    ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                    indexClient.Documents.Index(batch);
+                }
+                catch (IndexBatchException e)
+                {
+                    // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                    // the batch. Depending on your application, you can take compensating actions like delaying and
+                    // retrying. For this simple demo, we just log the failed document keys and continue.
+                    Console.WriteLine(
+                        "Failed to index some of the documents: {0}",
+                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
 
         //******************************** METHODS FOR QUERYING INDEX ******************************************
         public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr, string dataTypeFacet = "", string mediaFacet = "", 

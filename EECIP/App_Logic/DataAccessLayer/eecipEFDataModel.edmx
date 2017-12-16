@@ -125,7 +125,7 @@
           </Key>
           <Property Name="ENT_PLATFORM_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ENT_PLATFORM_NAME" Type="varchar" MaxLength="80" Nullable="false" />
-          <Property Name="ENT_PLATFORM_DESC" Type="varchar" MaxLength="500" />
+          <Property Name="ENT_PLATFORM_DESC" Type="varchar" MaxLength="1000" />
           <Property Name="ENT_PLATFORM_EXAMPLE" Type="varchar" MaxLength="100" />
           <Property Name="SEQ_NO" Type="int" />
           <Property Name="ACT_IND" Type="bit" Nullable="false" />
@@ -301,6 +301,16 @@
           <Property Name="Image" Type="nvarchar" MaxLength="200" />
           <Property Name="Category_Id" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="Poll">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsClosed" Type="bit" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="ClosePollAfterDays" Type="int" />
+          <Property Name="MembershipUser_Id" Type="int" Nullable="false" />
+        </EntityType>
         <Association Name="FK__Category__Catego__41B8C09B">
           <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
           <End Role="Category1" Type="Self.Category" Multiplicity="*" />
@@ -310,6 +320,18 @@
             </Principal>
             <Dependent Role="Category1">
               <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Poll__Membership__44952D46">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
+          <End Role="Poll" Type="Self.Poll" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="Poll">
+              <PropertyRef Name="MembershipUser_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -367,8 +389,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_ORGA__ORG_I__282DF8C2">
-          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1" />
+        <Association Name="FK__T_OE_ORGA__ORG_I__54CB950F">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="T_OE_ORGANIZATION_EMAIL_RULE" Type="Self.T_OE_ORGANIZATION_EMAIL_RULE" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_ORGANIZATION">
@@ -551,9 +575,14 @@
           <EntitySet Name="T_OE_USER_ROLES" EntityType="Self.T_OE_USER_ROLES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_USERS" EntityType="Self.T_OE_USERS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Category" EntityType="Self.Category" Schema="forum" store:Type="Tables" />
+          <EntitySet Name="Poll" EntityType="Self.Poll" Schema="forum" store:Type="Tables" />
           <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="Self.FK__Category__Catego__41B8C09B">
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Poll__Membership__44952D46" Association="Self.FK__Poll__Membership__44952D46">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="Poll" EntitySet="Poll" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__ENT_P__25518C17" Association="Self.FK__T_OE_ORGA__ENT_P__25518C17">
             <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
@@ -571,7 +600,7 @@
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__282DF8C2" Association="Self.FK__T_OE_ORGA__ORG_I__282DF8C2">
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__54CB950F" Association="Self.FK__T_OE_ORGA__ORG_I__54CB950F">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_ORGANIZATION_EMAIL_RULE" EntitySet="T_OE_ORGANIZATION_EMAIL_RULE" />
           </AssociationSet>
@@ -700,7 +729,6 @@
             <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
           </AssociationSet>
           <EntitySet Name="T_OE_APP_SETTINGS" EntityType="EECIPModel.T_OE_APP_SETTINGS" />
-          <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" />
           <EntitySet Name="T_OE_REF_ENTERPRISE_PLATFORM" EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" />
           <EntitySet Name="T_OE_REF_REGION" EntityType="EECIPModel.T_OE_REF_REGION" />
           <EntitySet Name="T_OE_REF_STATE" EntityType="EECIPModel.T_OE_REF_STATE" />
@@ -728,10 +756,6 @@
           <AssociationSet Name="FK__T_OE_ORGA__ORG_I__245D67DE" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__282DF8C2" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__282DF8C2">
-            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
-            <End Role="T_OE_ORGANIZATION_EMAIL_RULE" EntitySet="T_OE_ORGANIZATION_EMAIL_RULE" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__STATE__1CBC4616" Association="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616">
             <End Role="T_OE_REF_STATE" EntitySet="T_OE_REF_STATE" />
@@ -784,6 +808,16 @@
             <End Role="Category" EntitySet="Categories" />
             <End Role="Category1" EntitySet="Categories" />
           </AssociationSet>
+          <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" />
+          <EntitySet Name="Polls" EntityType="EECIPModel.Poll" />
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__54CB950F" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_EMAIL_RULE" EntitySet="T_OE_ORGANIZATION_EMAIL_RULE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Poll__Membership__44952D46" Association="EECIPModel.FK__Poll__Membership__44952D46">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="Poll" EntitySet="Polls" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="T_OE_APP_SETTINGS">
           <Key>
@@ -797,24 +831,13 @@
           <Property Name="MODIFY_USERIDX" Type="Int32" />
           <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
         </EntityType>
-        <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
-          <Key>
-            <PropertyRef Name="ORG_IDX" />
-            <PropertyRef Name="EMAIL_STRING" />
-          </Key>
-          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
-          <Property Name="EMAIL_STRING" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="MODIFY_USERIDX" Type="Int32" />
-          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__282DF8C2" FromRole="T_OE_ORGANIZATION_EMAIL_RULE" ToRole="T_OE_ORGANIZATION" />
-        </EntityType>
         <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
           <Key>
             <PropertyRef Name="ENT_PLATFORM_IDX" />
           </Key>
           <Property Name="ENT_PLATFORM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ENT_PLATFORM_NAME" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
-          <Property Name="ENT_PLATFORM_DESC" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ENT_PLATFORM_DESC" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="ENT_PLATFORM_EXAMPLE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SEQ_NO" Type="Int32" />
           <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
@@ -871,6 +894,7 @@
           <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="T_OE_USER_EXPERTISE" Relationship="EECIPModel.FK__T_OE_USER__USER___1C873BEC" FromRole="T_OE_USERS" ToRole="T_OE_USER_EXPERTISE" />
           <Property Name="LINKEDIN" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Polls" Relationship="EECIPModel.FK__Poll__Membership__44952D46" FromRole="T_OE_USERS" ToRole="Poll" />
         </EntityType>
         <Association Name="FK__T_OE_USER__USER___6477ECF3">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1">
@@ -979,11 +1003,11 @@
           <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
           <NavigationProperty Name="T_OE_REF_REGION" Relationship="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_REGION" />
           <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
-          <NavigationProperty Name="T_OE_ORGANIZATION_EMAIL_RULE" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__282DF8C2" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_EMAIL_RULE" />
           <NavigationProperty Name="T_OE_REF_STATE" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_STATE" />
           <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_USERS" />
           <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_ORGANIZATION_TAGS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_TAGS" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_EMAIL_RULE" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_EMAIL_RULE" />
         </EntityType>
         <Association Name="FK__T_OE_ORGA__EPA_R__1DB06A4F">
           <End Type="EECIPModel.T_OE_REF_REGION" Role="T_OE_REF_REGION" Multiplicity="0..1" />
@@ -1007,18 +1031,6 @@
               <PropertyRef Name="ORG_IDX" />
             </Principal>
             <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_ORGA__ORG_I__282DF8C2">
-          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1" />
-          <End Type="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Role="T_OE_ORGANIZATION_EMAIL_RULE" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION_EMAIL_RULE">
               <PropertyRef Name="ORG_IDX" />
             </Dependent>
           </ReferentialConstraint>
@@ -1283,6 +1295,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
+          <Key>
+            <PropertyRef Name="ORG_IDX" />
+            <PropertyRef Name="EMAIL_STRING" />
+          </Key>
+          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="EMAIL_STRING" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" FromRole="T_OE_ORGANIZATION_EMAIL_RULE" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <EntityType Name="Poll">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClosePollAfterDays" Type="Int32" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Poll__Membership__44952D46" FromRole="Poll" ToRole="T_OE_USERS" />
+        </EntityType>
+        <Association Name="FK__T_OE_ORGA__ORG_I__54CB950F">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Role="T_OE_ORGANIZATION_EMAIL_RULE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_EMAIL_RULE">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Poll__Membership__44952D46">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
+          <End Type="EECIPModel.Poll" Role="Poll" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="Poll">
+              <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1348,16 +1408,6 @@
                 <ScalarProperty Name="SETTING_DESC" ColumnName="SETTING_DESC" />
                 <ScalarProperty Name="SETTING_NAME" ColumnName="SETTING_NAME" />
                 <ScalarProperty Name="SETTING_IDX" ColumnName="SETTING_IDX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_ORGANIZATION_EMAIL_RULE">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE">
-              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_EMAIL_RULE">
-                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
-                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
-                <ScalarProperty Name="EMAIL_STRING" ColumnName="EMAIL_STRING" />
-                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1596,6 +1646,27 @@
                 <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_ORGANIZATION_EMAIL_RULE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE">
+              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_EMAIL_RULE">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="EMAIL_STRING" ColumnName="EMAIL_STRING" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Polls">
+            <EntityTypeMapping TypeName="EECIPModel.Poll">
+              <MappingFragment StoreEntitySet="Poll">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="ClosePollAfterDays" ColumnName="ClosePollAfterDays" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

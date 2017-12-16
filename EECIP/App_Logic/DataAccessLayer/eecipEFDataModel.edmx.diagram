@@ -4,14 +4,13 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="88843ed140a34e73b5b4bd5a921c00f0" Name="Diagram1" ZoomLevel="55">
+      <Diagram DiagramId="88843ed140a34e73b5b4bd5a921c00f0" Name="Diagram1" ZoomLevel="57">
         <EntityTypeShape EntityType="EECIPModel.T_OE_ROLES" Width="1.5" PointX="0.5" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_EMAIL_LOG" Width="1.5" PointX="12.75" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_LOG" Width="1.5" PointX="10.875" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_USER_ROLES" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__ROLE___1BFD2C07" ManuallyRouted="false" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_APP_SETTINGS" Width="1.5" PointX="11.125" PointY="3.25" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Width="1.5" PointX="0.5" PointY="4.25" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Width="1.5" PointX="7" PointY="0.5" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_REGION" Width="1.5" PointX="0.5" PointY="0.5" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_STATE" Width="1.5" PointX="0.5" PointY="2.375" />
@@ -25,7 +24,6 @@
         <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION" Width="1.5" PointX="2.75" PointY="0.5" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE" />
-        <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__282DF8C2" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_USER_NOTIFICATION" Width="1.5" PointX="9" PointY="0.5" />
@@ -42,8 +40,12 @@
         <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_TAGS" Width="1.5" PointX="2.75" PointY="6.125" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_SYNONYMS" Width="1.5" PointX="11.125" PointY="6" />
-        <EntityTypeShape EntityType="EECIPModel.Category" Width="1.5" PointX="25" PointY="0.5" />
+        <EntityTypeShape EntityType="EECIPModel.Category" Width="1.5" PointX="20.75" PointY="0.5" />
         <AssociationConnector Association="EECIPModel.FK__Category__Catego__41B8C09B" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Width="1.5" PointX="0.5" PointY="4.375" />
+        <EntityTypeShape EntityType="EECIPModel.Poll" Width="1.5" PointX="20.875" PointY="6.25" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" />
+        <AssociationConnector Association="EECIPModel.FK__Poll__Membership__44952D46" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

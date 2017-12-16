@@ -80,7 +80,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Platform Name</label>
-                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_NAME, new { @class = "form-control" })
+                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_NAME, new { @class = "form-control", @maxlength = "80" })
                                             @Html.ValidationMessageFor(model => model.edit_ent_services.ENT_PLATFORM_NAME)
                                         </div>
                                     </div>
@@ -89,7 +89,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Platform Description</label>
-                                            @Html.TextAreaFor(model => model.edit_ent_services.ENT_PLATFORM_DESC, new { @class = "form-control", @rows="5" })
+                                            @Html.TextAreaFor(model => model.edit_ent_services.ENT_PLATFORM_DESC, new { @class = "form-control", @rows="5", @maxlength = "1000" })
                                             @Html.ValidationMessageFor(model => model.edit_ent_services.ENT_PLATFORM_DESC)
                                         </div>
                                     </div>
@@ -98,7 +98,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Example</label>
-                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_EXAMPLE, new { @class = "form-control" })
+                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_EXAMPLE, new { @class = "form-control", @maxlength = "100" })
                                             @Html.ValidationMessageFor(model => model.edit_ent_services.ENT_PLATFORM_EXAMPLE)
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>Sequence</label>
-                                            @Html.TextBoxFor(model => model.edit_ent_services.SEQ_NO, new { @class = "form-control" })
+                                            @Html.TextBoxFor(model => model.edit_ent_services.SEQ_NO, new { @class = "form-control", @maxlength = "2" })
                                             @Html.ValidationMessageFor(model => model.edit_ent_services.SEQ_NO)
                                         </div>
                                     </div>

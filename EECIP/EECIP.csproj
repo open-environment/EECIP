@@ -196,6 +196,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>eecipEFDataModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\Poll.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_APP_SETTINGS.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
