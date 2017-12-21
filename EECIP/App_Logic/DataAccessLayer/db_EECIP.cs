@@ -216,7 +216,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
         public static int InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(int? oRG_ENT_SVCS_IDX, Guid? oRG_IDX, int? eNT_PLATFORM_IDX, string pROJECT_NAME, 
-            string vENDOR, string iMPLEMENT_STATUS, string cOMMENTS, int? cREATE_USER = 0)
+            string vENDOR, string iMPLEMENT_STATUS, string cOMMENTS, bool? syncInd, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -242,11 +242,13 @@ namespace EECIP.App_Logic.DataAccessLayer
                         e = new T_OE_ORGANIZATION_ENT_SVCS();
                         e.CREATE_DT = System.DateTime.Now;
                         e.CREATE_USERIDX = cREATE_USER;
+                        e.SYNC_IND = false;
                     }
                     else
                     {
                         e.MODIFY_DT = System.DateTime.Now;
                         e.MODIFY_USERIDX = cREATE_USER;
+                        if (syncInd != null) e.SYNC_IND = syncInd ?? false;
                     }
                   
 
@@ -262,7 +264,27 @@ namespace EECIP.App_Logic.DataAccessLayer
                         ctx.T_OE_ORGANIZATION_ENT_SVCS.Add(e);
 
                     ctx.SaveChanges();
-                    return e.ENT_PLATFORM_IDX;
+                    return e.ORG_ENT_SVCS_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int DeleteT_OE_ORGANIZATION_ENT_SVCS(int id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_ORGANIZATION_ENT_SVCS rec = new T_OE_ORGANIZATION_ENT_SVCS { ORG_ENT_SVCS_IDX = id };
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
                 }
                 catch (Exception ex)
                 {
@@ -422,7 +444,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 Name = a.PROJ_NAME,
                                 Description = a.PROJ_DESC,
                                 Media = x.TAG_NAME
-                            }).ToList();
+                            }).Take(250).ToList();
 
                     foreach (EECIP_Index e in xxx)
                         e.Tags = GetT_OE_PROJECT_TAGS_ByTwoAttributeSelected(new Guid(e.KeyID), "Project Feature", "Program Area").ToArray();
@@ -465,7 +487,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, int? mEDIA_TAG, int? sTART_YEAR,
             string pROJ_STATUS, int? dATE_LAST_UPDATE, string rECORD_SOURCE, string pROJECT_URL, int? mOBILE_IND, string mOBILE_DESC, int? aDV_MON_IND, 
             string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, string pROJECT_CONTACT, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
-            bool? updateSearch = false, string iMPORT_ID = null)
+            string iMPORT_ID = null)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {

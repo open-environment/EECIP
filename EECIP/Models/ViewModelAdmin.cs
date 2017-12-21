@@ -85,6 +85,13 @@ namespace EECIP.Models
         }
     }
 
+    public class vmAdminRefBadges
+    {
+        public List<Badge> _badge { get; set; }
+        public Badge edit_badge { get; set; }
+    }
+
+
 
     public class vmAdminSearch {
         public List<T_OE_REF_SYNONYMS> synonyms { get; set; }

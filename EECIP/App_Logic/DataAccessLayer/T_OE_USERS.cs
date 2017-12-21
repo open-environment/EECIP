@@ -20,6 +20,15 @@ namespace EECIP.App_Logic.DataAccessLayer
             this.T_OE_USER_ROLES = new HashSet<T_OE_USER_ROLES>();
             this.T_OE_USER_EXPERTISE = new HashSet<T_OE_USER_EXPERTISE>();
             this.Polls = new HashSet<Poll>();
+            this.Posts = new HashSet<Post>();
+            this.Topics = new HashSet<Topic>();
+            this.PollVotes = new HashSet<PollVote>();
+            this.MembershipUserPoints = new HashSet<MembershipUserPoint>();
+            this.TopicNotifications = new HashSet<TopicNotification>();
+            this.Votes = new HashSet<Vote>();
+            this.Votes1 = new HashSet<Vote>();
+            this.Favourites = new HashSet<Favourite>();
+            this.MembershipUser_Badge = new HashSet<MembershipUser_Badge>();
         }
     
         public int USER_IDX { get; set; }
@@ -56,5 +65,23 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual ICollection<T_OE_USER_EXPERTISE> T_OE_USER_EXPERTISE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Poll> Polls { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Post> Posts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Topic> Topics { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PollVote> PollVotes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MembershipUserPoint> MembershipUserPoints { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TopicNotification> TopicNotifications { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Vote> Votes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Vote> Votes1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Favourite> Favourites { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MembershipUser_Badge> MembershipUser_Badge { get; set; }
     }
 }

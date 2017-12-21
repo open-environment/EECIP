@@ -16,6 +16,17 @@ namespace EECIP.Controllers
         // GET: Dashboard
         public ActionResult Index()
         {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            var model = new vmDashboardIndex();
+            model.UserBadges = db_Forum.GetBadgesForUser(UserIDX);
+            return View(model);
+        }
+
+
+        // GET: Dashboard/Search
+        public ActionResult Search()
+        {
             var model = new vmDashboardSearch();
             model.activeTab = "1";
             model.currentPage = 1;
@@ -23,7 +34,7 @@ namespace EECIP.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(vmDashboardSearch model)
+        public ActionResult Search(vmDashboardSearch model)
         {
             if (model.currentPage == null)
                 model.currentPage = 1;
@@ -100,7 +111,7 @@ namespace EECIP.Controllers
             {
                 var z = model.edit_ent_services;
                 int SuccID = db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(z.ENT_PLATFORM_IDX, model.agency.ORG_IDX, z.ENT_PLATFORM_IDX, z.PROJECT_NAME, z.VENDOR, z.IMPLEMENT_STATUS,
-                    z.COMMENTS, db_Accounts.GetUserIDX());
+                    z.COMMENTS, false, db_Accounts.GetUserIDX());
                 if (SuccID > 0)
                 {
                     //sync to search service
@@ -114,6 +125,23 @@ namespace EECIP.Controllers
 
             return RedirectToAction("Agency", "Dashboard");
         }
+
+
+        // POST: /Dashboard/AgencyEntServicesDelete
+        [HttpPost]
+        public JsonResult AgencyEntServiceDelete(int id)
+        {
+            int SuccID = db_EECIP.DeleteT_OE_ORGANIZATION_ENT_SVCS(id);
+            if (SuccID == 0)
+                return Json("Unable to delete record.");
+            else
+            {
+                //now delete from Azure
+                AzureSearch.DeleteSearchIndexEntService(id);
+                return Json("Success");
+            }
+        }
+
 
         public ActionResult AgencyCard(string strid)
         {
@@ -241,7 +269,6 @@ namespace EECIP.Controllers
 
             return RedirectToAction("Projects", new { selAgency = model.project.ORG_IDX } );
         }
-
 
         [HttpPost]
         public JsonResult ProjectsDelete(Guid id)

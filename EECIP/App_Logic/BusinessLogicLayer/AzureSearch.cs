@@ -204,27 +204,46 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //connect to Azure Search
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
-                //get all projects needing to sync
-                List<EECIP_Index> _ps = db_EECIP.GetT_OE_PROJECTS_ReadyToSync(ProjectIDX);
-                if (_ps != null)
-                {
-                    var batch = IndexBatch.Upload(_ps);
+                bool PendingRecs = true;
 
-                    try
+                while (PendingRecs) {
+                    //get all projects needing to sync
+                    List<EECIP_Index> _ps = db_EECIP.GetT_OE_PROJECTS_ReadyToSync(ProjectIDX);
+                    if (_ps != null && _ps.Count > 0)
                     {
-                        ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
-                        indexClient.Documents.Index(batch);
+                        var batch = IndexBatch.Upload(_ps);
+
+                        try
+                        {
+                            //send to azure
+                            ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                            indexClient.Documents.Index(batch);
+
+
+                            //update local rec sync ind
+                            foreach (EECIP_Index p in _ps)
+                            {
+                                Guid proj_idx = Guid.Parse(p.KeyID);
+                                db_EECIP.InsertUpdatetT_OE_PROJECTS(proj_idx, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+                                    null, null, null, null, true, true, null, null);
+                            }
+
+                        }
+                        catch (IndexBatchException e)
+                        {
+                            // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                            // the batch. Depending on your application, you can take compensating actions like delaying and
+                            // retrying. For this simple demo, we just log the failed document keys and continue.
+                            Console.WriteLine(
+                                "Failed to index some of the documents: {0}",
+                                String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                            PendingRecs = false;
+                        }
                     }
-                    catch (IndexBatchException e)
-                    {
-                        // Sometimes when your Search service is under load, indexing will fail for some of the documents in
-                        // the batch. Depending on your application, you can take compensating actions like delaying and
-                        // retrying. For this simple demo, we just log the failed document keys and continue.
-                        Console.WriteLine(
-                            "Failed to index some of the documents: {0}",
-                            String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
-                    }
+                    else
+                        PendingRecs = false;
                 }
+
 
 
             }
@@ -278,7 +297,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //connect to Azure Search
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
-                //get all projects needing to sync
+                //get all ent services needing to sync
                 List<EECIP_Index> _ps = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_ReadyToSync(EntSvcIDX);
                 if (_ps != null)
                 {
@@ -288,8 +307,16 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
                         try
                         {
+                            //send to Azure
                             ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
                             indexClient.Documents.Index(batch);
+
+                            //then update local rec sync ind
+                            foreach (EECIP_Index p in _ps)
+                            {
+                                db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(p.KeyID.ConvertOrDefault<int>()-100000, null, null, null, null, null, null, true, null);
+                            }
+
                         }
                         catch (IndexBatchException e)
                         {
@@ -384,7 +411,6 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
-
         public static void DeleteSearchIndexAgency(string OrgIDX)
         {
             try
@@ -419,6 +445,39 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
+        public static void DeleteSearchIndexEntService(int OrgEntSvcIDX)
+        {
+            try
+            {
+                //connect to Azure Search
+                SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+                //get ent service needing to delete sync
+                IEnumerable<string> ss = new List<string>() { (OrgEntSvcIDX + 100000).ToString() };
+                var batch = IndexBatch.Delete("KeyID", ss);
+
+                try
+                {
+                    ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                    indexClient.Documents.Index(batch);
+                }
+                catch (IndexBatchException e)
+                {
+                    // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                    // the batch. Depending on your application, you can take compensating actions like delaying and
+                    // retrying. For this simple demo, we just log the failed document keys and continue.
+                    Console.WriteLine(
+                        "Failed to index some of the documents: {0}",
+                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
 
         //******************************** METHODS FOR QUERYING INDEX ******************************************

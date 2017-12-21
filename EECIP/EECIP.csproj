@@ -168,12 +168,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Logic\BusinessLogicLayer\AzureSearch.cs" />
+    <Compile Include="App_Logic\BusinessLogicLayer\BotUtils.cs" />
     <Compile Include="App_Logic\BusinessLogicLayer\Crypto.cs" />
     <Compile Include="App_Logic\BusinessLogicLayer\CustomRoleProvider.cs" />
     <Compile Include="App_Logic\BusinessLogicLayer\HtmlHelpers.cs" />
     <Compile Include="App_Logic\BusinessLogicLayer\SendGridHelper.cs" />
     <Compile Include="App_Logic\BusinessLogicLayer\UtilNodePosition.cs" />
     <Compile Include="App_Logic\BusinessLogicLayer\Utils.cs" />
+    <Compile Include="App_Logic\DataAccessLayer\Badge.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\Category.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -196,7 +200,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>eecipEFDataModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\Favourite.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\MembershipUserPoint.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\MembershipUser_Badge.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\Poll.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\PollAnswer.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\PollVote.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\Post.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\Topic.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\TopicNotification.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_APP_SETTINGS.cs">
@@ -259,6 +287,9 @@
     <Compile Include="App_Logic\DataAccessLayer\T_OE_USER_ROLES.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\Vote.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Logic\BusinessLogicLayer\CustomMembership.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -267,7 +298,6 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ForumAdminController.cs" />
-    <Compile Include="Controllers\ForumCategoryController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SharedController.cs" />
@@ -362,6 +392,20 @@
     <Content Include="Content\Images\Agencies\Wisconsin DNR.png" />
     <Content Include="Content\Images\Agencies\WV DEP.png" />
     <Content Include="Content\Images\Agencies\Wyoming DEQ.png" />
+    <Content Include="Content\Images\badges\jedi.png" />
+    <Content Include="Content\Images\badges\MemberForAYearBadge.png" />
+    <Content Include="Content\Images\badges\MentionsUmbracoBadge.png" />
+    <Content Include="Content\Images\badges\OneThousandPoints.png" />
+    <Content Include="Content\Images\badges\padawan.png" />
+    <Content Include="Content\Images\badges\photogenic.png" />
+    <Content Include="Content\Images\badges\PosterMarkAsSolutionBadge.png" />
+    <Content Include="Content\Images\badges\PosterVoteUpBadge.png" />
+    <Content Include="Content\Images\badges\recognised-post.png" />
+    <Content Include="Content\Images\badges\TheGrouch.png" />
+    <Content Include="Content\Images\badges\UserMarkAsSolutionBadge.png" />
+    <Content Include="Content\Images\badges\UserVoteUpBadge.png" />
+    <Content Include="Content\Images\badges\you-favourited-your-first-post.png" />
+    <Content Include="Content\Images\badges\your-post-got-favourited-by-another-member.png" />
     <Content Include="Content\Images\bg.png" />
     <Content Include="Content\Images\favicon-16x16.png" />
     <Content Include="Content\Images\favicon-32x32.png" />
@@ -641,6 +685,7 @@
     <Content Include="Scripts\tinymce\tinymce.min.js" />
     <Content Include="Scripts\toastr.js" />
     <Content Include="Scripts\toastr.min.js" />
+    <Content Include="Scripts\trunk8.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -672,7 +717,7 @@
     <Content Include="Views\Admin\RoleEdit.cshtml" />
     <Content Include="Views\Admin\RefAgencyEdit.cshtml" />
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
-    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Dashboard\Search.cshtml" />
     <Content Include="Views\Home\AccessDenied.cshtml" />
     <Content Include="Views\Dashboard\Agency.cshtml" />
     <Content Include="Views\Dashboard\Projects.cshtml" />
@@ -705,7 +750,17 @@
     <Content Include="Views\Shared\EditorTemplates\forumeditor.cshtml" />
     <Content Include="Views\Forum\Index.cshtml" />
     <Content Include="Views\Shared\_CommonSideNav.cshtml" />
-    <Content Include="Views\ForumCategory\ListCategorySideMenu.cshtml" />
+    <Content Include="Views\Forum\ListCategorySideMenu.cshtml" />
+    <Content Include="Views\Forum\Create.cshtml" />
+    <Content Include="Views\Forum\CreateEdit_TopicPost.cshtml" />
+    <Content Include="Views\Forum\ShowTopic.cshtml" />
+    <Content Include="Views\Forum\_Post.cshtml" />
+    <Content Include="Views\Forum\ListMainCategories.cshtml" />
+    <Content Include="Views\Forum\_Category.cshtml" />
+    <Content Include="Views\Forum\ShowCategory.cshtml" />
+    <Content Include="Views\Forum\_Topic.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Admin\RefBadge.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

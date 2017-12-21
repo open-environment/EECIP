@@ -1,6 +1,19 @@
-﻿@*@Html.Action("Index", "Language")*@
-@Html.Action("ListCategorySideMenu", "ForumCategory")
-@*@Html.Action("SideSearch", "Search")
-@Html.Action("PopularTags", "Tag", new { amountToTake = 20 })
-@Html.Action("CurrentWeekHighPointUsers", "Point")
-@Html.Action("HotTopics", "Topic")*@
+﻿<div class="col-md-3 sidelayoutsection">
+    <div class="main-side-box clearfix">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="createtopicbutton">
+                <a href="@Url.Action("Create", "Forum")" class="btn btn-success btn-lg btn-block">
+                    New Discussion
+                </a>
+            </div>
+        }
+
+        @*@Html.Action("Index", "Language")*@
+        @Html.Action("ListCategorySideMenu", "Forum")
+        @*@Html.Action("SideSearch", "Search")
+            @Html.Action("PopularTags", "Tag", new { amountToTake = 20 })
+            @Html.Action("CurrentWeekHighPointUsers", "Point")
+            @Html.Action("HotTopics", "Topic")*@
+    </div>
+</div>

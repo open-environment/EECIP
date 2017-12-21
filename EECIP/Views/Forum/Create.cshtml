@@ -1,0 +1,35 @@
+﻿@model EECIP.Models.vmForumTopicCreate
+@{
+    ViewBag.Title = "Create Discussion";
+}
+
+@*@section HeaderJS
+{
+    @(
+                 Bundle.JavaScript()
+                            .Add("~/Scripts/jquery.tagsinput.min.js")  //tagging
+                            .Add("~/Scripts/tags.js")   //tagging
+                            .Add("~/Scripts/createtopic.js")
+                            .MvcRender("~/scripts/cache/topic-combined_#.js")
+    )
+    <script type="text/javascript">
+        counter = @(Model.PollAnswers != null ? Model.PollAnswers.Count : 0);
+    </script>
+}*@
+
+<div class="row">
+
+    <div class="col-md-8 col-md-offset-2">
+        <div class="createtopicholder">
+
+            @using (Html.BeginForm("Create", "Forum", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.ValidationSummary(false)
+                @Html.AntiForgeryToken()
+                @Html.Partial("CreateEdit_TopicPost", Model)
+            }
+
+        </div>
+    </div>
+</div>
+

@@ -151,9 +151,7 @@
 	.header-default .navbar {
 		position: relative !important;
 	}
-	.main-container {
-		margin-top: 95px;
-	}
+
 
 	/***
 	 Main content
@@ -200,14 +198,8 @@
 		display: block;
 		clear: both;
 	}
-	.main-navigation {
-		position: fixed;
-		top: 95px;
-		left: 0;
-		right: 0;
-		z-index: 1000;
-		border-top: none;
-	}
+
+
 	.header-default .main-navigation {
 		position: static !important;
 		height: auto !important;

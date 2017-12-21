@@ -339,6 +339,37 @@ namespace EECIP.Controllers
         }
 
 
+        //*************************************** REF BADGES **********************************************************
+        // GET: /Admin/RefBadge
+        public ActionResult RefBadge()
+        {
+            var model = new vmAdminRefBadges
+            {
+                _badge = db_Forum.GetBadges()
+            };
+
+            return View(model);
+        }
+
+
+        // POST: /Admin/RefTagEdit
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult RefBadge(vmAdminRefBadges model)
+        {
+            Guid? SuccID = db_Forum.InsertUpdatetBadge(model.edit_badge.Id, model.edit_badge.Type, model.edit_badge.Name, model.edit_badge.DisplayName, model.edit_badge.Description, model.edit_badge.Image, 
+                model.edit_badge.AwardsPoints);
+
+            if (SuccID != null)
+                TempData["Success"] = "Update successful.";
+            else
+                TempData["Error"] = "Error updating data.";
+
+            //return View(model);
+            return RedirectToAction("RefBadge");
+
+        }
+
+
 
 
         //*************************************** SEARCH ADMIN **********************************************************
@@ -594,7 +625,7 @@ namespace EECIP.Controllers
                     T_OE_PROJECTS x = ps.T_OE_PROJECT;
                     Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, x.ORG_IDX, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS, 
                         x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
-                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, true, false, UserIDX, null, x.IMPORT_ID);
+                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, true, false, UserIDX, x.IMPORT_ID);
 
                     //import features
                     if (ps.FEATURES != null)

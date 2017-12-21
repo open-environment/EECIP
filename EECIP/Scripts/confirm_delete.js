@@ -7,7 +7,7 @@ $(function () {
         // data-delete-p: (attribute) URI path to action for deletion
         // data-delete-id: (attribute) key for record being deleted
         // data-delete-id2: (attribute) secondary id to optionally pass to the deletion action. This is sometimes used to redirect back to original page after deletion action finishes
-        // data-delete-type: (attribute) helps indicate which parent html block should be removed upon deletion. If blank, assume a table row 
+        // data-delete-type: (attribute) helps indicate which parent html block should be removed upon deletion. If blank, assume a table row . If 'cells' then delete the row contents but keep row
 
         var deleteLink = $(this);
         deleteLink.hide();
@@ -37,8 +37,11 @@ $(function () {
                         var idType = confirmButton.attr('data-delete-type');
                         var parentRow = deleteLink.parents("tr:first");
 
-                        if (idType === 'team') //special handling for team control
+                        if (idType === 'team') //special handling for tree control
                             parentRow = deleteLink.parents(".treecont:first");
+
+                        if (idType === 'cells')
+                            parentRow = deleteLink.parents("td:first").next().nextAll();
 
                         parentRow.fadeOut('slow', function () {
                             parentRow.remove();

@@ -22,40 +22,33 @@
     <!-- start: HEADER -->
     <div class="navbar navbar-inverse navbar-fixed-top">
         <!-- start: TOP NAVIGATION CONTAINER -->
-        <div class="container-fluid" >
-            <div class="navbar-header" >
-                <!-- start: RESPONSIVE MENU TOGGLER -->
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="background-color: whitesmoke;">
-                    <span class="glyphicon glyphicon-align-justify light-grey"></span>
-                </button>
+        <div class="container">
+            <div class="navbar-header pull-left">
                 <!-- start: HEADER LOGO -->
-@if (Request.IsAuthenticated)
-{
-                <a class="navbar-brand" href="~/Dashboard">
+                <a class="navbar-brand" href='@(Request.IsAuthenticated ? "/Dashboard" : "/Home")'>
                     <img src="~/Content/Images/seal.png" style="width:30px; float:left; padding-right:10px;" />
-                    e-Enterprise Community Inventory Platform
+                    <span class="visible-xs visible-sm">EECIP</span>
+                    <span class="hidden-xs hidden-sm">e-Enterprise Community Inventory Platform</span>
                 </a>
-}
-else
-{
-                <a class="navbar-brand" href="~/Home">
-                    <img src="~/Content/Images/seal.png" style="width:30px; float:left; padding-right:10px;" />
-                    e-Enterprise Community Inventory Platform
-                </a>
-}
             </div>
-            <div class="navbar-tools">
+            <!-- start: XS MENU TOGGLER -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse" style="background-color: whitesmoke;">
+                <span class="glyphicon glyphicon-align-justify light-grey"></span>
+            </button>
+
                 <!-- start: RIGHT NAVIGATION BANNER (ACCOUNT STUFF)-->
-                <ul class="nav navbar-nav navbar-right">
-                    <!-- start: USER DROPDOWN -->
+            <div class="navbar-tools">
+
+                <ul class="nav navbar-nav navbar-right pull-right" style="margin:0px !important">
                     @if (Request.IsAuthenticated)
                     {
                         @Html.Action("_PartialHeadNotification", "Shared")
 
-                        <li class="dropdown current-user">
-                            <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
+                        <!-- start: USER DROPDOWN -->
+                        <li class="dropdown current-user" style="float:left;">
+                            <a data-toggle="dropdown" @*data-hover="dropdown"*@ class="dropdown-toggle" data-close-others="true" href="#">
                                 <i class="clip-user-3"></i>
-                                <span class="username"> @User.Identity.Name </span>
+                                <span class="username hidden-xs"> @User.Identity.Name </span>
                                 <i class="clip-chevron-down"></i>
                             </a>
                             <ul class="dropdown-menu">
@@ -77,7 +70,7 @@ else
                                 </li>
                             </ul>
                         </li>
-                    <!-- end: USER DROPDOWN -->
+                        <!-- end: USER DROPDOWN -->
                     }
                     else
                     {
@@ -90,7 +83,6 @@ else
                     }
                 </ul>
                 <!-- end: TOP NAVIGATION MENU -->
-
             </div>
 
         </div>
@@ -100,30 +92,30 @@ else
     <div class="main-container">
         @if (Request.IsAuthenticated)
         {
-        <div class="navbar-content">
-            <!-- start: LEFT MENU -->
-            @Html.Partial("_LeftMenu")
-            <!-- end: LEFT MENU -->
-        </div>
+            <div class="navbar-content">
+                <!-- start: LEFT MENU -->
+                @Html.Partial("_LeftMenu")
+                <!-- end: LEFT MENU -->
+            </div>
         }
         <div class="main-content">
             <div class="container" style="min-height: 760px;">
 
                 @if (!(ViewBag.HideTitle ?? false))
                 {
-                <div class="row">
-                    <div class="col-sm-12">
-                        @if (ViewBag.ShowBack == true)
-                        {
-                            <button type="button" class="btn btn-return pull-right" style="margin-top:20px;" onclick="history.go(-1);">Back</button>
-                        }
-                        <!-- start: PAGE TITLE & BREADCRUMB -->
-                        <div class="page-header">
-                            <h1>@ViewBag.Title <small>@ViewBag.SubTitle</small></h1>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @if (ViewBag.ShowBack == true)
+                            {
+                                <button type="button" class="btn btn-return pull-right" style="margin-top:20px;" onclick="history.go(-1);"><i class="glyphicon glyphicon-arrow-left"></i> Back</button>
+                            }
+                            <!-- start: PAGE TITLE & BREADCRUMB -->
+                            <div class="page-header">
+                                <h1>@ViewBag.Title <small>@ViewBag.SubTitle</small></h1>
+                            </div>
+                            <!-- end: PAGE TITLE & BREADCRUMB -->
                         </div>
-                        <!-- end: PAGE TITLE & BREADCRUMB -->
                     </div>
-                </div>
                 }
 
                 @RenderBody()
@@ -137,7 +129,7 @@ else
                 <img src="~/Content/Images/footer-logo.png" />
             </a>
             <a href="http://www.exchangenetwork.net/">
-                <img src="~/Content/Images/footer-logo2-bw.png"/>
+                <img src="~/Content/Images/footer-logo2-bw.png" />
             </a>
         </div>
         <div class="footer-items">

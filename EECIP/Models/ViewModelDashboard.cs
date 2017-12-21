@@ -8,6 +8,11 @@ using System.Linq;
 
 namespace EECIP.Models
 {
+    public class vmDashboardIndex {
+        public List<UserBadgeDisplay> UserBadges { get; set; }
+    }
+
+
     public class vmDashboardSearch
     {
         public DocumentSearchResult<EECIP_Index> searchResults { get; set; }

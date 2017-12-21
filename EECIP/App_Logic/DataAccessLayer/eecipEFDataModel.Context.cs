@@ -47,5 +47,15 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<T_OE_ORGANIZATION_EMAIL_RULE> T_OE_ORGANIZATION_EMAIL_RULE { get; set; }
         public virtual DbSet<Poll> Polls { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<Topic> Topics { get; set; }
+        public virtual DbSet<PollAnswer> PollAnswers { get; set; }
+        public virtual DbSet<PollVote> PollVotes { get; set; }
+        public virtual DbSet<MembershipUserPoint> MembershipUserPoints { get; set; }
+        public virtual DbSet<TopicNotification> TopicNotifications { get; set; }
+        public virtual DbSet<Vote> Votes { get; set; }
+        public virtual DbSet<Favourite> Favourites { get; set; }
+        public virtual DbSet<Badge> Badges { get; set; }
+        public virtual DbSet<MembershipUser_Badge> MembershipUser_Badge { get; set; }
     }
 }

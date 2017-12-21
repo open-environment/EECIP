@@ -1,0 +1,9 @@
+﻿@model EECIP.Models.vmForumMainCategoriesList
+
+<div class="categoryindex">
+    @foreach (var cat in Model.Categories)
+    {
+        @Html.Partial("_Category", cat)
+    }
+</div>
+

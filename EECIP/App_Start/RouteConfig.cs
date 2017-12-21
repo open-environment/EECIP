@@ -15,6 +15,12 @@ namespace EECIP
                 defaults: new { controller = "Dashboard", action = "Index", id = UrlParameter.Optional },
                 namespaces: new[] { "EmergencyHoundWeb.Controllers" }
             );
+
+            //routes.MapRoute(
+            //    "topicUrls", // Route name
+            //    string.Concat("thread", "/{slug}"), // URL with parameters
+            //    new { controller = "Forum", action = "ShowTopic", slug = UrlParameter.Optional } // Parameter defaults
+            //    );
         }
     }
 }

@@ -1,0 +1,157 @@
+﻿@model EECIP.Models.vmAdminRefBadges
+@{
+    ViewBag.Title = "Badges";
+    ViewBag.SubTitle = "Edit badge information.";
+
+}
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th style="min-width: 70px;">Edit</th>
+                        <th>Image</th>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Display Name</th>
+                        <th>Description</th>
+                        <th>Awards Points</th>
+                    </tr>
+
+                    @foreach (var item in Model._badge)
+                    {
+                    <tr>
+                        <td>
+                            <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                            @Html.HiddenFor(modelItem => item.Id)
+                            @Html.HiddenFor(modelItem => item.Type)
+                            @Html.HiddenFor(modelItem => item.Name)
+                            @Html.HiddenFor(modelItem => item.DisplayName)
+                            @Html.HiddenFor(modelItem => item.Description)
+                            @Html.HiddenFor(modelItem => item.Image)
+                            @Html.HiddenFor(modelItem => item.AwardsPoints)
+                        </td>
+                        <td>
+                            <img src="/Content/Images/badges/@item.Image" alt="@item.Name">
+                            </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DisplayName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.AwardsPoints)
+                        </td>
+
+                    </tr>
+                    }
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("RefBadge", "Admin", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.edit_badge.Id)
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-tital">Edit Badge</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Type</label>
+                                            @Html.TextBoxFor(model => model.edit_badge.Type, new { @class = "form-control", @maxlength = "50" })
+                                            @Html.ValidationMessageFor(model => model.edit_badge.Type)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Name</label>
+                                            @Html.TextBoxFor(model => model.edit_badge.Name, new { @class = "form-control", @rows = "5", @maxlength = "50" })
+                                            @Html.ValidationMessageFor(model => model.edit_badge.Name)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Display Name</label>
+                                            @Html.TextBoxFor(model => model.edit_badge.DisplayName, new { @class = "form-control", @maxlength = "50" })
+                                            @Html.ValidationMessageFor(model => model.edit_badge.DisplayName)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Sequence</label>
+                                            @Html.TextAreaFor(model => model.edit_badge.Description, new { @class = "form-control", @maxlength = "400" })
+                                            @Html.ValidationMessageFor(model => model.edit_badge.Description)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Points Awarded</label>
+                                            @Html.TextBoxFor(model => model.edit_badge.AwardsPoints, new { @class = "form-control", @maxlength = "4" })
+                                            @Html.ValidationMessageFor(model => model.edit_badge.AwardsPoints)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- END MODAL FORM -->
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //create an event when button is clicked to display modal
+            $(".modal-it").click(function () {
+                $('#edit_badge_Id').val($(this).parent('td').find('#item_Id').val());
+                $('#edit_badge_Type').val($(this).parent('td').find('#item_Type').val());
+                $('#edit_badge_Name').val($(this).parent('td').find('#item_Name').val());
+                $('#edit_badge_DisplayName').val($(this).parent('td').find('#item_DisplayName').val());
+                $('#edit_badge_Description').val($(this).parent('td').find('#item_Description').val());
+                $('#edit_badge_AwardsPoints').val($(this).parent('td').find('#item_AwardsPoints').val());
+            });
+
+        });
+    </script>
+}
+

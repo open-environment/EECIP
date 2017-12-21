@@ -2,8 +2,8 @@
 
 @if (Model != null)
 {
-    <li class="dropdown">
-        <a data-toggle="dropdown" data-hover="dropdown" class="dropdown-toggle" data-close-others="true" href="#" aria-expanded="false">
+    <li class="dropdown" style="float:left">
+        <a data-toggle="dropdown" @*data-hover="dropdown"*@ class="dropdown-toggle" data-close-others="true" href="#" aria-expanded="false">
             <i class="glyphicon glyphicon-alert"></i>
             @if (Model.NotifyCount > 0)
             {

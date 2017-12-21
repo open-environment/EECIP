@@ -1,0 +1,60 @@
+﻿@model EECIP.Models.vmForumCategoryView
+
+<div class="row">
+    <div class="col-md-9">
+
+        @*@Html.Action("GetCategoryBreadcrumb", "Category", new { category = Model.Category })*@
+
+        <div class="category">
+            <div class="mainheading clearfix">
+                <div class="widgetright">
+                    @*<a href="#" class="emailsubscription" data-id="@Model.CategoryWithSub.Category.Id" data-type="category">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Subscribe</a>
+                        <a href="#" class="emailunsubscription" data-id="@Model.CategoryWithSub.Category.Id" data-type="category">
+                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>Unsubscribe</a>*@
+                </div>
+                @*@if (!string.IsNullOrEmpty(Model.Category.Image))
+                    {
+                        <img src="@AppHelpers.CategoryImage(Model.Category.Image, Model.Category.Id,110)" alt="@Model.Category" class="categoryimage" />
+                    }*@
+                <h1>@Html.Raw(Model.CategoryWithSub.Category.Name)</h1>
+                <p>@Html.Raw(Model.CategoryWithSub.Category.Description)</p>
+            </div>
+
+            @if (Model.CategoryWithSub.SubCategories != null)
+            {
+                <div class="subcategoryholder">
+                    <ul class="clearfix">
+                    @foreach (var category in Model.CategoryWithSub.SubCategories)
+                    {
+                        <li><a style="border-color: @(string.IsNullOrEmpty(category.Colour) ? "#ced1d1" : category.Colour)" href="@Url.Action("ShowCategory", "Forum", new { slug = category.Slug })">@Html.Raw(@category.Name)</a></li>
+                    }
+                    </ul>
+                </div>
+
+               
+                //Html.RenderPartial("_SubCategories", new SubCategoryViewModel
+                //{
+                //    ParentCategory = Model.Category
+                //});
+            }
+
+            <!-- DISPLAY TOPICS FOR THE CATEGORY -->
+            @if (Model.CategoryTopics != null)
+            {
+                foreach (var topic in Model.CategoryTopics)
+                {
+                    Html.RenderPartial("_Topic", topic);
+                }
+            }
+            else
+            {
+                <p>No Discussions</p>
+            }
+
+        </div>
+
+    </div>
+    @Html.Partial("_CommonSideNav")
+
+</div>

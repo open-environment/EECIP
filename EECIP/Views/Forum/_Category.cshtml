@@ -1,0 +1,27 @@
+﻿@model  EECIP.App_Logic.DataAccessLayer.CategoryDisplay
+
+<div class="categoryrow">
+    <h2 style="border-color: @(string.IsNullOrEmpty(Model._category.Colour) ? "#ced1d1" : Model._category.Colour)">
+
+        <a href="@Url.Action("ShowCategory", "Forum", new { slug = Model._category.Slug })">@Html.Raw(Model._category.Name)</a>
+    </h2>
+    <p>@Html.Raw(Model._category.Description)</p>
+    <div class="row categoryrowfooter">
+        <div class="col-md-2 col-xs-6 catdiscussions">
+            @Model.TopicCount Discussions
+        </div>
+        <div class="col-md-2 col-xs-6 catcomments">
+            @Model.PostCount Comments
+        </div>
+        <div class="col-md-7 col-xs-12 catmostrecent">
+            @if (Model.LatestTopicName != null)
+    {
+        <text>
+            Most Recent <a href="@Model.LatestTopicName">@Html.Raw(Model.LatestTopicName)</a>
+            Started @Model.LatestTopicDate by <a href="@Url.Action("UserCard", "Dashboard", new { strid = Model.LatestTopicUserIDX })">@Model.LatestTopicUserName</a>
+        </text>   
+}
+        </div>
+    </div>
+</div>
+

@@ -13,14 +13,14 @@
         {
             var subCats = Model.Categories.Where(x => x.Category_Id != null && x.Category_Id == category.Id).ToList();
             <li class="catitem">
-                <a style="border-color: @(string.IsNullOrEmpty(category.Colour) ? "#ced1d1" : category.Colour)" href="#">@Html.Raw(category.Name)</a>
+                <a style="border-color: @(string.IsNullOrEmpty(category.Colour) ? "#ced1d1" : category.Colour)" href="@Url.Action("ShowCategory", "Forum", new { slug = category.Slug })">@Html.Raw(category.Name)</a>
                 @if (subCats.Any())
                 {
                     <ul>
                         @foreach (var subCat in subCats)
                         {
                             <li class="catitem">
-                                <a style="border-color: @(string.IsNullOrEmpty(subCat.Colour) ? "#ced1d1" : subCat.Colour)" href="#">@Html.Raw(subCat.Name)</a>
+                                <a style="border-color: @(string.IsNullOrEmpty(subCat.Colour) ? "#ced1d1" : subCat.Colour)" href="@Url.Action("ShowCategory", "Forum", new { slug = subCat.Slug })">@Html.Raw(subCat.Name)</a>
                             </li>
                         }
                     </ul>

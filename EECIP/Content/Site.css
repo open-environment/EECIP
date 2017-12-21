@@ -40,12 +40,6 @@ html {
     color: #9d9d9d;
 }
 
-@media (max-width: 767px) {
-    .navbar-header {
-        background-color: #fff;
-    }
-}
-
 @media (min-width: 768px) {
     .modal-dialog {
         margin-top: 100px;
@@ -78,8 +72,9 @@ ul.main-navigation-menu > li.active > a {
     color: #A9D2A2;
 }
 
-ul.main-navigation-menu > li.active > a .selected:before {
-    color: #82B9DE !important;
+
+.current-user > > a {
+    padding-top: 16px;
 }
 
 .label-eecip-bluegreen, .badge-eecip-bluegreen {
@@ -402,8 +397,48 @@ ul.main-navigation-menu > li.active > a .selected:before {
     color: #8e44ad;
 }
 
-
+/**************************************************************/
 /***********************FORUM ********************************/
+/****************************************************************/
+.btn-mvc, .btn-mvc:visited {
+    display: inline-block;
+    padding: 7px 20px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 14px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    text-decoration: none;
+    background-color: #efefef;
+    color: #333;
+}
+
+.btn-mvc-small, .btn-mvc-small:visited {
+    padding: 5px 12px;
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.btn-mvc-fullwidth, .btn-mvc-fullwidth:visited {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+    display: block;
+}
 
 /* Side Boxes */
 .side-box {
@@ -461,3 +496,156 @@ ul.main-navigation-menu > li.active > a .selected:before {
             .categories-box ul li ul li a, .categories-box ul li ul li a:visited {
                 font-size: 12px;
             }
+
+
+
+/*   VIEW TOPICS / POSTS  */
+.topicshow .topicheading {
+    margin-bottom: 20px;
+}
+
+.widgetright {
+    float: right;
+    margin: 2px 0 10px 10px;
+}
+
+    .widgetright a, .widgetright a:visited {
+        margin-left: 8px;
+        color: #2c2c2c;
+        font-size: 13px;
+    }
+
+
+.topicshow .topicheading .topicinfo {
+    display: block;
+    clear: both;
+    padding: 0;
+    margin: 0;
+    color: #B3B3B3;
+    font-size: 12px;
+    font-weight: 300;
+}
+
+    .topicshow .topicheading .topicinfo li {
+        list-style: none;
+        display: inline-block;
+        padding: 0 8px 0 0;
+    }
+
+.topicstarterpost {
+    border-bottom: 2px #f2f2f2 solid;
+}
+
+.post {
+    border-top: 1px #f2f2f2 solid;
+    padding: 15px 0 15px 0;
+}
+
+.postadmin {
+    float: right;
+    width: 70px;
+}
+    .postadmin ul {
+        padding: 0;
+        margin: 0;
+    }
+        .postadmin ul li {
+            list-style: none;
+            text-align: right;
+            padding: 0 0 2px 0;
+        }
+
+.topicstarterpostbeginpostsheading {
+    padding-bottom: 3px;
+}
+
+
+.categoryrow {
+    border-bottom: 1px #f2f2f2 solid;
+    padding: 15px 0 15px 0;
+}
+    .categoryrow h2 {
+        border-left: 5px #83b6b9 solid;
+        padding-left: 8px;
+    }
+
+    .categoryrow a, .categoryrow a:visited {
+        color: #2c2c2c;
+    }
+
+.categoryrowfooter {
+    color: #B3B3B3;
+    font-size: 13px;
+    font-weight: 300;
+    padding-bottom: 10px;
+}
+
+.subcategoryholder {
+    border-top: 1px #ecf0f1 solid;
+    border-bottom: 1px #ecf0f1 solid;
+    padding: 4px 0;
+    margin: 4px 0;
+}
+    .subcategoryholder ul li {
+        list-style: none;
+        display: inline-block;
+        padding: 7px 7px 7px 0;
+    }
+
+    .subcategoryholder ul li a, .subcategoryholder ul li a:visited {
+        border-left: 5px #83b6b9 solid;
+        padding-left: 8px;
+    }
+
+.topicrowfooterinfo {
+    line-height: 16px;
+    font-size: 12px;
+    color: #b3b3b3;
+    font-weight: 300;
+    padding: 4px 0 0 0;
+}
+
+
+
+/***badges*/
+.publicbadgeline {
+    padding: 12px 0;
+    border-bottom: 1px #ecf0f1 solid;
+    float: left;
+}
+
+    .publicbadgeline p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .publicbadgeline .publicbadge {
+        text-align: center;
+    }
+    
+    .publicbadgeline .publicbadgename {
+        font-size: 18px;
+        margin-bottom: 4px;
+    }
+
+    .publicbadgeline .publicbadgenamedesc {
+        font-weight: 300;
+    }
+
+    .publicbadgeline .publicbadgeawards {
+        color: #636267;
+        font-weight: 300;
+        font-style: italic;
+        font-size: 12px;
+        margin-bottom: 16px;
+    }
+
+.publicbadge > img.grey {
+    filter: grayscale(100%);
+    opacity: 0.3;
+}
+
+
+.publicbadge:hover {
+    background-color:#f2f2f2;
+}

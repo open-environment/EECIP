@@ -421,9 +421,6 @@ ul.notifications li, ul.todo li, ul.posts li {
 	border-bottom: none !important;
 	border-radius: 0 0 6px 6px;
 }
-li.dropdown.current-user .dropdown-toggle {
-	padding: 10px 4px 7px 9px;
-}
 li.dropdown.current-user .dropdown-menu li a {
 	border-bottom: none !important;
 }

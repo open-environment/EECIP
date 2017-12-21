@@ -87,9 +87,9 @@ ul.main-navigation-menu > li.active > a {
 	border-top: none !important;
 	color: #fff;
 }
-ul.main-navigation-menu > li.active > a .selected:before {
-	color: #A47441 !important;
-}
+    ul.main-navigation-menu > li.active > a .selected:before {
+        color: #82B9DE !important;
+    }
 ul.main-navigation-menu > li.active > a i {
 	color: #fff;
 }
@@ -135,7 +135,7 @@ ul.main-navigation-menu li > ul.sub-menu > li.open > a, ul.main-navigation-menu 
 	border-bottom: none;
 }
 
-@media (max-width: 767px) {
+/*@media (max-width: 767px) {
 	.navbar-inverse {
 		background: none !important;
 	}
@@ -143,4 +143,4 @@ ul.main-navigation-menu li > ul.sub-menu > li.open > a, ul.main-navigation-menu 
 		background: rgba(35, 35, 35, 0.9);
 		border-top-color: #444444;
 	}
-}
+}*/

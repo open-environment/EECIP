@@ -4,11 +4,13 @@
     tinymce.init({
         selector: "textarea.rte",
         browser_spellcheck: true,
+        branding: false,
+        plugins: [ "link lists hr code wordcount emoticons"],
         //plugins: [
         //    "autosave link image lists hr anchor forumimageinsert",
         //    "wordcount visualblocks visualchars code fullscreen media nonbreaking"
         //],
-        toolbar1: "bold italic underline strikethrough bullist hr | link unlink @(ViewBag.ImageUploadType ?? "image") code blockquote | formatselect",
+        toolbar1: "emoticons bold italic underline strikethrough bullist hr | link unlink @(ViewBag.ImageUploadType ?? "image") code blockquote | formatselect",
         remove_linebreaks: false,
         relative_urls: false,
         menubar: false,

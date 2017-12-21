@@ -28,6 +28,7 @@ namespace EECIP
             bundles.Add(new ScriptBundle("~/bundles/autocomplete").Include("~/Scripts/auto-complete.js"));
             bundles.Add(new ScriptBundle("~/bundles/anchorme").Include("~/Scripts/anchorme.js"));
             bundles.Add(new ScriptBundle("~/bundles/pagination").Include("~/Scripts/jquery.twbsPagination.js"));
+            bundles.Add(new ScriptBundle("~/bundles/trunk8").Include("~/Scripts/trunk8.js"));
 
             //****************** CSS ***********************************
             //****************** CSS ***********************************

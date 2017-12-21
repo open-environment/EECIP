@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            @using (Html.BeginForm("AgencyEdit", "Dashboard", FormMethod.Post, new { @class = "panel-body", @id="norepostform" }))
+            @using (Html.BeginForm("AgencyEdit", "Dashboard", FormMethod.Post, new { @class = "panel-body", @id = "norepostform" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.agency.ORG_IDX)
@@ -104,15 +104,15 @@
 
                                 @foreach (var item in Model.users)
                                 {
-                                    <tr >
+                                    <tr>
                                         <td>
                                             <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(item.USER_IDX).png" />
                                         </td>
                                         <td>
 
-                                                @Html.DisplayFor(modelItem => item.FNAME)
-                                                &nbsp;
-                                                @Html.DisplayFor(modelItem => item.LNAME)
+                                            @Html.DisplayFor(modelItem => item.FNAME)
+                                            &nbsp;
+                                            @Html.DisplayFor(modelItem => item.LNAME)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.JOB_TITLE)
@@ -149,7 +149,7 @@
     </div>
 
 </div>
-<div class="row"> 
+<div class="row">
     <div class="col-sm-12">
         <section class="panel panel-default">
             <div class="panel-heading">
@@ -176,6 +176,13 @@
                             <tr>
                                 <td>
                                     <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    @if (!string.IsNullOrEmpty(item.PROJECT_NAME)) {
+                                        <div class="delete-section" style="display:inline">
+                                            <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                            <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.ORG_ENT_SVCS_IDX" data-delete-p="/Dashboard/AgencyEntServiceDelete" data-delete-type="cells"><b>Confirm Delete</b></div>
+                                        </div>
+                                    }
+
                                     @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
                                     @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
                                     @Html.HiddenFor(modelItem => item.PROJECT_NAME)
@@ -230,7 +237,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Enterprise Service</label>
-                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_NAME, new { @class = "form-control", @readonly="readonly" })
+                                            @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_NAME, new { @class = "form-control", @readonly = "readonly" })
                                         </div>
                                     </div>
                                 </div>
@@ -288,6 +295,7 @@
 
 
 @section Scripts {
+    @Scripts.Render("~/bundles/confirmdelete")
     @Scripts.Render("~/bundles/select2")
 
     <script type="text/javascript">

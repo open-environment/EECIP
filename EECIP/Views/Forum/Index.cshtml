@@ -1,20 +1,9 @@
 ﻿<div class="row">
     <div class="col-md-9">
 
+        @Html.Action("ListMainCategories", "Forum")
     </div>
-    <div class="col-md-3 sidelayoutsection">
-        <div class="main-side-box clearfix">
-            @if (User.Identity.IsAuthenticated)
-            {
-            <div class="createtopicbutton">
-                <a href="@Url.Action("Create", "Topic")" class="btn btn-success btn-lg btn-block">
-                    New Discussion
-                </a>
-            </div>
-            }
 
-            @Html.Partial("_CommonSideNav")
-            @*@RenderSection("side", false)*@
-        </div>
-    </div>
+    @Html.Partial("_CommonSideNav")
+    @*@RenderSection("side", false)*@
 </div>
