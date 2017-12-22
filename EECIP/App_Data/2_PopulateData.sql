@@ -222,6 +222,7 @@ INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREA
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Reporting','Project Feature',0,GetDate());
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Rules Engine','Project Feature',0,GetDate());
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('User Friendly','Project Feature',0,GetDate());
+	INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Governance','Project Feature',0,GetDate());
 
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air Emissions Inventory','Program Area',0,GetDate());
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Beaches','Program Area',0,GetDate());

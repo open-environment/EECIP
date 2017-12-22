@@ -2,33 +2,25 @@
 body {
     height: 100%;
     margin: 0;
-    padding-top: 50px;
-    padding-bottom: 20px;
-    background-color: #393939;
-}
-
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
-.dl-horizontal dt {
+/*.dl-horizontal dt {
     white-space: normal;
-}
-
-/* Set width on the form input elements since they're 100% wide by default */
-/*input,
-select,
-textarea {
-    max-width: 280px;
 }*/
 
 
 /****************SITE CUSTOM CSS *****************************/
+/* EENTERPRISE STYLING 
+    #82B9DE  blue
+    #199C98 blue-green
+    #A9D2A2 green
+    #383838 dark grey header
+
+*/
+
 html {
     height: 100%;
     margin: 0;
@@ -40,48 +32,84 @@ html {
     color: #9d9d9d;
 }
 
+.label-eecip-bluegreen, .badge-eecip-bluegreen {
+    background-color: #199C98 !important;
+    border-color: #199C98 !important;
+}
+
 @media (min-width: 768px) {
     .modal-dialog {
         margin-top: 100px;
     }
 }
 
+.validation-summary-errors {
+    color: darkred;
+    background-color: pink;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: darkred;
+    border-style: solid;
+}
+
+.field-validation-error {
+    color: red;
+}
+
+
+/***************     TOP AND LEFT MENU STYLING     ******************/
 .navbar-inverse {
 background-color: #393939;
 }
+    .navbar-inverse .navbar-brand i, .navbar-inverse .navbar-brand:hover i {
+        color: #A9D2A2;
+    }
 
-/* EENTERPRISE STYLING 
-    #82B9DE  blue
-    #199C98 blue-green
-    #A9D2A2 green
-    #383838 dark grey header
-
-*/
+.nav > li.dropdown .dropdown-toggle .badge-green {
+    background-color: #097e00;
+    border: none;
+}
 
 ul.main-navigation-menu > li a > i {
     color: #199C98;
 }
 
 ul.main-navigation-menu > li.active > a {
-    background-color: #82B9DE;
-    /*border-top: none !important;
-     color: #fff;*/
+    background-color: #199C98;  /*#82B9DE;*/
 }
 
-.navbar-inverse .navbar-brand i, .navbar-inverse .navbar-brand:hover i {
-    color: #A9D2A2;
+    ul.main-navigation-menu > li.active > a .selected:before {
+        color: #199C98 !important;
+    }
+
+.clip-chevron-left {
+    color: #199C98;
+}
+
+.clip-chevron-right {
+    color: #199C98;
 }
 
 
-.current-user > > a {
-    padding-top: 16px;
+
+/***************     FOOTER STYLING     ******************/
+.footer-inner > a > img {
+    height: 30px;
+    padding-right: 10px;
 }
 
-.label-eecip-bluegreen, .badge-eecip-bluegreen {
-    background-color: #199C98 !important;
-    border-color: #199C98 !important;
+.footer-items {
+    text-align: right;
 }
 
+    .footer-items > a {
+        color: #666;
+        padding: 5px;
+    }
+
+
+
+/***************     PANEL STYLING     ******************/
 .panel-tools .btn.expand:before {
     content: "\e161";
     display: inline;
@@ -103,45 +131,7 @@ ul.main-navigation-menu > li.active > a {
 }
 
 
-.clip-chevron-left {
-    color: #199C98;
-}
 
-
-.clip-chevron-right {
-    color: #199C98;
-}
-
-.footer-inner > a > img {
-    height: 30px;
-    padding-right: 10px;
-}
-.footer-items {
-    text-align: right;
-}
-    .footer-items > a {
-        color: #666;
-        padding: 5px;
-    }
-
-
-.validation-summary-errors {
-    color: darkred;
-    background-color: pink;
-    border-width: 1px;
-    border-radius: 5px;
-    border-color: darkred;
-    border-style: solid;
-}
-
-.field-validation-error {
-    color: red;
-}
-
-.nav > li.dropdown .dropdown-toggle .badge-green {
-    background-color: #097e00;
-    border: none;
-}
 
 
 /***************     TAG STYLING     ******************/
@@ -186,13 +176,29 @@ ul.main-navigation-menu > li.active > a {
 }
 
 
-/*     TOASTR CUSTOM STYLING     */
+/***************     TOASTR STYLING     ******************/
 .toast-top-right {
     top: 62px;
 }
 
 
 /***************     PANEL REDESIGN     ******************/
+.panel-heading {
+    font-size: 15px;
+    font-weight: 600;
+    padding-top: 8px;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: 1px;
+    color: #646464 !important;
+    border-bottom: solid 2px #199C98 !important;
+    padding-left: 10px;
+    min-height:40px;
+    padding-bottom: 20px !important;
+}
+
+    .panel-heading > .panel-tools:hover {
+        background-color:#B3B3B3;
+    }
 
 /*.panel-default {
     border-color: #337ab7;
@@ -262,14 +268,11 @@ ul.main-navigation-menu > li.active > a {
 .aligned-row {
     display: flex;
     flex-flow: row wrap;
-    &::before
+    &::before {
+                  display: block;
 
-{
-    display: block;
-}
-
-}
-
+              }
+              }
 
 
 .circle-tile {
@@ -397,9 +400,12 @@ ul.main-navigation-menu > li.active > a {
     color: #8e44ad;
 }
 
-/**************************************************************/
-/***********************FORUM ********************************/
-/****************************************************************/
+
+
+
+/**********************************************************************/
+/***********************FORUM STYLING *********************************/
+/**********************************************************************/
 .btn-mvc, .btn-mvc:visited {
     display: inline-block;
     padding: 7px 20px;
@@ -440,7 +446,7 @@ ul.main-navigation-menu > li.active > a {
     display: block;
 }
 
-/* Side Boxes */
+/* FORUM Side Boxes */
 .side-box {
     padding: 0 0 20px 0;
 }
@@ -473,7 +479,7 @@ ul.main-navigation-menu > li.active > a {
     }
 }
 
-/* Side Boxes - Category */
+/* FORUM Side Boxes - Category */
 .categories-box ul {
     padding: 0;
     margin: 0;
@@ -499,7 +505,7 @@ ul.main-navigation-menu > li.active > a {
 
 
 
-/*   VIEW TOPICS / POSTS  */
+/*   FORUM VIEW TOPICS / POSTS  */
 .topicshow .topicheading {
     margin-bottom: 20px;
 }

@@ -69,6 +69,10 @@
             <div id="leftFacets" class="col-sm-2" style="border-right-width:1px; border-right-style:solid; border-color:#ccc; min-height:500px; ">
                 <div>
                     <h3 style="margin-top:0px;padding-bottom: 20px;">Data Filters</h3>
+                    @Model.searchResults.Facets
+
+
+
                     @foreach (var item in Model.searchResults.Facets)
                     {
                         if (item.Key != "DataType")

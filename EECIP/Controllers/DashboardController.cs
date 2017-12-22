@@ -151,6 +151,7 @@ namespace EECIP.Controllers
                 var model = new vmDashboardAgencyCard();
                 model.agency = db_Ref.GetT_OE_ORGANIZATION_ByID(id);
                 model.org_ent_services = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_NoLeftJoin(id);
+                model.users = db_Accounts.GetT_OE_USERSByAgency(id);
                 model.SelectedDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(id, "Database");
                 model.SelectedAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(id, "App Framework");
                 model.projects = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(id);
