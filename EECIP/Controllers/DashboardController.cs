@@ -30,11 +30,19 @@ namespace EECIP.Controllers
 
 
         // GET: Dashboard/Search
-        public ActionResult Search()
+        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetTags, string activeTab, string currentPage)
         {
             var model = new vmDashboardSearch();
-            model.activeTab = "1";
-            model.currentPage = 1;
+            model.q = q;
+            model.facetDataType = facetDataType;
+            model.facetMedia = facetMedia;
+            model.facetRecordSource = facetRecordSource;
+            model.facetAgency = facetAgency;
+            model.facetTags = facetTags;
+            model.activeTab = activeTab ?? "1";
+            model.currentPage = currentPage.ConvertOrDefault<int?>() ?? 1;
+
+            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetTags, model.currentPage);
             return View(model);
         }
 
@@ -44,7 +52,7 @@ namespace EECIP.Controllers
             if (model.currentPage == null)
                 model.currentPage = 1;
 
-            model.searchResults = AzureSearch.QuerySearchIndex(model.searchStr, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetTags, model.currentPage);
+            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetTags, model.currentPage);
             return View(model);
         }
 

@@ -17,7 +17,7 @@ namespace EECIP.Models
     public class vmDashboardSearch
     {
         public DocumentSearchResult<EECIP_Index> searchResults { get; set; }
-        public string searchStr { get; set; }
+        public string q { get; set; }
         public string facetDataType { get; set; }
         public string facetMedia { get; set; }
         public string facetRecordSource { get; set; }

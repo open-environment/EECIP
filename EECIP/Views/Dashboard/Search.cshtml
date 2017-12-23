@@ -7,7 +7,7 @@
     ViewBag.SubTitle = "Find projects, agencies, people, or discussions that match your interests";
 }
 
-@using (Html.BeginForm("Search", "Dashboard", FormMethod.Post, new { @class = "", @id = "norepostform" }))
+@using (Html.BeginForm("Search", "Dashboard", FormMethod.Get, new { @id = "norepostform" }))
 {
 
     <!-- start: PAGE TITLE  -->
@@ -21,7 +21,7 @@
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </span>
-                    @Html.TextBoxFor(model => model.searchStr, new { @class = "form-control", @id = "txtSearch", @name = "txtSearch", @placeholder = @ViewBag.SubTitle })
+                    @Html.TextBoxFor(model => model.q, new { @class = "form-control", @id = "txtSearch", @name = "txtSearch", @placeholder = @ViewBag.SubTitle })
                     <span class="input-group-btn">
                         <button class="btn btn-success" type="submit">
                             <i class="clip-search-2"> </i>Search
@@ -29,19 +29,19 @@
                     </span>
                 </div>
                 <span class="help-block">
-                    @if (Model.facetAgency != null)
+                    @if (!string.IsNullOrEmpty(Model.facetAgency))
                     {
                         <a href="javascript:void(0)" data-id2="Agency" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetAgency</a>
                     }
-                    @if (Model.facetMedia != null)
+                    @if (!string.IsNullOrEmpty(Model.facetMedia))
                     {
                         <a href="javascript:void(0)" data-id2="Media" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetMedia</a>
                     }
-                    @if (Model.facetRecordSource != null)
+                    @if (!string.IsNullOrEmpty(Model.facetRecordSource))
                     {
                         <a href="javascript:void(0)" data-id2="Record_Source" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetRecordSource</a>
                     }
-                    @if (Model.facetTags != null)
+                    @if (!string.IsNullOrEmpty(Model.facetTags))
                     {
                         <a href="javascript:void(0)" data-id2="Tags" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetTags</a>
                     }
@@ -529,16 +529,16 @@
             });
 
 
-            $("#norepostform").on("submit", function () {
+            //$("#norepostform").on("submit", function () {
 
-                //Check if supported, if not won't push it
-                if (history.pushState) {
-                    var searchString = $("#txtSearch").val();
-                    var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?q=" + searchString + "";
-                    console.log(newUrl);
-                    window.history.pushState({ path: newUrl }, '', newUrl);
-                }
-            });
+            //    //Check if supported, if not won't push it
+            //    if (history.pushState) {
+            //        var searchString = $("#txtSearch").val();
+            //        var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?q=" + searchString + "";
+            //        console.log(newUrl);
+            //        window.history.pushState({ path: newUrl }, '', newUrl);
+            //    }
+            //});
 
             //function UpdateFacets(data) {
             //    var facetResultsHTML = '';
