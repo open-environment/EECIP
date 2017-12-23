@@ -335,6 +335,7 @@
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.min.css" />
     <Content Include="Content\fonts.css" />
+    <Content Include="Content\Images\Agencies\0.png" />
     <Content Include="Content\Images\Agencies\ADEC.png" />
     <Content Include="Content\Images\Agencies\ADEM.png" />
     <Content Include="Content\Images\Agencies\ARDEQ.png" />
@@ -761,6 +762,7 @@
     <Content Include="Views\Forum\_Topic.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Admin\RefBadge.cshtml" />
+    <Content Include="Views\Dashboard\EnterpriseSvcCard.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

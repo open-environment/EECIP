@@ -76,6 +76,30 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<UserBadgeDisplay> GetBadgesForUserNoLeftJoin(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Badges
+                            join b in ctx.MembershipUser_Badge on a.Id equals b.Badge_Id
+                            where b.MembershipUser_Id == UserIDX
+                            select new UserBadgeDisplay
+                            {
+                                _Badge = a,
+                                UserEarnedInd = true,
+                                EarnedDate = b.DateEarned
+                            }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static List<Badge> GetBadges()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -133,7 +157,37 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int AssignBadgeToUser(int UserIDX, Guid badgeID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    MembershipUser_Badge e = (from c in ctx.MembershipUser_Badge
+                               where c.MembershipUser_Id == UserIDX
+                               && c.Badge_Id == badgeID
+                               select c).FirstOrDefault();
 
+                    if (e != null)
+                        return -1; //badge already earned
+                    else
+                    {
+                        e = new MembershipUser_Badge();
+                        e.MembershipUser_Id = UserIDX;
+                        e.Badge_Id = badgeID;
+                        e.DateEarned = DateTime.UtcNow;
+                        ctx.MembershipUser_Badge.Add(e);
+                        ctx.SaveChanges();
+                        return 1;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
         //****************************** CATEGORIES **********************************************
         public static List<Category> GetCategory()

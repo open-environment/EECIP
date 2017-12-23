@@ -69,10 +69,6 @@
             <div id="leftFacets" class="col-sm-2" style="border-right-width:1px; border-right-style:solid; border-color:#ccc; min-height:500px; ">
                 <div>
                     <h3 style="margin-top:0px;padding-bottom: 20px;">Data Filters</h3>
-                    @Model.searchResults.Facets
-
-
-
                     @foreach (var item in Model.searchResults.Facets)
                     {
                         if (item.Key != "DataType")
@@ -366,13 +362,11 @@
 
         $(document).on('click', '#read-more', function (event) {
             $(this).parent().trunk8('revert').append(' <a id="read-less" href="#">read less</a>');
-
             return false;
         });
 
         $(document).on('click', '#read-less', function (event) {
             $(this).parent().trunk8();
-
             return false;
         });
 
@@ -532,6 +526,18 @@
                     $('#currentPage').val(txt);
                 $('#norepostform').submit();
                 return false;
+            });
+
+
+            $("#norepostform").on("submit", function () {
+
+                //Check if supported, if not won't push it
+                if (history.pushState) {
+                    var searchString = $("#txtSearch").val();
+                    var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?q=" + searchString + "";
+                    console.log(newUrl);
+                    window.history.pushState({ path: newUrl }, '', newUrl);
+                }
             });
 
             //function UpdateFacets(data) {

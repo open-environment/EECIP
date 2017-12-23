@@ -3,7 +3,23 @@
     ViewBag.Title = Model.agency.ORG_NAME;
     ViewBag.SubTitle = "";
 }
-
+@if (User.IsInRole("Admins"))
+{
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="form-field-1">
+                        Select Agency:
+                    </label>
+                    <div class="col-sm-9">
+                        @Html.DropDownListFor(model => model.agency.ORG_IDX, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Agency?selAgency=' + this.options[this.selectedIndex].value;" })
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
 <!-- render the main content -->
 <div class="row">
     <div class="col-sm-6">
@@ -169,43 +185,58 @@
                             <th>Description</th>
                             <th>Vendor</th>
                             <th>Current Implementation Status</th>
+                            <th>Contact</th>
                         </tr>
-
-                        @foreach (var item in Model.org_ent_services)
+                        @if (Model.org_ent_services != null)
                         {
-                            <tr>
-                                <td>
-                                    <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
-                                    @if (!string.IsNullOrEmpty(item.PROJECT_NAME)) {
-                                        <div class="delete-section" style="display:inline">
-                                            <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
-                                            <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.ORG_ENT_SVCS_IDX" data-delete-p="/Dashboard/AgencyEntServiceDelete" data-delete-type="cells"><b>Confirm Delete</b></div>
-                                        </div>
-                                    }
 
-                                    @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
-                                    @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
-                                    @Html.HiddenFor(modelItem => item.PROJECT_NAME)
-                                    @Html.HiddenFor(modelItem => item.COMMENTS)
-                                    @Html.HiddenFor(modelItem => item.VENDOR)
-                                    @Html.HiddenFor(modelItem => item.IMPLEMENT_STATUS)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ENT_PLATFORM_NAME)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PROJECT_NAME)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.COMMENTS)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.VENDOR)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.IMPLEMENT_STATUS)
-                                </td>
-                            </tr>
+                            foreach (var item in Model.org_ent_services)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                        @if (!string.IsNullOrEmpty(item.PROJECT_NAME))
+                                        {
+                                            <div class="delete-section" style="display:inline">
+                                                <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                                <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.ORG_ENT_SVCS_IDX" data-delete-p="/Dashboard/AgencyEntServiceDelete" data-delete-type="cells"><b>Confirm Delete</b></div>
+                                            </div>
+                                        }
+
+                                        @if (item.ACTIVE_INTEREST_IND != null && item.ACTIVE_INTEREST_IND == true)
+                                        {
+                                            <a><i class="glyphicon glyphicon-heart" style="font-size: 20px; color:forestgreen; float:right"></i></a>
+                                        }
+
+                                        @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
+                                        @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
+                                        @Html.HiddenFor(modelItem => item.PROJECT_NAME)
+                                        @Html.HiddenFor(modelItem => item.COMMENTS)
+                                        @Html.HiddenFor(modelItem => item.VENDOR)
+                                        @Html.HiddenFor(modelItem => item.IMPLEMENT_STATUS)
+                                        @Html.HiddenFor(modelItem => item.PROJECT_CONTACT)
+                                        @Html.HiddenFor(modelItem => item.ACTIVE_INTEREST_IND)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ENT_PLATFORM_NAME)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PROJECT_NAME)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.COMMENTS)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.VENDOR)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IMPLEMENT_STATUS)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PROJECT_CONTACT)
+                                    </td>
+                                </tr>
+                            }
                         }
                     </table>
                 </div>
@@ -234,10 +265,16 @@
                         <div class="col-sm-12 ">
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-9">
                                         <div class="form-group">
                                             <label>Enterprise Service</label>
                                             @Html.TextBoxFor(model => model.edit_ent_services.ENT_PLATFORM_NAME, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label>Active Interest?</label>
+                                            @Html.CheckBoxFor(model => model.edit_ent_services.ACTIVE_INTEREST_IND, new { @class = "form-control" })
                                         </div>
                                     </div>
                                 </div>
@@ -260,12 +297,18 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Implementation Status</label>
                                             @Html.DropDownListFor(model => model.edit_ent_services.IMPLEMENT_STATUS, Model.ddl_Status, "", new { @class = "form-control" })
-
                                             @Html.ValidationMessageFor(model => model.edit_ent_services.IMPLEMENT_STATUS)
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Project Contact</label>
+                                            @Html.TextBoxFor(model => model.edit_ent_services.PROJECT_CONTACT, new { @class = "form-control", @maxlength = "100" })
+                                            @Html.ValidationMessageFor(model => model.edit_ent_services.PROJECT_CONTACT)
                                         </div>
                                     </div>
                                 </div>
@@ -321,6 +364,10 @@
                 $('#edit_ent_services_VENDOR').val($(this).parent('td').find('#item_VENDOR').val());
                 $('#edit_ent_services_IMPLEMENT_STATUS').val($(this).parent('td').find('#item_IMPLEMENT_STATUS').val());
                 $('#edit_ent_services_COMMENTS').val($(this).parent('td').find('#item_COMMENTS').val());
+                $('#edit_ent_services_PROJECT_CONTACT').val($(this).parent('td').find('#item_PROJECT_CONTACT').val());
+                $('#edit_ent_services_ACTIVE_INTEREST_IND').val($(this).parent('td').find('#item_ACTIVE_INTEREST_IND').val());
+                $('#edit_ent_services.ACTIVE_INTEREST_IND').val($(this).parent('td').find('#item_ACTIVE_INTEREST_IND').val());
+
             });
         });
     </script>

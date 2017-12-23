@@ -314,7 +314,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                             //then update local rec sync ind
                             foreach (EECIP_Index p in _ps)
                             {
-                                db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(p.KeyID.ConvertOrDefault<int>()-100000, null, null, null, null, null, null, true, null);
+                                db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(p.KeyID.ConvertOrDefault<int>()-100000, null, null, null, null, null, null, null, null, true, null);
                             }
 
                         }

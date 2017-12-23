@@ -14,12 +14,17 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Guid? ORG_IDX { get; set; }
         public int ENT_PLATFORM_IDX { get; set; }
         public string ENT_PLATFORM_NAME { get; set; }
+        public string ENT_PLATFORM_DESC { get; set; }
         public string PROJECT_NAME { get; set; }
         public string VENDOR { get; set; }
         public string IMPLEMENT_STATUS { get; set; }
         public string COMMENTS { get; set; }
+        public string PROJECT_CONTACT { get; set; }
+        public bool ACTIVE_INTEREST_IND { get; set; }
         public DateTime? CREATE_DT { get; set; }
+        public int? CREATE_USERIDX { get; set; }
         public DateTime? MODIFY_DT { get; set; }
+        public int? MODIFY_USERIDX { get; set; }
     }
 
     public class ProjectDisplayType
@@ -172,6 +177,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 VENDOR = x.VENDOR,
                                 IMPLEMENT_STATUS = x.IMPLEMENT_STATUS, 
                                 COMMENTS = x.COMMENTS,
+                                PROJECT_CONTACT = x.PROJECT_CONTACT,
+                                ACTIVE_INTEREST_IND = x.ACTIVE_INTEREST_IND ?? false,
                                 CREATE_DT = x.CREATE_DT, 
                                 MODIFY_DT = x.MODIFY_DT
                             }).ToList();
@@ -203,6 +210,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 VENDOR = b.VENDOR,
                                 IMPLEMENT_STATUS = b.IMPLEMENT_STATUS,
                                 COMMENTS = b.COMMENTS,
+                                PROJECT_CONTACT = b.PROJECT_CONTACT,
+                                ACTIVE_INTEREST_IND = b.ACTIVE_INTEREST_IND ?? false,
                                 CREATE_DT = b.CREATE_DT,
                                 MODIFY_DT = b.MODIFY_DT
                             }).ToList();
@@ -215,8 +224,42 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static OrganizationEntServicesDisplayType GetT_OE_ORGANIZATION_ENT_SVCS_ByID(int oRG_ENT_SVCS_IDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_ENTERPRISE_PLATFORM
+                            join b in ctx.T_OE_ORGANIZATION_ENT_SVCS on a.ENT_PLATFORM_IDX equals b.ENT_PLATFORM_IDX
+                            where b.ORG_ENT_SVCS_IDX == oRG_ENT_SVCS_IDX
+                            select new OrganizationEntServicesDisplayType
+                            {
+                                ORG_ENT_SVCS_IDX = b.ORG_ENT_SVCS_IDX,
+                                ORG_IDX = b.ORG_IDX,
+                                ENT_PLATFORM_IDX = a.ENT_PLATFORM_IDX,
+                                ENT_PLATFORM_NAME = a.ENT_PLATFORM_NAME,
+                                ENT_PLATFORM_DESC = a.ENT_PLATFORM_DESC,
+                                PROJECT_NAME = b.PROJECT_NAME,
+                                VENDOR = b.VENDOR,
+                                IMPLEMENT_STATUS = b.IMPLEMENT_STATUS,
+                                COMMENTS = b.COMMENTS,
+                                PROJECT_CONTACT = b.PROJECT_CONTACT,
+                                ACTIVE_INTEREST_IND = b.ACTIVE_INTEREST_IND ?? false,
+                                CREATE_DT = b.CREATE_DT,
+                                MODIFY_DT = b.MODIFY_DT
+                            }).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static int InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(int? oRG_ENT_SVCS_IDX, Guid? oRG_IDX, int? eNT_PLATFORM_IDX, string pROJECT_NAME, 
-            string vENDOR, string iMPLEMENT_STATUS, string cOMMENTS, bool? syncInd, int? cREATE_USER = 0)
+            string vENDOR, string iMPLEMENT_STATUS, string cOMMENTS, string pROJECT_CONTACT, bool? aCTIVE_INTEREST_IND, bool? syncInd, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -259,6 +302,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (vENDOR != null) e.VENDOR = vENDOR;
                     if (iMPLEMENT_STATUS != null) e.IMPLEMENT_STATUS = iMPLEMENT_STATUS;
                     if (cOMMENTS != null) e.COMMENTS = cOMMENTS;
+                    if (pROJECT_CONTACT != null) e.PROJECT_CONTACT = pROJECT_CONTACT;
+                    if (aCTIVE_INTEREST_IND != null) e.ACTIVE_INTEREST_IND = aCTIVE_INTEREST_IND;
 
                     if (insInd)
                         ctx.T_OE_ORGANIZATION_ENT_SVCS.Add(e);

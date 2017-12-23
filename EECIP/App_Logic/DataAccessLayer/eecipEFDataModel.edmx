@@ -57,12 +57,14 @@
           <Property Name="VENDOR" Type="varchar" MaxLength="100" />
           <Property Name="IMPLEMENT_STATUS" Type="varchar" MaxLength="250" />
           <Property Name="COMMENTS" Type="varchar(max)" />
+          <Property Name="PROJECT_CONTACT" Type="varchar" MaxLength="100" />
+          <Property Name="ACTIVE_INTEREST_IND" Type="bit" />
+          <Property Name="RECORD_SOURCE" Type="varchar" MaxLength="50" />
+          <Property Name="SYNC_IND" Type="bit" Nullable="false" />
           <Property Name="CREATE_USERIDX" Type="int" />
           <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
-          <Property Name="SYNC_IND" Type="bit" Nullable="false" />
-          <Property Name="RECORD_SOURCE" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="T_OE_ORGANIZATION_TAGS">
           <Key>
@@ -571,7 +573,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_ORGA__ENT_P__25518C17">
+        <Association Name="FK__T_OE_ORGA__ENT_P__07220AB2">
           <End Role="T_OE_REF_ENTERPRISE_PLATFORM" Type="Self.T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -597,6 +599,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__062DE679">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__T_OE_ORGA__ORG_I__1F63A897">
           <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -607,20 +623,6 @@
               <PropertyRef Name="ORG_IDX" />
             </Principal>
             <Dependent Role="T_OE_ORGANIZATION_TAGS">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_ORGA__ORG_I__245D67DE">
-          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
               <PropertyRef Name="ORG_IDX" />
             </Dependent>
           </ReferentialConstraint>
@@ -990,7 +992,7 @@
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Post" EntitySet="Post" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ENT_P__25518C17" Association="Self.FK__T_OE_ORGA__ENT_P__25518C17">
+          <AssociationSet Name="FK__T_OE_ORGA__ENT_P__07220AB2" Association="Self.FK__T_OE_ORGA__ENT_P__07220AB2">
             <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
           </AssociationSet>
@@ -998,13 +1000,13 @@
             <End Role="T_OE_REF_REGION" EntitySet="T_OE_REF_REGION" />
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
           </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__062DE679" Association="Self.FK__T_OE_ORGA__ORG_I__062DE679">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+          </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__ORG_I__1F63A897" Association="Self.FK__T_OE_ORGA__ORG_I__1F63A897">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__245D67DE" Association="Self.FK__T_OE_ORGA__ORG_I__245D67DE">
-            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
-            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__ORG_I__54CB950F" Association="Self.FK__T_OE_ORGA__ORG_I__54CB950F">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
@@ -1513,6 +1515,8 @@
           <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_ORGANIZATION" />
           <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
           <Property Name="RECORD_SOURCE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACTIVE_INTEREST_IND" Type="Boolean" />
         </EntityType>
         <Association Name="FK__T_OE_ORGA__ENT_P__17036CC0">
           <End Type="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Role="T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
@@ -2431,6 +2435,8 @@
           <EntitySetMapping Name="T_OE_ORGANIZATION_ENT_SVCS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS">
               <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_ENT_SVCS">
+                <ScalarProperty Name="ACTIVE_INTEREST_IND" ColumnName="ACTIVE_INTEREST_IND" />
+                <ScalarProperty Name="PROJECT_CONTACT" ColumnName="PROJECT_CONTACT" />
                 <ScalarProperty Name="RECORD_SOURCE" ColumnName="RECORD_SOURCE" />
                 <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />

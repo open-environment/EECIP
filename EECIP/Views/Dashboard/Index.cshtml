@@ -1,5 +1,8 @@
 ﻿@using EECIP.App_Logic.DataAccessLayer
 @model EECIP.Models.vmDashboardIndex
+@{
+    ViewBag.Title = "Welcome " + Model.UserName + "!";
+}
 <section class="panel panel-default ">
     <div class="panel-heading">
         Badge Progress
@@ -20,7 +23,6 @@
                                 <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
                                 @if (Model.UserBadges[i].EarnedDate.HasValue)
                                 {
-
                                     <p class="publicbadgeawards" style="color:green"><b>Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</b></p>
                                 }
                                 else
@@ -50,26 +52,22 @@
                             </div>
                         }
                     </div>
-
-
-
                 </div>
-
             </div>
-
-
         </div>
-
-
-
     </div>
-
-
-    <div class="panel-footer" style="background-color:lightgrey">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-           href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-            Show/Hide
-        </a>
-    </div>
+    <a id="badgefooter" class="collapsed panel-footer" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%;display: block;text-align: center; text-decoration: none;">
+        Show All <i class="glyphicon clip-arrow-down"></i>
+    </a>
 </section>
 
+@section Scripts {
+    <script type="text/javascript">
+        $('#badgefooter').click(function () {
+            $(this).html(function (i, old) {
+                return old == 'Show Less <i class="glyphicon clip-arrow-up"></i>' ? 'Show All <i class="glyphicon clip-arrow-down"></i>' : 'Show Less <i class="glyphicon clip-arrow-up"></i>';
+            });
+        });
+
+    </script>
+}

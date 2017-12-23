@@ -9,17 +9,17 @@
         <div class="user-left">
             <div class="center" style="padding-bottom:20px">
                 <div class="user-image">
-                    <img src="@Url.Content(String.Format("~/Content/Images/Agencies/{0}.png",  Model.agency.ORG_ABBR))" alt="logo" onerror="this.src='../Content/Images/Agencies/0.png'" style="width:200px" />
+                    <img src="@Url.Content(String.Format("~/Content/Images/Agencies/{0}.png",  Model.agency.ORG_ABBR))" alt="logo" onerror="this.src='../Content/Images/Agencies/0.png'" style="width:150px" />
                 </div>
                 <h4>@Html.Raw(Model.agency.ORG_ABBR)</h4>
-                State: @Html.Raw(Model.agency.STATE_CD)
-                <br/>
-                EPA Region: @Html.Raw(Model.agency.EPA_REGION)
+                <div>
+                    <span class=""  style="padding:10px">@Html.Raw(Model.agency.STATE_CD)</span>
+                    <span class="" style="padding:10px"> EPA Region @Html.Raw(Model.agency.EPA_REGION)</span>
+                </div>               
             </div>
         </div>
     </div>
     <div class="col-sm-8">
-
         <section class="panel panel-default">
             <div class="panel-heading">
                 Tech Details
@@ -33,27 +33,33 @@
                 <table id="user" class="table table-bordered table-striped" style="clear: both">
                     <tbody>
                         <tr>
-                            <td class="column-left" style="width:50%">Application Development Framework</td>
+                            <td class="column-left text-right text-bold" style="width:50%">Application Development Framework</td>
                             <td class="column-right">
-                                temp
+                                @foreach (var item in Model.SelectedAppFramework)
+                                {
+                                    <span class="select2-selection__choice" style="font-size:12px !important">@item</span>
+                                }
                             </td>
                         </tr>
                         <tr>
-                            <td>Primary Database Platform</td>
+                            <td class="column-left text-right text-bold">Primary Database Platform</td>
                             <td>
-                                temp
+                                @foreach (var item in Model.SelectedDatabase)
+                                {
+                                    <span class="select2-selection__choice" style="font-size:12px !important">@item</span>
+                                }
                             </td>
                         </tr>
                         <tr>
-                            <td>Using/considering cloud applications?</td>
+                            <td class="column-left text-right text-bold">Using/considering cloud applications?</td>
                             <td>
-                                temp
+                                @Model.agency.CLOUD
                             </td>
                         </tr>
                         <tr>
-                            <td>Internal/External APIs and/or an Agency Strategy for APIs?</td>
+                            <td class="column-left text-right text-bold">Internal/External APIs and/or an Agency Strategy for APIs?</td>
                             <td>
-                                temp
+                                @Model.agency.API
                             </td>
                         </tr>
                     </tbody>
@@ -137,39 +143,46 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-striped m-b-none" data-ride="datatables">
-                        <tr>
-                            <th>Enterprise Service</th>
-                            <th>Project Name</th>
-                            <th>Vendor</th>
-                            <th>Current Implementation Status</th>
-                            <th>Comments</th>
-                        </tr>
 
-                        @foreach (var item in Model.org_ent_services)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.ENT_PLATFORM_NAME)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PROJECT_NAME)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.VENDOR)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.IMPLEMENT_STATUS)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.COMMENTS)
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
+                @if (Model.org_ent_services != null && Model.org_ent_services.Count > 0) {
+
+                        <div class="table-responsive">
+                            <table class="table table-striped m-b-none" data-ride="datatables">
+                                <tr>
+                                    <th>Enterprise Service</th>
+                                    <th>Project Name</th>
+                                    <th>Vendor</th>
+                                    <th>Current Implementation Status</th>
+                                    <th>Comments</th>
+                                </tr>
+
+                                @foreach (var item in Model.org_ent_services)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ENT_PLATFORM_NAME)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PROJECT_NAME)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.VENDOR)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IMPLEMENT_STATUS)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.COMMENTS)
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                }
+                else {
+                    <text>None entered</text>
+                }
+             </div>
         </section>
     </div>
 </div>
@@ -185,19 +198,24 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-striped m-b-none" data-ride="datatables">
-                        <tr>
-                            <th>Project Name</th>
-                            <th>Description</th>
-                            <th>Media</th>
-                            <th>Start Year</th>
-                            <th>Status</th>
-                            <th>Record Source</th>
-                            <th>Program Area</th>
-                            <th>Features</th>
-                            <th>More Info</th>
-                        </tr>
+                @if (Model.projects != null && Model.projects.Count > 0) {
+
+                <div class="table-responsive ">
+                    <table class="table  m-b-none table-hover table-striped table-bordered" data-ride="datatables">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Description</th>
+                                <th>Media</th>
+                                <th>Start Year</th>
+                                <th>Status</th>
+                                <th>Record Source</th>
+                                <th>Program Area</th>
+                                <th>Features</th>
+                                <th>More Info</th>
+                            </tr>
+
+                        </thead>
 
                         @foreach (var item in Model.projects)
                         {
@@ -239,15 +257,16 @@
                                     }
                                 </td>
                                 <td>
-                                    @if (item.PROJECT_URL != null && item.PROJECT_URL.Length > 5)
-                                    {
-                                        <a href="@Html.DisplayFor(modelItem => item.PROJECT_URL)" target="_blank">Project URL</a>
-                                    }
+                                    <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.PROJECT_IDX.ToString() })" class="label label-success btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; "><i class="clip-info"></i> More Info</a>
                                 </td>
                             </tr>
                         }
                     </table>
                 </div>
+                }
+                else {
+                    <text>None entered</text>
+                }
             </div>
         </section>
     </div>

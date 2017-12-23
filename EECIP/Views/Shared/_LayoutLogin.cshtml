@@ -12,6 +12,17 @@
     <link rel="shortcut icon" href="@Url.Content("~/favicon.ico")">
     @Styles.Render("~/Content/styles")
     @Scripts.Render("~/bundles/modernizr")
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108934202-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-108934202-1');
+    </script>
+
 </head>
 <body class="login example1"  >
     <div class="main-login col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">

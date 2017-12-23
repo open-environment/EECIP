@@ -1,112 +1,154 @@
 ﻿@model EECIP.Models.vmDashboardProjectCard
 @{
     ViewBag.Title = Model.project.PROJ_NAME;
+    ViewBag.SubTitle = Model.OrgName;
     ViewBag.ShowBack = true;
 }
-<i class="clip-thumbs-up" style="font-size: 30px; color:forestgreen"></i> 5
-<i class="clip-thumbs-up-2" style="font-size: 30px; color: red"></i> 3
-<h3>Project Contact</h3>
-<div class="row">
-    <div class="col-md-3">
-        <div class="div-card">
-            @Model.project.PROJECT_CONTACT
-        </div>
-    </div>
-    @*<div class="col-md-6">
-        <div class="div-card"></div>
-    </div>*@
-</div>
-
-
 @if (Model.project != null)
 {
 
-<h3>Project Overview</h3>
 <div class="row">
-    <div class="col-md-6">
-        <div class="div-card">
-
-            <dl class="dl-horizontal">
-                <dt>
-                    Start Year:
-                </dt>
-                <dd>
-                    @Model.project.START_YEAR
-                </dd>
-                <dt>
-                    Year Most Recently Active:
-                </dt>
-                <dd>
-                    @Model.project.DATE_LAST_UPDATE
-                </dd>
-                <dt>
-                    Current Status:
-                </dt>
-                <dd>
-                    @Model.project.PROJ_STATUS
-                </dd>
-                <dt>
-                    Record Source:
-                </dt>
-                <dd>
-                    @Model.project.RECORD_SOURCE
-                </dd>
-                <dt>
-                    Last Updated:
-                </dt>
-                <dd>
-                    @Model.LastUpdatedUser
-                    @(Model.project.MODIFY_DT ?? Model.project.CREATE_DT)
-               </dd>
-                <dt>
-                    Project URL:
-                </dt>
-                <dd>
-                    @Model.project.PROJECT_URL
-                </dd>
-            </dl>
-        </div>
-    </div>
-    <div class="clearfix visible-sm" ></div>
-
-    <div class="col-md-6">
-        <div class="div-card">
-            <h4>Media:</h4>
-            @if (Model.project.T_OE_REF_TAGS2 != null)
-            {
-                @Model.project.T_OE_REF_TAGS2.TAG_NAME
-            }
-            <hr />
-            <h4>Program Area(s):</h4>
-            @foreach (string pa in Model.SelectedProgramAreas)
-            {
-                <div class="select2-selection__choice">@pa</div>
-            }
-
-        </div>
-    </div>
-    <div class="clearfix visible-sm"></div>
-</div>
-
-
-<h3>Project Description</h3>
-<div class="row">
-    <div class="col-md-12">
-        <div class="div-card">
-            <div id="desc">
-                @Html.Raw(Model.project.PROJ_DESC)
+    <section class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Project Overview
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
             </div>
-        </div>
-    </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>
+                        Start Year:
+                    </dt>
+                    <dd>
+                        @Model.project.START_YEAR
+                    </dd>
+                    <dt>
+                        Year Most Recently Active:
+                    </dt>
+                    <dd>
+                        @Model.project.DATE_LAST_UPDATE
+                    </dd>
+                    <dt>
+                        Current Status:
+                    </dt>
+                    <dd>
+                        @Model.project.PROJ_STATUS
+                    </dd>
+                    <dt>
+                        Record Source:
+                    </dt>
+                    <dd>
+                        @Model.project.RECORD_SOURCE
+                    </dd>
+                    <dt>
+                        Project URL:
+                    </dt>
+                    <dd>
+                        @Model.project.PROJECT_URL
+                    </dd>
+                    <dt>
+                        Last Updated:
+                    </dt>
+                    <dd>
+                        @Model.LastUpdatedUser
+                        @(Model.project.MODIFY_DT ?? Model.project.CREATE_DT)
+                    </dd>
+
+                </dl>
+            </div>
+        </section>
+    </section>
+
+    <section class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Project Overview
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Media:</h4>
+                        @if (Model.project.T_OE_REF_TAGS2 != null)
+                        {
+                            <div class="select2-selection__choice">@Model.project.T_OE_REF_TAGS2.TAG_NAME</div>
+                        }
+
+
+                        <hr />
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Likes:</h4>
+                        <i class="clip-thumbs-up" style="font-size: 30px; color:forestgreen"></i> 5
+                    </div>
+                </div>
+                <h4>Program Area(s):</h4>
+                @foreach (string pa in Model.SelectedProgramAreas)
+                {
+                    <div class="select2-selection__choice">@pa</div>
+                }
+
+            </div>
+        </section>
+    </section>
 </div>
 
-<h3>Project Details</h3>
+
 <div class="row">
-    <div class="col-md-12">
-        <div class="div-card">
-            <dl class="dl-horizontal">
+    <section class="col-sm-9">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Project Description
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="desc">
+                    @Html.Raw(Model.project.PROJ_DESC)
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section class="col-sm-3">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Project Contact
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                @Model.project.PROJECT_CONTACT
+            </div>
+        </section>
+    </section>
+</div>
+
+
+<div class="row">
+    <section class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Project Details
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                            <dl class="dl-horizontal">
                 <dt style="width:30%">
-                    Features:
+                    Project Features:
                 </dt>
                 <dd>
                     @foreach (string pa in Model.SelectedFeatures)
@@ -152,9 +194,13 @@
                     @Model.project.ADV_MON_DESC
                 </dd>
             </dl>
-        </div>
-    </div>
+
+
+            </div>
+        </section>
+    </section>
 </div>
+
 
 }
 

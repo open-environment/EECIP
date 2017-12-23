@@ -3,7 +3,7 @@
     ViewBag.Title = "Project Details";
 }
 
-@using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @class = "" }))
+@using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id="norepostform" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.project.ORG_IDX)
@@ -219,6 +219,23 @@
                 width: ''
             });
 
+            //google analytics
+            $("#norepostform").on("submit", function () {
+                //0 if is editing, 1 if inserting
+//                var isEditing = Boolean($("#isEditing").val());
+  //              if (isEditing) {
+                    gtag("event", "edit", {
+                        "event_category": "engagement",
+                        "event_label": "Agency Project"
+                    });
+  //              } else {
+  //                  gtag("event", "insert", {
+  //                      "event_category": "engagement",
+  //                      "event_label": "Agency Project"
+                    });
+  //              }
+         //   });
+
             //visible divs
             $('#project_MOBILE_IND').change(function () {
                 toggleDIV('#project_MOBILE_IND option:selected', '#mobiledesc');
@@ -255,5 +272,8 @@
             }
 
         });
+
+
+
     </script>
 }

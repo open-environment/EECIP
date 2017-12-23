@@ -10,6 +10,7 @@ namespace EECIP.Models
 {
     public class vmDashboardIndex {
         public List<UserBadgeDisplay> UserBadges { get; set; }
+        public string UserName { get; set; }
     }
 
 
@@ -47,7 +48,8 @@ namespace EECIP.Models
         public OrganizationEntServicesDisplayType edit_ent_services { get; set; }
         public IEnumerable<SelectListItem> ddl_Status { get; set; }
 
-
+        //agency filter for admins
+        public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
 
         //initialize
         public vmDashboardAgency()
@@ -57,6 +59,7 @@ namespace EECIP.Models
             ddl_Cloud = ddlHelpers.get_ddl_tags_by_category_stringy("Cloud");
             ddl_API = ddlHelpers.get_ddl_tags_by_category_stringy("API");
             ddl_Status = db_Ref.GetT_OE_REF_TAGS_ByCategory_ProjStatus(false);
+            ddl_Agencies = ddlHelpers.get_ddl_organizations_all_active();
         }
 
     }
@@ -109,16 +112,25 @@ namespace EECIP.Models
     public class vmDashboardProjectCard
     {
         public T_OE_PROJECTS project { get; set; }
+        public string OrgName { get; set; }
         public List<string> SelectedProgramAreas { get; set; }
         public List<string> SelectedFeatures { get; set; }
         public string LastUpdatedUser { get; set; }
 
     }
 
+    public class vmDashboardEntSvcCard
+    {
+        public OrganizationEntServicesDisplayType entsvc { get; set; }
+        public string OrgName { get; set; }
+        public string LastUpdatedUser { get; set; }
+    }
+
     public class vmDashboardUserCard {
         public T_OE_USERS User { get; set; }
         public T_OE_ORGANIZATION UserOrg { get; set; }
         public List<string> SelectedExpertise { get; set; }
+        public List<UserBadgeDisplay> UserBadges { get; set; }
 
     }
 }

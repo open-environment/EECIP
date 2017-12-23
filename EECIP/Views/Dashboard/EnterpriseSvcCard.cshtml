@@ -1,0 +1,74 @@
+﻿@model EECIP.Models.vmDashboardEntSvcCard
+@{
+    if (Model.entsvc != null)
+    {
+        ViewBag.Title = Model.entsvc.ENT_PLATFORM_NAME;
+    }
+    ViewBag.SubTitle = Model.OrgName;
+    ViewBag.ShowBack = true;
+}
+@if (Model.entsvc != null)
+{
+
+    <div class="row">
+        <section class="col-sm-12">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    Description
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @Model.entsvc.COMMENTS
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <div class="row">
+        <section class="col-sm-6">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    Details
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            Status: @Model.entsvc.IMPLEMENT_STATUS
+                        </div>
+                        <div class="col-sm-12">
+                            Vendor: @Model.entsvc.VENDOR
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <section class="col-sm-6">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    Contact
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @Model.entsvc.PROJECT_CONTACT
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </div>
+
+
+
+}

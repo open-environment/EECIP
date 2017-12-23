@@ -27,6 +27,9 @@ html {
     padding: 0;
 }
 
+.text-bold {
+    font-weight:600;
+}
 
 .light-grey {
     color: #9d9d9d;
@@ -56,6 +59,19 @@ html {
     color: red;
 }
 
+.table {
+    margin-bottom:0px;
+}
+
+.thead-default th {
+    color: #464a4c;
+    background-color: #eceeef;
+}
+
+.thead-inverse th {
+    color: #fff;
+    background-color: #4F4F4F;
+}
 
 /***************     TOP AND LEFT MENU STYLING     ******************/
 .navbar-inverse {
@@ -130,7 +146,9 @@ ul.main-navigation-menu > li.active > a {
     text-shadow: none;
 }
 
-
+.panel-footer {
+    padding: 5px 15px;
+}
 
 
 
@@ -615,8 +633,8 @@ ul.main-navigation-menu > li.active > a {
 
 /***badges*/
 .publicbadgeline {
-    padding: 12px 0;
-    border-bottom: 1px #ecf0f1 solid;
+    /*padding: 12px 0;*/
+    /*border-bottom: 1px #ecf0f1 solid;*/
     float: left;
 }
 
@@ -643,8 +661,12 @@ ul.main-navigation-menu > li.active > a {
         font-weight: 300;
         font-style: italic;
         font-size: 12px;
-        margin-bottom: 16px;
+        margin-bottom: 8px;
     }
+
+.publicbadge {
+    padding-top: 10px;
+}
 
 .publicbadge > img.grey {
     filter: grayscale(100%);
@@ -654,4 +676,5 @@ ul.main-navigation-menu > li.active > a {
 
 .publicbadge:hover {
     background-color:#f2f2f2;
+    border: solid 1px #B3B3B3;
 }
