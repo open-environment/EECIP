@@ -370,12 +370,15 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     var xxx = (from a in ctx.T_OE_ORGANIZATION_ENT_SVCS
                                join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                               join s in ctx.T_OE_REF_STATE on o.STATE_CD equals s.STATE_CD into sr1 from x1 in sr1.DefaultIfEmpty() //left join
                                join e in ctx.T_OE_REF_ENTERPRISE_PLATFORM on a.ENT_PLATFORM_IDX equals e.ENT_PLATFORM_IDX
                                where a.SYNC_IND == false
                                && (EntSvcIDX == null ? true : a.ORG_ENT_SVCS_IDX == EntSvcIDX)
                                select new EECIP_Index
                                {
                                    Agency = o.ORG_NAME,
+                                   AgencyAbbreviation = o.ORG_ABBR,
+                                   State_or_Tribal = x1.STATE_NAME,
                                    KeyID = (a.ORG_ENT_SVCS_IDX + 100000).ToString(),
                                    DataType = "Enterprise Service",
                                    Record_Source = a.RECORD_SOURCE,
@@ -392,6 +395,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
 
 
         //***************************PROJECTS****************************************
@@ -468,6 +472,33 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<T_OE_PROJECTS> GetT_OE_PROJECTS_NeedingReview(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    DateTime staleDate = System.DateTime.Now.AddMonths(-6);
+                    T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+                    if (u != null)
+                    {
+                        return (from a in ctx.T_OE_PROJECTS
+                                where a.ORG_IDX == u.ORG_IDX
+                                && ((a.MODIFY_DT != null ? a.MODIFY_DT < staleDate : a.CREATE_DT < staleDate)
+                                || (a.PROJECT_CONTACT_IDX == null))
+                                select a).ToList();
+                    }
+                    else
+                        return null;
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
         public static List<EECIP_Index> GetT_OE_PROJECTS_ReadyToSync(Guid? ProjectIDX)
         {
@@ -476,13 +507,16 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     var xxx = (from a in ctx.T_OE_PROJECTS
-                            join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                            join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX 
+                            join s in ctx.T_OE_REF_STATE on o.STATE_CD equals s.STATE_CD into sr1 from x1 in sr1.DefaultIfEmpty() //left join
                             join b in ctx.T_OE_REF_TAGS on a.MEDIA_TAG equals b.TAG_IDX into sr from x in sr.DefaultIfEmpty()  //left join
                             where a.SYNC_IND == false
                             && a.ACT_IND == true
                             && (ProjectIDX == null ? true : a.PROJECT_IDX == ProjectIDX)
                             select new EECIP_Index {
                                 Agency = o.ORG_NAME,
+                                AgencyAbbreviation = o.ORG_ABBR,
+                                State_or_Tribal = x1.STATE_NAME,
                                 KeyID = a.PROJECT_IDX.ToString(),
                                 DataType = "Project",
                                 Record_Source = a.RECORD_SOURCE,
@@ -526,8 +560,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
 
         public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, int? mEDIA_TAG, int? sTART_YEAR,
             string pROJ_STATUS, int? dATE_LAST_UPDATE, string rECORD_SOURCE, string pROJECT_URL, int? mOBILE_IND, string mOBILE_DESC, int? aDV_MON_IND, 

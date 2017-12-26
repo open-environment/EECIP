@@ -585,6 +585,71 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             return input;
         }
 
+        /// <summary>
+        /// Returns a specified amount of words from a string
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="wordAmount"></param>
+        /// <returns></returns>
+        public static string ReturnAmountWordsFromString(string text, int wordAmount)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            string tmpStr;
+            string[] stringArray;
+            var tmpStrReturn = "";
+            tmpStr = text.Replace("\t", " ").Trim();
+            tmpStr = tmpStr.Replace("\n", " ");
+            tmpStr = tmpStr.Replace("\r", " ");
+
+            while (tmpStr.IndexOf("  ") != -1)
+                tmpStr = tmpStr.Replace("  ", " ");
+
+            stringArray = tmpStr.Split(' ');
+
+            if (stringArray.Length < wordAmount)
+                    return text;
+            else
+            {
+                for (int i = 0; i < wordAmount; i++)
+                    tmpStrReturn += stringArray[i] + " ";
+                return tmpStrReturn + "...";
+            }
+        }
+
+        //public static string ConvertPostContent(string post)
+        //{
+        //    if (!string.IsNullOrEmpty(post))
+        //    {
+        //        // Convert any BBCode
+        //        //NOTE: Decided to remove BB code
+        //        //post = StringUtils.ConvertBbCodeToHtml(post, false);
+
+        //        // If using the PageDown/MarkDown Editor uncomment this line
+        //        post = StringUtils.ConvertMarkDown(post);
+
+        //        // Allow video embeds
+        //        post = StringUtils.EmbedVideosInPosts(post);
+
+        //        // Add Google prettify code snippets
+        //        post = post.Replace("<pre>", "<pre class='prettyprint'>");
+        //    }
+
+        //    return post;
+        //}
+
+
+        ///// <summary>
+        ///// Converts markdown into HTML
+        ///// </summary>
+        ///// <param name="str"></param>
+        ///// <returns></returns>
+        //public static string ConvertMarkDown(string str)
+        //{
+        //    var md = new MarkdownSharp.Markdown { AutoHyperlink = true, LinkEmails = false };
+        //    return md.Transform(str);
+        //}
 
         #endregion
 

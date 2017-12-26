@@ -46,6 +46,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<System.DateTime> MODIFY_DT { get; set; }
         public string IMPORT_ID { get; set; }
         public string PROJECT_CONTACT { get; set; }
+        public Nullable<int> PROJECT_CONTACT_IDX { get; set; }
     
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

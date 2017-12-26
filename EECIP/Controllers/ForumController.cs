@@ -33,6 +33,8 @@ namespace EECIP.Controllers
             return View();
         }
 
+
+
         [Authorize]
         public ActionResult Create()
         {
@@ -43,8 +45,10 @@ namespace EECIP.Controllers
                 OptionalPermissions = GetOptionalPermissions(),
                 IsTopicStarter = true,
                 PollAnswers = new List<string>(),
-                PollCloseAfterDays = 0
-            };
+                PollCloseAfterDays = 0,
+                SelectedTags = new List<string>(),
+                AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
+        };
 
             return View(viewModel);
         }
@@ -188,15 +192,10 @@ namespace EECIP.Controllers
                         }
 
                         // 8. Tag handling
-                        if (!string.IsNullOrEmpty(topicViewModel.Tags))
-                        {
-                            //// Sanitise the tags
-                            //topicViewModel.Tags = _bannedWordService.SanitiseBannedWords(topicViewModel.Tags,
-                            //    bannedWords);
+                        db_Forum.DeleteTopicTags(_Topic.Id, "Topic Tag");
+                        foreach (string feature in topicViewModel.SelectedTags ?? new List<string>())
+                            db_Forum.InsertUpdateTopicTags(_Topic.Id, "Topic Tag", feature);
 
-                            //// Now add the tags
-                            //_topicTagService.Add(topicViewModel.Tags.ToLower(), topic);
-                        }
 
 
                         // 9. Subscribe the user to the topic if they have checked the checkbox
@@ -245,9 +244,9 @@ namespace EECIP.Controllers
                 model.Posts = db_Forum.GetPost_NonStarterForTopic(_topic.Id, UserIDX);
                 model.IsSubscribed = db_Forum.NotificationIsUserSubscribed(_topic.Id, UserIDX);
                 model.LastPostDatePretty = db_Forum.GetTopic_LastPostPrettyDate(_topic.Id);
+                model.DisablePosting = false;
+                model.NewPostContent = "";
 
-
-                //            var settings = SettingsService.GetSettings();
                 //            var sortQuerystring = Request.QueryString[AppConstants.PostOrderBy];
                 //            var orderBy = !string.IsNullOrEmpty(sortQuerystring) ?
                 //                                      EnumUtils.ReturnEnumValueFromString<PostOrderBy>(sortQuerystring) : PostOrderBy.Standard;
@@ -330,7 +329,6 @@ namespace EECIP.Controllers
                 TempData["Error"] = "No topic found";
                 return RedirectToAction("Index", "Forum");
             }
-            return null;
         }
 
 
@@ -356,6 +354,19 @@ namespace EECIP.Controllers
         }
 
 
+        [ChildActionOnly]
+        public ActionResult LatestTopics(int? p)
+        {
+            var viewModel = new vmForumLatestTopicsView
+            {
+                _topics = db_Forum.GetTopicsByCategory(null),
+                currentPage = p ?? 1,
+                numRecs = db_Forum.GetTopicCount()
+            };
+
+            return PartialView(viewModel);
+        }
+
         public ActionResult ShowCategory(string slug, int? p)
         {
             // Get the category
@@ -363,7 +374,7 @@ namespace EECIP.Controllers
             if (category != null)
             {
                 //get topics for the category
-                var topics = db_Forum.GetTopicListOverviewByCategory(category.Category.Id);
+                var topics = db_Forum.GetTopicsByCategory(category.Category.Id);
 
                 // Create the main view model for the category
                 var viewModel = new vmForumCategoryView
@@ -377,6 +388,75 @@ namespace EECIP.Controllers
             else
                 return RedirectToAction("Index");
         }
+
+
+
+        [HttpPost]
+        public ActionResult CreatePost(vmForumTopicView model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            // ************************ VALIDATION **********************************************
+            // Check posting flood control
+            if (!db_Forum.PassedPostFloodTest(UserIDX))
+            {
+                TempData["Error"] = "Please wait at least 30 seconds between posts";
+                RedirectToAction("Create");
+            }
+
+            // Log user out if they are LockedOut but still authenticated 
+            T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+            if (u != null && u.LOCKOUT_ENABLED)
+            {
+                FormsAuthentication.SignOut();
+                return RedirectToAction("Index", "Home");
+            }
+
+            // ************************ END VALIDATION **********************************************
+
+
+            Guid? _postID = db_Forum.InsertUpdatePost(null, model.NewPostContent, null, null, false, false, false, null, null, model.Topic.Id, UserIDX);
+            if (_postID != null)
+            {
+                // Success send any notifications
+                //NotifyNewTopics(topic, unitOfWork);
+            }
+
+
+            // Return view
+            return RedirectToAction("ShowTopic", "Forum", new { slug = model.Topic.Slug  }); 
+        }
+
+
+        [HttpPost]
+        public ActionResult DeletePost(Guid id)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            var post = db_Forum.GetPost_ByID(id);
+
+            if (post != null)
+            {
+                //only allow delete if post by user or user is admin
+                if (User.IsInRole("Admins") || UserIDX == post.MembershipUser_Id)
+                {
+                    if (post.IsTopicStarter == true)
+                    {
+                        //delete topic
+                    }
+                    else
+                    {
+                        //delete post only
+                    }
+
+                }
+            }
+
+            // Return view
+            return RedirectToAction("ShowTopic", "Forum", new { slug = post.Topic_Id });
+        }
+
+
 
     }
 }

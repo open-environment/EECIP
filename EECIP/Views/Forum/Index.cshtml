@@ -1,7 +1,11 @@
-﻿<div class="row">
+﻿@{
+    ViewBag.Title = "Latest Discussions";
+}
+<div class="row">
     <div class="col-md-9">
 
-        @Html.Action("ListMainCategories", "Forum")
+        @*@Html.Action("ListMainCategories", "Forum")*@
+        @Html.Action("LatestTopics", "Forum")
     </div>
 
     @Html.Partial("_CommonSideNav")

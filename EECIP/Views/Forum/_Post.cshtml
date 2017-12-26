@@ -2,6 +2,7 @@
 @{ 
     var postId = Model.Post.Id;
 }
+<div class="post">
 
     <div class="rowcreater hidden-xs">
         @*<a id="comment-@postId"></a>
@@ -9,15 +10,19 @@
             <img src="@Model.Post.User.MemberImage(SiteConstants.Instance.GravatarPostSize)" alt="@Model.Post.User.UserName">
         </a>*@
     </div>
-
+    <div class="rowcreater hidden-xs">
+        <a href="@Url.Action("UserCard", "Dashboard", new { strid = Model.Post.MembershipUser_Id })">
+            <img src="/Content/Images/Users/@(Model.Post.MembershipUser_Id).png" alt="@Model.UserIDX">
+        </a>
+    </div>
     <div class="rowdetails clearfix">
 
         <!-- POST ACTIONS RIGHT BAR -->
         <div class="postadmin">
             <ul class="clearfix postadminlist">
-                <li>
+                @*<li>
                     <a class="btn-mvc btn-mvc-small btn-mvc-fullwidth" href="#">Quote</a>
-                </li>
+                </li>*@
                 @if (Model.Post.MembershipUser_Id == Model.UserIDX)
                 {
                     <li>
@@ -55,7 +60,7 @@
             </div>
 
             <div id="postcontent-@postId" class="postcontent">
-                @*<p>@Html.Raw(AppHelpers.ConvertPostContent(Model.Post.PostContent))</p>*@
+                <p>@Html.Raw(Model.Post.PostContent)</p>
             </div>
             
             <div class="postsocial">
@@ -157,3 +162,4 @@
 
     </div>
 
+</div>

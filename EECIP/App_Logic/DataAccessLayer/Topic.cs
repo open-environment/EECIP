@@ -20,6 +20,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             this.Posts = new HashSet<Post>();
             this.TopicNotifications = new HashSet<TopicNotification>();
             this.Favourites = new HashSet<Favourite>();
+            this.Topic_Tags = new HashSet<Topic_Tags>();
         }
     
         public System.Guid Id { get; set; }
@@ -47,5 +48,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual ICollection<TopicNotification> TopicNotifications { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Favourite> Favourites { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Topic_Tags> Topic_Tags { get; set; }
     }
 }

@@ -1,0 +1,34 @@
+﻿@model EECIP.Models.vmForumLatestTopicsView
+
+<div class="latesttopics">
+
+    @if (Model._topics != null)
+    {
+        foreach (var topic in Model._topics)
+        {
+            Html.RenderPartial("_Topic", topic);
+        }
+    }
+
+    @if (Model.numRecs > 10)
+    {
+        <ul class="pagination" id="pagination" style="margin:0px"></ul>
+    }
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/pagination")
+
+    <script type="text/javascript">
+        $(function () {
+            var _totalRec = @(Model._topics != null ? Model.numRecs : 1);
+            var _totalPages = Math.round(_totalRec / 10) + 1;
+            var obj = $('#pagination').twbsPagination({
+                totalPages: _totalPages,
+                visiblePages: 10,
+                startPage: @Model.currentPage;
+            });
+        });
+    </script>
+}

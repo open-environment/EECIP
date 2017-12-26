@@ -26,8 +26,14 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         [IsFilterable, IsFacetable]
         public string Record_Source { get; set; }
 
-        [IsSearchable, IsFilterable, IsFacetable]
+        [IsSearchable, IsFilterable]
         public string Agency { get; set; }
+
+        [IsSearchable, IsFilterable]
+        public string AgencyAbbreviation { get; set; }
+
+        [IsSearchable, IsFilterable, IsFacetable]
+        public string State_or_Tribal { get; set; }
 
         [IsSearchable]
         public string Name { get; set; }
@@ -482,7 +488,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
         //******************************** METHODS FOR QUERYING INDEX ******************************************
         public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr, string dataTypeFacet = "", string mediaFacet = "", 
-            string recordSourceFacet = "", string agencyFacet = "", string tagsFacet = "", int? currentPage = 1)
+            string recordSourceFacet = "", string agencyFacet = "", string stateFacet = "", string tagsFacet = "", int? currentPage = 1)
         {
             try
             {
@@ -495,8 +501,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 {
                     Top = 50,
                     Skip = ((currentPage ?? 1) - 1) * 50,
-                    Facets = new List<string> { "DataType", "Record_Source", "Agency", "Media", "Tags" },
-                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "Name", "Description", "Media", "Tags", "PersonPhone", "PersonEmail", "PersonLinkedIn" },
+                    Facets = new List<string> { "DataType", "Record_Source", "State_or_Tribal", "Media", "Tags" },
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State_or_Tribal", "Name", "Description", "Media", "Tags", "PersonPhone", "PersonEmail", "PersonLinkedIn" },
                     IncludeTotalResultCount = true
                 };
 
@@ -509,6 +515,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Record_Source eq '" + recordSourceFacet + "' ";
                 if ((agencyFacet ?? "").Length > 0)
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Agency eq '" + agencyFacet + "' ";
+                if ((stateFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "State_or_Tribal eq '" + stateFacet + "' ";
                 if ((tagsFacet ?? "").Length > 0)
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Tags/any(t: t eq '" + tagsFacet + "') ";
 

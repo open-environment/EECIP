@@ -33,6 +33,11 @@
                     {
                         <a href="javascript:void(0)" data-id2="Agency" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetAgency</a>
                     }
+                    @if (!string.IsNullOrEmpty(Model.facetState))
+                    {
+                        <a href="javascript:void(0)" data-id2="State_or_Tribal" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetState</a>
+                    }
+
                     @if (!string.IsNullOrEmpty(Model.facetMedia))
                     {
                         <a href="javascript:void(0)" data-id2="Media" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetMedia</a>
@@ -57,6 +62,7 @@
     @Html.HiddenFor(model => model.facetMedia)
     @Html.HiddenFor(model => model.facetRecordSource)
     @Html.HiddenFor(model => model.facetAgency)
+    @Html.HiddenFor(model => model.facetState)
     @Html.HiddenFor(model => model.facetTags)
     @Html.HiddenFor(model => model.activeTab)
     @Html.HiddenFor(model => model.currentPage)
@@ -196,7 +202,7 @@
                                             <a href="@Url.Action("Index", "Forum", new { strid = item.Document.KeyID })" class="label label-purple" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Discussion</a>
                                         }
                                         @if (User.IsInRole("Admins"))
-                                        { <span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0,5)</span>}
+                                        {<span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>}
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Document.Agency)
@@ -204,7 +210,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Document.Name)
                                     </td>
-                                    <td >
+                                    <td>
                                         <span class="resDesc">
                                             @Html.DisplayFor(modelItem => item.Document.Description)
                                         </span>
@@ -339,11 +345,6 @@
 
 
 
-
-
-
-
-
         </div>
     </div>
 }
@@ -355,6 +356,7 @@
 
     <script type="text/javascript">
 
+        //truncate long text
         $('.resDesc').trunk8({
             lines: 4,
             fill: '&hellip; <a id="read-more" href="#">read more</a>'
@@ -370,52 +372,14 @@
             return false;
         });
 
-
-
-        //var businessTitleFacet, postingTypeFacet, salaryRangeFacet, sortType, currentPage;
-
-        //function Search() {
-        //    //$("#job_details_div").html("Loading...");
-        //    var txtSearch = $("#txtSearch").val();
-        //    $.post('/Dashboard/Search',
-        //        {
-        //            txtSearch: txtSearch//,
-        //            // businessTitleFacet: businessTitleFacet
-        //        },
-        //        function (data) {
-        //            UpdateFacet_Media(data.searchResults.Facets.Media);
-        //            FacetDisplay(data.searchResults.Facets);
-        //        });
-        //}
-
-        //function UpdateFacet_Media(data) {
-        //    var facetResultsHTML = '';
-        //    for (var i = 0; i < data.length; i++) {
-        //        if (data[i].Value.length > 0) {
-        //            facetResultsHTML += '<li><a href="javascript:void(0)" onclick="ChooseFacet_Media(\'' + data[i].Value + '\');">' + data[i].Value + ' (' + data[i].Count + ')</span></a></li>';
-        //        }
-        //    }
-        //    $("#facet_media").html(facetResultsHTML);
-        //}
-
-        //function FacetDisplay(data) {
-        //    $("#leftFacets").Show();
-
-        //    if (data.length > 0)
-        //    {
-        //        $("#leftFacets").Show();
-        //    }
-        //}
-
-
+        //pagination
         $(function () {
             var _totalRec = @(Model.searchResults != null ? Model.searchResults.Count : 1);
             var _totalPages = Math.round(_totalRec / 50) + 1;
             var obj = $('#pagination').twbsPagination({
                 totalPages: _totalPages,
                 visiblePages: 10,
-                startPage: @Model.currentPage
-            });
+                startPage: @Model.currentPage});
         });
 
         $(document).ready(function () {
@@ -425,13 +389,17 @@
             //make left small
             //if ($("#txtSearch").val().length > 0) {
             //    $('body').addClass("navigation-small");
-           // }
+            //}
 
             //autocomplete
             new autoComplete({
-                selector: 'input[name="searchStr"]',
+                selector: 'input[name="q"]',
                 source: function (term, response) {
                     $.getJSON('/Admin/SearchAdminSuggest/', { term: term }, function (data) { response(data); });
+                },
+                onSelect: function (e, term, item) {
+                    $("#txtSearch").val('"' + term + '"');
+                    console.log('f');
                 }
             });
 
@@ -484,11 +452,11 @@
                     $('#facetRecordSource').val(_id);
                 if (_facTyp == "Agency")
                     $('#facetAgency').val(_id);
+                if (_facTyp == "State_or_Tribal")
+                    $('#facetState').val(_id);
                 if (_facTyp == "Tags")
                     $('#facetTags').val(_id);
 
-                //$('#facetDataType').val('Project');
-                //$('#activeTab').val('2');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
             });
@@ -503,6 +471,8 @@
                     $('#facetRecordSource').val('');
                 if (_facTyp == "Agency")
                     $('#facetAgency').val('');
+                if (_facTyp == "State_or_Tribal")
+                    $('#facetState').val('');
                 if (_facTyp == "Tags")
                     $('#facetTags').val('');
 
@@ -527,27 +497,6 @@
                 $('#norepostform').submit();
                 return false;
             });
-
-
-            //$("#norepostform").on("submit", function () {
-
-            //    //Check if supported, if not won't push it
-            //    if (history.pushState) {
-            //        var searchString = $("#txtSearch").val();
-            //        var newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + "?q=" + searchString + "";
-            //        console.log(newUrl);
-            //        window.history.pushState({ path: newUrl }, '', newUrl);
-            //    }
-            //});
-
-            //function UpdateFacets(data) {
-            //    var facetResultsHTML = '';
-            //    for (var i = 0; i < data.length; i++) {
-            //        facetResultsHTML += '<li><a href="javascript:void(0)" onclick="ChoosePostingTypeFacet(\'' + data[i].Value + '\');">' + data[i].Value + ' (' + data[i].Count + ')</span></a></li>';
-            //    }
-
-            //    $("#posting_type_facets").html(facetResultsHTML);
-            //}
 
         });
 

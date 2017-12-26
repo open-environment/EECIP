@@ -227,6 +227,9 @@
     <Compile Include="App_Logic\DataAccessLayer\TopicNotification.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\Topic_Tags.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_APP_SETTINGS.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -763,6 +766,7 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Admin\RefBadge.cshtml" />
     <Content Include="Views\Dashboard\EnterpriseSvcCard.cshtml" />
+    <Content Include="Views\Forum\LatestTopics.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

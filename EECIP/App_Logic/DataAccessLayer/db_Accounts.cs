@@ -225,11 +225,14 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     var xxx = (from a in ctx.T_OE_USERS
                                join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                               join s in ctx.T_OE_REF_STATE on o.STATE_CD equals s.STATE_CD into sr1 from x1 in sr1.DefaultIfEmpty() //left join
                                where a.SYNC_IND == false
                                && (UserIDX == null ? true : a.USER_IDX == UserIDX)
                                select new EECIP_Index
                                {
                                    Agency = o.ORG_NAME,
+                                   AgencyAbbreviation = o.ORG_ABBR,
+                                   State_or_Tribal = x1.STATE_NAME,
                                    KeyID = a.USER_IDX.ToString(),
                                    DataType = "User",
                                    Record_Source = "Agency supplied",

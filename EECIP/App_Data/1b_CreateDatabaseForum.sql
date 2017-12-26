@@ -114,6 +114,15 @@ ALTER TABLE [forum].[Post]  WITH CHECK ADD  CONSTRAINT [forum.Topic_Post_FK] FOR
 GO
 
 
+CREATE TABLE [forum].[Topic_Tags](
+	[Topic_Id] [uniqueidentifier] NOT NULL,
+	[TopicTagAttribute] [varchar](50) NOT NULL,
+	[TopicTag] [varchar](100) NOT NULL,
+ CONSTRAINT [forum.PK_Topic_Tag] PRIMARY KEY CLUSTERED ([Topic_Id], [TopicTagAttribute] ASC, [TopicTag] ASC),
+ FOREIGN KEY ([Topic_Id]) references [forum].[Topic] ([Id]),
+) ON [PRIMARY]
+GO
+
 
 CREATE TABLE [forum].[MembershipUserPoints](
 	[Id] [uniqueidentifier] NOT NULL,
@@ -136,8 +145,7 @@ CREATE TABLE [forum].[TopicNotification](
 	[MembershipUser_Id] [int] NOT NULL,
  CONSTRAINT [forum.PK_TopicNotification] PRIMARY KEY CLUSTERED ([Id] ASC),
  FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
- FOREIGN KEY ([Topic_Id]) references [forum].[Topic] ([Id]),
-
+ FOREIGN KEY ([Topic_Id]) references [forum].[Topic] ([Id])
 ) ON [PRIMARY]
 GO
 

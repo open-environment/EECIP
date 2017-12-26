@@ -151,6 +151,34 @@ ul.main-navigation-menu > li.active > a {
 }
 
 
+.panel-default.danger {
+    border-color: #dc3545;
+}
+
+    .panel-default.danger > .panel-heading {
+        color: #dc3545 !important;
+        border-bottom-color: #dc3545 !important;
+        background-image: linear-gradient(to bottom, #fbe3e3 0%, #fbf0f0 100%);
+    }
+
+
+.panel-heading {
+    font-size: 15px;
+    font-weight: 600;
+    padding-top: 8px;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: 1px;
+    color: #646464 !important;
+    border-bottom: solid 2px #199C98 !important;
+    padding-left: 10px;
+    min-height: 40px;
+    padding-bottom: 20px !important;
+}
+
+    .panel-heading > .panel-tools:hover {
+        background-color: #B3B3B3;
+    }
+
 
 /***************     TAG STYLING     ******************/
 
@@ -200,42 +228,6 @@ ul.main-navigation-menu > li.active > a {
 }
 
 
-/***************     PANEL REDESIGN     ******************/
-.panel-heading {
-    font-size: 15px;
-    font-weight: 600;
-    padding-top: 8px;
-    font-family: 'Raleway', sans-serif;
-    letter-spacing: 1px;
-    color: #646464 !important;
-    border-bottom: solid 2px #199C98 !important;
-    padding-left: 10px;
-    min-height:40px;
-    padding-bottom: 20px !important;
-}
-
-    .panel-heading > .panel-tools:hover {
-        background-color:#B3B3B3;
-    }
-
-/*.panel-default {
-    border-color: #337ab7;
-    background-color:#fcfcfc;
-}
-    .panel-default > .panel-heading {
-        background-color: #82B9DE;
-        background-image: linear-gradient(to bottom, #c3e1f4 0%, #82B9DE 100%);
-        font-size: 14px;
-        padding-top: 8px;
-        font-weight: bold;
-        border-radius: 3px 3px 0 0;
-        box-shadow: 0 0 0 #FFFFFF inset;
-    }
-
-.btn-primary {
-    background-color: #82B9DE;
-    border-color: #2e6da4;
-}*/
 
 
 /************************SELECT 2 STYLING  ******************/
@@ -420,10 +412,10 @@ ul.main-navigation-menu > li.active > a {
 
 
 
-
-/**********************************************************************/
-/***********************FORUM STYLING *********************************/
-/**********************************************************************/
+/*************************************************************************************************************************************************/
+/*************************************************************************************************************************************************/
+/***********************FORUM STYLING ************************************************************************************************************/
+/*************************************************************************************************************************************************/
 .btn-mvc, .btn-mvc:visited {
     display: inline-block;
     padding: 7px 20px;
@@ -522,11 +514,54 @@ ul.main-navigation-menu > li.active > a {
             }
 
 
+span.tag {
+    display: inline-block;
+    line-height: 19px;
+    height: 19px;
+    position: relative;
+    -ms-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+    background-color: #6fa8e3;
+    color: #fff;
+    font-size: 10px;
+    margin-right: 6px;
+    padding: 0 4px 0 2px;
+    text-transform: uppercase;
+}
+
+    span.tag:before {
+        content: "";
+        float: left;
+        position: absolute;
+        top: 0;
+        left: -6px;
+        width: 0;
+        height: 0;
+        border-color: transparent #6fa8e3 transparent transparent;
+        border-style: solid;
+        border-width: 9px 6px 9px 0;
+    }
+
+span.tag a, span.tag a:visited {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    line-height: 18px;
+    height: 18px;
+}
+
+
+
 
 /*   FORUM VIEW TOPICS / POSTS  */
 .topicshow .topicheading {
     margin-bottom: 20px;
 }
+
+    .topicshow .topicheading h1 {
+        font-size: 26px;
+        margin-bottom: 19px;
+    }
 
 .widgetright {
     float: right;
@@ -560,6 +595,14 @@ ul.main-navigation-menu > li.active > a {
     border-bottom: 2px #f2f2f2 solid;
 }
 
+.topicstarterpostbeginpostsheading {
+    padding-bottom: 3px;
+}
+
+.topicpostorderfilter {
+    text-align: right;
+}
+
 .post {
     border-top: 1px #f2f2f2 solid;
     padding: 15px 0 15px 0;
@@ -579,10 +622,24 @@ ul.main-navigation-menu > li.active > a {
             padding: 0 0 2px 0;
         }
 
-.topicstarterpostbeginpostsheading {
-    padding-bottom: 3px;
+.postbodytop {
+    color: #B3B3B3;
+    font-size: 13px;
+    font-weight: 300;
+    padding-bottom: 10px;
 }
 
+.postsocial {
+    padding-bottom: 10px;
+    color: #b3b3b3;
+}
+
+    .postsocial ul li {
+        list-style: none;
+        display: inline-block;
+        padding: 0 4px 0 0;
+        font-size: 13px;
+    }
 
 .categoryrow {
     border-bottom: 1px #f2f2f2 solid;
@@ -603,6 +660,19 @@ ul.main-navigation-menu > li.active > a {
     font-weight: 300;
     padding-bottom: 10px;
 }
+
+.rowcreater {
+    float: left;
+    width: 60px;
+    text-align: center;
+}
+
+    .rowcreater img {
+        -ms-border-radius: 10px;
+        border-radius: 10px;
+        max-width: 50px;
+    }
+
 
 .subcategoryholder {
     border-top: 1px #ecf0f1 solid;
@@ -628,6 +698,48 @@ ul.main-navigation-menu > li.active > a {
     font-weight: 300;
     padding: 4px 0 0 0;
 }
+
+.rowdetails {
+    margin-left: 70px;
+}
+
+.topicrow {
+    padding: 15px;
+    border-bottom: solid #f2f2f2 1px;
+}
+
+    .topicrow:hover {
+        background-color: #ecf0f1;
+    }
+
+    .topicrow .rowdetails h3 {
+        margin: 6px 0;
+        padding: 0;
+    }
+
+        .topicrow .rowdetails h3 a, .topicrow .rowdetails h3 a:visited {
+            font-size: 22px;
+            color: #494848;
+            font-weight: 600;
+            margin-top: 7px;
+            line-height: 26px;
+            text-decoration: none;
+        }
+
+            .topicrow .rowdetails h3 a:hover, .topicrow .rowdetails h3 a:focus, .topicrow .rowdetails h3 a:visited:hover, .topicrow .rowdetails h3 a:visited:focus {
+                color: #373737;
+                text-decoration: underline;
+            }
+
+    .topicrow p.category {
+        line-height: 16px;
+        font-size: 12px;
+        color: #b3b3b3;
+        padding: 0 0 0 10px;
+        margin: 0;
+        border-left: 3px solid #ccc;
+    }
+
 
 
 

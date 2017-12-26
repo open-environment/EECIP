@@ -120,6 +120,7 @@
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
           <Property Name="IMPORT_ID" Type="varchar" MaxLength="20" />
           <Property Name="PROJECT_CONTACT" Type="varchar" MaxLength="100" />
+          <Property Name="PROJECT_CONTACT_IDX" Type="int" />
         </EntityType>
         <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
           <Key>
@@ -409,6 +410,16 @@
           <Property Name="Post_Id" Type="uniqueidentifier" />
           <Property Name="Poll_Id" Type="uniqueidentifier" />
           <Property Name="MembershipUser_Id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Topic_Tags">
+          <Key>
+            <PropertyRef Name="Topic_Id" />
+            <PropertyRef Name="TopicTagAttribute" />
+            <PropertyRef Name="TopicTag" />
+          </Key>
+          <Property Name="Topic_Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="TopicTagAttribute" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TopicTag" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="TopicNotification">
           <Key>
@@ -839,6 +850,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Topic_Tag__Topic__1387E197">
+          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+          <End Role="Topic_Tags" Type="Self.Topic_Tags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Topic_Tags">
+              <PropertyRef Name="Topic_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__TopicNoti__Membe__2116E6DF">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="TopicNotification" Type="Self.TopicNotification" Multiplicity="*" />
@@ -942,6 +965,7 @@
           <EntitySet Name="PollVote" EntityType="Self.PollVote" Schema="forum" store:Type="Tables" />
           <EntitySet Name="Post" EntityType="Self.Post" Schema="forum" store:Type="Tables" />
           <EntitySet Name="Topic" EntityType="Self.Topic" Schema="forum" store:Type="Tables" />
+          <EntitySet Name="Topic_Tags" EntityType="Self.Topic_Tags" Schema="forum" store:Type="Tables" />
           <EntitySet Name="TopicNotification" EntityType="Self.TopicNotification" Schema="forum" store:Type="Tables" />
           <EntitySet Name="Vote" EntityType="Self.Vote" Schema="forum" store:Type="Tables" />
           <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="Self.FK__Category__Catego__41B8C09B">
@@ -1075,6 +1099,10 @@
           <AssociationSet Name="FK__Topic__Post_Id__7167D3BD" Association="Self.FK__Topic__Post_Id__7167D3BD">
             <End Role="Post" EntitySet="Post" />
             <End Role="Topic" EntitySet="Topic" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Topic_Tag__Topic__1387E197" Association="Self.FK__Topic_Tag__Topic__1387E197">
+            <End Role="Topic" EntitySet="Topic" />
+            <End Role="Topic_Tags" EntitySet="Topic_Tags" />
           </AssociationSet>
           <AssociationSet Name="FK__TopicNoti__Membe__2116E6DF" Association="Self.FK__TopicNoti__Membe__2116E6DF">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
@@ -1355,6 +1383,11 @@
           <AssociationSet Name="FK__Membershi__Badge__6D6238AF" Association="EECIPModel.FK__Membershi__Badge__6D6238AF">
             <End Role="Badge" EntitySet="Badges" />
             <End Role="MembershipUser_Badge" EntitySet="MembershipUser_Badge" />
+          </AssociationSet>
+          <EntitySet Name="Topic_Tags" EntityType="EECIPModel.Topic_Tags" />
+          <AssociationSet Name="FK__Topic_Tag__Topic__1387E197" Association="EECIPModel.FK__Topic_Tag__Topic__1387E197">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="Topic_Tags" EntitySet="Topic_Tags" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="T_OE_APP_SETTINGS">
@@ -1674,6 +1707,7 @@
           <NavigationProperty Name="T_OE_REF_TAGS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <Property Name="IMPORT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_CONTACT_IDX" Type="Int32" />
         </EntityType>
         <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
           <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
@@ -1944,6 +1978,7 @@
           <NavigationProperty Name="Posts" Relationship="EECIPModel.Forum_Topic_Post_FK" FromRole="Topic" ToRole="Post" />
           <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Topic__220B0B18" FromRole="Topic" ToRole="TopicNotification" />
           <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Topic__4C0144E4" FromRole="Topic" ToRole="Favourite" />
+          <NavigationProperty Name="Topic_Tags" Relationship="EECIPModel.FK__Topic_Tag__Topic__1387E197" FromRole="Topic" ToRole="Topic_Tags" />
         </EntityType>
         <Association Name="FK__Post__Membership__67DE6983">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
@@ -2279,6 +2314,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Topic_Tags">
+          <Key>
+            <PropertyRef Name="Topic_Id" />
+            <PropertyRef Name="TopicTagAttribute" />
+            <PropertyRef Name="TopicTag" />
+          </Key>
+          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
+          <Property Name="TopicTagAttribute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TopicTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Topic_Tag__Topic__1387E197" FromRole="Topic_Tags" ToRole="Topic" />
+        </EntityType>
+        <Association Name="FK__Topic_Tag__Topic__1387E197">
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1" />
+          <End Type="EECIPModel.Topic_Tags" Role="Topic_Tags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Topic_Tags">
+              <PropertyRef Name="Topic_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2505,6 +2563,7 @@
           <EntitySetMapping Name="T_OE_PROJECTS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECTS">
               <MappingFragment StoreEntitySet="T_OE_PROJECTS">
+                <ScalarProperty Name="PROJECT_CONTACT_IDX" ColumnName="PROJECT_CONTACT_IDX" />
                 <ScalarProperty Name="PROJECT_CONTACT" ColumnName="PROJECT_CONTACT" />
                 <ScalarProperty Name="IMPORT_ID" ColumnName="IMPORT_ID" />
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
@@ -2731,6 +2790,15 @@
                 <ScalarProperty Name="DateEarned" ColumnName="DateEarned" />
                 <ScalarProperty Name="Badge_Id" ColumnName="Badge_Id" />
                 <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Topic_Tags">
+            <EntityTypeMapping TypeName="EECIPModel.Topic_Tags">
+              <MappingFragment StoreEntitySet="Topic_Tags">
+                <ScalarProperty Name="TopicTag" ColumnName="TopicTag" />
+                <ScalarProperty Name="TopicTagAttribute" ColumnName="TopicTagAttribute" />
+                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

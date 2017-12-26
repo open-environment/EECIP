@@ -43,10 +43,10 @@
         <EntityTypeShape EntityType="EECIPModel.Category" Width="1.5" PointX="19.875" PointY="0.5" />
         <AssociationConnector Association="EECIPModel.FK__Category__Catego__41B8C09B" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Width="1.5" PointX="0.5" PointY="4.375" />
-        <EntityTypeShape EntityType="EECIPModel.Poll" Width="1.5" PointX="21.625" PointY="5.875" />
+        <EntityTypeShape EntityType="EECIPModel.Poll" Width="1.5" PointX="21.625" PointY="6.125" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" />
         <AssociationConnector Association="EECIPModel.FK__Poll__Membership__44952D46" />
-        <EntityTypeShape EntityType="EECIPModel.Post" Width="1.5" PointX="24.125" PointY="0.5" />
+        <EntityTypeShape EntityType="EECIPModel.Post" Width="1.5" PointX="25.75" PointY="0.5" />
         <EntityTypeShape EntityType="EECIPModel.Topic" Width="1.5" PointX="21.875" PointY="0.5" />
         <AssociationConnector Association="EECIPModel.FK__Post__Membership__67DE6983" />
         <AssociationConnector Association="EECIPModel.FK__Topic__Membershi__6F7F8B4B" />
@@ -59,23 +59,25 @@
         <AssociationConnector Association="EECIPModel.FK__PollVote__Member__10E07F16" />
         <AssociationConnector Association="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" />
         <AssociationConnector Association="EECIPModel.FK__PollVote__PollAn__11D4A34F" />
-        <EntityTypeShape EntityType="EECIPModel.MembershipUserPoint" Width="1.5" PointX="8.125" PointY="12.25" />
+        <EntityTypeShape EntityType="EECIPModel.MembershipUserPoint" Width="1.5" PointX="15.375" PointY="12.5" />
         <AssociationConnector Association="EECIPModel.FK__Membershi__Membe__14B10FFA" />
         <EntityTypeShape EntityType="EECIPModel.TopicNotification" Width="1.5" PointX="23.75" PointY="5.875" />
         <AssociationConnector Association="EECIPModel.FK__TopicNoti__Membe__2116E6DF" />
         <AssociationConnector Association="EECIPModel.FK__TopicNoti__Topic__220B0B18" />
-        <EntityTypeShape EntityType="EECIPModel.Vote" Width="1.5" PointX="25.875" PointY="7.75" />
+        <EntityTypeShape EntityType="EECIPModel.Vote" Width="1.5" PointX="25.75" PointY="6.875" />
         <AssociationConnector Association="EECIPModel.FK__Vote__Membership__3429BB53" />
         <AssociationConnector Association="EECIPModel.FK__Vote__VotedByMem__351DDF8C" />
         <AssociationConnector Association="EECIPModel.FK__Vote__Post_Id__361203C5" />
-        <EntityTypeShape EntityType="EECIPModel.Favourite" Width="1.5" PointX="26.5" PointY="4.75" />
+        <EntityTypeShape EntityType="EECIPModel.Favourite" Width="1.5" PointX="28.125" PointY="3.125" />
         <AssociationConnector Association="EECIPModel.FK__Favourite__Membe__4A18FC72" />
         <AssociationConnector Association="EECIPModel.FK__Favourite__PostI__4B0D20AB" />
         <AssociationConnector Association="EECIPModel.FK__Favourite__Topic__4C0144E4" />
-        <EntityTypeShape EntityType="EECIPModel.Badge" Width="1.5" PointX="0.75" PointY="12.75" />
-        <EntityTypeShape EntityType="EECIPModel.MembershipUser_Badge" Width="1.5" PointX="11.25" PointY="12.5" />
+        <EntityTypeShape EntityType="EECIPModel.Badge" Width="1.5" PointX="20.25" PointY="12.375" />
+        <EntityTypeShape EntityType="EECIPModel.MembershipUser_Badge" Width="1.5" PointX="17.5" PointY="12.5" />
         <AssociationConnector Association="EECIPModel.FK__Membershi__Membe__6E565CE8" />
         <AssociationConnector Association="EECIPModel.FK__Membershi__Badge__6D6238AF" />
+        <EntityTypeShape EntityType="EECIPModel.Topic_Tags" Width="1.5" PointX="23.875" PointY="0.5" />
+        <AssociationConnector Association="EECIPModel.FK__Topic_Tag__Topic__1387E197" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

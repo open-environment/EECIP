@@ -57,5 +57,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<Favourite> Favourites { get; set; }
         public virtual DbSet<Badge> Badges { get; set; }
         public virtual DbSet<MembershipUser_Badge> MembershipUser_Badge { get; set; }
+        public virtual DbSet<Topic_Tags> Topic_Tags { get; set; }
     }
 }

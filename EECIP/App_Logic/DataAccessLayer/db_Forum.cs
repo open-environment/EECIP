@@ -28,15 +28,14 @@ namespace EECIP.App_Logic.DataAccessLayer
     public class TopicOverviewDisplay
     {
         public Topic _topic { get; set; }
+        public Post _postStart { get; set; }
+        public vmPostDisplayType _postLatest { get; set; }
         public string topicCreator { get; set; }
         public int postCount { get; set; }
         public int upVoteCount { get; set; }
         public int downVoteCount { get; set; }
-        public int Views { get; set; }
-        public string LastUpdateDatePretty { get; set; }
-        public int? LastPostUserIDX { get; set; }
-        public string LastPostUserName { get; set; }
-        public string PostContent { get; set; }
+        public List<Topic_Tags> topicTags { get; set; }
+
     }
 
     public class UserBadgeDisplay {
@@ -341,6 +340,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
         //********************************** TOPICS *************************************************
         public static Topic InsertUpdateTopic(vmForumTopicCreate model, int UserIDX)
         {
@@ -586,7 +586,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<TopicOverviewDisplay> GetTopicListOverviewByCategory(Guid cat_id)
+        public static int GetTopicCount()
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -594,14 +594,41 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
 
                     return (from a in ctx.Topics.AsNoTracking()
+                            select a).Count();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static List<TopicOverviewDisplay> GetTopicsByCategory(Guid? cat_id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Topics.AsNoTracking()
+                            .Include(x => x.Topic_Tags)
                             join b in ctx.Posts on a.Id equals b.Topic_Id
-                            where a.Category_Id == cat_id
-                            && b.IsTopicStarter == true
-                            orderby a.CreateDate descending
-                            select new TopicOverviewDisplay {
+                            join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
+                            where b.IsTopicStarter == true
+                            && (cat_id != null ? a.Category_Id == cat_id : true)
+                            orderby b.DateCreated descending
+                            select new TopicOverviewDisplay
+                            {
                                 _topic = a,
-                                PostContent = b.PostContent
-                            }).ToList();
+                                _postStart = b,
+                                _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
+                                topicCreator = c.FNAME + " " + c.LNAME,
+                                postCount = (from v1 in ctx.Posts where v1.Topic_Id == a.Id select v1).Count(),
+                                upVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount > 0 select v1).Count(),
+                                downVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount < 0 select v1).Count(),
+                                topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList()
+                            }).Take(10).ToList();
 
                 }
                 catch (Exception ex)
@@ -611,6 +638,97 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+
+
+        //********************************** TOPIC TAGS*************************************************
+        public static List<string> GetT_OE_PROJECT_TAGS_ByAttributeSelected(Guid TopicID, string aTTRIBUTE)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Topic_Tags
+                            where a.Topic_Id == TopicID
+                            && a.TopicTagAttribute == aTTRIBUTE
+                            select a.TopicTag.ToString()).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int InsertUpdateTopicTags(Guid topic_id, string aTTRIBUTE, string tAG)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Topic_Tags e = new Topic_Tags();
+                    e.Topic_Id = topic_id;
+                    e.TopicTagAttribute = aTTRIBUTE;
+                    e.TopicTag = tAG;
+
+                    ctx.Topic_Tags.Add(e);
+
+                    ctx.SaveChanges();
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int DeleteTopicTags(Guid TopicId, string aTTRIBUTE)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    ctx.Database.ExecuteSqlCommand("DELETE FROM [forum].[Topic_Tags] where Topic_Id = '" + TopicId + "' and TopicTagAttribute = '" + aTTRIBUTE + "'");
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static List<string> GetTopicTags_ByAttributeAll(Guid topic_id, string aTTRIBUTE)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xx1 = (from a in ctx.Topic_Tags
+                               where a.Topic_Id == topic_id
+                               && a.TopicTagAttribute == aTTRIBUTE
+                               select a.TopicTag);
+
+                    var xx2 = (from a in ctx.T_OE_REF_TAGS
+                               where a.TAG_CAT_NAME == aTTRIBUTE
+                               select a.TAG_NAME);
+
+                    return xx1.Union(xx2).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
 
 
         //************************************TOPIC NOTIFICATION **************************************************
@@ -734,6 +852,27 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static Post GetPost_ByID(Guid post_id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return  (from a in ctx.Posts.AsNoTracking()
+                               where a.Id == post_id
+                               select a).FirstOrDefault();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+
         public static vmForumPost GetPost_StarterForTopic(Guid topic_id, int UserIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -808,6 +947,31 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     db_Ref.LogEFException(ex);
                     return 0;
+                }
+            }
+        }
+
+        public static bool PassedPostFloodTest(int UserIDX)
+        {
+            var timeNow = DateTime.UtcNow;
+            var floodWindow = timeNow.AddSeconds(-30);
+
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.Posts.AsNoTracking()
+                               where a.MembershipUser_Id == UserIDX
+                               && a.DateCreated >= floodWindow
+                               && a.IsTopicStarter == false
+                               select a).Count();
+
+                    return (xxx == 0);
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
                 }
             }
         }

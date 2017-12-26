@@ -20,6 +20,7 @@ namespace EECIP.Controllers
 
             var model = new vmDashboardIndex();
             model.UserBadges = db_Forum.GetBadgesForUser(UserIDX);
+            model.ProjectsNeedingReview = db_EECIP.GetT_OE_PROJECTS_NeedingReview(UserIDX);
             T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
             if (u != null)
             {
@@ -30,7 +31,7 @@ namespace EECIP.Controllers
 
 
         // GET: Dashboard/Search
-        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetTags, string activeTab, string currentPage)
+        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string activeTab, string currentPage)
         {
             var model = new vmDashboardSearch();
             model.q = q;
@@ -38,11 +39,12 @@ namespace EECIP.Controllers
             model.facetMedia = facetMedia;
             model.facetRecordSource = facetRecordSource;
             model.facetAgency = facetAgency;
+            model.facetState = facetState;
             model.facetTags = facetTags;
             model.activeTab = activeTab ?? "1";
             model.currentPage = currentPage.ConvertOrDefault<int?>() ?? 1;
 
-            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetTags, model.currentPage);
+            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.currentPage);
             return View(model);
         }
 
@@ -52,7 +54,7 @@ namespace EECIP.Controllers
             if (model.currentPage == null)
                 model.currentPage = 1;
 
-            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetTags, model.currentPage);
+            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.currentPage);
             return View(model);
         }
 

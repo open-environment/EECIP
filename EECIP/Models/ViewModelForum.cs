@@ -21,7 +21,6 @@ namespace EECIP.Models
         }
     }
 
-
     public class vmForumAdminCategories
     {
         public List<Category> Categories { get; set; }
@@ -84,6 +83,7 @@ namespace EECIP.Models
         }
     }
 
+
     public class vmForumTopicCreate
     {
         [Required]
@@ -105,7 +105,9 @@ namespace EECIP.Models
         [DisplayName("Choose Category")]
         public Guid Category { get; set; }
 
-        public string Tags { get; set; }
+        public List<string> SelectedTags { get; set; }
+        public IEnumerable<SelectListItem> AllTags { get; set; }
+
 
         [DisplayName("Close Poll After Specified Amount Of Days?")]
         public int PollCloseAfterDays { get; set; }
@@ -171,6 +173,12 @@ namespace EECIP.Models
 
         // Misc
         public bool ShowUnSubscribedLink { get; set; }
+
+
+        //new post
+        [DataType(DataType.MultilineText)]
+        [UIHint("forumeditor"), AllowHtml]
+        public string NewPostContent { get; set; }
     }
     
     public class vmForumPoll
@@ -200,6 +208,11 @@ namespace EECIP.Models
 
     }
 
+    public class vmPostDisplayType {
+        public Post Post { get; set; }
+        public string PosterDisplayName { get; set; }
+    }
+
     public class vmForumMainCategoriesList {
         public List<CategoryDisplay> Categories { get; set; }
     }
@@ -210,6 +223,13 @@ namespace EECIP.Models
         // Topic info
         public List<TopicOverviewDisplay> CategoryTopics { get; set; }
 
+    }
+
+    public class vmForumLatestTopicsView {
+
+        public List<TopicOverviewDisplay> _topics { get; set; }
+        public int numRecs { get; set; }
+        public int currentPage { get; set; }
     }
 
     public class CheckCreateTopicPermissions

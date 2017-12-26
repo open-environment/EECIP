@@ -11,6 +11,7 @@ namespace EECIP.Models
     public class vmDashboardIndex {
         public List<UserBadgeDisplay> UserBadges { get; set; }
         public string UserName { get; set; }
+        public List<T_OE_PROJECTS> ProjectsNeedingReview { get; set; }
     }
 
 
@@ -22,6 +23,7 @@ namespace EECIP.Models
         public string facetMedia { get; set; }
         public string facetRecordSource { get; set; }
         public string facetAgency { get; set; }
+        public string facetState { get; set; }
         public string facetTags { get; set; }
         public string activeTab { get; set; }
         public int? currentPage { get; set; }
