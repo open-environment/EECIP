@@ -35,7 +35,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         [IsSearchable, IsFilterable, IsFacetable]
         public string State_or_Tribal { get; set; }
 
-        [IsSearchable]
+        [IsSearchable, IsSortable]
         public string Name { get; set; }
 
         [IsSearchable, IsFilterable]
@@ -377,9 +377,61 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
             catch (Exception ex)
             {
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", ex.InnerException.ToString().SubStringPlus(0, 2000));
+            }
+        }
+
+        public static void PopulateSearchIndexForumTopic(Guid? TopicIDX)
+        {
+            try
+            {
+                //connect to Azure Search
+                SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+                bool PendingRecs = true;
+
+                while (PendingRecs)
+                {
+                    //get all projects needing to sync
+                    List<EECIP_Index> _ps = db_Forum.GetTopic_ReadyToSync(TopicIDX);
+                    if (_ps != null && _ps.Count > 0)
+                    {
+                        var batch = IndexBatch.Upload(_ps);
+
+                        try
+                        {
+                            //send to azure
+                            ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                            indexClient.Documents.Index(batch);
+
+                            //update local rec sync ind
+                            foreach (EECIP_Index p in _ps)
+                            {
+                                Guid topic_idx = Guid.Parse(p.KeyID);
+                                db_Forum.UpdateTopic_SetSynced(topic_idx);
+                            }
+                        }
+                        catch (IndexBatchException e)
+                        {
+                            // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                            // the batch. Depending on your application, you can take compensating actions like delaying and
+                            // retrying. For this simple demo, we just log the failed document keys and continue.
+                            Console.WriteLine(
+                                "Failed to index some of the documents: {0}",
+                                String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                            PendingRecs = false;
+                        }
+                    }
+                    else
+                        PendingRecs = false;
+                }
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }
+
 
 
         //******************************** METHODS FOR DELETE ROW FROM INDEX ******************************************
@@ -447,7 +499,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", (ex.InnerException != null ? ex.InnerException.ToString() : ex.Message).SubStringPlus(0, 2000));
             }
         }
 
@@ -481,14 +533,14 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", (ex.InnerException != null ? ex.InnerException.ToString() : ex.Message).SubStringPlus(0, 2000));
             }
         }
 
 
         //******************************** METHODS FOR QUERYING INDEX ******************************************
         public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr, string dataTypeFacet = "", string mediaFacet = "", 
-            string recordSourceFacet = "", string agencyFacet = "", string stateFacet = "", string tagsFacet = "", int? currentPage = 1)
+            string recordSourceFacet = "", string agencyFacet = "", string stateFacet = "", string tagsFacet = "", int? currentPage = 1, string sortType = "")
         {
             try
             {
@@ -520,6 +572,10 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 if ((tagsFacet ?? "").Length > 0)
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Tags/any(t: t eq '" + tagsFacet + "') ";
 
+                //sort handling
+                if (sortType == "alpha")
+                    parameters.OrderBy = new List<string>() { "Name" };
+
                 try
                 {
                     DocumentSearchResult<EECIP_Index> results = indexClient.Documents.Search<EECIP_Index>(searchStr, parameters);
@@ -535,7 +591,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", (ex.InnerException != null ? ex.InnerException.ToString() : ex.Message).SubStringPlus(0, 2000));
+                return null;
             }
         }
 

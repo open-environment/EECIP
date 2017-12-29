@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using EECIP.Models;
 using EECIP.App_Logic.BusinessLogicLayer;
 using EECIP.App_Logic.DataAccessLayer;
-using Microsoft.Azure.Search.Models;
 
 namespace EECIP.Controllers
 {
     [Authorize]
     public class DashboardController : Controller
     {
+        #region DASHBOARD    
+        
         // GET: Dashboard
         public ActionResult Index()
         {
@@ -29,9 +29,8 @@ namespace EECIP.Controllers
             return View(model);
         }
 
-
         // GET: Dashboard/Search
-        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string activeTab, string currentPage)
+        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string activeTab, string currentPage, string sortType)
         {
             var model = new vmDashboardSearch();
             model.q = q;
@@ -43,24 +42,33 @@ namespace EECIP.Controllers
             model.facetTags = facetTags;
             model.activeTab = activeTab ?? "1";
             model.currentPage = currentPage.ConvertOrDefault<int?>() ?? 1;
+            model.sortType = sortType;
 
-            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.currentPage);
+            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.currentPage, model.sortType);
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult Search(vmDashboardSearch model)
-        {
-            if (model.currentPage == null)
-                model.currentPage = 1;
+        // POST: Dashboard/Search
+        //[HttpPost]
+        //public ActionResult Search(vmDashboardSearch model)
+        //{
+        //    if (model.currentPage == null)
+        //        model.currentPage = 1;
 
-            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.currentPage);
-            return View(model);
-        }
+        //    model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.currentPage);
+        //    return View(model);
+        //}
 
 
 
         // GET: Agency
+
+        #endregion
+
+
+        #region AGENCY
+
+        // GET: /Dashboard/Agency
         public ActionResult Agency(Guid? selAgency)
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -110,7 +118,7 @@ namespace EECIP.Controllers
             int UserIDX = db_Accounts.GetUserIDX();
 
             //update general agency data
-            Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(model.agency.ORG_IDX, null, null, null, null, model.agency.CLOUD, model.agency.API, true, UserIDX);
+            Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(model.agency.ORG_IDX, null, null, null, null, null, model.agency.CLOUD, model.agency.API, true, UserIDX);
 
 
             //update database tags
@@ -136,6 +144,7 @@ namespace EECIP.Controllers
             return RedirectToAction("Agency", new { selAgency = model.agency.ORG_IDX });
         }
 
+        // POST: /Dashboard/AgencyEntServiceEdit
         [HttpPost]
         public ActionResult AgencyEntServiceEdit(vmDashboardAgency model)
         {
@@ -156,8 +165,7 @@ namespace EECIP.Controllers
 
             return RedirectToAction("Agency", "Dashboard", new { selAgency = model.agency.ORG_IDX });
         }
-
-
+        
         // POST: /Dashboard/AgencyEntServicesDelete
         [HttpPost]
         public JsonResult AgencyEntServiceDelete(int id)
@@ -172,8 +180,8 @@ namespace EECIP.Controllers
                 return Json("Success");
             }
         }
-
-
+        
+        // GET: /Dashboard/AgencyCard
         public ActionResult AgencyCard(string strid)
         {
             Guid id;
@@ -194,9 +202,12 @@ namespace EECIP.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+        #endregion
 
 
-        // GET: Projects
+        #region PROJECT
+        
+        // GET: /Dashboard/Projects
         public ActionResult Projects(Guid? selAgency)
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -232,9 +243,8 @@ namespace EECIP.Controllers
             model.selAgency = selAgency;
             return View(model);
         }
-            
 
-        // GET: ProjectDetails/1
+        // GET: /Dashboard/ProjectDetails/1
         public ActionResult ProjectDetails(Guid? id, Guid? orgIDX)
         {
             if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), orgIDX.ConvertOrDefault<Guid>()))
@@ -270,32 +280,36 @@ namespace EECIP.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult ProjectEdit(vmDashboardProjectDetails model)
         {
-            int UserIDX = db_Accounts.GetUserIDX();
-
-            //update project data
-            Guid? SuccID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, model.project.ORG_IDX, model.project.PROJ_NAME, 
-                model.project.PROJ_DESC, model.project.MEDIA_TAG, model.project.START_YEAR, model.project.PROJ_STATUS, 
-                model.project.DATE_LAST_UPDATE, model.project.RECORD_SOURCE, model.project.PROJECT_URL, model.project.MOBILE_IND,
-                model.project.MOBILE_DESC, model.project.ADV_MON_IND, model.project.ADV_MON_DESC, model.project.BP_MODERN_IND,
-                model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, model.project.PROJECT_CONTACT, true, false, UserIDX);
-
-            if (SuccID != null)
+            //CHECK PERMISSIONS
+            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), model.project.ORG_IDX.ConvertOrDefault<Guid>()))
             {
-                //update program area tags
-                db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area");
-                foreach (string expertise in model.SelectedProgramAreas ?? new List<string>())
-                    db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area", expertise);
+                //update project data
+                Guid? SuccID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, model.project.ORG_IDX, model.project.PROJ_NAME,
+                    model.project.PROJ_DESC, model.project.MEDIA_TAG, model.project.START_YEAR, model.project.PROJ_STATUS,
+                    model.project.DATE_LAST_UPDATE, model.project.RECORD_SOURCE, model.project.PROJECT_URL, model.project.MOBILE_IND,
+                    model.project.MOBILE_DESC, model.project.ADV_MON_IND, model.project.ADV_MON_DESC, model.project.BP_MODERN_IND,
+                    model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, model.project.PROJECT_CONTACT, true, false, db_Accounts.GetUserIDX());
+
+                if (SuccID != null)
+                {
+                    //update program area tags
+                    db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area");
+                    foreach (string expertise in model.SelectedProgramAreas ?? new List<string>())
+                        db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area", expertise);
 
 
-                //update feature tags
-                db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature");
-                foreach (string feature in model.SelectedFeatures ?? new List<string>())
-                    db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature", feature);
+                    //update feature tags
+                    db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature");
+                    foreach (string feature in model.SelectedFeatures ?? new List<string>())
+                        db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature", feature);
 
-                //now update the Azure search
-                AzureSearch.PopulateSearchIndexProject(SuccID);
+                    //now update the Azure search
+                    AzureSearch.PopulateSearchIndexProject(SuccID);
 
-                TempData["Success"] = "Update successful.";
+                    TempData["Success"] = "Update successful.";
+                }
+                else
+                    TempData["Error"] = "Error updating data.";
             }
             else
                 TempData["Error"] = "Error updating data.";
@@ -303,26 +317,36 @@ namespace EECIP.Controllers
             return RedirectToAction("Projects", new { selAgency = model.project.ORG_IDX } );
         }
 
+        // POST: /Dashboard/ProjectsDelete
         [HttpPost]
         public JsonResult ProjectsDelete(Guid id)
         {
-            int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
-            if (SuccID == 0)
-                return Json("Unable to delete record.");
-            else
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            //CHECK PERMISSIONS
+            T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
+            if (p != null)
             {
-                //now delete from Azure
-                AzureSearch.DeleteSearchIndexProject(id);
-                return Json("Success");
+                if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), p.ORG_IDX.ConvertOrDefault<Guid>()))
+                {
+                    int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
+                    if (SuccID > 0)
+                    {
+                        //SUCCESS - now delete from Azure
+                        AzureSearch.DeleteSearchIndexProject(id);
+                        return Json("Success");
+                    }
+                }
             }
+
+            //if got this far, general error
+            return Json("Unable to delete project.");
         }
 
-
-        // GET: ProjectDetails/1
+        // GET: /Dashboard/ProjectCard/1
         public ActionResult ProjectCard(string strid)
         {
-            //testing remove this line
-            //strid = "40bc4a06-1fda-46ea-b161-44dbd37212bb";
+            int UserIDX = db_Accounts.GetUserIDX();
 
             Guid id;
             if (Guid.TryParse(strid, out id))
@@ -340,18 +364,49 @@ namespace EECIP.Controllers
                     T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(model.project.MODIFY_USERIDX ?? model.project.CREATE_USERIDX ?? -1);
                     if (u != null)
                         model.LastUpdatedUser = u.FNAME + " " + u.LNAME;
+                    model.ProjectVotePoints = db_EECIP.GetT_OE_PROJECT_VOTES_TotalByProject(model.project.PROJECT_IDX);
+                    model.HasVoted = db_EECIP.GetT_OE_PROJECT_VOTES_HasVoted(model.project.PROJECT_IDX, UserIDX);
+                    model.UserBelongsToProjectAgency = db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), model.project.ORG_IDX.ConvertOrDefault<Guid>());
                 }
 
                 if (model.project != null)
                     return View(model);
-
-
             }
 
             TempData["Error"] = "No project found";
             return RedirectToAction("Index", "Dashboard");
         }
 
+        // POST: /Dashboard/ProjectVote
+        [HttpPost]
+        public JsonResult ProjectVote(Guid? id, string typ)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            bool SuccInd = false;
+
+            if (typ == "up")
+            {
+                Guid? VoteID = db_EECIP.InsertT_OE_PROJECT_VOTES(id.ConvertOrDefault<Guid>(), UserIDX, 1);
+                SuccInd = (VoteID != null);
+            }
+            else if (typ == "removeup") {
+                int SuccID = db_EECIP.DeleteT_OE_PROJECT_VOTE(id.ConvertOrDefault<Guid>(), UserIDX);
+                SuccInd = (SuccID == 1);
+            }
+            else
+                return Json(new { msg = "Unable to record vote." });
+
+            if (SuccInd)
+            {
+                string votes = db_EECIP.GetT_OE_PROJECT_VOTES_TotalByProject(id.ConvertOrDefault<Guid>()).ToString();
+                return Json(new { msg = "Success", val = votes });
+            }
+            else
+                return Json(new { msg = "Unable to record vote." });
+
+        }
+
+        #endregion
 
 
         public ActionResult EnterpriseSvcCard(string strid)
@@ -382,9 +437,6 @@ namespace EECIP.Controllers
             //return RedirectToAction("Index", "Dashboard");
         }
 
-
-
-
         public ActionResult UserCard(string strid)
         {
             int UserIDX = strid.ConvertOrDefault<int>();
@@ -400,7 +452,6 @@ namespace EECIP.Controllers
 
             return RedirectToAction("Index", "Dashboard");
         }
-
 
     }
 }

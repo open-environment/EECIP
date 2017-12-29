@@ -14,6 +14,12 @@ namespace EECIP.App_Logic.DataAccessLayer
     
     public partial class T_OE_ORGANIZATION_ENT_SVCS
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public T_OE_ORGANIZATION_ENT_SVCS()
+        {
+            this.T_OE_PROJECT_VOTES = new HashSet<T_OE_PROJECT_VOTES>();
+        }
+    
         public int ORG_ENT_SVCS_IDX { get; set; }
         public System.Guid ORG_IDX { get; set; }
         public int ENT_PLATFORM_IDX { get; set; }
@@ -32,5 +38,7 @@ namespace EECIP.App_Logic.DataAccessLayer
     
         public virtual T_OE_REF_ENTERPRISE_PLATFORM T_OE_REF_ENTERPRISE_PLATFORM { get; set; }
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_OE_PROJECT_VOTES> T_OE_PROJECT_VOTES { get; set; }
     }
 }

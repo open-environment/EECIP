@@ -1,0 +1,22 @@
+﻿@model EECIP.Models.vmForumTopicCreate
+@{
+    ViewBag.Title = "Edit Post";
+    ViewBag.ShowBack = true;
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="editpostholder">
+
+            @using (Html.BeginForm())
+            {
+                @Html.ValidationSummary(false)
+                @Html.AntiForgeryToken()
+                @Html.Partial("CreateEdit_TopicPost", Model)
+                
+            }
+
+        </div>
+    </div>
+    @Html.Partial("_CommonSideNav")
+</div>

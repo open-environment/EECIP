@@ -38,6 +38,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<System.DateTime> CREATE_DT { get; set; }
         public Nullable<int> MODIFY_USERIDX { get; set; }
         public Nullable<System.DateTime> MODIFY_DT { get; set; }
+        public string ORG_TYPE { get; set; }
     
         public virtual T_OE_REF_REGION T_OE_REF_REGION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

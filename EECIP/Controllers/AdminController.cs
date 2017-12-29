@@ -185,7 +185,7 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
-            Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(agency.ORG_IDX, agency.ORG_ABBR, agency.ORG_NAME, agency.STATE_CD, agency.EPA_REGION, null, null, true, UserIDX);
+            Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(agency.ORG_IDX, agency.ORG_ABBR, agency.ORG_NAME, agency.STATE_CD, agency.EPA_REGION, agency.ORG_TYPE, null, null, true, UserIDX);
 
             if (SuccID != null)
             {
@@ -196,7 +196,7 @@ namespace EECIP.Controllers
                 TempData["Error"] = "Error updating data.";
 
             //return View(model);
-            return RedirectToAction("RefAgencyEdit", new { id = agency.ORG_IDX });
+            return RedirectToAction("RefAgencyEdit", new { id = SuccID });
 
         }
 
@@ -450,6 +450,13 @@ namespace EECIP.Controllers
 
                 //then send all unsynced agencies to Azure
                 AzureSearch.PopulateSearchIndexUsers(null);
+
+
+                //***********FORUM TOPICS  **************************
+                db_Forum.UpdateTopic_SetAllUnsynced();
+
+                //then send all unsynced agencies to Azure
+                AzureSearch.PopulateSearchIndexForumTopic(null);
 
 
                 TempData["Success"] = "Search index populated.";

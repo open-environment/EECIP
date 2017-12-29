@@ -378,7 +378,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                {
                                    Agency = o.ORG_NAME,
                                    AgencyAbbreviation = o.ORG_ABBR,
-                                   State_or_Tribal = x1.STATE_NAME,
+                                   State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
                                    KeyID = (a.ORG_ENT_SVCS_IDX + 100000).ToString(),
                                    DataType = "Enterprise Service",
                                    Record_Source = a.RECORD_SOURCE,
@@ -516,7 +516,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                             select new EECIP_Index {
                                 Agency = o.ORG_NAME,
                                 AgencyAbbreviation = o.ORG_ABBR,
-                                State_or_Tribal = x1.STATE_NAME,
+                                State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
                                 KeyID = a.PROJECT_IDX.ToString(),
                                 DataType = "Project",
                                 Record_Source = a.RECORD_SOURCE,
@@ -853,7 +853,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                 else if (_rules._datatype == "int")
                     typeof(T_OE_PROJECTS).GetProperty(f).SetValue(a.T_OE_PROJECT, _value.ConvertOrDefault<int?>());
             }
-            catch (Exception ex) {  }
+            catch (Exception ex) {
+                throw ex;
+            }
         }
 
 
@@ -968,9 +970,109 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+        //***************************PROJECT VOTES****************************************
+        public static int GetT_OE_PROJECT_VOTES_TotalByProject(Guid ProjectIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_PROJECT_VOTES
+                            where a.PROJECT_IDX == ProjectIDX
+                            select a.VOTE_AMOUNT).Sum();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static bool GetT_OE_PROJECT_VOTES_HasVoted(Guid ProjectIDX, int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_PROJECT_VOTES
+                            where a.PROJECT_IDX == ProjectIDX
+                            && a.VOTED_BY_USER_IDX == UserIDX
+                            select a).ToList().Count() > 0;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return true;
+                }
+            }
+        }
+
+        public static Guid? InsertT_OE_PROJECT_VOTES(Guid pROJECT_IDX, int vOTED_BY_USER_IDX, int vOTE_AMOUNT)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    bool insInd = false;
+
+                    T_OE_PROJECT_VOTES e = (from c in ctx.T_OE_PROJECT_VOTES
+                                       where c.PROJECT_IDX == pROJECT_IDX
+                                       && c.VOTED_BY_USER_IDX == vOTED_BY_USER_IDX
+                                       select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_PROJECT_VOTES();
+                        e.PROJECT_VOTE_IDX = Guid.NewGuid();
+                        e.PROJECT_IDX = pROJECT_IDX;
+                        e.VOTED_BY_USER_IDX = vOTED_BY_USER_IDX;
+                    }
+
+                    e.DATE_VOTED = System.DateTime.UtcNow;
+                    e.VOTE_AMOUNT = vOTE_AMOUNT;
+
+                    if (insInd)
+                        ctx.T_OE_PROJECT_VOTES.Add(e);
+                    ctx.SaveChanges();
+
+                    return e.PROJECT_VOTE_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int DeleteT_OE_PROJECT_VOTE(Guid pROJECT_IDX, int vOTED_BY_USER_IDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_PROJECT_VOTES rec = (from a in ctx.T_OE_PROJECT_VOTES
+                                              where a.PROJECT_IDX == pROJECT_IDX
+                                              && a.VOTED_BY_USER_IDX == vOTED_BY_USER_IDX
+                                              select a).FirstOrDefault();
+
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
 
         //******************************* NOTIFICATIONS ***************************************
-
         public static List<T_OE_USER_NOTIFICATION> GetT_OE_USER_NOTIFICATION_byUserIDX(int? UserIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())

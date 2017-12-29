@@ -103,25 +103,11 @@
                     </ul>
                 </li>
 
-                <li class="@Html.ActivePage("Admin", "Forum")">
-                    <a href="javascript:;">
-                        <span class="title">Forum Admin</span>
-                        <i class="icon-arrow"></i>
+                <li class="@Html.ActivePage("ForumAdmin", "Category")">
+                    <a href="@Url.Action("Category","ForumAdmin")">
+                        <span class="title">Forum Admin </span>
                     </a>
-                    <ul class="sub-menu">
-                        <li class="lvl3 @Html.ActivePage("ForumAdmin", "Category")">
-                            <a href="@Url.Action("Category","ForumAdmin")">
-                                <span class="title">Categories</span>
-                            </a>
-                        </li>
-                        <li class="lvl3 @Html.ActivePage("ForumAdmin", "Settings")">
-                            <a href="@Url.Action("Settings","ForumAdmin")">
-                                <span class="title">Forum Settings</span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
-
                 <li class="@Html.ActivePage("Admin", "ImportData")">
                     <a href="@Url.Action("ImportData","Admin")">
                         <span class="title">Import Data </span>

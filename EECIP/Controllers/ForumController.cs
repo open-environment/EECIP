@@ -31,9 +31,7 @@ namespace EECIP.Controllers
         public ActionResult Index()
         {
             return View();
-        }
-
-
+        }    
 
         [Authorize]
         public ActionResult Create()
@@ -52,7 +50,6 @@ namespace EECIP.Controllers
 
             return View(viewModel);
         }
-
 
         [HttpPost]
         [Authorize]
@@ -103,7 +100,7 @@ namespace EECIP.Controllers
                 if (_Topic != null)
                 {
                     // 2. Create Post and add to Topic
-                    Guid? _postID = db_Forum.InsertUpdatePost(null, topicViewModel.Content, null, null, true, null, null, null, null, _Topic.Id, UserIDX);
+                    Guid? _postID = db_Forum.InsertUpdatePost(null, topicViewModel.Content, null, null, true, null, null, null, null, _Topic.Id, UserIDX, false);
 
                     if (_postID != null)
                     {
@@ -205,6 +202,9 @@ namespace EECIP.Controllers
                         // 10. Success so now send the emails
                         //NotifyNewTopics(category, topic, unitOfWork);
 
+                        //11  now update the Azure search
+                        AzureSearch.PopulateSearchIndexForumTopic(_Topic.Id);
+
                         // Redirect to the newly created topic
                         //return Redirect($"{db_Forum.TopicURL(_Topic.Slug)}?postbadges=true");
                         return RedirectToAction("ShowTopic", "Forum", new { slug = _Topic.Slug });
@@ -219,16 +219,57 @@ namespace EECIP.Controllers
             return View(topicViewModel);
         }
 
+        [Authorize]
+        public ActionResult EditPost(Guid? id)
+        {
+            Post _post = db_Forum.GetPost_ByID(id.ConvertOrDefault<Guid>());
+            if (_post != null)
+            {
+                Topic _topic = db_Forum.GetTopic_ByID(_post.Topic_Id);
+
+                var viewModel = new vmForumTopicCreate
+                {
+                    //stuff from post
+                    Name = _topic.Name,
+                    Content = _post.PostContent,
+                    IsSticky = _topic.IsSticky,
+                    IsLocked = _topic.IsLocked,
+                    Category = _topic.Category_Id,
+                    SelectedTags = db_Forum.GetTopicTags_ByAttributeSelected(_topic.Id, "Topic Tag"),
+                    Id = _post.Id,
+                    TopicId = _topic.Id,
+                    Categories = ddlForumHelpers.get_ddl_categories(),
+                    OptionalPermissions = GetOptionalPermissions(),
+                    IsTopicStarter = _post.IsTopicStarter ?? false,
+                    PollAnswers = new List<string>(),
+                    PollCloseAfterDays = 0,
+                    AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
+                };
+
+                return View(viewModel);
+            }
+            else
+            {
+                TempData["Error"] = "Post not found";
+                return RedirectToAction("Index", "Forum");
+            }
+        }
 
 
-        public ActionResult ShowTopic(string slug, int? p)
+        public ActionResult ShowTopic(string slug, int? p, string order, Guid? id)
         {
             // Set initial stuff
             //var pageIndex = p ?? 1;
             int UserIDX = db_Accounts.GetUserIDX();
 
             // Get the topic
-            var _topic = db_Forum.GetTopic_fromSlug(slug);
+            var _topic = new Topic();
+            if (slug != null)
+                _topic = db_Forum.GetTopic_fromSlug(slug);
+            else if (id != null)
+                _topic = db_Forum.GetTopic_ByID(id.ConvertOrDefault<Guid>());
+
+
             if (_topic != null)
             {
                 //add view count (only if not the person who created topic) and only if not a bot
@@ -240,87 +281,13 @@ namespace EECIP.Controllers
 
                 var model = new vmForumTopicView();
                 model.Topic = _topic;
+                model.TopicTags = db_Forum.GetTopicTags_ByAttributeSelected(_topic.Id, "Topic Tag");
                 model.StarterPost = db_Forum.GetPost_StarterForTopic(_topic.Id, UserIDX);
-                model.Posts = db_Forum.GetPost_NonStarterForTopic(_topic.Id, UserIDX);
+                model.Posts = db_Forum.GetPost_NonStarterForTopic(_topic.Id, UserIDX, order);
                 model.IsSubscribed = db_Forum.NotificationIsUserSubscribed(_topic.Id, UserIDX);
                 model.LastPostDatePretty = db_Forum.GetTopic_LastPostPrettyDate(_topic.Id);
-                model.DisablePosting = false;
+                //model.DisablePosting = false;
                 model.NewPostContent = "";
-
-                //            var sortQuerystring = Request.QueryString[AppConstants.PostOrderBy];
-                //            var orderBy = !string.IsNullOrEmpty(sortQuerystring) ?
-                //                                      EnumUtils.ReturnEnumValueFromString<PostOrderBy>(sortQuerystring) : PostOrderBy.Standard;
-
-                // Store the amount per page
-                var amountPerPage = 50;
-
-
-                //            // Get the posts
-                //            var posts = _postService.GetPagedPostsByTopic(pageIndex,
-                //                                                          amountPerPage,
-                //                                                          int.MaxValue,
-                //                                                          topic.Id,
-                //                                                          orderBy);
-
-
-                //            // Get the permissions for the category that this topic is in
-                //            var permissions = RoleService.GetPermissions(topic.Category, UsersRole);
-
-
-                //            // Set editor permissions
-                //            ViewBag.ImageUploadType = permissions[SiteConstants.Instance.PermissionInsertEditorImages].IsTicked ? "forumimageinsert" : "image";
-
-                //            var viewModel = ViewModelMapping.CreateTopicViewModel(topic, permissions, posts.ToList(), starterPost, posts.PageIndex, posts.TotalCount, posts.TotalPages, LoggedOnReadOnlyUser, settings, true);
-
-                //            // If there is a quote querystring
-                //            var quote = Request["quote"];
-                //            if (!string.IsNullOrEmpty(quote))
-                //            {
-                //                try
-                //                {
-                //                    // Got a quote
-                //                    var postToQuote = _postService.Get(new Guid(quote));
-                //                    viewModel.QuotedPost = postToQuote.PostContent;
-                //                    viewModel.ReplyTo = postToQuote.Id;
-                //                    viewModel.ReplyToUsername = postToQuote.User.UserName;
-                //                }
-                //                catch (Exception ex)
-                //                {
-                //                    LoggingService.Error(ex);
-                //                }
-                //            }
-
-                //            var reply = Request["reply"];
-                //            if (!string.IsNullOrEmpty(reply))
-                //            {
-                //                try
-                //                {
-                //                    // Set the reply
-                //                    var toReply = _postService.Get(new Guid(reply));
-                //                    viewModel.ReplyTo = toReply.Id;
-                //                    viewModel.ReplyToUsername = toReply.User.UserName;
-                //                }
-                //                catch (Exception ex)
-                //                {
-                //                    LoggingService.Error(ex);
-                //                }
-                //            }
-
-
-                //            // Check the poll - To see if it has one, and whether it needs to be closed.
-                //            if (viewModel.Poll?.Poll?.ClosePollAfterDays != null &&
-                //                viewModel.Poll.Poll.ClosePollAfterDays > 0 &&
-                //                !viewModel.Poll.Poll.IsClosed)
-                //            {
-                //                // Check the date the topic was created
-                //                var endDate = viewModel.Poll.Poll.DateCreated.AddDays((int)viewModel.Poll.Poll.ClosePollAfterDays);
-                //                if (DateTime.UtcNow > endDate)
-                //                {
-                //                    topic.Poll.IsClosed = true;
-                //                    viewModel.Topic.Poll.IsClosed = true;
-                //                    updateDatabase = true;
-                //                }
-                //            }
 
                 return View(model);
             }
@@ -355,11 +322,11 @@ namespace EECIP.Controllers
 
 
         [ChildActionOnly]
-        public ActionResult LatestTopics(int? p)
+        public ActionResult LatestTopics(int? p, string tag)
         {
             var viewModel = new vmForumLatestTopicsView
             {
-                _topics = db_Forum.GetTopicsByCategory(null),
+                _topics = db_Forum.GetTopicsByCategory(null, tag),
                 currentPage = p ?? 1,
                 numRecs = db_Forum.GetTopicCount()
             };
@@ -374,7 +341,7 @@ namespace EECIP.Controllers
             if (category != null)
             {
                 //get topics for the category
-                var topics = db_Forum.GetTopicsByCategory(category.Category.Id);
+                var topics = db_Forum.GetTopicsByCategory(category.Category.Id, null);
 
                 // Create the main view model for the category
                 var viewModel = new vmForumCategoryView
@@ -389,7 +356,13 @@ namespace EECIP.Controllers
                 return RedirectToAction("Index");
         }
 
-
+        [ChildActionOnly]
+        public PartialViewResult PopularTags()
+        {
+            var viewModel = new vmForumPopularTags();
+            viewModel.popularTags = db_Forum.GetPopularTags();
+            return PartialView(viewModel);
+        }
 
         [HttpPost]
         public ActionResult CreatePost(vmForumTopicView model)
@@ -401,7 +374,7 @@ namespace EECIP.Controllers
             if (!db_Forum.PassedPostFloodTest(UserIDX))
             {
                 TempData["Error"] = "Please wait at least 30 seconds between posts";
-                RedirectToAction("Create");
+                return RedirectToAction("ShowTopic", new { slug = model.Topic.Slug });
             }
 
             // Log user out if they are LockedOut but still authenticated 
@@ -411,11 +384,10 @@ namespace EECIP.Controllers
                 FormsAuthentication.SignOut();
                 return RedirectToAction("Index", "Home");
             }
-
             // ************************ END VALIDATION **********************************************
 
 
-            Guid? _postID = db_Forum.InsertUpdatePost(null, model.NewPostContent, null, null, false, false, false, null, null, model.Topic.Id, UserIDX);
+            Guid? _postID = db_Forum.InsertUpdatePost(null, model.NewPostContent, null, null, false, false, false, null, null, model.Topic.Id, UserIDX, false);
             if (_postID != null)
             {
                 // Success send any notifications
@@ -428,32 +400,111 @@ namespace EECIP.Controllers
         }
 
 
-        [HttpPost]
         public ActionResult DeletePost(Guid id)
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
             var post = db_Forum.GetPost_ByID(id);
-
             if (post != null)
             {
                 //only allow delete if post by user or user is admin
                 if (User.IsInRole("Admins") || UserIDX == post.MembershipUser_Id)
                 {
-                    if (post.IsTopicStarter == true)
+                    //if not topic starter, just delete post
+                    if (post.IsTopicStarter == false)
                     {
-                        //delete topic
+                        db_Forum.DeletePost(id);
+                        TempData["Success"] = "Post deleted";
+                        return RedirectToAction("ShowTopic", "Forum", new { id = post.Topic_Id });
                     }
                     else
                     {
-                        //delete post only
-                    }
+                        //remove post id from topic
+                        db_Forum.OrphanTopic(post.Topic_Id);
 
+                        //delete all posts for the topic
+                        List<Post> _postList = db_Forum.GetPost_ByTopicID(post.Topic_Id);
+                        foreach (Post p in _postList)
+                        {
+                            db_Forum.DeletePost(p.Id);
+                        }
+
+                        //then delete the topic
+                        db_Forum.DeleteTopic(post.Topic_Id);
+
+                        TempData["Success"] = "Post deleted";
+                        return RedirectToAction("Index", "Forum");
+
+                    }
                 }
             }
 
-            // Return view
-            return RedirectToAction("ShowTopic", "Forum", new { slug = post.Topic_Id });
+            TempData["Error"] = "Unable to delete";
+            return RedirectToAction("LatestTopics", "Forum", new { slug = post.Topic_Id });
+        }
+
+
+        // POST: /Forum/PostVote
+        [HttpPost]
+        public JsonResult PostVote(Guid? id, string typ)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            bool SuccInd = false;
+
+            if (typ == "up" || typ == "down")
+            {
+                Guid? VoteID = db_Forum.InsertVote(id.ConvertOrDefault<Guid>(), UserIDX, (typ == "up" ? 1 : -1));
+                SuccInd = (VoteID != null);
+            }
+            else if (typ == "removeup" || typ == "removedown")
+            {
+                int SuccID = db_Forum.DeleteVote(id.ConvertOrDefault<Guid>(), UserIDX);
+                SuccInd = (SuccID == 1);
+            }
+            else
+                return Json(new { msg = "Unable to record vote." });
+
+
+            //return response
+            if (SuccInd)
+            {
+                //get latest vote count
+                string votes = db_Forum.GetVotes_TotalByPost(id.ConvertOrDefault<Guid>(), (typ=="up" || typ=="removeup"), (typ=="down" || typ=="removedown")).ToString();
+                return Json(new { msg = "Success", val = votes });
+            }
+            else
+                return Json(new { msg = "Unable to record vote." });
+
+        }
+
+
+
+        // POST: /Forum/PostAnswer
+        [HttpPost]
+        public JsonResult PostAnswer(Guid? id, string typ)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            bool SuccInd = false;
+            bool Answered = false;
+
+            Post _p = db_Forum.GetPost_ByID(id.ConvertOrDefault<Guid>());
+            if (_p != null)
+            {
+                //update Topic
+                Guid? TopicID = db_Forum.SetTopicAnswer(_p.Topic_Id, (typ == "answer"));
+
+                //update Post 
+                Guid? VoteID = db_Forum.InsertUpdatePost(id, null, null, (typ == "answer"), null, null, null, null, null, null, null, false);
+                SuccInd = (VoteID != null);
+                Answered = (typ == "answer");
+            }
+
+            //return response
+            if (SuccInd)
+                return Json(new { msg = "Success", val = Answered });
+            else
+                return Json(new { msg = "Unable to record vote." });
+
         }
 
 

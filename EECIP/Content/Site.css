@@ -107,6 +107,16 @@ ul.main-navigation-menu > li.active > a {
 }
 
 
+/***************     BREADCRUMB STYLING     ******************/
+.breadcrumb {
+    font-size: 11px;
+    background: none;
+    padding: 0 0 5px 0;
+    margin: -12px 0 0 0;
+}
+    .breadcrumb a, .breadcrumb a:visited {
+        color: #636267;
+    }
 
 /***************     FOOTER STYLING     ******************/
 .footer-inner > a > img {
@@ -278,11 +288,10 @@ ul.main-navigation-menu > li.active > a {
 .aligned-row {
     display: flex;
     flex-flow: row wrap;
-    &::before {
-                  display: block;
-
-              }
-              }
+}
+    .aligned-row:before {
+        display: block;
+    }
 
 
 .circle-tile {
@@ -391,7 +400,7 @@ ul.main-navigation-menu > li.active > a {
 }
 
 .text-green {
-    color: #16a085;
+    color: #5cb85c;
 }
 
 .text-orange {
@@ -454,6 +463,12 @@ ul.main-navigation-menu > li.active > a {
     padding-right: 0;
     width: 100%;
     display: block;
+}
+
+.btn-mvc-large, .btn-mvc-large:visited {
+    padding: 9px 25px;
+    font-size: 19px;
+    line-height: 19px;
 }
 
 /* FORUM Side Boxes */
@@ -550,7 +565,31 @@ span.tag a, span.tag a:visited {
     height: 18px;
 }
 
+    span.tag .badge {
+        background-color: #4891dc;
+        font-size: 10px;
+        margin-top: -1px;
+    }
 
+.popular-tags-box ul {
+    padding: 0 0 0 6px;
+    margin: 0 0 0 0;
+}
+
+    .popular-tags-box ul li {
+        list-style: none;
+        margin: 0;
+        padding: 0 0 3px 0;
+        display: inline-block;
+    }
+
+
+.tagsinput {
+    padding: 0 0 8px 10px;
+    width: auto !important;
+    min-height: 10px !important;
+    height: auto !important;
+}
 
 
 /*   FORUM VIEW TOPICS / POSTS  */
@@ -640,6 +679,19 @@ span.tag a, span.tag a:visited {
         padding: 0 4px 0 0;
         font-size: 13px;
     }
+
+
+.solutionlink:hover {
+    text-decoration: none;
+}
+
+.solutionlink.solution {
+    color: #5cb85c;
+}
+    .solutionlink.solution:hover {
+        color: #5cb85c;
+    }
+
 
 .categoryrow {
     border-bottom: 1px #f2f2f2 solid;

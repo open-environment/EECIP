@@ -61,7 +61,6 @@ namespace EECIP.Models
 
         }
 
-
         public static IEnumerable<SelectListItem> get_ddl_tag_cats()
         {
 
@@ -69,6 +68,16 @@ namespace EECIP.Models
             {
                 Value = x.TAG_CAT_NAME,
                 Text = x.TAG_CAT_NAME
+            });
+        }
+
+        public static IEnumerable<SelectListItem> get_ddl_orgtypes()
+        {
+
+            return db_Ref.GetT_OE_REF_ORG_TYPE().Select(x => new SelectListItem
+            {
+                Value = x.ORG_TYPE,
+                Text = x.ORG_TYPE
             });
         }
 

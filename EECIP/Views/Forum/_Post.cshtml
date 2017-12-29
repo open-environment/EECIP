@@ -1,18 +1,11 @@
 ﻿@model EECIP.Models.vmForumPost
-@{ 
+@{
     var postId = Model.Post.Id;
 }
 <div class="post">
-
-    <div class="rowcreater hidden-xs">
-        @*<a id="comment-@postId"></a>
-        <a href="@Model.Post.User.NiceUrl">
-            <img src="@Model.Post.User.MemberImage(SiteConstants.Instance.GravatarPostSize)" alt="@Model.Post.User.UserName">
-        </a>*@
-    </div>
     <div class="rowcreater hidden-xs">
         <a href="@Url.Action("UserCard", "Dashboard", new { strid = Model.Post.MembershipUser_Id })">
-            <img src="/Content/Images/Users/@(Model.Post.MembershipUser_Id).png" alt="@Model.UserIDX">
+            <img src="/Content/Images/Users/@(Model.Post.MembershipUser_Id).png" alt="@Model.Post.MembershipUser_Id">
         </a>
     </div>
     <div class="rowdetails clearfix">
@@ -20,16 +13,13 @@
         <!-- POST ACTIONS RIGHT BAR -->
         <div class="postadmin">
             <ul class="clearfix postadminlist">
-                @*<li>
-                    <a class="btn-mvc btn-mvc-small btn-mvc-fullwidth" href="#">Quote</a>
-                </li>*@
                 @if (Model.Post.MembershipUser_Id == Model.UserIDX)
                 {
                     <li>
                         <a class="btn-mvc btn-mvc-small btn-mvc-fullwidth" onclick="return confirm('Are you sure you want to delete?')" href="@Url.Action("DeletePost", "Forum", new { id = Model.Post.Id })">Delete</a>
                     </li>
                     <li>
-                        <a class="btn-mvc btn-mvc-small btn-mvc-fullwidth" href="@Url.Action("EditPostTopic", "Forum", new { id = Model.Post.Id })">Edit</a>
+                        <a class="btn-mvc btn-mvc-small btn-mvc-fullwidth" href="@Url.Action("EditPost", "Forum", new { id = Model.Post.Id })">Edit</a>
                     </li>
                     <li>
                         <a class="btn-mvc btn-mvc-small btn-mvc-fullwidth postshowattach" href="#">Attach</a>
@@ -40,11 +30,7 @@
 
         <div>
             <div class="postbodytop">
-                @*@if (Model.Post.IsTopicStarter ?? false)
-                {
-                    <p><a href="@Model.ParentTopic.NiceUrl">@Model.ParentTopic.Name</a></p>
-                }
-                <a class="postmember-@postId" href="@Html.Raw(Model.Post.User.NiceUrl)">@Html.Raw(Model.Post.User.UserName)</a>*@
+                <a class="postmember-@postId" href="@Url.Action("UserCard", "Dashboard", new { strid = Model.Post.MembershipUser_Id })">@Html.Raw(Model.PosterName)</a>
                 posted this
                 @EECIP.App_Logic.BusinessLogicLayer.Utils.GetPrettyDate(Model.Post.DateCreated.ToString())
                 @if (User.IsInRole("Admins") && !string.IsNullOrEmpty(Model.Post.IpAddress))
@@ -62,104 +48,105 @@
             <div id="postcontent-@postId" class="postcontent">
                 <p>@Html.Raw(Model.Post.PostContent)</p>
             </div>
-            
+
             <div class="postsocial">
                 <ul>
                     <li>
-                        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
-                        <span class="count">@Model.UpVoteCount</span>
-                        @if (Model.AllowedToVote)
+                        <span class="glyphicon glyphicon-thumbs-up" style="@(Model.HasVotedUp == true ? "color:#5da548; font-weight:bold" : "") " aria-hidden="true"></span>
+                        <span class="count" style="@(Model.HasVotedUp == true ? "color:#5da548; font-weight:bold" : "") ">@Model.UpVoteCount</span>
+                        @if (Model.UserIDX != Model.Post.MembershipUser_Id)
                         {
-                            <a class="votelink" data-id="@postId" data-votetype="up" data-votetext="Vote Up" data-votedtext="Voted Up" data-hasvoted="@Model.HasVotedUp.ToString().ToLower()" style="@Html.Raw(Model.HasVotedDown ? "display:none;" : "")">
-                                @(Model.HasVotedUp ? "Liked" : "Like")
-                            </a>
+                            if (!Model.HasVotedUp)
+                            {
+                                <a id="VoteUp" class="votelink" href="#" data-type="up" data-id="@postId" >Like</a>
+                            }
+                            else {
+                                <a id="VoteUp" class="votelink" href="#" data-type="removeup" data-id="@postId" >Liked</a>
+                            }
                         }
                     </li>
                     <li>
-                        <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
-                        <span class="count">@Model.DownVoteCount</span>
-                        @if (Model.AllowedToVote)
+                        <span class="glyphicon glyphicon-thumbs-down" style="@(Model.HasVotedDown == true ? "color:#ec0d0d; font-weight:bold" : "") " aria-hidden="true"></span>
+                        <span class="count" style="@(Model.HasVotedDown == true ? "color:#ec0d0d; font-weight:bold" : "") ">@Model.DownVoteCount</span>
+                        @if (Model.UserIDX != Model.Post.MembershipUser_Id)
                         {
-                            <a class="votelink" data-id="@postId" data-votetype="down" data-votetext="Vote Down" data-votedtext="Voted Down" data-hasvoted="@Model.HasVotedDown.ToString().ToLower()" style="@Html.Raw(Model.HasVotedUp ? "display:none;" : "")">
-                                @(Model.HasVotedDown ? "Voted Down" : "Vote Down")
-                            </a>
+                            if (!Model.HasVotedDown)
+                            {
+                                <a id="VoteDown" class="votelink" href="#" data-type="down" data-id="@postId" >Dislike</a>
+                            }
+                            else {
+                                <a id="VoteDown" class="votelink" href="#" data-type="removedown" data-id="@postId" >Disliked</a>
+                            }
                         }
+
                     </li>
                     @*<li>
-                        <span class="glyphicon @(Model.MemberHasFavourited ? "glyphicon glyphicon-star" : "glyphicon-star-empty")" aria-hidden="true"></span>
-                        <span class="count">@Model.Favourites.Count</span>
-                        @if (Html.CurrentMember() != null && Model.Post.User.Id != loggedOnUserId)
+                            <span class="glyphicon @(Model.MemberHasFavourited ? "glyphicon glyphicon-star" : "glyphicon-star-empty")" aria-hidden="true"></span>
+                            <span class="count">@Model.Favourites.Count</span>
+                            @if (Html.CurrentMember() != null && Model.Post.User.Id != loggedOnUserId)
+                            {
+                                <a class="favourite" data-id="@postId" data-addremove="@(Model.MemberHasFavourited ? "remove" : "add")">
+                                    @(Model.MemberHasFavourited ? Html.Lang("Post.Favourited") : Html.Lang("Post.Favourite"))
+                                </a>
+                            }
+                        </li>*@
+
+
+                        @if (Model.ParentTopic.Solved && Model.Post.IsSolution)
                         {
-                            <a class="favourite" data-id="@postId" data-addremove="@(Model.MemberHasFavourited ? "remove" : "add")">
-                                @(Model.MemberHasFavourited ? Html.Lang("Post.Favourited") : Html.Lang("Post.Favourite"))
-                            </a>
+                            <li>
+                                <span class="glyphicon glyphicon-ok text-green" aria-hidden="true"></span>
+                                @if (Model.UserIDX == Model.ParentTopic.MembershipUser_Id || User.IsInRole("Admins")) {
+                                    <a class="solutionlink solution text-bold" data-id="@postId" data-type="removeanswer" href="#">Solution</a>
+                                }
+                            </li>
                         }
-                    </li>*@
 
-
-                    @*@if (Model.ParentTopic.Solved && Model.Post.IsSolution)
-                    {
-                        <li>
-                            <span class="glyphicon glyphicon-ok green-colour" aria-hidden="true"></span>
-                        </li>
-                    }
-                    else if (!Model.ParentTopic.Solved && !Model.Post.IsTopicStarter && Html.CurrentMember() != null && (Model.ParentTopic.User.Id == loggedOnUserId || User.IsInRole(AppConstants.AdminRoleName)))
-                    {
-                        <li>
-                            <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                            <a class="solutionlink" data-id="@postId">Is Solution</a>
-                        </li>
-                    }*@
+                        else if (Model.ParentTopic.Solved == false
+                            && Model.Post.IsTopicStarter == false 
+                            && (Model.UserIDX != Model.Post.MembershipUser_Id || User.IsInRole("Admins")))
+                        {
+                            <li>
+                                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                                <a class="solutionlink" data-id="@postId" data-type="answer" href="#">Mark As Solution</a>
+                            </li>
+                        }
 
                 </ul>
 
             </div>
 
-            @*@if (Model.Post.IsTopicStarter && Model.ParentTopic.Tags.Any())
-            {
-                <div class="posttags tagsinput">
-                    @foreach (var tag in Model.ParentTopic.Tags)
-                    {
-                        <span class="tag"><span><a href="@Html.Raw(tag.NiceUrl)">@Html.Raw(tag.Tag)</a></span></span>
-                    }
-                </div>
-            }*@
-
             @*@if (Model.Post.Files != null && Model.Post.Files.Any())
-            {
-                <div class="postuploadedfilesholder clearfix">
-                    <p>Attached Files</p>
-                    <ul>
-                        @foreach (var file in Model.Post.Files.OrderByDescending(o => o.DateCreated))
-                        {
-                            <li>
-                                <a class="fileupload" href="@Url.Action("Download", "File", new { id = file.Id})">
-                                    @if (AppHelpers.FileIsImage(file.FilePath))
-                                    {
-                                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-                                    }
-                                    else
-                                    {
-                                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                                    }
-                                </a>
-                                @if (Model.Post.User.Id == loggedOnUserId || User.IsInRole(AppConstants.AdminRoleName))
-                                {
-                                    <a href="@Url.Action("DeleteUploadedFile", "Upload", new { file.Id })" class="deleteupload" title="@Html.LanguageString("Post.Delete")">
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                {
+                    <div class="postuploadedfilesholder clearfix">
+                        <p>Attached Files</p>
+                        <ul>
+                            @foreach (var file in Model.Post.Files.OrderByDescending(o => o.DateCreated))
+                            {
+                                <li>
+                                    <a class="fileupload" href="@Url.Action("Download", "File", new { id = file.Id})">
+                                        @if (AppHelpers.FileIsImage(file.FilePath))
+                                        {
+                                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                                        }
+                                        else
+                                        {
+                                            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                                        }
                                     </a>
-                                }
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }*@
-
-            @*@Html.Partial("_PostLikedBy", new MVCForum.Website.ViewModels.PostLikedByViewModel { Post = Model.Post, Votes = upVotes })*@
+                                    @if (Model.Post.User.Id == loggedOnUserId || User.IsInRole(AppConstants.AdminRoleName))
+                                    {
+                                        <a href="@Url.Action("DeleteUploadedFile", "Upload", new { file.Id })" class="deleteupload" title="@Html.LanguageString("Post.Delete")">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }*@
 
         </div>
-
-
     </div>
-
 </div>
+

@@ -66,64 +66,92 @@
 <!--  ************  PROJECTS NEEDING REVIEW *************-->
 @if (Model.ProjectsNeedingReview != null && Model.ProjectsNeedingReview.Count > 0)
 {
-<section class="panel panel-default danger">
+    <section class="panel panel-default danger">
+        <div class="panel-heading">
+            Projects Needing Your Review
+            <div class="panel-tools">
+                <a class="btn btn-xs panel-collapse collapses" href="#">
+                </a>
+            </div>
+        </div>
+        <div class="panel-body" id="collapseProj">
+
+            <div class="table-responsive" style="max-height:200px;">
+                <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th></th>
+                            <th>Reason for Review</th>
+                            <th>Project Name</th>
+                            <th>Description</th>
+                            <th>Record Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                        @foreach (var item in Model.ProjectsNeedingReview)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i> Review</a>
+                                </td>
+                                <td style="color:#dc3545; font-weight:bold">
+                                    @if (item.PROJECT_CONTACT_IDX == null)
+                                    {
+                                        <text>Project is unclaimed</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Project hasn't been updated in 6 months</text>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_DESC)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RECORD_SOURCE)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+}
+
+
+<!--  **************  LATEST QUESTIONS **************************************-->
+<section class="panel panel-default ">
     <div class="panel-heading">
-        Projects Needing Your Review
+        Latest Questions (matching your tag interest)
         <div class="panel-tools">
             <a class="btn btn-xs panel-collapse collapses" href="#">
             </a>
         </div>
     </div>
-    <div class="panel-body" id="collapseProj">
-
-        <div class="table-responsive"  style="max-height:200px;">
-            <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables" >
-                <thead class="thead-inverse">
-                    <tr>
-                        <th></th>
-                        <th>Reason for Review</th>
-                        <th>Project Name</th>
-                        <th>Description</th>
-                        <th>Record Source</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-
-                @foreach (var item in Model.ProjectsNeedingReview)
-                {
-                    <tr>
-                        <td>
-                            <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i> Review</a>
-                        </td>
-                        <td style="color:#dc3545; font-weight:bold">
-                            @if (item.PROJECT_CONTACT_IDX == null)
-                            {
-                            <text>Project is unclaimed</text>
-                            }
-                            else
-                            {
-                                <text>Project hasn't been updated in 6 months</text>
-                            }
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PROJ_NAME)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PROJ_DESC)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.RECORD_SOURCE)
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
-
+    <div class="panel-body">
     </div>
 </section>
-}
+
+<!--  **************  MOST ACTIVE USERS **************************************-->
+<section class="panel panel-default ">
+    <div class="panel-heading">
+        Most Active Users 
+        <div class="panel-tools">
+            <a class="btn btn-xs panel-collapse collapses" href="#">
+            </a>
+        </div>
+    </div>
+    <div class="panel-body">
+    </div>
+</section>
+
 
 @section Scripts {
     <script type="text/javascript">

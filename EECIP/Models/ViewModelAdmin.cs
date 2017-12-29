@@ -51,6 +51,8 @@ namespace EECIP.Models
         public T_OE_ORGANIZATION agency { get; set; }
         public IEnumerable<SelectListItem> ddl_States { get; set; }
         public IEnumerable<SelectListItem> ddl_Regions { get; set; }
+        public IEnumerable<SelectListItem> ddl_OrgTypes { get; set; }
+
         public List<T_OE_ORGANIZATION_EMAIL_RULE> agency_emails { get; set; }
         public string new_email { get; set; }
 
@@ -59,6 +61,7 @@ namespace EECIP.Models
         {
             ddl_States = ddlHelpers.get_ddl_states();
             ddl_Regions = ddlHelpers.get_ddl_regions();
+            ddl_OrgTypes = ddlHelpers.get_ddl_orgtypes();
 
         }
     }

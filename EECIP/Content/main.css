@@ -1436,7 +1436,7 @@ ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > ul.sub-menu
 /* ---------------------------------------------------------------------- */
 /*	Breadcrumb
  /* ---------------------------------------------------------------------- */
-.breadcrumb {
+/*.breadcrumb {
 	margin: 0 -15px;
 	border-radius: 0;
 	padding: 15px 45px 15px 15px;
@@ -1456,7 +1456,7 @@ ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > ul.sub-menu
 	border-bottom: 1px solid #C8C7CC;
 	position: relative;
 	height: 51px;
-}
+}*/
 /* ---------------------------------------------------------------------- */
 /*	Rating
  /* ---------------------------------------------------------------------- */

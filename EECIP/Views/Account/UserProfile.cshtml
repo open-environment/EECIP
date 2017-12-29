@@ -71,25 +71,25 @@
                                 </div>
                                 <hr />
                                 @if (Model.HasAvatar == false)
-    {
-                            <div id="imgPreview" class="thumbnail" style="display:none">
-                                <img class="img-responsive" id="targetImg" />
-                                <div class="caption">
-                                    <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
-                                    <span id="description"></span>
-                                </div>
-                            </div>
-}
-else
-{
-                            <div id="imgPreview" class="thumbnail" style="max-width:200px">
-                                <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(Model.UserIDX).png" />
-                                <div class="caption">
-                                    <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
-                                    <span id="description"></span>
-                                </div>
-                            </div>
-}
+                                {
+                                    <div id="imgPreview" class="thumbnail" style="display:none">
+                                        <img class="img-responsive" id="targetImg" />
+                                        <div class="caption">
+                                            <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
+                                            <span id="description"></span>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="imgPreview" class="thumbnail" style="max-width:200px">
+                                        <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(Model.UserIDX).png" />
+                                        <div class="caption">
+                                            <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
+                                            <span id="description"></span>
+                                        </div>
+                                    </div>
+                                }
 
                             </div>
                         </div>
@@ -210,11 +210,8 @@ else
                     $("#targetImg").attr('src', _file.target.result);
                     $("#description").text("Size:" + size + ", " + height + "X " + width + ", " + type + "");
                     $("#imgPreview").show();
-
                 }
-
             }
-
         }
 
         var ClearPreview = function () {

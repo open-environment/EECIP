@@ -169,7 +169,7 @@ namespace EECIP.Controllers
                             if (model.intSelOrgIDX == null)
                             {
                                 //create the agency & email rule
-                                NewOrgIDX = db_Ref.InsertUpdatetT_OE_ORGANIZATION(null, null, model.suggestAgency, null, null, null, null, true, UserIDX);
+                                NewOrgIDX = db_Ref.InsertUpdatetT_OE_ORGANIZATION(null, null, model.suggestAgency, null, null, "Tribal", null, null, true, UserIDX);
                                 db_Ref.InsertT_OE_ORGANIZATION_EMAIL_RULE(NewOrgIDX.ConvertOrDefault<Guid>(), Regex.Match(model.UserName, "@(.*)").Groups[1].Value);
 
                                 //notify Site Admins via email

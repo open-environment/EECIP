@@ -24,11 +24,13 @@ namespace EECIP.App_Logic.DataAccessLayer
             this.Topics = new HashSet<Topic>();
             this.PollVotes = new HashSet<PollVote>();
             this.MembershipUserPoints = new HashSet<MembershipUserPoint>();
+            this.MembershipUser_Badge = new HashSet<MembershipUser_Badge>();
+            this.T_OE_PROJECT_VOTES = new HashSet<T_OE_PROJECT_VOTES>();
+            this.Favourites = new HashSet<Favourite>();
             this.TopicNotifications = new HashSet<TopicNotification>();
             this.Votes = new HashSet<Vote>();
             this.Votes1 = new HashSet<Vote>();
-            this.Favourites = new HashSet<Favourite>();
-            this.MembershipUser_Badge = new HashSet<MembershipUser_Badge>();
+            this.PostFiles = new HashSet<PostFile>();
         }
     
         public int USER_IDX { get; set; }
@@ -74,14 +76,18 @@ namespace EECIP.App_Logic.DataAccessLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembershipUserPoint> MembershipUserPoints { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MembershipUser_Badge> MembershipUser_Badge { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_OE_PROJECT_VOTES> T_OE_PROJECT_VOTES { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Favourite> Favourites { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TopicNotification> TopicNotifications { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vote> Votes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vote> Votes1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Favourite> Favourites { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<MembershipUser_Badge> MembershipUser_Badge { get; set; }
+        public virtual ICollection<PostFile> PostFiles { get; set; }
     }
 }

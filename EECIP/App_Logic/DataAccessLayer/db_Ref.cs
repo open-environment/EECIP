@@ -165,7 +165,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static Guid? InsertUpdatetT_OE_ORGANIZATION(Guid? oRG_IDX, string oRG_ABBR, string oRG_NAME, string sTATE_CD, int? ePA_REGION,
+        public static Guid? InsertUpdatetT_OE_ORGANIZATION(Guid? oRG_IDX, string oRG_ABBR, string oRG_NAME, string sTATE_CD, int? ePA_REGION, string oRG_TYPE,
             string cLOUD, string aPI, bool? aCT_IND, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -197,6 +197,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (oRG_NAME != null) e.ORG_NAME = oRG_NAME;
                     if (sTATE_CD != null) e.STATE_CD = sTATE_CD;
                     if (ePA_REGION != null) e.EPA_REGION = ePA_REGION;
+                    if (oRG_TYPE != null) e.ORG_TYPE = oRG_TYPE;
                     if (cLOUD != null) e.CLOUD = cLOUD;
                     if (aPI != null) e.API = aPI;
                     if (aCT_IND != null) e.ACT_IND = aCT_IND ?? true;
@@ -255,7 +256,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                {
                                    Agency = a.ORG_NAME,
                                    AgencyAbbreviation = a.ORG_ABBR,
-                                   State_or_Tribal = x1.STATE_NAME,
+                                   State_or_Tribal = (a.ORG_TYPE == "State" ? x1.STATE_NAME : a.ORG_TYPE),
                                    KeyID = a.ORG_IDX.ToString(),
                                    DataType = "Agency",
                                    Record_Source = "EECIP Supplied",
@@ -711,6 +712,25 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
+        //*******************REF_ORG_TYPES ********************************
+        public static List<T_OE_REF_ORG_TYPE> GetT_OE_REF_ORG_TYPE()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_ORG_TYPE
+                            orderby a.ORG_TYPE
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
 
 

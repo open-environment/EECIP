@@ -118,8 +118,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     int c =  (from a in ctx.T_OE_USERS
-                            where a.ORG_IDX == orgIDX
-                            select a).Count();
+                              where a.ORG_IDX == orgIDX
+                              select a).Count();
 
                     return (c > 0);
                 }
@@ -130,8 +130,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
 
         public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, 
             DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE, 
@@ -232,11 +230,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                                {
                                    Agency = o.ORG_NAME,
                                    AgencyAbbreviation = o.ORG_ABBR,
-                                   State_or_Tribal = x1.STATE_NAME,
+                                   State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
                                    KeyID = a.USER_IDX.ToString(),
                                    DataType = "User",
                                    Record_Source = "Agency supplied",
-                                   Name = a.FNAME + " " + a.LNAME,
+                                   Name = a.LNAME + ", " + a.FNAME,
                                    Description = a.JOB_TITLE,
                                    PersonPhone = a.PHONE,
                                    PersonEmail = a.EMAIL,
@@ -288,7 +286,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 return 0;
             }
         }
-
 
 
 
@@ -399,6 +396,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
 
 
         //*****************ROLE / USER RELATIONSHIP **********************************
@@ -518,8 +516,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
 
     }
 }

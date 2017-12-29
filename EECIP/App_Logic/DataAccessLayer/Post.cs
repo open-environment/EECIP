@@ -18,8 +18,9 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Post()
         {
             this.Topics = new HashSet<Topic>();
-            this.Votes = new HashSet<Vote>();
             this.Favourites = new HashSet<Favourite>();
+            this.Votes = new HashSet<Vote>();
+            this.PostFiles = new HashSet<PostFile>();
         }
     
         public System.Guid Id { get; set; }
@@ -42,8 +43,10 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual ICollection<Topic> Topics { get; set; }
         public virtual Topic Topic { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Favourite> Favourites { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vote> Votes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Favourite> Favourites { get; set; }
+        public virtual ICollection<PostFile> PostFiles { get; set; }
     }
 }

@@ -66,6 +66,7 @@
     @Html.HiddenFor(model => model.facetTags)
     @Html.HiddenFor(model => model.activeTab)
     @Html.HiddenFor(model => model.currentPage)
+    @Html.HiddenFor(model => model.sortType)
 
     <div class="row">
 
@@ -139,7 +140,15 @@
                         </a>
                     </li>
                     <li><a href="#tab6" data-toggle="tab">Governance</a></li>
-                    <li><a href="#tab7" data-toggle="tab">Discussion</a></li>
+                    <li>
+                        <a href="#tab7" data-toggle="tab">
+                            Discussion
+                            @if (Model.searchResults != null && Model.searchResults.Facets != null && Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Discussion") != null)
+                            {
+                                <span class="badge badge-eecip-bluegreen">@Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Discussion").Count</span>
+                            }
+                        </a>
+                    </li>
                     <li class="pull-right"><a href="#" style="background-color: #FFF; border: 0px; font-weight: bold; font-size: 11px;">Record Count: @(Model.searchResults != null ? Model.searchResults.Count : 0)</a></li>
                 </ul>
                 <div class="tab-content" style="height:0px; padding: 0px;">
@@ -153,6 +162,8 @@
                     <div class="tab-pane" id="tab4">
                     </div>
                     <div class="tab-pane" id="tab5">
+                    </div>
+                    <div class="tab-pane" id="tab6">
                     </div>
                 </div>
             </div>
@@ -211,9 +222,16 @@
                                         @Html.DisplayFor(modelItem => item.Document.Name)
                                     </td>
                                     <td>
-                                        <span class="resDesc">
-                                            @Html.DisplayFor(modelItem => item.Document.Description)
-                                        </span>
+                                        @if(item.Document.DataType != "Discussion") { 
+                                            <span class="resDesc">
+                                                @Html.DisplayFor(modelItem => item.Document.Description)
+                                            </span>
+                                        }
+                                        else {
+                                            <span class="resDesc">
+                                                @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item.Document.Description), 50)
+                                            </span>
+                                        }
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Document.Record_Source)
@@ -242,7 +260,7 @@
                 else
                 {
                     <!-- ************** PEOPLE ****************************-->
-                    <div class="row aligned-row">
+                    @*<div class="row aligned-row">
                         @foreach (var item in Model.searchResults.Results)
                         {
                             <div class="col-lg-3 col-sm-6">
@@ -287,7 +305,54 @@
                                 </div>
                             </div>
                         }
+                    </div>*@
+
+
+                    <div class="table-responsive">
+                        <table class="table table-striped m-b-none" data-ride="datatables">
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Agency</th>
+                                <th>Title</th>
+                                <th>Tags</th>
+                            </tr>
+
+                            @foreach (var item in Model.searchResults.Results)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })">
+                                            <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(item.Document.KeyID).png)">
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Document.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Document.Agency)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Document.Description)
+                                    </td>
+                                    <td>
+                                        @foreach (string tag in item.Document.Tags)
+                                        {
+                                            <span class="select2-selection__choice">@Html.DisplayFor(modelItem => tag)</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+
+                        @if (Model.searchResults.Count > 50)
+                        {
+                            <ul class="pagination" id="pagination" style="margin:0px"></ul>
+                        }
+
                     </div>
+
                 }
             }
             else
@@ -432,12 +497,20 @@
                 $('#facetDataType').val('User');
                 $('#activeTab').val('4');
                 $('#currentPage').val(1);
+                $('#sortType').val('alpha');
                 $('#norepostform').submit();
             });
 
             $('a[href="#tab5"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('Agency');
                 $('#activeTab').val('5');
+                $('#currentPage').val(1);
+                $('#norepostform').submit();
+            });
+
+            $('a[href="#tab7"]').on('shown.bs.tab', function (e) {
+                $('#facetDataType').val('Discussion');
+                $('#activeTab').val('7');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
             });

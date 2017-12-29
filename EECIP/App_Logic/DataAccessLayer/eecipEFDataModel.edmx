@@ -35,6 +35,7 @@
           <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+          <Property Name="ORG_TYPE" Type="varchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
           <Key>
@@ -90,6 +91,17 @@
           <Property Name="CREATE_USERIDX" Type="int" />
           <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
         </EntityType>
+        <EntityType Name="T_OE_PROJECT_VOTES">
+          <Key>
+            <PropertyRef Name="PROJECT_VOTE_IDX" />
+          </Key>
+          <Property Name="PROJECT_VOTE_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="VOTE_AMOUNT" Type="int" Nullable="false" />
+          <Property Name="DATE_VOTED" Type="datetime" />
+          <Property Name="PROJECT_IDX" Type="uniqueidentifier" />
+          <Property Name="ORG_ENT_SVCS_IDX" Type="int" />
+          <Property Name="VOTED_BY_USER_IDX" Type="int" />
+        </EntityType>
         <EntityType Name="T_OE_PROJECTS">
           <Key>
             <PropertyRef Name="PROJECT_IDX" />
@@ -134,6 +146,12 @@
           <Property Name="ACT_IND" Type="bit" Nullable="false" />
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_ORG_TYPE">
+          <Key>
+            <PropertyRef Name="ORG_TYPE" />
+          </Key>
+          <Property Name="ORG_TYPE" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="T_OE_REF_REGION">
           <Key>
@@ -392,6 +410,18 @@
           <Property Name="Topic_Id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="MembershipUser_Id" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="PostFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Filename" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+          <Property Name="Post_Id" Type="uniqueidentifier" />
+          <Property Name="FileContent" Type="varbinary(max)" />
+          <Property Name="FileDecription" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Topic">
           <Key>
             <PropertyRef Name="Id" />
@@ -410,6 +440,7 @@
           <Property Name="Post_Id" Type="uniqueidentifier" />
           <Property Name="Poll_Id" Type="uniqueidentifier" />
           <Property Name="MembershipUser_Id" Type="int" Nullable="false" />
+          <Property Name="SYNC_IND" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Topic_Tags">
           <Key>
@@ -452,7 +483,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Favourite__Membe__4A18FC72">
+        <Association Name="FK__Favourite__Membe__49E3F248">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="Favourite" Type="Self.Favourite" Multiplicity="*" />
           <ReferentialConstraint>
@@ -464,8 +495,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Favourite__PostI__4B0D20AB">
-          <End Role="Post" Type="Self.Post" Multiplicity="1" />
+        <Association Name="FK__Favourite__PostI__4AD81681">
+          <End Role="Post" Type="Self.Post" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Favourite" Type="Self.Favourite" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Post">
@@ -476,8 +509,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Favourite__Topic__4C0144E4">
-          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+        <Association Name="FK__Favourite__Topic__4BCC3ABA">
+          <End Role="Topic" Type="Self.Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Favourite" Type="Self.Favourite" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Topic">
@@ -581,6 +616,30 @@
             </Principal>
             <Dependent Role="Post">
               <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PostFile__Member__60C757A0">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
+          <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PostFile__Post_I__5FD33367">
+          <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
+          <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="Post_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -712,6 +771,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__T_OE_PROJ__ORG_E__2D47B39A">
+          <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
           <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="0..1" />
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
@@ -724,6 +795,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__2C538F61">
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__T_OE_PROJ__PROJE__73852659">
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="1" />
           <End Role="T_OE_PROJECT_TAGS" Type="Self.T_OE_PROJECT_TAGS" Multiplicity="*" />
@@ -733,6 +816,18 @@
             </Principal>
             <Dependent Role="T_OE_PROJECT_TAGS">
               <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__VOTED__2B5F6B28">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="VOTED_BY_USER_IDX" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -850,8 +945,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Topic_Tag__Topic__1387E197">
-          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+        <Association Name="FK__Topic_Tag__Topic__4242D080">
+          <End Role="Topic" Type="Self.Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Topic_Tags" Type="Self.Topic_Tags" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Topic">
@@ -862,7 +959,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TopicNoti__Membe__2116E6DF">
+        <Association Name="FK__TopicNoti__Membe__3E723F9C">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="TopicNotification" Type="Self.TopicNotification" Multiplicity="*" />
           <ReferentialConstraint>
@@ -874,8 +971,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TopicNoti__Topic__220B0B18">
-          <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
+        <Association Name="FK__TopicNoti__Topic__3F6663D5">
+          <End Role="Topic" Type="Self.Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="TopicNotification" Type="Self.TopicNotification" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Topic">
@@ -886,7 +985,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Vote__Membership__3429BB53">
+        <Association Name="FK__Vote__Membership__451F3D2B">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="Vote" Type="Self.Vote" Multiplicity="*" />
           <ReferentialConstraint>
@@ -898,8 +997,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Vote__Post_Id__361203C5">
-          <End Role="Post" Type="Self.Post" Multiplicity="1" />
+        <Association Name="FK__Vote__Post_Id__4707859D">
+          <End Role="Post" Type="Self.Post" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Vote" Type="Self.Vote" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Post">
@@ -910,7 +1011,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Vote__VotedByMem__351DDF8C">
+        <Association Name="FK__Vote__VotedByMem__46136164">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="0..1" />
           <End Role="Vote" Type="Self.Vote" Multiplicity="*" />
           <ReferentialConstraint>
@@ -922,7 +1023,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="Forum_Topic_Post_FK">
+        <Association Name="forum_Topic_Post_FK">
           <End Role="Topic" Type="Self.Topic" Multiplicity="1" />
           <End Role="Post" Type="Self.Post" Multiplicity="*" />
           <ReferentialConstraint>
@@ -941,8 +1042,10 @@
           <EntitySet Name="T_OE_ORGANIZATION_ENT_SVCS" EntityType="Self.T_OE_ORGANIZATION_ENT_SVCS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION_TAGS" EntityType="Self.T_OE_ORGANIZATION_TAGS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_PROJECT_TAGS" EntityType="Self.T_OE_PROJECT_TAGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_PROJECT_VOTES" EntityType="Self.T_OE_PROJECT_VOTES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_PROJECTS" EntityType="Self.T_OE_PROJECTS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_REF_ENTERPRISE_PLATFORM" EntityType="Self.T_OE_REF_ENTERPRISE_PLATFORM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_REF_ORG_TYPE" EntityType="Self.T_OE_REF_ORG_TYPE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_REF_REGION" EntityType="Self.T_OE_REF_REGION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_REF_STATE" EntityType="Self.T_OE_REF_STATE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_REF_SYNONYMS" EntityType="Self.T_OE_REF_SYNONYMS" Schema="dbo" store:Type="Tables" />
@@ -964,6 +1067,7 @@
           <EntitySet Name="PollAnswer" EntityType="Self.PollAnswer" Schema="forum" store:Type="Tables" />
           <EntitySet Name="PollVote" EntityType="Self.PollVote" Schema="forum" store:Type="Tables" />
           <EntitySet Name="Post" EntityType="Self.Post" Schema="forum" store:Type="Tables" />
+          <EntitySet Name="PostFile" EntityType="Self.PostFile" Schema="forum" store:Type="Tables" />
           <EntitySet Name="Topic" EntityType="Self.Topic" Schema="forum" store:Type="Tables" />
           <EntitySet Name="Topic_Tags" EntityType="Self.Topic_Tags" Schema="forum" store:Type="Tables" />
           <EntitySet Name="TopicNotification" EntityType="Self.TopicNotification" Schema="forum" store:Type="Tables" />
@@ -972,15 +1076,15 @@
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
           </AssociationSet>
-          <AssociationSet Name="FK__Favourite__Membe__4A18FC72" Association="Self.FK__Favourite__Membe__4A18FC72">
+          <AssociationSet Name="FK__Favourite__Membe__49E3F248" Association="Self.FK__Favourite__Membe__49E3F248">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Favourite" EntitySet="Favourite" />
           </AssociationSet>
-          <AssociationSet Name="FK__Favourite__PostI__4B0D20AB" Association="Self.FK__Favourite__PostI__4B0D20AB">
+          <AssociationSet Name="FK__Favourite__PostI__4AD81681" Association="Self.FK__Favourite__PostI__4AD81681">
             <End Role="Post" EntitySet="Post" />
             <End Role="Favourite" EntitySet="Favourite" />
           </AssociationSet>
-          <AssociationSet Name="FK__Favourite__Topic__4C0144E4" Association="Self.FK__Favourite__Topic__4C0144E4">
+          <AssociationSet Name="FK__Favourite__Topic__4BCC3ABA" Association="Self.FK__Favourite__Topic__4BCC3ABA">
             <End Role="Topic" EntitySet="Topic" />
             <End Role="Favourite" EntitySet="Favourite" />
           </AssociationSet>
@@ -1015,6 +1119,14 @@
           <AssociationSet Name="FK__Post__Membership__67DE6983" Association="Self.FK__Post__Membership__67DE6983">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Post" EntitySet="Post" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PostFile__Member__60C757A0" Association="Self.FK__PostFile__Member__60C757A0">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="PostFile" EntitySet="PostFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PostFile__Post_I__5FD33367" Association="Self.FK__PostFile__Post_I__5FD33367">
+            <End Role="Post" EntitySet="Post" />
+            <End Role="PostFile" EntitySet="PostFile" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__ENT_P__07220AB2" Association="Self.FK__T_OE_ORGA__ENT_P__07220AB2">
             <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
@@ -1056,13 +1168,25 @@
             <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_E__2D47B39A" Association="Self.FK__T_OE_PROJ__ORG_E__2D47B39A">
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
           <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6BE40491" Association="Self.FK__T_OE_PROJ__ORG_I__6BE40491">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__2C538F61" Association="Self.FK__T_OE_PROJ__PROJE__2C538F61">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
           <AssociationSet Name="FK__T_OE_PROJ__PROJE__73852659" Association="Self.FK__T_OE_PROJ__PROJE__73852659">
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
             <End Role="T_OE_PROJECT_TAGS" EntitySet="T_OE_PROJECT_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__VOTED__2B5F6B28" Association="Self.FK__T_OE_PROJ__VOTED__2B5F6B28">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_REF___TAG_C__6B24EA82" Association="Self.FK__T_OE_REF___TAG_C__6B24EA82">
             <End Role="T_OE_REF_TAG_CATEGORIES" EntitySet="T_OE_REF_TAG_CATEGORIES" />
@@ -1100,31 +1224,31 @@
             <End Role="Post" EntitySet="Post" />
             <End Role="Topic" EntitySet="Topic" />
           </AssociationSet>
-          <AssociationSet Name="FK__Topic_Tag__Topic__1387E197" Association="Self.FK__Topic_Tag__Topic__1387E197">
+          <AssociationSet Name="FK__Topic_Tag__Topic__4242D080" Association="Self.FK__Topic_Tag__Topic__4242D080">
             <End Role="Topic" EntitySet="Topic" />
             <End Role="Topic_Tags" EntitySet="Topic_Tags" />
           </AssociationSet>
-          <AssociationSet Name="FK__TopicNoti__Membe__2116E6DF" Association="Self.FK__TopicNoti__Membe__2116E6DF">
+          <AssociationSet Name="FK__TopicNoti__Membe__3E723F9C" Association="Self.FK__TopicNoti__Membe__3E723F9C">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="TopicNotification" EntitySet="TopicNotification" />
           </AssociationSet>
-          <AssociationSet Name="FK__TopicNoti__Topic__220B0B18" Association="Self.FK__TopicNoti__Topic__220B0B18">
+          <AssociationSet Name="FK__TopicNoti__Topic__3F6663D5" Association="Self.FK__TopicNoti__Topic__3F6663D5">
             <End Role="Topic" EntitySet="Topic" />
             <End Role="TopicNotification" EntitySet="TopicNotification" />
           </AssociationSet>
-          <AssociationSet Name="FK__Vote__Membership__3429BB53" Association="Self.FK__Vote__Membership__3429BB53">
+          <AssociationSet Name="FK__Vote__Membership__451F3D2B" Association="Self.FK__Vote__Membership__451F3D2B">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Vote" EntitySet="Vote" />
           </AssociationSet>
-          <AssociationSet Name="FK__Vote__Post_Id__361203C5" Association="Self.FK__Vote__Post_Id__361203C5">
+          <AssociationSet Name="FK__Vote__Post_Id__4707859D" Association="Self.FK__Vote__Post_Id__4707859D">
             <End Role="Post" EntitySet="Post" />
             <End Role="Vote" EntitySet="Vote" />
           </AssociationSet>
-          <AssociationSet Name="FK__Vote__VotedByMem__351DDF8C" Association="Self.FK__Vote__VotedByMem__351DDF8C">
+          <AssociationSet Name="FK__Vote__VotedByMem__46136164" Association="Self.FK__Vote__VotedByMem__46136164">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Vote" EntitySet="Vote" />
           </AssociationSet>
-          <AssociationSet Name="Forum_Topic_Post_FK" Association="Self.Forum_Topic_Post_FK">
+          <AssociationSet Name="forum_Topic_Post_FK" Association="Self.forum_Topic_Post_FK">
             <End Role="Topic" EntitySet="Topic" />
             <End Role="Post" EntitySet="Post" />
           </AssociationSet>
@@ -1339,41 +1463,6 @@
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="MembershipUserPoint" EntitySet="MembershipUserPoints" />
           </AssociationSet>
-          <EntitySet Name="TopicNotifications" EntityType="EECIPModel.TopicNotification" />
-          <AssociationSet Name="FK__TopicNoti__Membe__2116E6DF" Association="EECIPModel.FK__TopicNoti__Membe__2116E6DF">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="TopicNotification" EntitySet="TopicNotifications" />
-          </AssociationSet>
-          <AssociationSet Name="FK__TopicNoti__Topic__220B0B18" Association="EECIPModel.FK__TopicNoti__Topic__220B0B18">
-            <End Role="Topic" EntitySet="Topics" />
-            <End Role="TopicNotification" EntitySet="TopicNotifications" />
-          </AssociationSet>
-          <EntitySet Name="Votes" EntityType="EECIPModel.Vote" />
-          <AssociationSet Name="FK__Vote__Membership__3429BB53" Association="EECIPModel.FK__Vote__Membership__3429BB53">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="Vote" EntitySet="Votes" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Vote__VotedByMem__351DDF8C" Association="EECIPModel.FK__Vote__VotedByMem__351DDF8C">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="Vote" EntitySet="Votes" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Vote__Post_Id__361203C5" Association="EECIPModel.FK__Vote__Post_Id__361203C5">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Vote" EntitySet="Votes" />
-          </AssociationSet>
-          <EntitySet Name="Favourites" EntityType="EECIPModel.Favourite" />
-          <AssociationSet Name="FK__Favourite__Membe__4A18FC72" Association="EECIPModel.FK__Favourite__Membe__4A18FC72">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="Favourite" EntitySet="Favourites" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Favourite__PostI__4B0D20AB" Association="EECIPModel.FK__Favourite__PostI__4B0D20AB">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Favourite" EntitySet="Favourites" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Favourite__Topic__4C0144E4" Association="EECIPModel.FK__Favourite__Topic__4C0144E4">
-            <End Role="Topic" EntitySet="Topics" />
-            <End Role="Favourite" EntitySet="Favourites" />
-          </AssociationSet>
           <EntitySet Name="Badges" EntityType="EECIPModel.Badge" />
           <EntitySet Name="MembershipUser_Badge" EntityType="EECIPModel.MembershipUser_Badge" />
           <AssociationSet Name="FK__Membershi__Membe__6E565CE8" Association="EECIPModel.FK__Membershi__Membe__6E565CE8">
@@ -1384,10 +1473,68 @@
             <End Role="Badge" EntitySet="Badges" />
             <End Role="MembershipUser_Badge" EntitySet="MembershipUser_Badge" />
           </AssociationSet>
+          <EntitySet Name="T_OE_PROJECT_VOTES" EntityType="EECIPModel.T_OE_PROJECT_VOTES" />
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_E__2D47B39A" Association="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A">
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__2C538F61" Association="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__VOTED__2B5F6B28" Association="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
+          <EntitySet Name="T_OE_REF_ORG_TYPE" EntityType="EECIPModel.T_OE_REF_ORG_TYPE" />
+          <EntitySet Name="Favourites" EntityType="EECIPModel.Favourite" />
           <EntitySet Name="Topic_Tags" EntityType="EECIPModel.Topic_Tags" />
-          <AssociationSet Name="FK__Topic_Tag__Topic__1387E197" Association="EECIPModel.FK__Topic_Tag__Topic__1387E197">
+          <EntitySet Name="TopicNotifications" EntityType="EECIPModel.TopicNotification" />
+          <EntitySet Name="Votes" EntityType="EECIPModel.Vote" />
+          <AssociationSet Name="FK__Favourite__Membe__49E3F248" Association="EECIPModel.FK__Favourite__Membe__49E3F248">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="Favourite" EntitySet="Favourites" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TopicNoti__Membe__3E723F9C" Association="EECIPModel.FK__TopicNoti__Membe__3E723F9C">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="TopicNotification" EntitySet="TopicNotifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vote__Membership__451F3D2B" Association="EECIPModel.FK__Vote__Membership__451F3D2B">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="Vote" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vote__VotedByMem__46136164" Association="EECIPModel.FK__Vote__VotedByMem__46136164">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="Vote" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Favourite__PostI__4AD81681" Association="EECIPModel.FK__Favourite__PostI__4AD81681">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Favourite" EntitySet="Favourites" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Favourite__Topic__4BCC3ABA" Association="EECIPModel.FK__Favourite__Topic__4BCC3ABA">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="Favourite" EntitySet="Favourites" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vote__Post_Id__4707859D" Association="EECIPModel.FK__Vote__Post_Id__4707859D">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Vote" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Topic_Tag__Topic__4242D080" Association="EECIPModel.FK__Topic_Tag__Topic__4242D080">
             <End Role="Topic" EntitySet="Topics" />
             <End Role="Topic_Tags" EntitySet="Topic_Tags" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TopicNoti__Topic__3F6663D5" Association="EECIPModel.FK__TopicNoti__Topic__3F6663D5">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="TopicNotification" EntitySet="TopicNotifications" />
+          </AssociationSet>
+          <EntitySet Name="PostFiles" EntityType="EECIPModel.PostFile" />
+          <AssociationSet Name="FK__PostFile__Member__60C757A0" Association="EECIPModel.FK__PostFile__Member__60C757A0">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="PostFile" EntitySet="PostFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PostFile__Post_I__5FD33367" Association="EECIPModel.FK__PostFile__Post_I__5FD33367">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="PostFile" EntitySet="PostFiles" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="T_OE_APP_SETTINGS">
@@ -1470,11 +1617,13 @@
           <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Membershi__6F7F8B4B" FromRole="T_OE_USERS" ToRole="Topic" />
           <NavigationProperty Name="PollVotes" Relationship="EECIPModel.FK__PollVote__Member__10E07F16" FromRole="T_OE_USERS" ToRole="PollVote" />
           <NavigationProperty Name="MembershipUserPoints" Relationship="EECIPModel.FK__Membershi__Membe__14B10FFA" FromRole="T_OE_USERS" ToRole="MembershipUserPoint" />
-          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Membe__2116E6DF" FromRole="T_OE_USERS" ToRole="TopicNotification" />
-          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Membership__3429BB53" FromRole="T_OE_USERS" ToRole="Vote" />
-          <NavigationProperty Name="Votes1" Relationship="EECIPModel.FK__Vote__VotedByMem__351DDF8C" FromRole="T_OE_USERS" ToRole="Vote" />
-          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Membe__4A18FC72" FromRole="T_OE_USERS" ToRole="Favourite" />
           <NavigationProperty Name="MembershipUser_Badge" Relationship="EECIPModel.FK__Membershi__Membe__6E565CE8" FromRole="T_OE_USERS" ToRole="MembershipUser_Badge" />
+          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28" FromRole="T_OE_USERS" ToRole="T_OE_PROJECT_VOTES" />
+          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Membe__49E3F248" FromRole="T_OE_USERS" ToRole="Favourite" />
+          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Membe__3E723F9C" FromRole="T_OE_USERS" ToRole="TopicNotification" />
+          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Membership__451F3D2B" FromRole="T_OE_USERS" ToRole="Vote" />
+          <NavigationProperty Name="Votes1" Relationship="EECIPModel.FK__Vote__VotedByMem__46136164" FromRole="T_OE_USERS" ToRole="Vote" />
+          <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Member__60C757A0" FromRole="T_OE_USERS" ToRole="PostFile" />
         </EntityType>
         <Association Name="FK__T_OE_USER__USER___6477ECF3">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1">
@@ -1550,6 +1699,7 @@
           <Property Name="RECORD_SOURCE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ACTIVE_INTEREST_IND" Type="Boolean" />
+          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_PROJECT_VOTES" />
         </EntityType>
         <Association Name="FK__T_OE_ORGA__ENT_P__17036CC0">
           <End Type="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Role="T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
@@ -1590,6 +1740,7 @@
           <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_ORGANIZATION_TAGS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_TAGS" />
           <NavigationProperty Name="T_OE_ORGANIZATION_EMAIL_RULE" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_EMAIL_RULE" />
+          <Property Name="ORG_TYPE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK__T_OE_ORGA__EPA_R__1DB06A4F">
           <End Type="EECIPModel.T_OE_REF_REGION" Role="T_OE_REF_REGION" Multiplicity="0..1" />
@@ -1708,6 +1859,7 @@
           <Property Name="IMPORT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="PROJECT_CONTACT_IDX" Type="Int32" />
+          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_VOTES" />
         </EntityType>
         <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
           <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
@@ -1950,8 +2102,9 @@
           <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Post__Membership__67DE6983" FromRole="Post" ToRole="T_OE_USERS" />
           <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Post" ToRole="Topic" />
           <NavigationProperty Name="Topic" Relationship="EECIPModel.Forum_Topic_Post_FK" FromRole="Post" ToRole="Topic" />
-          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Post_Id__361203C5" FromRole="Post" ToRole="Vote" />
-          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__PostI__4B0D20AB" FromRole="Post" ToRole="Favourite" />
+          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Post" ToRole="Favourite" />
+          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Post" ToRole="Vote" />
+          <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Post_I__5FD33367" FromRole="Post" ToRole="PostFile" />
         </EntityType>
         <EntityType Name="Topic">
           <Key>
@@ -1976,9 +2129,10 @@
           <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Topic" ToRole="Poll" />
           <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Topic" ToRole="Post" />
           <NavigationProperty Name="Posts" Relationship="EECIPModel.Forum_Topic_Post_FK" FromRole="Topic" ToRole="Post" />
-          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Topic__220B0B18" FromRole="Topic" ToRole="TopicNotification" />
-          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Topic__4C0144E4" FromRole="Topic" ToRole="Favourite" />
-          <NavigationProperty Name="Topic_Tags" Relationship="EECIPModel.FK__Topic_Tag__Topic__1387E197" FromRole="Topic" ToRole="Topic_Tags" />
+          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Topic" ToRole="Favourite" />
+          <NavigationProperty Name="Topic_Tags" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic" ToRole="Topic_Tags" />
+          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="Topic" ToRole="TopicNotification" />
         </EntityType>
         <Association Name="FK__Post__Membership__67DE6983">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
@@ -2133,139 +2287,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="TopicNotification">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__TopicNoti__Membe__2116E6DF" FromRole="TopicNotification" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__TopicNoti__Topic__220B0B18" FromRole="TopicNotification" ToRole="Topic" />
-        </EntityType>
-        <Association Name="FK__TopicNoti__Membe__2116E6DF">
-          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
-          <End Type="EECIPModel.TopicNotification" Role="TopicNotification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="TopicNotification">
-              <PropertyRef Name="MembershipUser_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__TopicNoti__Topic__220B0B18">
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1" />
-          <End Type="EECIPModel.TopicNotification" Role="TopicNotification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Topic">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="TopicNotification">
-              <PropertyRef Name="Topic_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Vote">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Amount" Type="Int32" Nullable="false" />
-          <Property Name="DateVoted" Type="DateTime" Precision="3" />
-          <Property Name="Post_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <Property Name="VotedByMembershipUser_Id" Type="Int32" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Vote__Membership__3429BB53" FromRole="Vote" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK__Vote__VotedByMem__351DDF8C" FromRole="Vote" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Vote__Post_Id__361203C5" FromRole="Vote" ToRole="Post" />
-        </EntityType>
-        <Association Name="FK__Vote__Membership__3429BB53">
-          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
-          <End Type="EECIPModel.Vote" Role="Vote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="Vote">
-              <PropertyRef Name="MembershipUser_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Vote__VotedByMem__351DDF8C">
-          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="0..1" />
-          <End Type="EECIPModel.Vote" Role="Vote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="Vote">
-              <PropertyRef Name="VotedByMembershipUser_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Vote__Post_Id__361203C5">
-          <End Type="EECIPModel.Post" Role="Post" Multiplicity="1" />
-          <End Type="EECIPModel.Vote" Role="Vote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Vote">
-              <PropertyRef Name="Post_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Favourite">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="MemberId" Type="Int32" Nullable="false" />
-          <Property Name="PostId" Type="Guid" Nullable="false" />
-          <Property Name="TopicId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Favourite__Membe__4A18FC72" FromRole="Favourite" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Favourite__PostI__4B0D20AB" FromRole="Favourite" ToRole="Post" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Favourite__Topic__4C0144E4" FromRole="Favourite" ToRole="Topic" />
-        </EntityType>
-        <Association Name="FK__Favourite__Membe__4A18FC72">
-          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
-          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="Favourite">
-              <PropertyRef Name="MemberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Favourite__PostI__4B0D20AB">
-          <End Type="EECIPModel.Post" Role="Post" Multiplicity="1" />
-          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Favourite">
-              <PropertyRef Name="PostId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Favourite__Topic__4C0144E4">
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1" />
-          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Topic">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Favourite">
-              <PropertyRef Name="TopicId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Badge">
           <Key>
             <PropertyRef Name="Id" />
@@ -2314,6 +2335,75 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="T_OE_PROJECT_VOTES">
+          <Key>
+            <PropertyRef Name="PROJECT_VOTE_IDX" />
+          </Key>
+          <Property Name="PROJECT_VOTE_IDX" Type="Guid" Nullable="false" />
+          <Property Name="VOTE_AMOUNT" Type="Int32" Nullable="false" />
+          <Property Name="DATE_VOTED" Type="DateTime" Precision="3" />
+          <Property Name="PROJECT_IDX" Type="Guid" />
+          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" />
+          <Property Name="VOTED_BY_USER_IDX" Type="Int32" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_USERS" />
+        </EntityType>
+        <Association Name="FK__T_OE_PROJ__ORG_E__2D47B39A">
+          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__2C538F61">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__VOTED__2B5F6B28">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="VOTED_BY_USER_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="T_OE_REF_ORG_TYPE">
+          <Key>
+            <PropertyRef Name="ORG_TYPE" />
+          </Key>
+          <Property Name="ORG_TYPE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Favourite">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MemberId" Type="Int32" Nullable="false" />
+          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <Property Name="TopicId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Favourite__Membe__49E3F248" FromRole="Favourite" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Favourite" ToRole="Post" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Favourite" ToRole="Topic" />
+        </EntityType>
         <EntityType Name="Topic_Tags">
           <Key>
             <PropertyRef Name="Topic_Id" />
@@ -2323,10 +2413,126 @@
           <Property Name="Topic_Id" Type="Guid" Nullable="false" />
           <Property Name="TopicTagAttribute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="TopicTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Topic_Tag__Topic__1387E197" FromRole="Topic_Tags" ToRole="Topic" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic_Tags" ToRole="Topic" />
         </EntityType>
-        <Association Name="FK__Topic_Tag__Topic__1387E197">
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1" />
+        <EntityType Name="TopicNotification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__TopicNoti__Membe__3E723F9C" FromRole="TopicNotification" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="TopicNotification" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="Vote">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="DateVoted" Type="DateTime" Precision="3" />
+          <Property Name="Post_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <Property Name="VotedByMembershipUser_Id" Type="Int32" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Vote__Membership__451F3D2B" FromRole="Vote" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK__Vote__VotedByMem__46136164" FromRole="Vote" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Vote" ToRole="Post" />
+        </EntityType>
+        <Association Name="FK__Favourite__Membe__49E3F248">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
+          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="Favourite">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TopicNoti__Membe__3E723F9C">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
+          <End Type="EECIPModel.TopicNotification" Role="TopicNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="TopicNotification">
+              <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vote__Membership__451F3D2B">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
+          <End Type="EECIPModel.Vote" Role="Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="Vote">
+              <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vote__VotedByMem__46136164">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="0..1" />
+          <End Type="EECIPModel.Vote" Role="Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="Vote">
+              <PropertyRef Name="VotedByMembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Favourite__PostI__4AD81681">
+          <End Type="EECIPModel.Post" Role="Post" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Favourite">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Favourite__Topic__4BCC3ABA">
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Favourite">
+              <PropertyRef Name="TopicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vote__Post_Id__4707859D">
+          <End Type="EECIPModel.Post" Role="Post" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.Vote" Role="Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Vote">
+              <PropertyRef Name="Post_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Topic_Tag__Topic__4242D080">
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="EECIPModel.Topic_Tags" Role="Topic_Tags" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Topic">
@@ -2334,6 +2540,58 @@
             </Principal>
             <Dependent Role="Topic_Tags">
               <PropertyRef Name="Topic_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TopicNoti__Topic__3F6663D5">
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.TopicNotification" Role="TopicNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TopicNotification">
+              <PropertyRef Name="Topic_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PostFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Filename" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Post_Id" Type="Guid" />
+          <Property Name="FileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="FileDecription" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PostFile__Member__60C757A0" FromRole="PostFile" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__PostFile__Post_I__5FD33367" FromRole="PostFile" ToRole="Post" />
+        </EntityType>
+        <Association Name="FK__PostFile__Member__60C757A0">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
+          <End Type="EECIPModel.PostFile" Role="PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PostFile__Post_I__5FD33367">
+          <End Type="EECIPModel.Post" Role="Post" Multiplicity="0..1" />
+          <End Type="EECIPModel.PostFile" Role="PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="Post_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2514,6 +2772,7 @@
           <EntitySetMapping Name="T_OE_ORGANIZATION">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION">
               <MappingFragment StoreEntitySet="T_OE_ORGANIZATION">
+                <ScalarProperty Name="ORG_TYPE" ColumnName="ORG_TYPE" />
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
                 <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
                 <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
@@ -2691,6 +2950,7 @@
           <EntitySetMapping Name="Topics">
             <EntityTypeMapping TypeName="EECIPModel.Topic">
               <MappingFragment StoreEntitySet="Topic">
+                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
                 <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
                 <ScalarProperty Name="Poll_Id" ColumnName="Poll_Id" />
                 <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
@@ -2739,38 +2999,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TopicNotifications">
-            <EntityTypeMapping TypeName="EECIPModel.TopicNotification">
-              <MappingFragment StoreEntitySet="TopicNotification">
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Votes">
-            <EntityTypeMapping TypeName="EECIPModel.Vote">
-              <MappingFragment StoreEntitySet="Vote">
-                <ScalarProperty Name="VotedByMembershipUser_Id" ColumnName="VotedByMembershipUser_Id" />
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
-                <ScalarProperty Name="DateVoted" ColumnName="DateVoted" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Favourites">
-            <EntityTypeMapping TypeName="EECIPModel.Favourite">
-              <MappingFragment StoreEntitySet="Favourite">
-                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
-                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Badges">
             <EntityTypeMapping TypeName="EECIPModel.Badge">
               <MappingFragment StoreEntitySet="Badge">
@@ -2793,12 +3021,76 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_PROJECT_VOTES">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECT_VOTES">
+              <MappingFragment StoreEntitySet="T_OE_PROJECT_VOTES">
+                <ScalarProperty Name="VOTED_BY_USER_IDX" ColumnName="VOTED_BY_USER_IDX" />
+                <ScalarProperty Name="ORG_ENT_SVCS_IDX" ColumnName="ORG_ENT_SVCS_IDX" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+                <ScalarProperty Name="DATE_VOTED" ColumnName="DATE_VOTED" />
+                <ScalarProperty Name="VOTE_AMOUNT" ColumnName="VOTE_AMOUNT" />
+                <ScalarProperty Name="PROJECT_VOTE_IDX" ColumnName="PROJECT_VOTE_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_REF_ORG_TYPE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_ORG_TYPE">
+              <MappingFragment StoreEntitySet="T_OE_REF_ORG_TYPE">
+                <ScalarProperty Name="ORG_TYPE" ColumnName="ORG_TYPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Favourites">
+            <EntityTypeMapping TypeName="EECIPModel.Favourite">
+              <MappingFragment StoreEntitySet="Favourite">
+                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Topic_Tags">
             <EntityTypeMapping TypeName="EECIPModel.Topic_Tags">
               <MappingFragment StoreEntitySet="Topic_Tags">
                 <ScalarProperty Name="TopicTag" ColumnName="TopicTag" />
                 <ScalarProperty Name="TopicTagAttribute" ColumnName="TopicTagAttribute" />
                 <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TopicNotifications">
+            <EntityTypeMapping TypeName="EECIPModel.TopicNotification">
+              <MappingFragment StoreEntitySet="TopicNotification">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Votes">
+            <EntityTypeMapping TypeName="EECIPModel.Vote">
+              <MappingFragment StoreEntitySet="Vote">
+                <ScalarProperty Name="VotedByMembershipUser_Id" ColumnName="VotedByMembershipUser_Id" />
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
+                <ScalarProperty Name="DateVoted" ColumnName="DateVoted" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PostFiles">
+            <EntityTypeMapping TypeName="EECIPModel.PostFile">
+              <MappingFragment StoreEntitySet="PostFile">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="FileDecription" ColumnName="FileDecription" />
+                <ScalarProperty Name="FileContent" ColumnName="FileContent" />
+                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Filename" ColumnName="Filename" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -3,20 +3,6 @@
     ViewBag.Title = "Create Discussion";
 }
 
-@*@section HeaderJS
-{
-    @(
-                 Bundle.JavaScript()
-                            .Add("~/Scripts/jquery.tagsinput.min.js")  //tagging
-                            .Add("~/Scripts/tags.js")   //tagging
-                            .Add("~/Scripts/createtopic.js")
-                            .MvcRender("~/scripts/cache/topic-combined_#.js")
-    )
-    <script type="text/javascript">
-        counter = @(Model.PollAnswers != null ? Model.PollAnswers.Count : 0);
-    </script>
-}*@
-
 <div class="row">
 
     <div class="col-md-8 col-md-offset-2">
@@ -33,3 +19,19 @@
     </div>
 </div>
 
+@section Scripts {
+    @Scripts.Render("~/bundles/select2")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            console.log('d');
+            //function to initiate Select2
+            $(".search-select").select2({
+                placeholder: "",
+                allowClear: true,
+                tags: true,
+                width: ''
+            });
+        });
+
+    </script>
+}

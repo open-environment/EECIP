@@ -10,14 +10,14 @@
         <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_LOG" Width="1.5" PointX="10.875" PointY="0.5" IsExpanded="true" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_USER_ROLES" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__ROLE___1BFD2C07" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_APP_SETTINGS" Width="1.5" PointX="11.125" PointY="3.25" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_APP_SETTINGS" Width="1.5" PointX="13.5" PointY="3.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Width="1.5" PointX="7" PointY="0.5" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_REGION" Width="1.5" PointX="0.5" PointY="0.5" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_STATE" Width="1.5" PointX="0.5" PointY="2.375" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_USERS" Width="1.5" PointX="5" PointY="5.625" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_USERS" Width="1.5" PointX="4.75" PointY="6.75" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__USER___6477ECF3" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAG_CATEGORIES" Width="1.5" PointX="9.375" PointY="7.875" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAGS" Width="1.5" PointX="9.375" PointY="4.375" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAG_CATEGORIES" Width="1.5" PointX="11.25" PointY="4.125" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAGS" Width="1.5" PointX="9.25" PointY="4.125" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Width="1.5" PointX="4.875" PointY="0.5" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ENT_P__17036CC0" />
@@ -27,7 +27,7 @@
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_USER_NOTIFICATION" Width="1.5" PointX="9" PointY="0.5" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECT_TAGS" Width="1.5" PointX="11.25" PointY="9" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECT_TAGS" Width="1.5" PointX="11.125" PointY="6.875" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECTS" Width="1.5" PointX="7" PointY="3.75" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__PROJE__73852659" />
@@ -39,7 +39,7 @@
         <AssociationConnector Association="EECIPModel.FK__T_OE_USER__USER___1C873BEC" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_TAGS" Width="1.5" PointX="2.75" PointY="6.125" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_SYNONYMS" Width="1.5" PointX="11.125" PointY="6" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_SYNONYMS" Width="1.5" PointX="13.5" PointY="6.375" />
         <EntityTypeShape EntityType="EECIPModel.Category" Width="1.5" PointX="19.875" PointY="0.5" />
         <AssociationConnector Association="EECIPModel.FK__Category__Catego__41B8C09B" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Width="1.5" PointX="0.5" PointY="4.375" />
@@ -61,23 +61,31 @@
         <AssociationConnector Association="EECIPModel.FK__PollVote__PollAn__11D4A34F" />
         <EntityTypeShape EntityType="EECIPModel.MembershipUserPoint" Width="1.5" PointX="15.375" PointY="12.5" />
         <AssociationConnector Association="EECIPModel.FK__Membershi__Membe__14B10FFA" />
-        <EntityTypeShape EntityType="EECIPModel.TopicNotification" Width="1.5" PointX="23.75" PointY="5.875" />
-        <AssociationConnector Association="EECIPModel.FK__TopicNoti__Membe__2116E6DF" />
-        <AssociationConnector Association="EECIPModel.FK__TopicNoti__Topic__220B0B18" />
-        <EntityTypeShape EntityType="EECIPModel.Vote" Width="1.5" PointX="25.75" PointY="6.875" />
-        <AssociationConnector Association="EECIPModel.FK__Vote__Membership__3429BB53" />
-        <AssociationConnector Association="EECIPModel.FK__Vote__VotedByMem__351DDF8C" />
-        <AssociationConnector Association="EECIPModel.FK__Vote__Post_Id__361203C5" />
-        <EntityTypeShape EntityType="EECIPModel.Favourite" Width="1.5" PointX="28.125" PointY="3.125" />
-        <AssociationConnector Association="EECIPModel.FK__Favourite__Membe__4A18FC72" />
-        <AssociationConnector Association="EECIPModel.FK__Favourite__PostI__4B0D20AB" />
-        <AssociationConnector Association="EECIPModel.FK__Favourite__Topic__4C0144E4" />
         <EntityTypeShape EntityType="EECIPModel.Badge" Width="1.5" PointX="20.25" PointY="12.375" />
         <EntityTypeShape EntityType="EECIPModel.MembershipUser_Badge" Width="1.5" PointX="17.5" PointY="12.5" />
         <AssociationConnector Association="EECIPModel.FK__Membershi__Membe__6E565CE8" />
         <AssociationConnector Association="EECIPModel.FK__Membershi__Badge__6D6238AF" />
-        <EntityTypeShape EntityType="EECIPModel.Topic_Tags" Width="1.5" PointX="23.875" PointY="0.5" />
-        <AssociationConnector Association="EECIPModel.FK__Topic_Tag__Topic__1387E197" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECT_VOTES" Width="1.5" PointX="9.25" PointY="10.625" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_ORG_TYPE" Width="1.5" PointX="11.375" PointY="10.75" />
+        <EntityTypeShape EntityType="EECIPModel.Favourite" Width="1.5" PointX="31" PointY="5.75" />
+        <EntityTypeShape EntityType="EECIPModel.Topic_Tags" Width="1.5" PointX="24.125" PointY="6.375" />
+        <EntityTypeShape EntityType="EECIPModel.TopicNotification" Width="1.5" PointX="24.125" PointY="9" />
+        <EntityTypeShape EntityType="EECIPModel.Vote" Width="1.5" PointX="28" PointY="6.625" />
+        <AssociationConnector Association="EECIPModel.FK__Favourite__Membe__49E3F248" />
+        <AssociationConnector Association="EECIPModel.FK__TopicNoti__Membe__3E723F9C" />
+        <AssociationConnector Association="EECIPModel.FK__Vote__Membership__451F3D2B" />
+        <AssociationConnector Association="EECIPModel.FK__Vote__VotedByMem__46136164" />
+        <AssociationConnector Association="EECIPModel.FK__Favourite__PostI__4AD81681" />
+        <AssociationConnector Association="EECIPModel.FK__Favourite__Topic__4BCC3ABA" />
+        <AssociationConnector Association="EECIPModel.FK__Vote__Post_Id__4707859D" />
+        <AssociationConnector Association="EECIPModel.FK__Topic_Tag__Topic__4242D080" />
+        <AssociationConnector Association="EECIPModel.FK__TopicNoti__Topic__3F6663D5" />
+        <EntityTypeShape EntityType="EECIPModel.PostFile" Width="1.5" PointX="31" PointY="9.75" />
+        <AssociationConnector Association="EECIPModel.FK__PostFile__Member__60C757A0" />
+        <AssociationConnector Association="EECIPModel.FK__PostFile__Post_I__5FD33367" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

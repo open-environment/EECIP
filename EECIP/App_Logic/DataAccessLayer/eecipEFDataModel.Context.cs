@@ -52,11 +52,14 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<PollAnswer> PollAnswers { get; set; }
         public virtual DbSet<PollVote> PollVotes { get; set; }
         public virtual DbSet<MembershipUserPoint> MembershipUserPoints { get; set; }
-        public virtual DbSet<TopicNotification> TopicNotifications { get; set; }
-        public virtual DbSet<Vote> Votes { get; set; }
-        public virtual DbSet<Favourite> Favourites { get; set; }
         public virtual DbSet<Badge> Badges { get; set; }
         public virtual DbSet<MembershipUser_Badge> MembershipUser_Badge { get; set; }
+        public virtual DbSet<T_OE_PROJECT_VOTES> T_OE_PROJECT_VOTES { get; set; }
+        public virtual DbSet<T_OE_REF_ORG_TYPE> T_OE_REF_ORG_TYPE { get; set; }
+        public virtual DbSet<Favourite> Favourites { get; set; }
         public virtual DbSet<Topic_Tags> Topic_Tags { get; set; }
+        public virtual DbSet<TopicNotification> TopicNotifications { get; set; }
+        public virtual DbSet<Vote> Votes { get; set; }
+        public virtual DbSet<PostFile> PostFiles { get; set; }
     }
 }

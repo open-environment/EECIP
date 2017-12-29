@@ -139,33 +139,34 @@ namespace EECIP.Models
     public class vmForumTopicView
     {
         public Topic Topic { get; set; }
+        public List<string> TopicTags { get; set; }
         //public bool MemberIsOnline { get; set; }
         public string LastPostDatePretty { get; set; }
 
         // Poll
-        public vmForumPoll Poll { get; set; }
+        //public vmForumPoll Poll { get; set; }
 
         // Post Stuff
         public  vmForumPost StarterPost { get; set; }
         public List<vmForumPost> Posts { get; set; }
-        public int? PageIndex { get; set; }
-        public int? TotalCount { get; set; }
-        public int? TotalPages { get; set; }
+        //public int? PageIndex { get; set; }
+        //public int? TotalCount { get; set; }
+        //public int? TotalPages { get; set; }
 
         // Permissions
-        public bool DisablePosting { get; set; }
+        //public bool DisablePosting { get; set; }
 
         // Subscription
         public bool IsSubscribed { get; set; }
 
         // Votes
-        public int VotesUp { get; set; }
-        public int VotesDown { get; set; }
+        //public int VotesUp { get; set; }
+        //public int VotesDown { get; set; }
 
         // Quote/Reply
-        public string QuotedPost { get; set; }
-        public Guid? ReplyTo { get; set; }
-        public string ReplyToUsername { get; set; }
+        //public string QuotedPost { get; set; }
+        //public Guid? ReplyTo { get; set; }
+        //public string ReplyToUsername { get; set; }
 
         // Stats
         public int Answers { get; set; }
@@ -189,6 +190,11 @@ namespace EECIP.Models
         public bool UserAllowedToVote { get; set; }
     }
 
+    public class vmForumEditPost
+    {
+
+    }
+
     public class vmForumPost
     {
         public Post Post { get; set; }
@@ -205,6 +211,7 @@ namespace EECIP.Models
         //public bool ShowTopicName { get; set; }
         //public bool MinimalPost { get; set; }
         public int UserIDX { get; set; }
+        public string PosterName { get; set; }
 
     }
 
@@ -230,6 +237,11 @@ namespace EECIP.Models
         public List<TopicOverviewDisplay> _topics { get; set; }
         public int numRecs { get; set; }
         public int currentPage { get; set; }
+    }
+
+
+    public class vmForumPopularTags {
+        public Dictionary<string, int> popularTags { get; set; }
     }
 
     public class CheckCreateTopicPermissions

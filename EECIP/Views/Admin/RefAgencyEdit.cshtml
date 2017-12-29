@@ -49,6 +49,12 @@
                                 @Html.DropDownListFor(x => x.agency.EPA_REGION, Model.ddl_Regions, "", new { @class = "form-control" })
                             </div>
                         </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Type</label>
+                                @Html.DropDownListFor(x => x.agency.ORG_TYPE, Model.ddl_OrgTypes, "", new { @class = "form-control" })
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">

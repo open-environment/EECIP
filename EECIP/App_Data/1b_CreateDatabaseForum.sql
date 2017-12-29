@@ -101,6 +101,7 @@ CREATE TABLE [forum].[Topic](
 	[Post_Id] [uniqueidentifier] NULL,
 	[Poll_Id] [uniqueidentifier] NULL,
 	[MembershipUser_Id] [int] NOT NULL,
+	[SYNC_IND] [bit] NOT NULL DEFAULT 0,
  CONSTRAINT [forum.PK_Topic] PRIMARY KEY CLUSTERED ([Id] ASC),
  FOREIGN KEY ([Category_Id]) references [forum].[Category] ([Id]),
  FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
@@ -109,9 +110,12 @@ CREATE TABLE [forum].[Topic](
 ) ON [PRIMARY]
 GO
 
+--alter table [Topic] add SYNC_IND [bit] NOT NULL DEFAULT 0;
 
-ALTER TABLE [forum].[Post]  WITH CHECK ADD  CONSTRAINT [forum.Topic_Post_FK] FOREIGN KEY([Topic_Id]) REFERENCES [forum].[Topic] ([Id])
+ALTER TABLE [forum].[Post]  WITH CHECK ADD  CONSTRAINT [forum.Topic_Post_FK] FOREIGN KEY([Topic_Id]) REFERENCES [forum].[Topic] ([Id]) 
 GO
+
+
 
 
 CREATE TABLE [forum].[Topic_Tags](
@@ -119,7 +123,7 @@ CREATE TABLE [forum].[Topic_Tags](
 	[TopicTagAttribute] [varchar](50) NOT NULL,
 	[TopicTag] [varchar](100) NOT NULL,
  CONSTRAINT [forum.PK_Topic_Tag] PRIMARY KEY CLUSTERED ([Topic_Id], [TopicTagAttribute] ASC, [TopicTag] ASC),
- FOREIGN KEY ([Topic_Id]) references [forum].[Topic] ([Id]),
+ FOREIGN KEY ([Topic_Id]) references [forum].[Topic] ([Id]) ON DELETE CASCADE,
 ) ON [PRIMARY]
 GO
 
@@ -145,7 +149,7 @@ CREATE TABLE [forum].[TopicNotification](
 	[MembershipUser_Id] [int] NOT NULL,
  CONSTRAINT [forum.PK_TopicNotification] PRIMARY KEY CLUSTERED ([Id] ASC),
  FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
- FOREIGN KEY ([Topic_Id]) references [forum].[Topic] ([Id])
+ FOREIGN KEY ([Topic_Id]) references [forum].[Topic] ([Id]) ON DELETE CASCADE
 ) ON [PRIMARY]
 GO
 
@@ -160,7 +164,7 @@ CREATE TABLE [forum].[Vote](
  CONSTRAINT [forum.PK_Vote] PRIMARY KEY CLUSTERED  ([Id] ASC ),
  FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
  FOREIGN KEY ([VotedByMembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
- FOREIGN KEY ([Post_Id]) references [forum].[Post] ([Id])
+ FOREIGN KEY ([Post_Id]) references [forum].[Post] ([Id]) ON DELETE CASCADE 
 ) ON [PRIMARY]
 GO
 
@@ -174,8 +178,8 @@ CREATE TABLE [forum].[Favourite](
 	[TopicId] [uniqueidentifier] NOT NULL,
  CONSTRAINT [forum.PK_Favourite] PRIMARY KEY CLUSTERED ([Id] ASC),
  FOREIGN KEY ([MemberId]) references [dbo].[T_OE_USERS] ([USER_IDX]),
- FOREIGN KEY ([PostId]) references [forum].[Post] ([Id]),
- FOREIGN KEY ([TopicId]) references [forum].[Topic] ([Id])
+ FOREIGN KEY ([PostId]) references [forum].[Post] ([Id]) ON DELETE CASCADE,
+ FOREIGN KEY ([TopicId]) references [forum].[Topic] ([Id]) ON DELETE CASCADE
 ) ON [PRIMARY]
 GO
 
@@ -218,4 +222,20 @@ INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image
 INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'FavouriteFirstPost', N'First Favourite', N'You have Favourited your first post', N'you-favourited-your-first-post.png', 1)
 INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'YourPostFavourited', N'Favourited Post', N'You have one or more posts that have been Favourited by another member', N'your-post-got-favourited-by-another-member.png', 2)
 INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'YourPostFavouritedTenTimes', N'Recognised Post', N'One or more of your posts have been Favourited by 10 or more people', N'recognised-post.png', 10)
+GO
+
+
+
+CREATE TABLE [forum].[PostFile](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Filename] [nvarchar](200) NOT NULL,
+	[DateCreated] [datetime] NOT NULL,
+	[Post_Id] [uniqueidentifier] NULL,
+	[FileContent] [varbinary](max) NULL,
+	[FileDecription] [nvarchar](200) NOT NULL,
+	[MembershipUser_Id] [int] NOT NULL,
+ CONSTRAINT [forum.PK_UploadedFile] PRIMARY KEY CLUSTERED  ([Id] ASC),
+ FOREIGN KEY ([Post_Id]) references [forum].[Post] ([Id]),
+ FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX])
+) ON [PRIMARY]
 GO

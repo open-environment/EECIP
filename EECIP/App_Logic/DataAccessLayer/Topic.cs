@@ -18,9 +18,9 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Topic()
         {
             this.Posts = new HashSet<Post>();
-            this.TopicNotifications = new HashSet<TopicNotification>();
             this.Favourites = new HashSet<Favourite>();
             this.Topic_Tags = new HashSet<Topic_Tags>();
+            this.TopicNotifications = new HashSet<TopicNotification>();
         }
     
         public System.Guid Id { get; set; }
@@ -37,6 +37,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<System.Guid> Post_Id { get; set; }
         public Nullable<System.Guid> Poll_Id { get; set; }
         public int MembershipUser_Id { get; set; }
+        public bool SYNC_IND { get; set; }
     
         public virtual T_OE_USERS T_OE_USERS { get; set; }
         public virtual Category Category { get; set; }
@@ -45,10 +46,10 @@ namespace EECIP.App_Logic.DataAccessLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Post> Posts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TopicNotification> TopicNotifications { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Favourite> Favourites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Topic_Tags> Topic_Tags { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TopicNotification> TopicNotifications { get; set; }
     }
 }

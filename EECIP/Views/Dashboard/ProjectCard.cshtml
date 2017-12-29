@@ -46,7 +46,7 @@
                     <dt>
                         Project URL:
                     </dt>
-                    <dd>
+                    <dd id="projUrl">
                         @Model.project.PROJECT_URL
                     </dd>
                     <dt>
@@ -85,7 +85,18 @@
                     </div>
                     <div class="col-md-6">
                         <h4>Likes:</h4>
-                        <i class="clip-thumbs-up" style="font-size: 30px; color:forestgreen"></i> 5
+                        <i class="glyphicon glyphicon-thumbs-up" style="font-size: 30px; color:forestgreen"></i>
+                        <span id="voteTotal" style="font-size: 24px; color:forestgreen">@Model.ProjectVotePoints</span>
+
+                        <br/>
+                        @if (!Model.HasVoted && !Model.UserBelongsToProjectAgency)
+                        {
+                            <a id="ProjectVoteUp" class="votelink" href="#" data-type="up">Like</a>
+                        }
+                        else if (Model.HasVoted) {
+                            <a id="ProjectVoteUp" class="votelink" href="#" data-type="removeup">Liked</a>
+                        }
+
                     </div>
                 </div>
                 <h4>Program Area(s):</h4>
@@ -209,10 +220,47 @@
 @section Scripts {
     @Scripts.Render("~/bundles/anchorme")
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#desc').html(anchorme($('#desc').text(), { }));
+<script type="text/javascript">
+    $(document).ready(function () {
+        //automatically add links to description
+        $('#desc').html(anchorme($('#desc').text(), {}));
+        $('#projUrl').html(anchorme($('#projUrl').text(), {}));
+
+        //upvoting event handling
+        $("#ProjectVoteUp").click(function () {
+            //determine if upvoting or removing
+            var _typ = $(this).attr('data-type');
+
+            $.post('@Url.Action("ProjectVote", "Dashboard")',
+                AddAntiForgeryToken({ id: '@Model.project.PROJECT_IDX', typ: _typ }))
+                .done(function (response) {
+                    if (response.msg == "Success") {
+                        toastr.success("Thank you for voting!");
+                        $("#voteTotal").text(response.val);
+                        if (_typ == "up") {
+                            $("#ProjectVoteUp").text('Liked');
+                            $("#ProjectVoteUp").attr('data-type', 'removeup');
+                        }
+                        else {
+                            $("#ProjectVoteUp").text('Like');
+                            $("#ProjectVoteUp").attr('data-type', 'up');
+                        }
+                    }
+                    else {
+                        toastr.warning(response.msg);
+                    }
+
+                }).fail(function (data) {
+                    toastr.warning("Record cannot be deleted.");
+                });
+
         });
-    </script>
+    });
+
+    AddAntiForgeryToken = function (data) {
+        data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+        return data;
+    };
+</script>
 }
 

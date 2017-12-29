@@ -27,6 +27,7 @@ namespace EECIP.Models
         public string facetTags { get; set; }
         public string activeTab { get; set; }
         public int? currentPage { get; set; }
+        public string sortType { get; set; }
 
         public List<T_OE_ORGANIZATION> active_agencies { get; set; }
         public List<T_OE_PROJECTS> active_projects { get; set; }
@@ -118,6 +119,9 @@ namespace EECIP.Models
         public List<string> SelectedProgramAreas { get; set; }
         public List<string> SelectedFeatures { get; set; }
         public string LastUpdatedUser { get; set; }
+        public int ProjectVotePoints { get; set; }
+        public bool HasVoted { get; set; }
+        public bool UserBelongsToProjectAgency { get; set; }
 
     }
 

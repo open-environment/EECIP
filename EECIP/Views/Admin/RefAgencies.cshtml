@@ -14,6 +14,7 @@
                         <th>Edit</th>
                         <th>Agency Name</th>
                         <th>Agency Abbreviation</th>
+                        <th>Type</th>
                         <th>State</th>
                         <th>Region</th>
                     </tr>
@@ -34,6 +35,9 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ORG_ABBR)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ORG_TYPE)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.STATE_CD)

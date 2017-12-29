@@ -56,10 +56,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     return (from a in ctx.Badges
-                            join b in ctx.MembershipUser_Badge on a.Id equals b.Badge_Id
-                                into sr
-                            from x in sr.DefaultIfEmpty()  //left join
+                            join b in ctx.MembershipUser_Badge on a.Id equals b.Badge_Id into sr from x in sr.DefaultIfEmpty()  //left join
                             where (x == null ? true : x.MembershipUser_Id == UserIDX)
+                            orderby x.DateEarned descending
                             select new UserBadgeDisplay
                             {
                                 _Badge = a,
@@ -187,6 +186,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
 
         //****************************** CATEGORIES **********************************************
         public static List<Category> GetCategory()
@@ -393,6 +393,47 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static Topic GetTopic_ByID(Guid id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Topics.AsNoTracking()
+                            where a.Id == id
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static Guid? SetTopicAnswer(Guid Id, bool Answered)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Topic e = (from c in ctx.Topics
+                               where c.Id == Id
+                               select c).FirstOrDefault();
+      
+                    e.Solved = Answered;
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
         public static string GetUniqueTopicSlug(string topicName)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -455,6 +496,52 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     db_Ref.LogEFException(ex);
                     return null;
+                }
+            }
+        }
+
+        public static Guid? UpdateTopic_SetSynced(Guid topicID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Topic e = (from c in ctx.Topics
+                               where c.Id == topicID
+                               select c).FirstOrDefault();
+
+                    e.SYNC_IND = true;
+
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static bool UpdateTopic_SetAllUnsynced()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.Topics
+                               where a.SYNC_IND == true
+                               select a).ToList();
+
+                    xxx.ForEach(a => a.SYNC_IND = false);
+                    ctx.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
                 }
             }
         }
@@ -592,7 +679,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
-
                     return (from a in ctx.Topics.AsNoTracking()
                             select a).Count();
 
@@ -605,30 +691,52 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<TopicOverviewDisplay> GetTopicsByCategory(Guid? cat_id)
+        public static List<TopicOverviewDisplay> GetTopicsByCategory(Guid? cat_id, string tag)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
-                    return (from a in ctx.Topics.AsNoTracking()
-                            .Include(x => x.Topic_Tags)
-                            join b in ctx.Posts on a.Id equals b.Topic_Id
-                            join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
-                            where b.IsTopicStarter == true
-                            && (cat_id != null ? a.Category_Id == cat_id : true)
-                            orderby b.DateCreated descending
-                            select new TopicOverviewDisplay
-                            {
-                                _topic = a,
-                                _postStart = b,
-                                _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
-                                topicCreator = c.FNAME + " " + c.LNAME,
-                                postCount = (from v1 in ctx.Posts where v1.Topic_Id == a.Id select v1).Count(),
-                                upVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount > 0 select v1).Count(),
-                                downVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount < 0 select v1).Count(),
-                                topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList()
-                            }).Take(10).ToList();
+                    if (tag == null)
+                        return (from a in ctx.Topics.AsNoTracking()
+                                //.Include(x => x.Topic_Tags)
+                                join b in ctx.Posts on a.Id equals b.Topic_Id
+                                join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
+                                where b.IsTopicStarter == true
+                                && (cat_id != null ? a.Category_Id == cat_id : true)
+                                orderby b.DateCreated descending
+                                select new TopicOverviewDisplay
+                                {
+                                    _topic = a,
+                                    _postStart = b,
+                                    _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
+                                    topicCreator = c.FNAME + " " + c.LNAME,
+                                    postCount = (from v1 in ctx.Posts where v1.Topic_Id == a.Id select v1).Count(),
+                                    upVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount > 0 select v1).Count(),
+                                    downVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount < 0 select v1).Count(),
+                                    topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList()
+                                }).Take(20).ToList();
+                    else
+                        return (from a in ctx.Topics.AsNoTracking()
+                                //.Include(x => x.Topic_Tags)
+                                join b in ctx.Posts on a.Id equals b.Topic_Id
+                                join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
+                                join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
+                                where b.IsTopicStarter == true
+                                && (cat_id != null ? a.Category_Id == cat_id : true)
+                                && d.TopicTag == tag
+                                orderby b.DateCreated descending
+                                select new TopicOverviewDisplay
+                                {
+                                    _topic = a,
+                                    _postStart = b,
+                                    _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
+                                    topicCreator = c.FNAME + " " + c.LNAME,
+                                    postCount = (from v1 in ctx.Posts where v1.Topic_Id == a.Id select v1).Count(),
+                                    upVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount > 0 select v1).Count(),
+                                    downVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount < 0 select v1).Count(),
+                                    topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList()
+                                }).Take(20).ToList();
 
                 }
                 catch (Exception ex)
@@ -639,10 +747,94 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<EECIP_Index> GetTopic_ReadyToSync(Guid? TopicID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.Topics
+                               join b in ctx.Posts on a.Id equals b.Topic_Id
+                               join u in ctx.T_OE_USERS on a.MembershipUser_Id equals u.USER_IDX
+                               join o in ctx.T_OE_ORGANIZATION on u.ORG_IDX equals o.ORG_IDX
+                               join s in ctx.T_OE_REF_STATE on o.STATE_CD equals s.STATE_CD into sr1 from x1 in sr1.DefaultIfEmpty() //left join
+                               where a.SYNC_IND == false
+                               && b.IsTopicStarter == true
+                               && (TopicID == null ? true : a.Id == TopicID)
+                               select new EECIP_Index
+                               {
+                                   Agency = o.ORG_NAME,
+                                   AgencyAbbreviation = o.ORG_ABBR,
+                                   State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
+                                   KeyID = a.Id.ToString(),
+                                   DataType = "Discussion",
+                                   Record_Source = "User supplied",
+                                   Name = a.Name,
+                                   Description = b.PostContent
+                               }).Take(250).ToList();
+
+                    foreach (EECIP_Index e in xxx)
+                        e.Tags = db_Forum.GetTopicTags_ByAttributeSelected(new Guid(e.KeyID), "Topic Tag").ToArray();
+
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int OrphanTopic(Guid TopicID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Topic rec = (from a in ctx.Topics
+                                 where a.Id == TopicID
+                                 select a).FirstOrDefault();
+
+                    rec.Post_Id = null;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+        public static int DeleteTopic(Guid TopicID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Topic rec = (from a in ctx.Topics
+                                where a.Id == TopicID
+                                select a).FirstOrDefault();
+
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
 
         //********************************** TOPIC TAGS*************************************************
-        public static List<string> GetT_OE_PROJECT_TAGS_ByAttributeSelected(Guid TopicID, string aTTRIBUTE)
+        public static List<string> GetTopicTags_ByAttributeSelected(Guid TopicID, string aTTRIBUTE)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -729,6 +921,31 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        /// <summary>
+        /// Get a specified amount of the most popular tags, ordered by use amount
+        /// </summary>
+        /// <param name="amount"></param>
+        /// <param name="allowedCategories"></param>
+        /// <returns></returns>
+        public static Dictionary<string, int> GetPopularTags()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var tags = ctx.Topic_Tags
+                        .GroupBy(x => x.TopicTag)
+                        .Select(g => new { g.Key, Count = g.Count() }).Take(20);
+
+                    return tags.ToDictionary(tag => tag.Key, tag => tag.Count); ;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
 
         //************************************TOPIC NOTIFICATION **************************************************
@@ -792,13 +1009,12 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
+        
 
 
         //************************************POST **************************************************
         public static Guid? InsertUpdatePost(Guid? id, string postContent, int? voteCount, bool? isSolution, bool? isTopicStarter, bool? flaggedAsSpam, bool? pending, 
-            string searchField, Guid? inReplyTo, Guid? topicId, int? UserIDX)
+            string searchField, Guid? inReplyTo, Guid? topicId, int? UserIDX, bool? editPost = false)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -817,6 +1033,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         insInd = true;
                         e.Id = Guid.NewGuid();
                         e.DateCreated = System.DateTime.UtcNow;
+                        e.DateEdited = System.DateTime.UtcNow;
                         e.VoteCount = 0;
                         e.IpAddress = Utils.GetUsersIpAddress();
 
@@ -826,11 +1043,12 @@ namespace EECIP.App_Logic.DataAccessLayer
                         e.Topic_Id = topicId ?? Guid.Empty;
                         e.MembershipUser_Id = UserIDX ?? 0;
                     }
+                    else if (editPost == true)
+                        e.DateEdited = System.DateTime.UtcNow;
 
 
-                    e.PostContent = Utils.GetSafeHtml(postContent);   //sanitize
+                    if (postContent != null) e.PostContent = Utils.GetSafeHtml(postContent);   //sanitize
                     if (voteCount != null) e.VoteCount = voteCount ?? 0;
-                    e.DateEdited = System.DateTime.UtcNow;
                     if (isSolution != null) e.IsSolution = isSolution ?? false;
                     if (isTopicStarter != null) e.IsTopicStarter = isTopicStarter;
                     if (flaggedAsSpam != null) e.FlaggedAsSpam = flaggedAsSpam;
@@ -871,7 +1089,25 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<Post> GetPost_ByTopicID(Guid topic_id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Posts.AsNoTracking()
+                            join b in ctx.Topics on a.Topic_Id equals b.Id
+                            where a.Topic_Id == topic_id
+                            select a).ToList();
 
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
         public static vmForumPost GetPost_StarterForTopic(Guid topic_id, int UserIDX)
         {
@@ -881,6 +1117,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     var xxx = (from a in ctx.Posts.AsNoTracking()
                                join b in ctx.Topics on a.Topic_Id equals b.Id
+                               join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
                             where a.Topic_Id == topic_id
                             && a.IsTopicStarter == true
                             select new vmForumPost {
@@ -888,7 +1125,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 ParentTopic = b,
                                 UpVoteCount = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.Amount > 0 select v1).Count(),
                                 DownVoteCount = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.Amount < 0 select v1).Count(),
-                                UserIDX = UserIDX
+                                UserIDX = UserIDX,
+                                PosterName = c.FNAME + " " + c.LNAME,
+                                HasVotedUp = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount > 0 select v1).ToList().Count() > 0,
+                                HasVotedDown = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount < 0 select v1).ToList().Count() > 0
                             }).FirstOrDefault();
 
 
@@ -902,23 +1142,32 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<vmForumPost> GetPost_NonStarterForTopic(Guid topic_id, int UserIDX)
+        public static List<vmForumPost> GetPost_NonStarterForTopic(Guid topic_id, int UserIDX, string orderBy)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
                     var xxx = (from a in ctx.Posts.AsNoTracking()
+                               join b in ctx.Topics on a.Topic_Id equals b.Id
+                               join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
                                where a.Topic_Id == topic_id
                                && a.IsTopicStarter == false
+                               orderby a.DateCreated
                                select new vmForumPost
                                {
                                    Post = a,
+                                   ParentTopic = b,
                                    UpVoteCount = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.Amount > 0 select v1).Count(),
                                    DownVoteCount = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.Amount < 0 select v1).Count(),
-                                   UserIDX = UserIDX
+                                   UserIDX = UserIDX,
+                                   PosterName = c.FNAME + " " + c.LNAME,
+                                   HasVotedUp = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount > 0 select v1).ToList().Count() > 0,
+                                   HasVotedDown = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount < 0 select v1).ToList().Count() > 0
                                }).ToList();
 
+                    if (orderBy == "votes")
+                        xxx.OrderByDescending(x => x.UpVoteCount);
 
                     return xxx;
                 }
@@ -976,6 +1225,28 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int DeletePost(Guid PostID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Post rec = (from a in ctx.Posts
+                                where a.Id == PostID
+                                select a).FirstOrDefault();
+
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
 
         //*************************************MEMBERSHIP USER POINTS*********************************
@@ -1043,6 +1314,137 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
+        //****************************************VOTES **************************************************
+        public static Guid? InsertVote(Guid post_id, int vOTED_BY_USER_IDX, int vOTE_AMOUNT)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    bool insInd = false;
+
+                    Vote e = (from c in ctx.Votes
+                              where c.Post_Id == post_id
+                              && c.VotedByMembershipUser_Id == vOTED_BY_USER_IDX
+                              select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new Vote();
+                        e.Id = Guid.NewGuid();
+                        e.Post_Id = post_id;
+
+                        //get UserIDX for the post
+                        Post _p = GetPost_ByID(post_id);
+                        if (_p != null)
+                            e.MembershipUser_Id = _p.MembershipUser_Id; 
+                        e.VotedByMembershipUser_Id = vOTED_BY_USER_IDX;
+                    }
+
+                    e.DateVoted = System.DateTime.UtcNow;
+                    e.Amount = vOTE_AMOUNT;
+
+                    if (insInd)
+                        ctx.Votes.Add(e);
+                    ctx.SaveChanges();
+
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int GetVotes_TotalByPost(Guid Id, bool UpVoteOnly, bool DownVoteOnly)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.Votes
+                            where a.Post_Id == Id
+                            && (UpVoteOnly ? a.Amount > 0 : true)
+                            && (DownVoteOnly ? a.Amount < 0 : true)
+                            select (int?) a.Amount).Sum() ?? 0;
+
+                    return Math.Abs(xxx);
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int DeleteVote(Guid Id, int vOTED_BY_USER_IDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Vote rec = (from a in ctx.Votes
+                                where a.Post_Id == Id
+                                && a.VotedByMembershipUser_Id == vOTED_BY_USER_IDX
+                                select a).FirstOrDefault();
+
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static bool HasVotedUp(Guid post_id, int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Votes
+                            where a.Post_Id == post_id
+                            && a.VotedByMembershipUser_Id == UserIDX
+                            && a.Amount > 0
+                            select a).ToList().Count() > 0;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return true;
+                }
+            }
+        }
+
+        public static bool HasVotedDown(Guid post_id, int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Votes
+                            where a.Post_Id == post_id
+                            && a.VotedByMembershipUser_Id == UserIDX
+                            && a.Amount < 0
+                            select a).ToList().Count() > 0;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return true;
+                }
+            }
+        }
 
     }
 }
