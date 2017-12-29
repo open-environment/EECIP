@@ -199,19 +199,26 @@ namespace EECIP.Models
     {
         public Post Post { get; set; }
         public string PermaLink { get; set; }
-        //public List<Vote> Votes { get; set; }
         public Topic ParentTopic { get; set; }
-
         public int UpVoteCount { get; set; }
         public int DownVoteCount { get; set; }
         public bool AllowedToVote { get; set; }
         public bool HasVotedUp { get; set; }
         public bool HasVotedDown { get; set; }
         public bool MemberHasFavourited { get; set; }
-        //public bool ShowTopicName { get; set; }
-        //public bool MinimalPost { get; set; }
         public int UserIDX { get; set; }
         public string PosterName { get; set; }
+        public List<vmPostFileDisplay> PostFiles { get; set; }
+
+    }
+
+    public class vmPostFileDisplay {
+        public Guid Id { get; set; }
+        public string FileName { get; set; }
+        public DateTime? DateCreated { get; set; }
+        public Guid? PostId { get; set; }
+        public string FileDescription { get; set; }
+        public int MembershipUser_Id { get; set; }
 
     }
 
@@ -253,5 +260,12 @@ namespace EECIP.Models
         public bool CanInsertImages { get; set; }
     }
 
+
+
+    public class vmForumAttachFilesToPost
+    {
+        public HttpPostedFileBase[] Files { get; set; }
+        public Guid UploadPostId { get; set; }
+    }
 
 }

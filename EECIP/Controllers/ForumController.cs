@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 using EECIP.Models;
 using EECIP.App_Logic.DataAccessLayer;
 using System.Web.Security;
 using EECIP.App_Logic.BusinessLogicLayer;
+using System.IO;
 
 namespace EECIP.Controllers
 {
@@ -255,6 +257,11 @@ namespace EECIP.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditPost() {
+        }
 
         public ActionResult ShowTopic(string slug, int? p, string order, Guid? id)
         {
@@ -478,7 +485,6 @@ namespace EECIP.Controllers
         }
 
 
-
         // POST: /Forum/PostAnswer
         [HttpPost]
         public JsonResult PostAnswer(Guid? id, string typ)
@@ -508,6 +514,121 @@ namespace EECIP.Controllers
         }
 
 
+
+        /****************POST FILES **********************/
+
+        [HttpPost]
+        public ActionResult PostFileUpload(vmForumAttachFilesToPost attachFileToPostViewModel)
+        {
+
+            try
+            {
+                int UserIDX = db_Accounts.GetUserIDX();
+
+                // First this to do is get the post
+                var post = db_Forum.GetPost_ByID(attachFileToPostViewModel.UploadPostId);
+                if (post != null)
+                {
+                    // Check we get a valid post back and have some file
+                    if (attachFileToPostViewModel.Files != null && attachFileToPostViewModel.Files.Any())
+                    {
+                        // Loop through each file and get the file info and save to the users folder and Db
+                        foreach (var file in attachFileToPostViewModel.Files)
+                        {
+                            byte[] fileBytes = null;
+
+                            if (file != null)
+                            {
+                                using (Stream inputStream = file.InputStream)
+                                {
+                                    MemoryStream memoryStream = inputStream as MemoryStream;
+                                    if (memoryStream == null)
+                                    {
+                                        memoryStream = new MemoryStream();
+                                        inputStream.CopyTo(memoryStream);
+                                    }
+                                    fileBytes = memoryStream.ToArray();
+
+                                    //insert to database
+                                    db_Forum.InsertUpdatePostFile(null, file.FileName, post.Id, fileBytes, file.FileName, file.ContentType, UserIDX);
+                                }
+                            }
+                        }
+
+                        TempData["Success"] = "Upload success";
+                        return RedirectToAction("ShowTopic", "Forum", new { id = post.Topic_Id });
+
+                    }
+                    else
+                    {
+                        TempData["Error"] = "No files";
+                        return RedirectToAction("Index", "Forum");
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Invalid post";
+                    return RedirectToAction("Index", "Forum");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Invalid post";
+                return RedirectToAction("Index", "Forum");
+            }
+
+        }
+
+
+        public ActionResult PostFileDownload(Guid? id)
+        {
+            try
+            {
+                PostFile doc = db_Forum.GetPostFile_ByID(id.ConvertOrDefault<Guid>());
+                var cd = new System.Net.Mime.ContentDisposition
+                {
+                    FileName = doc.Filename,
+                    Inline = false
+                };
+
+                Response.AppendHeader("Content-Disposition", cd.ToString());
+                if (doc.FileContent != null)
+                    return File(doc.FileContent, doc.FileContentType ?? "application/octet-stream");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            TempData["Error"] = "Unable to download document.";
+            return RedirectToAction("Index", "Forum");
+        }
+
+
+        public ActionResult PostFileDelete(Guid? id)
+        {
+
+            PostFile doc = db_Forum.GetPostFile_ByID(id.ConvertOrDefault<Guid>());
+            if (doc != null)
+            {
+                int UserIDX = db_Accounts.GetUserIDX();
+
+                //permission check
+                if (UserIDX == doc.MembershipUser_Id || User.IsInRole("Admins"))
+                {
+                    int SuccID = db_Forum.DeletePostFile(id.ConvertOrDefault<Guid>());
+                    if (SuccID > 0)
+                    {
+                        TempData["Success"] = "Removed.";
+                        return RedirectToAction("Index", "Forum");
+                    }
+                }
+            }
+
+
+            TempData["Error"] = "Unable to delete document.";
+            return RedirectToAction("Index", "Forum");
+        }
 
     }
 }

@@ -420,6 +420,7 @@
           <Property Name="Post_Id" Type="uniqueidentifier" />
           <Property Name="FileContent" Type="varbinary(max)" />
           <Property Name="FileDecription" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="FileContentType" Type="nvarchar" MaxLength="75" />
           <Property Name="MembershipUser_Id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Topic">
@@ -619,7 +620,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PostFile__Member__60C757A0">
+        <Association Name="FK__PostFile__Member__6497E884">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -631,7 +632,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PostFile__Post_I__5FD33367">
+        <Association Name="FK__PostFile__Post_I__63A3C44B">
           <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
           <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1120,11 +1121,11 @@
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Post" EntitySet="Post" />
           </AssociationSet>
-          <AssociationSet Name="FK__PostFile__Member__60C757A0" Association="Self.FK__PostFile__Member__60C757A0">
+          <AssociationSet Name="FK__PostFile__Member__6497E884" Association="Self.FK__PostFile__Member__6497E884">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="PostFile" EntitySet="PostFile" />
           </AssociationSet>
-          <AssociationSet Name="FK__PostFile__Post_I__5FD33367" Association="Self.FK__PostFile__Post_I__5FD33367">
+          <AssociationSet Name="FK__PostFile__Post_I__63A3C44B" Association="Self.FK__PostFile__Post_I__63A3C44B">
             <End Role="Post" EntitySet="Post" />
             <End Role="PostFile" EntitySet="PostFile" />
           </AssociationSet>
@@ -2570,6 +2571,7 @@
           <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
           <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PostFile__Member__60C757A0" FromRole="PostFile" ToRole="T_OE_USERS" />
           <NavigationProperty Name="Post" Relationship="EECIPModel.FK__PostFile__Post_I__5FD33367" FromRole="PostFile" ToRole="Post" />
+          <Property Name="FileContentType" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK__PostFile__Member__60C757A0">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
@@ -3084,6 +3086,7 @@
           <EntitySetMapping Name="PostFiles">
             <EntityTypeMapping TypeName="EECIPModel.PostFile">
               <MappingFragment StoreEntitySet="PostFile">
+                <ScalarProperty Name="FileContentType" ColumnName="FileContentType" />
                 <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
                 <ScalarProperty Name="FileDecription" ColumnName="FileDecription" />
                 <ScalarProperty Name="FileContent" ColumnName="FileContent" />

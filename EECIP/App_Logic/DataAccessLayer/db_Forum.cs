@@ -1128,7 +1128,18 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 UserIDX = UserIDX,
                                 PosterName = c.FNAME + " " + c.LNAME,
                                 HasVotedUp = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount > 0 select v1).ToList().Count() > 0,
-                                HasVotedDown = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount < 0 select v1).ToList().Count() > 0
+                                HasVotedDown = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount < 0 select v1).ToList().Count() > 0,
+                                PostFiles = (from v1 in ctx.PostFiles
+                                             where v1.Post_Id == a.Id
+                                             select new vmPostFileDisplay
+                                             {
+                                                 Id = v1.Id,
+                                                 FileName = v1.Filename,
+                                                 DateCreated = v1.DateCreated,
+                                                 PostId = v1.Post_Id,
+                                                 FileDescription = v1.FileDecription,
+                                                 MembershipUser_Id = v1.MembershipUser_Id
+                                             }).ToList()
                             }).FirstOrDefault();
 
 
@@ -1163,7 +1174,18 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    UserIDX = UserIDX,
                                    PosterName = c.FNAME + " " + c.LNAME,
                                    HasVotedUp = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount > 0 select v1).ToList().Count() > 0,
-                                   HasVotedDown = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount < 0 select v1).ToList().Count() > 0
+                                   HasVotedDown = (from v1 in ctx.Votes where v1.Post_Id == a.Id && v1.VotedByMembershipUser_Id == UserIDX && v1.Amount < 0 select v1).ToList().Count() > 0,
+                                   PostFiles = (from v1 in ctx.PostFiles
+                                                where v1.Post_Id == a.Id
+                                                select new vmPostFileDisplay
+                                                {
+                                                    Id = v1.Id,
+                                                    FileName = v1.Filename,
+                                                    DateCreated = v1.DateCreated,
+                                                    PostId = v1.Post_Id,
+                                                    FileDescription = v1.FileDecription,
+                                                    MembershipUser_Id = v1.MembershipUser_Id
+                                                }).ToList()
                                }).ToList();
 
                     if (orderBy == "votes")
@@ -1234,6 +1256,120 @@ namespace EECIP.App_Logic.DataAccessLayer
                     Post rec = (from a in ctx.Posts
                                 where a.Id == PostID
                                 select a).FirstOrDefault();
+
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
+
+        //*************************************POST FILES*********************************
+        public static List<vmPostFileDisplay> GetPostFileDisplay_ByPostID(Guid post_id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.PostFiles.AsNoTracking()
+                            where a.Post_Id == post_id
+                            select new vmPostFileDisplay {
+                                Id = a.Id,
+                                FileName = a.Filename,
+                                DateCreated = a.DateCreated,
+                                PostId = a.Post_Id,
+                                FileDescription = a.FileDecription,
+                                MembershipUser_Id = a.MembershipUser_Id
+                            }).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+        public static Guid? InsertUpdatePostFile(Guid? id, string fileName, Guid? postID, byte[] fileContent, string fileDescription, string fileType, int? UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Boolean insInd = false;
+
+                    PostFile e = (from c in ctx.PostFiles
+                                  where c.Id == id
+                              select c).FirstOrDefault();
+
+                    //insert case
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new PostFile();
+                        e.Id = Guid.NewGuid();
+                        e.DateCreated = System.DateTime.UtcNow;
+                        e.MembershipUser_Id = UserIDX ?? 0;
+                    }
+
+                    if (fileName != null) e.Filename = fileName;
+                    if (postID != null) e.Post_Id = postID;
+                    if (fileContent != null) e.FileContent = fileContent;
+                    if (fileDescription != null) e.FileDecription = fileDescription;
+                    if (fileType != null) e.FileContentType = fileType;
+
+                    if (insInd)
+                        ctx.PostFiles.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static PostFile GetPostFile_ByID(Guid id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.PostFiles
+                            where a.Id == id
+                            select a).FirstOrDefault();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int DeletePostFile(Guid PostFile)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    PostFile rec = (from a in ctx.PostFiles
+                                 where a.Id == PostFile
+                                 select a).FirstOrDefault();
 
                     ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
                     ctx.SaveChanges();

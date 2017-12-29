@@ -233,6 +233,7 @@ CREATE TABLE [forum].[PostFile](
 	[Post_Id] [uniqueidentifier] NULL,
 	[FileContent] [varbinary](max) NULL,
 	[FileDecription] [nvarchar](200) NOT NULL,
+	[FileContentType] [nvarchar](75) NULL,
 	[MembershipUser_Id] [int] NOT NULL,
  CONSTRAINT [forum.PK_UploadedFile] PRIMARY KEY CLUSTERED  ([Id] ASC),
  FOREIGN KEY ([Post_Id]) references [forum].[Post] ([Id]),

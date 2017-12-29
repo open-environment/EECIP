@@ -1,4 +1,5 @@
-﻿@model EECIP.Models.vmForumPost
+﻿@using EECIP.App_Logic.BusinessLogicLayer
+@model EECIP.Models.vmForumPost
 @{
     var postId = Model.Post.Id;
 }
@@ -116,16 +117,19 @@
 
             </div>
 
-            @*@if (Model.Post.Files != null && Model.Post.Files.Any())
+            @if (Model.PostFiles != null && Model.PostFiles.Count > 0)
                 {
+                
                     <div class="postuploadedfilesholder clearfix">
                         <p>Attached Files</p>
                         <ul>
-                            @foreach (var file in Model.Post.Files.OrderByDescending(o => o.DateCreated))
+                            @foreach (var file in Model.PostFiles.OrderByDescending(o => o.DateCreated))
                             {
                                 <li>
-                                    <a class="fileupload" href="@Url.Action("Download", "File", new { id = file.Id})">
-                                        @if (AppHelpers.FileIsImage(file.FilePath))
+                                    <a class="fileupload" href="@Url.Action("PostFileDownload", "Forum", new { id = file.Id})">
+                                        
+
+                                        @if (Utils.FileIsImage(file.FileName))
                                         {
                                             <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
                                         }
@@ -134,17 +138,42 @@
                                             <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                                         }
                                     </a>
-                                    @if (Model.Post.User.Id == loggedOnUserId || User.IsInRole(AppConstants.AdminRoleName))
+                                    @if ((Model.UserIDX == file.MembershipUser_Id) || User.IsInRole("Admins"))
                                     {
-                                        <a href="@Url.Action("DeleteUploadedFile", "Upload", new { file.Id })" class="deleteupload" title="@Html.LanguageString("Post.Delete")">
+                                        <a href="@Url.Action("PostFileDelete", "Forum", new { file.Id })" class="deleteupload" title="Delete">
                                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         </a>
                                     }
+                                    
+                                    <div class="postedfilename">@file.FileName</div>
                                 </li>
                             }
                         </ul>
                     </div>
-                }*@
+                }
+
+                @if (Model.UserIDX == Model.Post.MembershipUser_Id)
+                {
+                <div class="postuploadholder" style="display:none;">
+                    @using (Html.BeginForm("PostFileUpload", "Forum", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="input-group input-group-sm">
+
+                            <span class="input-group-btn">
+                                <span class="btn btn-default btn-file">
+                                    Browse: <input type="file" name="files" id="files" value="" multiple="multiple">
+                                </span>
+                            </span>
+                            <input type="text" class="form-control" readonly="">
+                        </div>
+                        <p>
+                            <input type="submit" value="Upload Files" class="btn-mvc btn-mvc-small postuploadbutton" />
+                            <span style="display: none;" class="ajaxspinner" title="Please wait">Please Wait</span>
+                            <input type="hidden" name="uploadPostId" id="uploadPostId" value="@Model.Post.Id" />
+                        </p>
+                    }
+                </div>
+                }
 
         </div>
     </div>

@@ -124,6 +124,7 @@ namespace EECIP.Controllers
                 }
                 catch (Exception ex)
                 {
+                    throw ex;
                 }
 
             }

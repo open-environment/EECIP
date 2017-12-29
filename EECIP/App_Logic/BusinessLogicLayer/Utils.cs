@@ -704,6 +704,19 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             return !string.IsNullOrEmpty(ipList) ? ipList.Split(',')[0] : context.Request.ServerVariables["REMOTE_ADDR"];
         }
 
+        /// <summary>
+        /// Returns true if the file is an image based on the file extension
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static bool FileIsImage(string file)
+        {
+            var imageFileTypes = new List<string>
+            {
+                ".jpg", ".jpeg",".gif",".bmp",".png"
+            };
+            return imageFileTypes.Any(file.Contains);
+        }
         #endregion
 
 

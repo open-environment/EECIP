@@ -21,7 +21,7 @@
         <div class="topicshow">
             <div class="topicheading">
                 <div class="widgetright">
-                    @if (Model.IsSubscribed)
+                    @*@if (Model.IsSubscribed)
                     {
                         <a href="#" class="emailunsubscription" data-id="@Model.Topic.Id" data-type="topic">
                             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>Unsubscribe
@@ -32,7 +32,7 @@
                         <a href="#" class="emailsubscription" data-id="@Model.Topic.Id" data-type="topic">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Subscribe
                         </a>
-                    }
+                    }*@
                 </div>
                 <h1 style="margin-top:0px">@Html.Raw(Model.Topic.Name)</h1>
                 <ul class="topicinfo">
@@ -97,9 +97,11 @@
                 </div>
             </div>
 
-            @foreach (var post in Model.Posts)
-            {
-                Html.RenderPartial("_Post", post);
+            @if (Model.Posts != null) {
+                foreach (var post in Model.Posts)
+                {
+                    Html.RenderPartial("_Post", post);
+                }
             }
 
             @if (!Model.Topic.IsLocked)
@@ -142,94 +144,112 @@
 
 @section Scripts {
 <script type="text/javascript">
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            //upvoting event handling
-            $(".votelink").on('click', function (e) {
-                e.preventDefault();
-                //determine if upvoting or removing
-                var _typ = $(this).attr('data-type');
-                var _id = $(this).attr('data-id');
-                var linker = $(this);
+        $(function () {
+            ShowFileUploadClickHandler();
+        });
 
-                $.post('@Url.Action("PostVote", "Forum")',
-                AddAntiForgeryToken({ id: _id, typ: _typ }))
+        var ShowFileUploadClickHandler = function () {
+            var attachButton = $(".postshowattach");
+            if (attachButton.length > 0) {
+                attachButton.click(function (e) {
+                    console.log('d');
+                    e.preventDefault();
+                    var postHolder = $(this).closest("div.post");
+                    var uploadHolder = postHolder.find("div.postuploadholder");
+                    uploadHolder.toggle();
+                });
+            }
+        }
 
-                    .done(function (response) {
-                        if (response.msg == "Success") {
-                            linker.parent().children('span').eq(1).text(response.val);
-                            if (_typ == "up") {
-                                toastr.success("Thank you for voting!");
-                                linker.text('Liked');
-                                linker.attr('data-type', 'removeup');
-                            }
-                            else if (_typ == "removeup") {
-                                toastr.success("Vote removed");
-                                linker.text('Like');
-                                linker.attr('data-type', 'up');
-                            }
-                            else if (_typ == "down") {
-                                toastr.success("Thank you for voting!");
-                                linker.text('Disliked');
-                                linker.attr('data-type', 'removedown');
-                            }
-                            else if (_typ == "removedown") {
-                                toastr.success("Vote removed");
-                                linker.text('Dislike');
-                                linker.attr('data-type', 'down');
-                            }
+
+        //upvoting event handling
+        $(".votelink").on('click', function (e) {
+            e.preventDefault();
+            //determine if upvoting or removing
+            var _typ = $(this).attr('data-type');
+            var _id = $(this).attr('data-id');
+            var linker = $(this);
+
+            $.post('@Url.Action("PostVote", "Forum")',
+            AddAntiForgeryToken({ id: _id, typ: _typ }))
+
+                .done(function (response) {
+                    if (response.msg == "Success") {
+                        linker.parent().children('span').eq(1).text(response.val);
+                        if (_typ == "up") {
+                            toastr.success("Thank you for voting!");
+                            linker.text('Liked');
+                            linker.attr('data-type', 'removeup');
                         }
-                        else {
-                            toastr.warning(response.msg);
+                        else if (_typ == "removeup") {
+                            toastr.success("Vote removed");
+                            linker.text('Like');
+                            linker.attr('data-type', 'up');
                         }
-                    }).fail(function (data) {
-                        toastr.warning("Unable to record vote.");
-                    });
+                        else if (_typ == "down") {
+                            toastr.success("Thank you for voting!");
+                            linker.text('Disliked');
+                            linker.attr('data-type', 'removedown');
+                        }
+                        else if (_typ == "removedown") {
+                            toastr.success("Vote removed");
+                            linker.text('Dislike');
+                            linker.attr('data-type', 'down');
+                        }
+                    }
+                    else {
+                        toastr.warning(response.msg);
+                    }
+                }).fail(function (data) {
+                    toastr.warning("Unable to record vote.");
+                });
 
-            });
+        });
 
 
             
-            //answer event handling
-            $(".solutionlink").on('click', function (e) {
-                e.preventDefault();
-                //determine if answering or removing answer
-                var _typ = $(this).attr('data-type');
-                var _id = $(this).attr('data-id');
-                var linker = $(this);
+        //answer event handling
+        $(".solutionlink").on('click', function (e) {
+            e.preventDefault();
+            //determine if answering or removing answer
+            var _typ = $(this).attr('data-type');
+            var _id = $(this).attr('data-id');
+            var linker = $(this);
 
-                $.post('@Url.Action("PostAnswer", "Forum")',
-                AddAntiForgeryToken({ id: _id, typ: _typ }))
+            $.post('@Url.Action("PostAnswer", "Forum")',
+            AddAntiForgeryToken({ id: _id, typ: _typ }))
 
-                    .done(function (response) {
-                        if (response.msg == "Success") {
-                            if (_typ == "answer") {
-                                toastr.success("Thank you for voting!");
-                                linker.text('Solution');
-                                linker.attr('data-type', 'removeanswer');
-                                linker.addClass("solution");
-                                linker.prev().removeClass('glyphicon-question-sign');
-                                linker.prev().addClass('glyphicon-ok text-green');
-                            }
-                            else if (_typ == "removeanswer") {
-                                toastr.success("Vote removed");
-                                linker.text('Mark As Solution');
-                                linker.attr('data-type', 'answer');
-                                linker.removeClass("solution");
-                                linker.prev().addClass('glyphicon-question-sign');
-                                linker.prev().removeClass('glyphicon-ok text-green');
-                            }
+                .done(function (response) {
+                    if (response.msg == "Success") {
+                        if (_typ == "answer") {
+                            toastr.success("Thank you for voting!");
+                            linker.text('Solution');
+                            linker.attr('data-type', 'removeanswer');
+                            linker.addClass("solution");
+                            linker.prev().removeClass('glyphicon-question-sign');
+                            linker.prev().addClass('glyphicon-ok text-green');
                         }
-                        else {
-                            toastr.warning(response.msg);
+                        else if (_typ == "removeanswer") {
+                            toastr.success("Vote removed");
+                            linker.text('Mark As Solution');
+                            linker.attr('data-type', 'answer');
+                            linker.removeClass("solution");
+                            linker.prev().addClass('glyphicon-question-sign');
+                            linker.prev().removeClass('glyphicon-ok text-green');
                         }
-                    }).fail(function (data) {
-                        toastr.warning("Unable to record vote.");
-                    });
-
-            });
+                    }
+                    else {
+                        toastr.warning(response.msg);
+                    }
+                }).fail(function (data) {
+                    toastr.warning("Unable to record vote.");
+                });
 
         });
+
+    });
 
     AddAntiForgeryToken = function (data) {
         data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
