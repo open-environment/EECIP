@@ -40,6 +40,16 @@ namespace EECIP.Models
             });
         }
 
+        public static IEnumerable<SelectListItem> get_ddl_organizations_all_governance()
+        {
+
+            return db_Ref.GetT_OE_ORGANIZATIONS_ByType("Governance").Select(x => new SelectListItem
+            {
+                Value = x.ORG_IDX.ToString(),
+                Text = x.ORG_NAME
+            });
+        }
+
         public static IEnumerable<SelectListItem> get_ddl_tags_by_category(string cat_name)
         {
 

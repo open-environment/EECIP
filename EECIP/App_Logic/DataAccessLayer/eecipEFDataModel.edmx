@@ -17,6 +17,25 @@
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
         </EntityType>
+        <EntityType Name="T_OE_DOCUMENTS">
+          <Key>
+            <PropertyRef Name="DOC_IDX" />
+          </Key>
+          <Property Name="DOC_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DOC_CONTENT" Type="varbinary(max)" />
+          <Property Name="DOC_NAME" Type="varchar" MaxLength="100" />
+          <Property Name="DOC_TYPE" Type="varchar" MaxLength="50" />
+          <Property Name="DOC_FILE_TYPE" Type="varchar" MaxLength="75" />
+          <Property Name="DOC_SIZE" Type="int" />
+          <Property Name="DOC_COMMENT" Type="varchar" MaxLength="200" />
+          <Property Name="DOC_AUTHOR" Type="varchar" MaxLength="100" />
+          <Property Name="PROJECT_IDX" Type="uniqueidentifier" />
+          <Property Name="ORG_ENT_SVCS_IDX" Type="int" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
         <EntityType Name="T_OE_ORGANIZATION">
           <Key>
             <PropertyRef Name="ORG_IDX" />
@@ -301,6 +320,7 @@
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
           <Property Name="SYNC_IND" Type="bit" Nullable="false" />
           <Property Name="LINKEDIN" Type="varchar" MaxLength="100" />
+          <Property Name="ALLOW_GOVERNANCE" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Badge">
           <Key>
@@ -313,6 +333,8 @@
           <Property Name="Description" Type="nvarchar(max)" />
           <Property Name="Image" Type="nvarchar" MaxLength="50" />
           <Property Name="AwardsPoints" Type="int" />
+          <Property Name="ACT_IND" Type="bit" Nullable="false" />
+          <Property Name="SORT_SEQ" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Category">
           <Key>
@@ -641,6 +663,34 @@
             </Principal>
             <Dependent Role="PostFile">
               <PropertyRef Name="Post_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
+          <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_DOCUMENTS" Type="Self.T_OE_DOCUMENTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_DOCUMENTS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_DOCU__PROJE__190BB0C3">
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_DOCUMENTS" Type="Self.T_OE_DOCUMENTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_DOCUMENTS">
+              <PropertyRef Name="PROJECT_IDX" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1038,6 +1088,7 @@
         </Association>
         <EntityContainer Name="EECIPModelStoreContainer">
           <EntitySet Name="T_OE_APP_SETTINGS" EntityType="Self.T_OE_APP_SETTINGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_DOCUMENTS" EntityType="Self.T_OE_DOCUMENTS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION" EntityType="Self.T_OE_ORGANIZATION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="Self.T_OE_ORGANIZATION_EMAIL_RULE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION_ENT_SVCS" EntityType="Self.T_OE_ORGANIZATION_ENT_SVCS" Schema="dbo" store:Type="Tables" />
@@ -1128,6 +1179,14 @@
           <AssociationSet Name="FK__PostFile__Post_I__63A3C44B" Association="Self.FK__PostFile__Post_I__63A3C44B">
             <End Role="Post" EntitySet="Post" />
             <End Role="PostFile" EntitySet="PostFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_DOCU__ORG_E__19FFD4FC" Association="Self.FK__T_OE_DOCU__ORG_E__19FFD4FC">
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_DOCU__PROJE__190BB0C3" Association="Self.FK__T_OE_DOCU__PROJE__190BB0C3">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__ENT_P__07220AB2" Association="Self.FK__T_OE_ORGA__ENT_P__07220AB2">
             <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
@@ -1537,6 +1596,15 @@
             <End Role="Post" EntitySet="Posts" />
             <End Role="PostFile" EntitySet="PostFiles" />
           </AssociationSet>
+          <EntitySet Name="T_OE_DOCUMENTS" EntityType="EECIPModel.T_OE_DOCUMENTS" />
+          <AssociationSet Name="FK__T_OE_DOCU__ORG_E__19FFD4FC" Association="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC">
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_DOCU__PROJE__190BB0C3" Association="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="T_OE_APP_SETTINGS">
           <Key>
@@ -1625,6 +1693,7 @@
           <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Membership__451F3D2B" FromRole="T_OE_USERS" ToRole="Vote" />
           <NavigationProperty Name="Votes1" Relationship="EECIPModel.FK__Vote__VotedByMem__46136164" FromRole="T_OE_USERS" ToRole="Vote" />
           <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Member__60C757A0" FromRole="T_OE_USERS" ToRole="PostFile" />
+          <Property Name="ALLOW_GOVERNANCE" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK__T_OE_USER__USER___6477ECF3">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1">
@@ -1701,6 +1770,7 @@
           <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ACTIVE_INTEREST_IND" Type="Boolean" />
           <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_PROJECT_VOTES" />
+          <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_DOCUMENTS" />
         </EntityType>
         <Association Name="FK__T_OE_ORGA__ENT_P__17036CC0">
           <End Type="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Role="T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
@@ -1861,6 +1931,7 @@
           <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="PROJECT_CONTACT_IDX" Type="Int32" />
           <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_VOTES" />
+          <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_PROJECTS" ToRole="T_OE_DOCUMENTS" />
         </EntityType>
         <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
           <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
@@ -2300,6 +2371,8 @@
           <Property Name="Image" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="AwardsPoints" Type="Int32" />
           <NavigationProperty Name="MembershipUser_Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="Badge" ToRole="MembershipUser_Badge" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="SORT_SEQ" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="MembershipUser_Badge">
           <Key>
@@ -2597,6 +2670,55 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="T_OE_DOCUMENTS">
+          <Key>
+            <PropertyRef Name="DOC_IDX" />
+          </Key>
+          <Property Name="DOC_IDX" Type="Guid" Nullable="false" />
+          <Property Name="DOC_CONTENT" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="DOC_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_TYPE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_FILE_TYPE" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_SIZE" Type="Int32" />
+          <Property Name="DOC_COMMENT" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_AUTHOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_IDX" Type="Guid" />
+          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" FromRole="T_OE_DOCUMENTS" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_DOCUMENTS" ToRole="T_OE_PROJECTS" />
+        </EntityType>
+        <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
+          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_DOCUMENTS" Role="T_OE_DOCUMENTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_DOCUMENTS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_DOCU__PROJE__190BB0C3">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_DOCUMENTS" Role="T_OE_DOCUMENTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_DOCUMENTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2698,6 +2820,7 @@
           <EntitySetMapping Name="T_OE_USERS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_USERS">
               <MappingFragment StoreEntitySet="T_OE_USERS">
+                <ScalarProperty Name="ALLOW_GOVERNANCE" ColumnName="ALLOW_GOVERNANCE" />
                 <ScalarProperty Name="LINKEDIN" ColumnName="LINKEDIN" />
                 <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
@@ -3004,6 +3127,8 @@
           <EntitySetMapping Name="Badges">
             <EntityTypeMapping TypeName="EECIPModel.Badge">
               <MappingFragment StoreEntitySet="Badge">
+                <ScalarProperty Name="SORT_SEQ" ColumnName="SORT_SEQ" />
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
                 <ScalarProperty Name="AwardsPoints" ColumnName="AwardsPoints" />
                 <ScalarProperty Name="Image" ColumnName="Image" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -3094,6 +3219,26 @@
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="Filename" ColumnName="Filename" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_DOCUMENTS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_DOCUMENTS">
+              <MappingFragment StoreEntitySet="T_OE_DOCUMENTS">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="ORG_ENT_SVCS_IDX" ColumnName="ORG_ENT_SVCS_IDX" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+                <ScalarProperty Name="DOC_AUTHOR" ColumnName="DOC_AUTHOR" />
+                <ScalarProperty Name="DOC_COMMENT" ColumnName="DOC_COMMENT" />
+                <ScalarProperty Name="DOC_SIZE" ColumnName="DOC_SIZE" />
+                <ScalarProperty Name="DOC_FILE_TYPE" ColumnName="DOC_FILE_TYPE" />
+                <ScalarProperty Name="DOC_TYPE" ColumnName="DOC_TYPE" />
+                <ScalarProperty Name="DOC_NAME" ColumnName="DOC_NAME" />
+                <ScalarProperty Name="DOC_CONTENT" ColumnName="DOC_CONTENT" />
+                <ScalarProperty Name="DOC_IDX" ColumnName="DOC_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

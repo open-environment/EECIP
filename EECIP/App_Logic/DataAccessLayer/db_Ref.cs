@@ -108,6 +108,26 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<T_OE_ORGANIZATION> GetT_OE_ORGANIZATIONS_ByType(string oRG_TYPE)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_ORGANIZATION
+                            where a.ORG_TYPE == oRG_TYPE
+                            orderby a.ORG_NAME
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
         public static T_OE_ORGANIZATION GetT_OE_ORGANIZATION_ByID(Guid id)
         {
             using (EECIPEntities ctx = new EECIPEntities())

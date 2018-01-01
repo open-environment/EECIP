@@ -1,72 +1,14 @@
 ﻿@using EECIP.App_Logic.DataAccessLayer
+@using EECIP.App_Logic.BusinessLogicLayer
 @model EECIP.Models.vmDashboardIndex
 @{
     ViewBag.Title = "Welcome " + Model.UserName + "!";
 }
 
-<!--  ************ BADGES *********-->
-<section class="panel panel-default ">
-    <div class="panel-heading">
-        Badge Progress
-        <div class="panel-tools">
-            <a class="btn btn-xs panel-collapse collapses" href="#">
-            </a>
-        </div>
-    </div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="badgeholder">
-                    <div class="publicbadgeline" style="width:100%">
-                        @for (int i = 0; i < 6; i++)
-                        {
-                            <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
-                                <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
-                                <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
-                                @if (Model.UserBadges[i].EarnedDate.HasValue)
-                                {
-                                    <p class="publicbadgeawards" style="color:green"><b>Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</b></p>
-                                }
-                                else
-                                {
-                                    <p class="publicbadgeawards">Not Awarded</p>
-                                }
-                            </div>
-                        }
-                    </div>
-
-
-                    <div id="collapseThree" class="publicbadgeline panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" style="width:100%">
-                        @for (int i = 6; i < Model.UserBadges.Count; i++)
-                        {
-                            <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
-                                <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
-                                <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
-                                @if (Model.UserBadges[i].EarnedDate.HasValue)
-                                {
-
-                                    <p class="publicbadgeawards" style="color:green">Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</p>
-                                }
-                                else
-                                {
-                                    <p class="publicbadgeawards">Not Awarded</p>
-                                }
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <a id="badgefooter" class="collapsed panel-footer" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%;display: block;text-align: center; text-decoration: none;">
-        Show All <i class="glyphicon clip-arrow-down"></i>
-    </a>
-</section>
-
 <!--  ************  PROJECTS NEEDING REVIEW *************-->
 @if (Model.ProjectsNeedingReview != null && Model.ProjectsNeedingReview.Count > 0)
 {
-    <section class="panel panel-default danger">
+    <section class="panel panel-default ee">
         <div class="panel-heading">
             Projects Needing Your Review
             <div class="panel-tools">
@@ -126,31 +68,227 @@
 }
 
 
-<!--  **************  LATEST QUESTIONS **************************************-->
+<!--  ************ BADGES *********-->
 <section class="panel panel-default ">
     <div class="panel-heading">
-        Latest Questions (matching your tag interest)
+        Your Badge Progress
         <div class="panel-tools">
             <a class="btn btn-xs panel-collapse collapses" href="#">
             </a>
         </div>
     </div>
     <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="badgeholder">
+                    <div class="publicbadgeline" style="width:100%">
+                        @for (int i = 0; i < 6; i++)
+                        {
+                            if (@Model.UserBadges.Count > i)
+                            {
+                            <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
+                                <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
+                                <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
+                                @if (Model.UserBadges[i].EarnedDate.HasValue)
+                                {
+                                    <p class="publicbadgeawards" style="color:green"><b>Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</b></p>
+                                }
+                                else
+                                {
+                                    <p class="publicbadgeawards">Not Awarded</p>
+                                }
+                            </div>
+                            }
+                        }
+                    </div>
+
+
+                    <div id="collapseThree" class="publicbadgeline panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" style="width:100%">
+                        @for (int i = 6; i < Model.UserBadges.Count; i++)
+                        {
+                            if (@Model.UserBadges.Count > i)
+                            {
+                            <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
+                                <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
+                                <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
+                                @if (Model.UserBadges[i].EarnedDate.HasValue)
+                                {
+
+                                    <p class="publicbadgeawards" style="color:green">Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</p>
+                                }
+                                else
+                                {
+                                    <p class="publicbadgeawards">Not Awarded</p>
+                                }
+                            </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <a id="badgefooter" class="collapsed panel-footer" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%;display: block;text-align: center; text-decoration: none;">
+        Show All <i class="glyphicon clip-arrow-down"></i>
+    </a>
 </section>
 
-<!--  **************  MOST ACTIVE USERS **************************************-->
-<section class="panel panel-default ">
-    <div class="panel-heading">
-        Most Active Users 
-        <div class="panel-tools">
-            <a class="btn btn-xs panel-collapse collapses" href="#">
-            </a>
+
+<div class="row">
+    <!--  **************  MOST RECENT PROJECTS **************************************-->
+    <div class="col-md-6">
+        <section class="panel panel-default ">
+            <div class="panel-heading">
+                Most Recent Projects
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="table-responsive" style="max-height:400px;">
+                    <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th></th>
+                                <th>Project Name</th>
+                                <th>Agency</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            @foreach (var item in Model.LatestProjects)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-info-sign"></i> Info</a>
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PROJ_NAME)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ORG_NAME)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LAST_ACTIVITY_DATE)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+
+
+            </div>
+        </section>
+
+    </div>
+
+
+    <!--  **************  LATEST DISCUSSIONS **************************************-->
+    @if (Model.LatestTopics != null && Model.LatestTopics.Count>0)
+    {
+        <div class="col-md-6">
+            <section class="panel panel-default ">
+                <div class="panel-heading">
+                    Most Recent Discussion Topics @(Model.LatestTopics[0].postCount == 999 ? "(matching your tag interest)" : "")
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @foreach (var item in Model.LatestTopics)
+                    {
+                        <div class="topicrow" style="padding: 5px;">
+                            <div class="rowcreater hidden-xs">
+                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._topic.MembershipUser_Id })">
+                                    <img src="/Content/Images/Users/@(item._topic.MembershipUser_Id).png" alt="">
+                                </a>
+                            </div>
+
+                            <div class="rowdetails">
+                                <h3>
+                                    <a title="#" href="@Url.Action("ShowTopic", "Forum", new { slug = item._topic.Slug })">
+                                        @Html.Raw(item._topic.Name)
+                                    </a>
+                                </h3>
+                                @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item._postStart.PostContent), 50)
+                                @*@if (Model._topic != null)
+                                    {
+                                    <div class="tagsinput clearfix">
+                                        @foreach (var tag in Model.topicTags)
+                                        {
+                                        <span class="tag"><span><a href="@Url.Action("Index", "Forum", new { tag = tag.TopicTag })">@Html.Raw(tag.TopicTag)</a></span></span>
+                                        }
+                                    </div>
+                                    }*@
+                                <p class="topicrowfooterinfo">
+                                    Latest By
+                                    <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._postLatest.Post.MembershipUser_Id })">@item._postLatest.PosterDisplayName</a>
+                                    @EECIP.App_Logic.BusinessLogicLayer.Utils.GetPrettyDate(item._postLatest.Post.DateCreated.ToString())
+                                </p>
+
+                            </div>
+                        </div>
+
+                    }
+                </div>
+            </section>
         </div>
-    </div>
-    <div class="panel-body">
-    </div>
-</section>
+    }
+
+</div>
+
+
+<!--  **************  MOST ACTIVE USERS **************************************-->
+<div class="col-md-12">
+    <section class="panel panel-default ">
+        <div class="panel-heading">
+            Most Active Users
+            <div class="panel-tools">
+                <a class="btn btn-xs panel-collapse collapses" href="#">
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="badgeholder">
+                        <div class="publicbadgeline" style="width:100%">
+                            @for (int i = 0; i < 6; i++)
+                            {
+                                if (@Model.UserPointLeaders.Count > i)
+                                {
+                                    <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@(Model.UserPointLeaders[i]._User.FNAME + " " + Model.UserPointLeaders[i]._User.LNAME)">
+                                        <a href="/Dashboard/UserCard?strid=@Model.UserPointLeaders[i]._User.USER_IDX">
+                                            <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(Model.UserPointLeaders[i]._User.USER_IDX).png)">
+                                            </div>
+                                        </a>
+                                        <p class="publicbadgenamedesc">
+                                            @Model.UserPointLeaders[i]._User.FNAME @Model.UserPointLeaders[i]._User.LNAME
+                                        </p>
+                                        <p class="publicbadgeawards">
+                                            @Model.UserPointLeaders[i].UserPoints points
+                                        </p>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+
 
 
 @section Scripts {
@@ -160,5 +298,12 @@
                 return old == 'Show Less <i class="glyphicon clip-arrow-up"></i>' ? 'Show All <i class="glyphicon clip-arrow-down"></i>' : 'Show Less <i class="glyphicon clip-arrow-up"></i>';
             });
         });
+
+        $('#badgefooterPoints').click(function () {
+            $(this).html(function (i, old) {
+                return old == 'Show Less <i class="glyphicon clip-arrow-up"></i>' ? 'Show All <i class="glyphicon clip-arrow-down"></i>' : 'Show Less <i class="glyphicon clip-arrow-up"></i>';
+            });
+        });
+
     </script>
 }

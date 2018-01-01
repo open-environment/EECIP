@@ -44,6 +44,17 @@ namespace EECIP.App_Logic.DataAccessLayer
         public List<Tuple<int, string>> progam_areas { get; set; }
     }
 
+
+    public class ProjectShortDisplayType
+    {
+        public Guid? PROJECT_IDX { get; set; }
+        public Guid? ORG_IDX { get; set; }
+        public string PROJ_NAME { get; set; }
+        public string ORG_NAME { get; set; }
+        public DateTime LAST_ACTIVITY_DATE { get; set; }
+    }
+
+
     public class ProjectImportType
     {
         public T_OE_PROJECTS T_OE_PROJECT { get; set; }
@@ -156,6 +167,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+
         //************************** ORGANIZTION_ENTERPRISE_PLATFORM *************************************************
         public static List<OrganizationEntServicesDisplayType> GetT_OE_ORGANIZATION_ENTERPRISE_PLATFORM(Guid OrgID)
         {
@@ -246,7 +258,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 COMMENTS = b.COMMENTS,
                                 PROJECT_CONTACT = b.PROJECT_CONTACT,
                                 ACTIVE_INTEREST_IND = b.ACTIVE_INTEREST_IND ?? false,
+                                CREATE_USERIDX = b.CREATE_USERIDX,
                                 CREATE_DT = b.CREATE_DT,
+                                MODIFY_USERIDX = b.MODIFY_USERIDX,
                                 MODIFY_DT = b.MODIFY_DT
                             }).FirstOrDefault();
                 }
@@ -500,6 +514,32 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdated()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_PROJECTS
+                            join b in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals b.ORG_IDX
+                            orderby a.MODIFY_DT ?? a.CREATE_DT descending
+                            select new ProjectShortDisplayType {
+                                PROJECT_IDX = a.PROJECT_IDX,
+                                ORG_IDX = a.ORG_IDX,
+                                PROJ_NAME = a.PROJ_NAME,
+                                ORG_NAME = b.ORG_NAME,
+                                LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now
+                            }).Take(6).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static List<EECIP_Index> GetT_OE_PROJECTS_ReadyToSync(Guid? ProjectIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -651,7 +691,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
 
-        //***************************project local****************************************
+        //***************************project local (temp when importing)****************************************
         /// <summary>
         /// Creates a new local PROJECT record and validates it according to the validation rules contained in XML file
         /// </summary>
@@ -859,6 +899,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+
         //***************************PROJECT TAGS****************************************
         public static List<string> GetT_OE_PROJECT_TAGS_ByAttributeSelected(Guid ProjectIDX, string aTTRIBUTE)
         {
@@ -970,6 +1011,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+
         //***************************PROJECT VOTES****************************************
         public static int GetT_OE_PROJECT_VOTES_TotalByProject(Guid ProjectIDX)
         {
@@ -979,6 +1021,24 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     return (from a in ctx.T_OE_PROJECT_VOTES
                             where a.PROJECT_IDX == ProjectIDX
+                            select a.VOTE_AMOUNT).Sum();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int GetT_OE_PROJECT_VOTES_TotalByUser(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_PROJECT_VOTES
+                            where a.VOTED_BY_USER_IDX == UserIDX
                             select a.VOTE_AMOUNT).Sum();
                 }
                 catch (Exception ex)
@@ -1072,6 +1132,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+
         //******************************* NOTIFICATIONS ***************************************
         public static List<T_OE_USER_NOTIFICATION> GetT_OE_USER_NOTIFICATION_byUserIDX(int? UserIDX)
         {
@@ -1086,7 +1147,58 @@ namespace EECIP.App_Logic.DataAccessLayer
                             select a).ToList();
                 }
                 catch (Exception ex)
-                { db_Ref.LogEFException(ex);
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+        public static Guid? InsertUpdateT_OE_USER_NOTIFICATION(Guid? nOTIFICATION_IDX, int uSER_IDX, DateTime? nOTIFY_DT, string nOTIFY_TYPE, string nOTIFY_TITLE,
+            string nOTIFY_DESC, Boolean rEAD_IND, int? fROM_USER_IDX, Boolean aCT_IND, int? cREATE_USER, bool SendEmailInd)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Boolean insInd = false;
+
+                    T_OE_USER_NOTIFICATION e = (from c in ctx.T_OE_USER_NOTIFICATION
+                                                where c.NOTIFICATION_IDX == nOTIFICATION_IDX
+                                                select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_USER_NOTIFICATION();
+                        e.NOTIFICATION_IDX = Guid.NewGuid();
+                        e.CREATE_DT = System.DateTime.Now;
+                        e.CREATE_USERIDX = cREATE_USER;
+                    }
+                    else
+                    {
+                        e.MODIFY_DT = System.DateTime.Now;
+                        e.MODIFY_USERIDX = cREATE_USER;
+                    }
+
+                    e.USER_IDX = uSER_IDX;
+                    if (nOTIFY_DT != null) e.NOTIFY_DT = nOTIFY_DT.ConvertOrDefault<DateTime>();
+                    if (nOTIFY_TYPE != null) e.NOTIFY_TYPE = nOTIFY_TYPE;
+                    if (nOTIFY_TITLE != null) e.NOTIFY_TITLE = nOTIFY_TITLE;
+                    if (nOTIFY_DESC != null) e.NOTIFY_DESC = nOTIFY_DESC;
+                    e.READ_IND = rEAD_IND;
+                    if (fROM_USER_IDX != null) e.FROM_USER_IDX = fROM_USER_IDX;
+
+                    if (insInd)
+                        ctx.T_OE_USER_NOTIFICATION.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.NOTIFICATION_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
                     return null;
                 }
             }

@@ -287,6 +287,24 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int UpdateT_OE_USERS_UnlockGovernance(int idx)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_USERS row = (from c in ctx.T_OE_USERS where c.USER_IDX == idx select c).First();
+                    row.ALLOW_GOVERNANCE = true;
+                    ctx.SaveChanges();
+                    return row.USER_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
 
         //*****************ROLES **********************************

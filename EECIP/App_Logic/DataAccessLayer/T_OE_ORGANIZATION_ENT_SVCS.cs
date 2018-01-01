@@ -18,6 +18,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public T_OE_ORGANIZATION_ENT_SVCS()
         {
             this.T_OE_PROJECT_VOTES = new HashSet<T_OE_PROJECT_VOTES>();
+            this.T_OE_DOCUMENTS = new HashSet<T_OE_DOCUMENTS>();
         }
     
         public int ORG_ENT_SVCS_IDX { get; set; }
@@ -40,5 +41,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_PROJECT_VOTES> T_OE_PROJECT_VOTES { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_OE_DOCUMENTS> T_OE_DOCUMENTS { get; set; }
     }
 }

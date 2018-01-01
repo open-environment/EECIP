@@ -192,9 +192,14 @@ CREATE TABLE [forum].[Badge](
 	[Description] [nvarchar](max) NULL,
 	[Image] [nvarchar](50) NULL,
 	[AwardsPoints] [int] NULL,
+	[ACT_IND] [bit] NOT NULL DEFAULT 1,
+	[SORT_SEQ] [int] NOT NULL DEFAULT 1
  CONSTRAINT [forum.PK_Badge] PRIMARY KEY CLUSTERED ([Id] ASC)
 ) ON [PRIMARY] 
 GO
+
+--  alter table [forum].[Badge] add ACT_IND [bit] NOT NULL DEFAULT 1;
+--  alter table [forum].[Badge] add SORT_SEQ [int] NOT NULL DEFAULT 1;
 
 
 CREATE TABLE [forum].[MembershipUser_Badge](
@@ -210,21 +215,34 @@ GO
 
 
 
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Profile', N'Photogenic', N'Photogenic', N'Little things like uploading a profile picture make the community a better place. Thanks!', N'photogenic.png', 20)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Post', N'OneThousandPoints', N'Thousand Pointer', N'This badge is awarded to users who have received 1000 points', N'OneThousandPoints.png', 10)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'VoteUp', N'PosterVoteUp', N'First Vote Up Received', N'This badge is awarded to users after they receive their first vote up from another user', N'PosterVoteUpBadge.png', 2)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'VoteUp', N'UserVoteUp', N'You''ve Given Your First Vote Up', N'This badge is awarded to users after they make their first vote up', N'UserVoteUpBadge.png', 2)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'VoteDown', N'TheGrouch', N'The Grouch', N'This badge is awarded to users who have voted down other users posts 10 or more times', N'TheGrouch.png', 0)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'MarkAsSolution', N'PosterMarkAsSolution', N'Post Selected As Answer', N'This badge is awarded to a user when their post is marked as the solution to a topic', N'PosterMarkAsSolutionBadge.png', 2)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'MarkAsSolution', N'AuthorMarkAsSolution', N'Your Question Solved', N'This badge is awarded to a user when they mark another users post as the solution to their topic', N'UserMarkAsSolutionBadge.png', 2)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'MarkAsSolution', N'Padawan', N'Padawan', N'Had 10 or more posts successfully marked as an answer', N'padawan.png', 10)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'MarkAsSolution', N'JediMaster', N'Jedi Master', N'Had 50 or more posts successfully marked as an answer', N'jedi.png', 50)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'FavouriteFirstPost', N'First Favourite', N'You have Favourited your first post', N'you-favourited-your-first-post.png', 1)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'YourPostFavourited', N'Favourited Post', N'You have one or more posts that have been Favourited by another member', N'your-post-got-favourited-by-another-member.png', 2)
-INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'YourPostFavouritedTenTimes', N'Recognised Post', N'One or more of your posts have been Favourited by 10 or more people', N'recognised-post.png', 10)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Post', N'OneThousandPoints', N'Thousand Pointer', N'This badge is awarded to users who have received 1000 points', N'OneThousandPoints.png', 10)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'VoteUp', N'PosterVoteUp', N'First Vote Up Received', N'This badge is awarded to users after they receive their first vote up from another user', N'PosterVoteUpBadge.png', 2)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'VoteUp', N'UserVoteUp', N'You''ve Given Your First Vote Up', N'This badge is awarded to users after they make their first vote up', N'UserVoteUpBadge.png', 2)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'VoteDown', N'TheGrouch', N'The Grouch', N'This badge is awarded to users who have voted down other users posts 10 or more times', N'TheGrouch.png', 0)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'MarkAsSolution', N'PosterMarkAsSolution', N'Post Selected As Answer', N'This badge is awarded to a user when their post is marked as the solution to a topic', N'PosterMarkAsSolutionBadge.png', 2)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'MarkAsSolution', N'AuthorMarkAsSolution', N'Your Question Solved', N'This badge is awarded to a user when they mark another users post as the solution to their topic', N'UserMarkAsSolutionBadge.png', 2)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'MarkAsSolution', N'Padawan', N'Padawan', N'Had 10 or more posts successfully marked as an answer', N'padawan.png', 10)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'MarkAsSolution', N'JediMaster', N'Jedi Master', N'Had 50 or more posts successfully marked as an answer', N'jedi.png', 50)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'FavouriteFirstPost', N'First Favourite', N'You have Favourited your first post', N'you-favourited-your-first-post.png', 1)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'YourPostFavourited', N'Favourited Post', N'You have one or more posts that have been Favourited by another member', N'your-post-got-favourited-by-another-member.png', 2)
+--INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints]) VALUES (NewID(), N'Favourite', N'YourPostFavouritedTenTimes', N'Recognised Post', N'One or more of your posts have been Favourited by 10 or more people', N'recognised-post.png', 10)
+
+
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'Profile', N'Photogenic', N'Photogenic', N'Little things like uploading a profile picture make the community a better place. Thanks!', N'photogenic.png', 20, 1, 1)
+
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'Post', N'OneTopic', N'Create a Discussion', N'This badge is awarded to users who have posted a new topic to the discussion forum', N'OneTopic.png', 10, 1, 2);
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'Post', N'FiveTopics', N'Create 5th Discussion', N'This badge is awarded to users who have posted their fifth topic to the discussion forum', N'FiveTopic.png', 20, 1, 3);
+
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'VoteUp', N'UserVoteUp', N'Vote Up Your First Discussion Topic', N'This badge is awarded to users after they make their first vote up', N'OneLike.png', 2, 1, 4);
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'VoteUp', N'UserVoteUpFive', N'Vote Up 5 Discussion Topics', N'This badge is awarded to users after they make their 5th vote up on a discussion topic', N'FiveLike.png', 5, 1, 5);
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'VoteUp', N'UserVoteUpTen', N'Vote Up 10 Discussion Topics', N'This badge is awarded to users after they make their 10th vote up on a discussion topic', N'TenLike.png', 10, 1, 6);
+
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'VoteUp', N'UserProjectLike', N'Like A Project', N'This badge is awarded to users after they like a project', N'OneLikeProject.png', 2, 1, 7);
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'VoteUp', N'UserProjectLikeFive', N'Like 5 Projects', N'This badge is awarded to users after they like 5 projects', N'FiveLikeProject.png', 5, 1, 8);
+INSERT [forum].[Badge] (Id, [Type], [Name], [DisplayName], [Description], [Image], [AwardsPoints], ACT_IND, SORT_SEQ) VALUES (NewID(), N'VoteUp', N'UserProjectLikeTen', N'Like 10 Projects', N'This badge is awarded to users after they like 10 projects', N'TenLikeProject.png', 10, 1, 9);
+
+
 GO
-
-
 
 CREATE TABLE [forum].[PostFile](
 	[Id] [uniqueidentifier] NOT NULL,

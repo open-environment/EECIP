@@ -94,18 +94,24 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-12 ">
-                            <div class="panel-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Synonym (comma separate values)</label>
-                                            @Html.TextBoxFor(model => model.edit_synonym_text, new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(model => model.edit_synonym_text)
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Synonym (comma separate values)</label>
+                                @Html.TextBoxFor(model => model.edit_synonym_text, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.edit_synonym_text)
                             </div>
+                        </div>
+                    </div>
+                    <div id="bulkRow" class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input id="chkBulk" type="checkbox" value="true"> Perform bulk import<br>
+                            </div>
+                            <div id="bulkDtl" class="form-group" style="display:none">
+                                <label>Paste rows of comma-separated value sets (one synonym set per row)</label>
+                                @Html.TextAreaFor(model => model.edit_synonym_bulk, new { @class = "form-control", @rows="4" })
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -131,12 +137,25 @@
             $(".modal-it").click(function () {
                 $('#edit_synonym_idx').val($(this).parent('td').find('#item_SYNONYM_IDX').val());
                 $('#edit_synonym_text').val($(this).parent('td').find('#item_SYNONYM_TEXT').val());
+                $('#bulkRow').hide();
             });
 
             $(".add-it").click(function () {
                 $('#edit_synonym_idx').val(null);
                 $('#edit_synonym_text').val('');
+                $('#bulkRow').show();
             });
+
+
+            //display bulk import
+            $('#chkBulk').change(function () {
+                console.log('d');
+                if ($(this).is(':checked'))
+                    $('#bulkDtl').show();
+                else 
+                    $('#bulkDtl').hide();
+            }).change();
+
         });
     </script>
 }

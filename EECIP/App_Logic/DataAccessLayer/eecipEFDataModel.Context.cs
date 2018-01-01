@@ -61,5 +61,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<TopicNotification> TopicNotifications { get; set; }
         public virtual DbSet<Vote> Votes { get; set; }
         public virtual DbSet<PostFile> PostFiles { get; set; }
+        public virtual DbSet<T_OE_DOCUMENTS> T_OE_DOCUMENTS { get; set; }
     }
 }

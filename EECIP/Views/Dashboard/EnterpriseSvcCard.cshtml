@@ -45,6 +45,11 @@
                         <div class="col-sm-12">
                             Vendor: @Model.entsvc.VENDOR
                         </div>
+                        <div class="col-sm-12">
+                            Last Updated:                         
+                            @Model.LastUpdatedUser
+                            @(Model.entsvc.MODIFY_DT ?? Model.entsvc.CREATE_DT)
+                        </div>
                     </div>
                 </div>
             </section>

@@ -100,6 +100,7 @@ namespace EECIP.Models
         public List<T_OE_REF_SYNONYMS> synonyms { get; set; }
         public int? edit_synonym_idx { get; set; }
         public string edit_synonym_text { get; set; }
+        public string edit_synonym_bulk { get; set; }
     }
 
     public class vmAdminImportData {

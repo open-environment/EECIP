@@ -150,21 +150,20 @@ else
     @if (Model.IsTopicStarter)
     {
         <div class="col-md-5 col-md-offset-1 topiccategory">
-
             @if (Model.Id == Guid.Empty)
             {
-                @*<div class="form-group createuploadfiles" @Html.Raw(Model.OptionalPermissions.CanUploadFiles ? "" : displayNone)>
-                        @Html.LabelFor(x => x.Files)
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <span class="btn btn-default btn-file">
-                                    @Html.LanguageString("Post.Browse") <input type="file" name="files" id="files" value="">
-                                </span>
+                <div class="form-group createuploadfiles">
+                    @Html.LabelFor(x => x.Files)
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <span class="btn btn-default btn-file">
+                                Browse <input type="file" name="files" id="files" value="">
                             </span>
-                            <input type="text" class="form-control" readonly="">
-                        </div>
-                        @Html.ValidationMessageFor(x => x.Files)
-                    </div>*@
+                        </span>
+                        <input id="filename1" type="text" class="form-control" readonly="">
+                    </div>
+                    @Html.ValidationMessageFor(x => x.Files)
+                </div>
             }
         </div>
     }

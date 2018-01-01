@@ -44,8 +44,8 @@ namespace EECIP.Controllers
                 Categories = ddlForumHelpers.get_ddl_categories(),
                 OptionalPermissions = GetOptionalPermissions(),
                 IsTopicStarter = true,
-                PollAnswers = new List<string>(),
-                PollCloseAfterDays = 0,
+                //PollAnswers = new List<string>(),
+                //PollCloseAfterDays = 0,
                 SelectedTags = new List<string>(),
                 AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
         };
@@ -64,7 +64,9 @@ namespace EECIP.Controllers
             topicViewModel.OptionalPermissions = GetOptionalPermissions();
             topicViewModel.Categories = ddlForumHelpers.get_ddl_categories();
             topicViewModel.IsTopicStarter = true;
-            topicViewModel.PollAnswers = topicViewModel.PollAnswers ?? new List<string>();
+            //topicViewModel.PollAnswers = topicViewModel.PollAnswers ?? new List<string>();
+            topicViewModel.SelectedTags = topicViewModel.SelectedTags ?? new List<string>();
+            topicViewModel.AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
             /*---- End Re-populate ViewModel ----*/
 
             if (ModelState.IsValid)
@@ -80,7 +82,7 @@ namespace EECIP.Controllers
                 // Check posting flood control
                 if (!db_Forum.PassedTopicFloodTest(topicViewModel.Name, UserIDX))
                 {
-                    TempData["Error"] = "Cannot repost the same topic";
+                    TempData["Error"] = "Can only post once per minute";
                     RedirectToAction("Create");
                 }
 
@@ -90,6 +92,12 @@ namespace EECIP.Controllers
                 {
                     FormsAuthentication.SignOut();
                     return RedirectToAction("Index", "Home");
+                }
+
+                //reject if no post content
+                if (topicViewModel.Content == null) {
+                    TempData["Error"] = "Post content is required";
+                    RedirectToAction("Create");
                 }
 
                 // Check Permissions for topic opions
@@ -115,8 +123,8 @@ namespace EECIP.Controllers
 
 
                         // 5. Poll handling
-                        if (topicViewModel.PollAnswers.Count(x => x != null) > 1)
-                        {
+                        //if (topicViewModel.PollAnswers.Count(x => x != null) > 1)
+                        //{
                             // Create a new Poll
                             //        var newPoll = new Poll
                             //        {
@@ -144,71 +152,37 @@ namespace EECIP.Controllers
 
                             //        // Add the poll to the topic
                             //        topic.Poll = newPoll;
-                        }
+                        //}
 
 
                         // 6. File handling
-                        if (topicViewModel.Files != null)
+                        if (topicViewModel.Files != null && topicViewModel.Files.Any())
                         {
-                            //    // Before we save anything, check the user already has an upload folder and if not create one
-                            //    var uploadFolderPath =
-                            //        HostingEnvironment.MapPath(string.Concat(SiteConstants.Instance.UploadFolderPath,
-                            //            LoggedOnReadOnlyUser.Id));
-                            //    if (!Directory.Exists(uploadFolderPath))
-                            //    {
-                            //        Directory.CreateDirectory(uploadFolderPath);
-                            //    }
-
-                            //    // Loop through each file and get the file info and save to the users folder and Db
-                            //    foreach (var file in topicViewModel.Files)
-                            //    {
-                            //        if (file != null)
-                            //        {
-                            //            // If successful then upload the file
-                            //            var uploadResult = AppHelpers.UploadFile(file, uploadFolderPath,
-                            //                LocalizationService);
-                            //            if (!uploadResult.UploadSuccessful)
-                            //            {
-                            //                TempData[AppConstants.MessageViewBagName] = new GenericMessageViewModel
-                            //                {
-                            //                    Message = uploadResult.ErrorMessage,
-                            //                    MessageType = GenericMessages.danger
-                            //                };
-                            //                unitOfWork.Rollback();
-                            //                return View(topicViewModel);
-                            //            }
-
-                            //            // Add the filename to the database
-                            //            var uploadedFile = new UploadedFile
-                            //            {
-                            //                Filename = uploadResult.UploadedFileName,
-                            //                Post = topicPost,
-                            //                MembershipUser = loggedOnUser
-                            //            };
-                            //            _uploadedFileService.Add(uploadedFile);
-                            //        }
-                            //    }
+                            UPloadPostFiles(topicViewModel.Files, UserIDX, _postID.ConvertOrDefault<Guid>());
                         }
 
-                        // 8. Tag handling
+
+                        // 7. Tag handling
                         db_Forum.DeleteTopicTags(_Topic.Id, "Topic Tag");
                         foreach (string feature in topicViewModel.SelectedTags ?? new List<string>())
                             db_Forum.InsertUpdateTopicTags(_Topic.Id, "Topic Tag", feature);
 
 
-
-                        // 9. Subscribe the user to the topic if they have checked the checkbox
+                        // 8. Subscribe the user to the topic if they have checked the checkbox
                         if (topicViewModel.SubscribeToTopic)
                             db_Forum.InsertUpdateTopicNotification(null, _Topic.Id, UserIDX);
 
-                        // 10. Success so now send the emails
+                        // 9. Success so now send the emails
                         //NotifyNewTopics(category, topic, unitOfWork);
 
-                        //11  now update the Azure search
+
+                        // 10. Badge Checking
+                        db_Forum.EarnBadgePostTopicEvent(UserIDX);
+
+                        // 11. Update Azure search
                         AzureSearch.PopulateSearchIndexForumTopic(_Topic.Id);
 
                         // Redirect to the newly created topic
-                        //return Redirect($"{db_Forum.TopicURL(_Topic.Slug)}?postbadges=true");
                         return RedirectToAction("ShowTopic", "Forum", new { slug = _Topic.Slug });
                     }
                 }
@@ -216,8 +190,8 @@ namespace EECIP.Controllers
 
             }
 
-            if (TempData["Error"].ToString() == "")
-                ModelState.AddModelError(string.Empty, "Unable to save post");
+            if (TempData["Error"] == null)
+                TempData["Error"] = "Unable to save data";
             return View(topicViewModel);
         }
 
@@ -260,7 +234,16 @@ namespace EECIP.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public ActionResult EditPost() {
+        public ActionResult EditPost(vmForumTopicCreate model) {
+
+            //get topic being edited
+            Topic _topic = db_Forum.GetTopic_ByID(model.TopicId);
+            if (_topic != null)
+            {
+
+            }
+
+            return RedirectToAction("ShowTopic", "Forum", new { slug = _topic.Slug });
         }
 
         public ActionResult ShowTopic(string slug, int? p, string order, Guid? id)
@@ -391,6 +374,13 @@ namespace EECIP.Controllers
                 FormsAuthentication.SignOut();
                 return RedirectToAction("Index", "Home");
             }
+
+            //required fields
+            if (model.NewPostContent == null)
+            {
+                TempData["Error"] = "You must supply post content.";
+                return RedirectToAction("ShowTopic", new { slug = model.Topic.Slug });
+            }
             // ************************ END VALIDATION **********************************************
 
 
@@ -439,7 +429,11 @@ namespace EECIP.Controllers
                         //then delete the topic
                         db_Forum.DeleteTopic(post.Topic_Id);
 
-                        TempData["Success"] = "Post deleted";
+                        //now sync with Azure
+                        AzureSearch.DeleteForumTopic(post.Topic_Id);
+
+
+                        TempData["Success"] = "Topic deleted";
                         return RedirectToAction("Index", "Forum");
 
                     }
@@ -462,6 +456,13 @@ namespace EECIP.Controllers
             {
                 Guid? VoteID = db_Forum.InsertVote(id.ConvertOrDefault<Guid>(), UserIDX, (typ == "up" ? 1 : -1));
                 SuccInd = (VoteID != null);
+
+                //
+                if (typ == "up")
+                {
+                    // Badge Checking
+                    db_Forum.EarnBadgeUpVotePost(UserIDX);
+                }
             }
             else if (typ == "removeup" || typ == "removedown")
             {
@@ -520,7 +521,6 @@ namespace EECIP.Controllers
         [HttpPost]
         public ActionResult PostFileUpload(vmForumAttachFilesToPost attachFileToPostViewModel)
         {
-
             try
             {
                 int UserIDX = db_Accounts.GetUserIDX();
@@ -532,44 +532,19 @@ namespace EECIP.Controllers
                     // Check we get a valid post back and have some file
                     if (attachFileToPostViewModel.Files != null && attachFileToPostViewModel.Files.Any())
                     {
-                        // Loop through each file and get the file info and save to the users folder and Db
-                        foreach (var file in attachFileToPostViewModel.Files)
-                        {
-                            byte[] fileBytes = null;
-
-                            if (file != null)
-                            {
-                                using (Stream inputStream = file.InputStream)
-                                {
-                                    MemoryStream memoryStream = inputStream as MemoryStream;
-                                    if (memoryStream == null)
-                                    {
-                                        memoryStream = new MemoryStream();
-                                        inputStream.CopyTo(memoryStream);
-                                    }
-                                    fileBytes = memoryStream.ToArray();
-
-                                    //insert to database
-                                    db_Forum.InsertUpdatePostFile(null, file.FileName, post.Id, fileBytes, file.FileName, file.ContentType, UserIDX);
-                                }
-                            }
-                        }
+                        UPloadPostFiles(attachFileToPostViewModel.Files, UserIDX, post.Id);
 
                         TempData["Success"] = "Upload success";
                         return RedirectToAction("ShowTopic", "Forum", new { id = post.Topic_Id });
 
                     }
                     else
-                    {
-                        TempData["Error"] = "No files";
-                        return RedirectToAction("Index", "Forum");
-                    }
+                        TempData["Error"] = "Please select a file";
                 }
                 else
-                {
                     TempData["Error"] = "Invalid post";
-                    return RedirectToAction("Index", "Forum");
-                }
+
+                return RedirectToAction("ShowTopic", "Forum", new { id = post.Topic_Id });
             }
             catch (Exception ex)
             {
@@ -579,6 +554,31 @@ namespace EECIP.Controllers
 
         }
 
+        private static void UPloadPostFiles(HttpPostedFileBase[] files, int UserIDX, Guid postID)
+        {
+            // Loop through each file and get the file info and save to the users folder and Db
+            foreach (var file in files)
+            {
+                byte[] fileBytes = null;
+
+                if (file != null)
+                {
+                    using (Stream inputStream = file.InputStream)
+                    {
+                        MemoryStream memoryStream = inputStream as MemoryStream;
+                        if (memoryStream == null)
+                        {
+                            memoryStream = new MemoryStream();
+                            inputStream.CopyTo(memoryStream);
+                        }
+                        fileBytes = memoryStream.ToArray();
+
+                        //insert to database
+                        db_Forum.InsertUpdatePostFile(null, file.FileName, postID, fileBytes, file.FileName, file.ContentType, UserIDX);
+                    }
+                }
+            }
+        }
 
         public ActionResult PostFileDownload(Guid? id)
         {
@@ -619,8 +619,11 @@ namespace EECIP.Controllers
                     int SuccID = db_Forum.DeletePostFile(id.ConvertOrDefault<Guid>());
                     if (SuccID > 0)
                     {
-                        TempData["Success"] = "Removed.";
-                        return RedirectToAction("Index", "Forum");
+                        //get the topic from post
+                        Post _post = db_Forum.GetPost_ByID(doc.Post_Id.ConvertOrDefault<Guid>());
+
+                        TempData["Success"] = "File removed.";
+                        return RedirectToAction("ShowTopic", "Forum", new { id = _post.Topic_Id });
                     }
                 }
             }

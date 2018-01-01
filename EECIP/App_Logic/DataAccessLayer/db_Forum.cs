@@ -45,6 +45,12 @@ namespace EECIP.App_Logic.DataAccessLayer
         public DateTime? EarnedDate { get; set; }
     }
 
+    public class UserMostPointsDisplay
+    {
+        public T_OE_USERS _User { get; set; }
+        public int UserPoints { get; set; }
+    }
+
     public class db_Forum
     {
 
@@ -56,9 +62,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     return (from a in ctx.Badges
-                            join b in ctx.MembershipUser_Badge on a.Id equals b.Badge_Id into sr from x in sr.DefaultIfEmpty()  //left join
-                            where (x == null ? true : x.MembershipUser_Id == UserIDX)
-                            orderby x.DateEarned descending
+                            join b in ctx.MembershipUser_Badge on a.Id equals b.Badge_Id into sr from x in sr.Where(f => f.MembershipUser_Id == UserIDX).DefaultIfEmpty()  //left join
+                            where a.ACT_IND == true
+                            orderby x.DateEarned descending, a.SORT_SEQ ascending
                             select new UserBadgeDisplay
                             {
                                 _Badge = a,
@@ -83,6 +89,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     return (from a in ctx.Badges
                             join b in ctx.MembershipUser_Badge on a.Id equals b.Badge_Id
                             where b.MembershipUser_Id == UserIDX
+                            orderby b.DateEarned descending
                             select new UserBadgeDisplay
                             {
                                 _Badge = a,
@@ -105,6 +112,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     return (from a in ctx.Badges
+                            orderby a.SORT_SEQ
                             select a).ToList();
                 }
                 catch (Exception ex)
@@ -115,7 +123,25 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static Guid? InsertUpdatetBadge(Guid? id, string type, string name, string displayName, string description, string image, int? awardsPoints)
+        public static Badge GetBadgeByName(string badgeName)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Badges
+                            where a.Name == badgeName
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static Guid? InsertUpdateBadge(Guid? id, string type, string name, string displayName, string description, string image, int? awardsPoints)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -186,6 +212,155 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+
+        //****************************** MEMBERSHIP USER BADGE **********************************************
+        public static int InsertUpdateMembershipUser_Badge(int membershipUser_Id, Guid badge_Id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    MembershipUser_Badge e = (from c in ctx.MembershipUser_Badge
+                                              where c.MembershipUser_Id == membershipUser_Id
+                                              && c.Badge_Id == badge_Id
+                                              select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        //earning a badge
+                        e = new MembershipUser_Badge();
+                        e.MembershipUser_Id = membershipUser_Id;
+                        e.Badge_Id = badge_Id;
+                        e.DateEarned = System.DateTime.UtcNow;
+                        ctx.MembershipUser_Badge.Add(e);
+                        ctx.SaveChanges();
+
+                        return 1;
+                    }
+                    else
+                        return -1;  //indicates badge already earned
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Awards a Badge, adds badge points to user, and creates notification
+        /// </summary>
+        /// <param name="membershipUser_Id"></param>
+        /// <param name="badgeName"></param>
+        /// <returns></returns>
+        public static bool EarnBadgeController(int membershipUser_Id, string badgeName)
+        {
+            //0. get badge name
+            Badge _b = db_Forum.GetBadgeByName(badgeName);
+            if (_b != null)
+            {
+                //1. award badge
+                int SuccID = InsertUpdateMembershipUser_Badge(membershipUser_Id, _b.Id);
+
+                //2. add points to user
+                if (SuccID == 1)
+                {
+                    Guid? UserPointID = InsertUpdateMembershipUserPoints(null, _b.AwardsPoints, System.DateTime.UtcNow, 3, _b.Id, null, membershipUser_Id);
+                    if (UserPointID != null)
+                    {
+                        //3. send notification
+                        Guid? NotifyID = db_EECIP.InsertUpdateT_OE_USER_NOTIFICATION(null, membershipUser_Id, System.DateTime.UtcNow, "Badge", "New Badge Earned", "You have earned the " + _b.DisplayName + " badge.", false, 0, true, 0, true);
+
+                        if (NotifyID != null)
+                            return true;
+                    }
+                }
+
+            }
+
+            //if got this far, failure
+            return false;
+        }
+
+        public static bool EarnBadgePostTopicEvent(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    //get post count of user
+                    int TopicCount = db_Forum.GetTopicCountByUser(UserIDX);
+
+                    if (TopicCount == 1)
+                        return EarnBadgeController(UserIDX, "OneTopic");
+                    else if (TopicCount == 5)
+                        return EarnBadgeController(UserIDX, "FiveTopics");
+                    else
+                        return false;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
+        public static bool EarnBadgeUpVotePost(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    //get post count of user
+                    int UpvoteCount = db_Forum.GetVotes_TotalByUser(UserIDX, true, false);
+
+                    if (UpvoteCount == 1)
+                        return EarnBadgeController(UserIDX, "UserVoteUp");
+                    else if (UpvoteCount == 5)
+                        return EarnBadgeController(UserIDX, "UserVoteUpFive");
+                    else if (UpvoteCount == 10)
+                        return EarnBadgeController(UserIDX, "UserVoteUpTen");
+                    else
+                        return false;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
+
+        public static bool EarnBadgeUpVoteProject(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    //get post count of user
+                    int UpvoteCount = db_EECIP.GetT_OE_PROJECT_VOTES_TotalByUser(UserIDX);
+
+                    if (UpvoteCount == 1)
+                        return EarnBadgeController(UserIDX, "UserProjectLike");
+                    else if (UpvoteCount == 5)
+                        return EarnBadgeController(UserIDX, "UserProjectLikeFive");
+                    else if (UpvoteCount == 10)
+                        return EarnBadgeController(UserIDX, "UserProjectLikeTen");
+                    else
+                        return false;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
 
 
         //****************************** CATEGORIES **********************************************
@@ -433,7 +608,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
         public static string GetUniqueTopicSlug(string topicName)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -549,7 +723,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public static bool PassedTopicFloodTest(string topicTitle, int UserIDX)
         {
             topicTitle = Utils.SafePlainText(topicTitle);
-            var floodWindow = System.DateTime.UtcNow.AddMinutes(-2);
+            var floodWindow = System.DateTime.UtcNow.AddMinutes(-1);
 
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -691,6 +865,25 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int GetTopicCountByUser(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Topics.AsNoTracking()
+                            where a.MembershipUser_Id == UserIDX
+                            select a).Count();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
         public static List<TopicOverviewDisplay> GetTopicsByCategory(Guid? cat_id, string tag)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -699,7 +892,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     if (tag == null)
                         return (from a in ctx.Topics.AsNoTracking()
-                                //.Include(x => x.Topic_Tags)
                                 join b in ctx.Posts on a.Id equals b.Topic_Id
                                 join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
                                 where b.IsTopicStarter == true
@@ -718,7 +910,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 }).Take(20).ToList();
                     else
                         return (from a in ctx.Topics.AsNoTracking()
-                                //.Include(x => x.Topic_Tags)
                                 join b in ctx.Posts on a.Id equals b.Topic_Id
                                 join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
                                 join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
@@ -738,6 +929,64 @@ namespace EECIP.App_Logic.DataAccessLayer
                                     topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList()
                                 }).Take(20).ToList();
 
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterest(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    List<TopicOverviewDisplay> xxx = null;
+
+                    //get interest tags
+                    List<string> user_tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
+                    if (user_tags != null)
+                    {
+
+                        xxx = (from a in ctx.Topics.AsNoTracking()
+                               join b in ctx.Posts on a.Id equals b.Topic_Id
+                               join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
+                               join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
+                               where user_tags.Contains(d.TopicTag)
+                               && b.IsTopicStarter == true
+                               orderby a.CreateDate descending
+                               select new TopicOverviewDisplay
+                               {
+                                   _topic = a,
+                                   _postStart = b,
+                                   _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
+                                   topicCreator = c.FNAME + " " + c.LNAME,
+                                   postCount = 999 //hack to indicate tag match
+                               }).Take(5).ToList();
+
+                    }
+
+                    if (xxx == null || xxx.Count() == 0)
+                    {
+                        xxx = (from a in ctx.Topics.AsNoTracking()
+                               join b in ctx.Posts on a.Id equals b.Topic_Id
+                               join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
+                               where b.IsTopicStarter == true
+                               orderby a.CreateDate descending
+                               select new TopicOverviewDisplay
+                               {
+                                   _topic = a,
+                                   _postStart = b,
+                                   _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
+                                   topicCreator = c.FNAME + " " + c.LNAME,
+                                   postCount = 0 //hack to indicate tag match
+                               }).Take(5).ToList();
+                    }
+
+                    return xxx;
                 }
                 catch (Exception ex)
                 {
@@ -804,6 +1053,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
                 catch (Exception ex)
                 {
+                    //temp
+                    if (ex.InnerException != null)
+                        db_Ref.InsertT_OE_SYS_LOG("ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
+
                     db_Ref.LogEFException(ex);
                     return 0;
                 }
@@ -826,6 +1079,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
                 catch (Exception ex)
                 {
+                    //temp
+                    if (ex.InnerException != null)
+                        db_Ref.InsertT_OE_SYS_LOG("ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
+
+
                     db_Ref.LogEFException(ex);
                     return 0;
                 }
@@ -857,8 +1115,10 @@ namespace EECIP.App_Logic.DataAccessLayer
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
+
                 try
                 {
+
                     Topic_Tags e = new Topic_Tags();
                     e.Topic_Id = topic_id;
                     e.TopicTagAttribute = aTTRIBUTE;
@@ -937,7 +1197,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         .GroupBy(x => x.TopicTag)
                         .Select(g => new { g.Key, Count = g.Count() }).Take(20);
 
-                    return tags.ToDictionary(tag => tag.Key, tag => tag.Count); ;
+                    return tags.ToDictionary(tag => tag.Key, tag => tag.Count);
                 }
                 catch (Exception ex)
                 {
@@ -1264,11 +1524,17 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
                 catch (Exception ex)
                 {
+                    //temp
+                    if (ex.InnerException != null)
+                        db_Ref.InsertT_OE_SYS_LOG("ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
+
+
                     db_Ref.LogEFException(ex);
                     return 0;
                 }
             }
         }
+
 
 
 
@@ -1383,11 +1649,12 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+        
 
 
         //*************************************MEMBERSHIP USER POINTS*********************************
         /// <summary>
-        /// 
+        /// Adds points to a user
         /// </summary>
         /// <param name="id"></param>
         /// <param name="points"></param>
@@ -1449,6 +1716,35 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+        public static List<UserMostPointsDisplay> GetMembershipUserPoints_MostPoints(int recCount)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var tags = ctx.MembershipUserPoints
+                        .GroupBy(x => x.MembershipUser_Id)
+                        .Select(g => new { g.Key, Count = g.Count() });
+
+                    var yyy = (from a in ctx.T_OE_USERS
+                               join b in tags on a.USER_IDX equals b.Key
+                               orderby b.Count descending
+                               select new UserMostPointsDisplay {
+                                   _User = a,
+                                   UserPoints = b.Count
+                               }).Take(recCount).ToList();
+
+                    return yyy;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
 
 
         //****************************************VOTES **************************************************
@@ -1517,6 +1813,29 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+        public static int GetVotes_TotalByUser(int UserIDX, bool UpVoteOnly, bool DownVoteOnly)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.Votes
+                               where a.VotedByMembershipUser_Id == UserIDX
+                               && (UpVoteOnly ? a.Amount > 0 : true)
+                               && (DownVoteOnly ? a.Amount < 0 : true)
+                               select (int?)a.Amount).Sum() ?? 0;
+
+                    return Math.Abs(xxx);
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
 
         public static int DeleteVote(Guid Id, int vOTED_BY_USER_IDX)
         {

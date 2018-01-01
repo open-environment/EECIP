@@ -27,6 +27,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string Description { get; set; }
         public string Image { get; set; }
         public Nullable<int> AwardsPoints { get; set; }
+        public bool ACT_IND { get; set; }
+        public int SORT_SEQ { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembershipUser_Badge> MembershipUser_Badge { get; set; }

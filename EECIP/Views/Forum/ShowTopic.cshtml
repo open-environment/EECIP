@@ -146,6 +146,8 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+
+        //upload file handling
         $(function () {
             ShowFileUploadClickHandler();
         });
@@ -154,7 +156,6 @@
             var attachButton = $(".postshowattach");
             if (attachButton.length > 0) {
                 attachButton.click(function (e) {
-                    console.log('d');
                     e.preventDefault();
                     var postHolder = $(this).closest("div.post");
                     var uploadHolder = postHolder.find("div.postuploadholder");
@@ -162,6 +163,12 @@
                 });
             }
         }
+
+        //file upload display filename
+        $("input[id='files']").change(function (e) {                       
+            var $this = $(this);
+            $("#filename1").val($this.val().split('\\').pop());
+        });
 
 
         //upvoting event handling

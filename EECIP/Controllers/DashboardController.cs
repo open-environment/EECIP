@@ -5,6 +5,8 @@ using System.Web.Mvc;
 using EECIP.Models;
 using EECIP.App_Logic.BusinessLogicLayer;
 using EECIP.App_Logic.DataAccessLayer;
+using System.Web;
+using System.IO;
 
 namespace EECIP.Controllers
 {
@@ -19,8 +21,11 @@ namespace EECIP.Controllers
             int UserIDX = db_Accounts.GetUserIDX();
 
             var model = new vmDashboardIndex();
-            model.UserBadges = db_Forum.GetBadgesForUser(UserIDX);
-            model.ProjectsNeedingReview = db_EECIP.GetT_OE_PROJECTS_NeedingReview(UserIDX);
+            model.UserBadges = db_Forum.GetBadgesForUser(UserIDX);  //badge progress
+            model.ProjectsNeedingReview = db_EECIP.GetT_OE_PROJECTS_NeedingReview(UserIDX);  //projects needing review
+            model.UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(6);  //user point leaders
+            model.LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdated();  //latest projects
+            model.LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX); //latest topics matching interest
             T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
             if (u != null)
             {
@@ -319,7 +324,7 @@ namespace EECIP.Controllers
 
         // POST: /Dashboard/ProjectsDelete
         [HttpPost]
-        public JsonResult ProjectsDelete(Guid id)
+        public JsonResult ProjectsDelete(Guid id, string Type)
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
@@ -398,12 +403,78 @@ namespace EECIP.Controllers
 
             if (SuccInd)
             {
+                //now award badge
+                db_Forum.EarnBadgeUpVoteProject(UserIDX);
+
                 string votes = db_EECIP.GetT_OE_PROJECT_VOTES_TotalByProject(id.ConvertOrDefault<Guid>()).ToString();
                 return Json(new { msg = "Success", val = votes });
             }
             else
                 return Json(new { msg = "Unable to record vote." });
 
+        }
+
+
+        [HttpPost]
+        public ActionResult ProjectFileUpload(vmForumAttachFilesToPost attachFileToPostViewModel)
+        {
+            try
+            {
+                int UserIDX = db_Accounts.GetUserIDX();
+
+                // First this to do is get the post
+                var project = db_EECIP.GetT_OE_PROJECTS_ByIDX(attachFileToPostViewModel.UploadPostId);
+                if (project != null)
+                {
+                    // Check we get a valid post back and have some file
+                    if (attachFileToPostViewModel.Files != null && attachFileToPostViewModel.Files.Any())
+                    {
+                        UploadProjectFiles(attachFileToPostViewModel.Files, UserIDX, project.PROJECT_IDX);
+                        TempData["Success"] = "Upload success";
+                    }
+                    else
+                        TempData["Error"] = "Please select a file";
+
+                    return RedirectToAction("ProjectDetails", "Dashboard", new { id = project.PROJECT_IDX });
+                }
+                else
+                    TempData["Error"] = "Invalid post";
+
+                return RedirectToAction("ShowTopic", "Forum", new { id = project.PROJECT_IDX });
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Invalid post";
+                return RedirectToAction("Index", "Forum");
+            }
+
+        }
+
+
+        private static void UploadProjectFiles(HttpPostedFileBase[] files, int UserIDX, Guid postID)
+        {
+            // Loop through each file and get the file info and save to the users folder and Db
+            foreach (var file in files)
+            {
+                byte[] fileBytes = null;
+
+                if (file != null)
+                {
+                    using (Stream inputStream = file.InputStream)
+                    {
+                        MemoryStream memoryStream = inputStream as MemoryStream;
+                        if (memoryStream == null)
+                        {
+                            memoryStream = new MemoryStream();
+                            inputStream.CopyTo(memoryStream);
+                        }
+                        fileBytes = memoryStream.ToArray();
+
+                        //insert to database
+                        db_EECIP.inse db_Forum. InsertUpdatePostFile(null, file.FileName, postID, fileBytes, file.FileName, file.ContentType, UserIDX);
+                    }
+                }
+            }
         }
 
         #endregion
@@ -451,6 +522,45 @@ namespace EECIP.Controllers
                 return View(model);
 
             return RedirectToAction("Index", "Dashboard");
+        }
+
+
+        public ActionResult Governance(Guid? selAgency)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            var model = new vmDashboardGovernance();
+
+            T_OE_USERS user = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+            if (user != null)
+            {
+                model.UnlockedInd = user.ALLOW_GOVERNANCE;
+
+                //if user has unlocked governance, display more
+                if (model.UnlockedInd == true)
+                {
+                    if (selAgency != null)
+                    {
+                        model.selAgency = selAgency;
+                        model.projects = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(selAgency.ConvertOrDefault<Guid>());
+
+                        T_OE_ORGANIZATION o = db_Ref.GetT_OE_ORGANIZATION_ByID(selAgency.ConvertOrDefault<Guid>());
+                        if (o != null)
+                            model.selAgencyName = o.ORG_NAME;
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult GovernanceUnlock()
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            db_Accounts.UpdateT_OE_USERS_UnlockGovernance(UserIDX);
+            return RedirectToAction("Governance");
         }
 
     }

@@ -172,6 +172,16 @@ ul.main-navigation-menu > li.active > a {
     }
 
 
+.panel-default.ee {
+    border-color: #199C98;
+}
+
+    .panel-default.ee > .panel-heading {
+        color: #094e4c !important;
+        border-bottom-color: #199C98 !important;
+        background-image: linear-gradient(to bottom, #fff 0%, #92d8d6 100%);
+    }
+
 .panel-heading {
     font-size: 15px;
     font-weight: 600;
@@ -871,7 +881,13 @@ span.tag a, span.tag a:visited {
 
 .publicbadge {
     padding-top: 10px;
+    border: solid 1px #fff;
 }
+    .publicbadge:hover {
+        background-color: #f2f2f2;
+        border: solid 1px #B3B3B3;
+    }
+
 
 .publicbadge > img.grey {
     filter: grayscale(100%);
@@ -879,7 +895,4 @@ span.tag a, span.tag a:visited {
 }
 
 
-.publicbadge:hover {
-    background-color:#f2f2f2;
-    border: solid 1px #B3B3B3;
-}
+

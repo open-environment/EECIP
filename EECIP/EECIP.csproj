@@ -236,6 +236,9 @@
     <Compile Include="App_Logic\DataAccessLayer\T_OE_APP_SETTINGS.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\T_OE_DOCUMENTS.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_ORGANIZATION.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -407,15 +410,20 @@
     <Content Include="Content\Images\Agencies\Wisconsin DNR.png" />
     <Content Include="Content\Images\Agencies\WV DEP.png" />
     <Content Include="Content\Images\Agencies\Wyoming DEQ.png" />
+    <Content Include="Content\Images\badges\FiveLikeProject.png" />
+    <Content Include="Content\Images\badges\FiveTopic.png" />
     <Content Include="Content\Images\badges\jedi.png" />
     <Content Include="Content\Images\badges\MemberForAYearBadge.png" />
     <Content Include="Content\Images\badges\MentionsUmbracoBadge.png" />
+    <Content Include="Content\Images\badges\OneLikeProject.png" />
     <Content Include="Content\Images\badges\OneThousandPoints.png" />
+    <Content Include="Content\Images\badges\OneTopic.png" />
     <Content Include="Content\Images\badges\padawan.png" />
     <Content Include="Content\Images\badges\photogenic.png" />
     <Content Include="Content\Images\badges\PosterMarkAsSolutionBadge.png" />
     <Content Include="Content\Images\badges\PosterVoteUpBadge.png" />
     <Content Include="Content\Images\badges\recognised-post.png" />
+    <Content Include="Content\Images\badges\TenLikeProject.png" />
     <Content Include="Content\Images\badges\TheGrouch.png" />
     <Content Include="Content\Images\badges\UserMarkAsSolutionBadge.png" />
     <Content Include="Content\Images\badges\UserVoteUpBadge.png" />
@@ -780,6 +788,7 @@
     <Content Include="Views\Forum\LatestTopics.cshtml" />
     <Content Include="Views\Forum\PopularTags.cshtml" />
     <Content Include="Views\Forum\EditPost.cshtml" />
+    <Content Include="Views\Dashboard\Governance.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

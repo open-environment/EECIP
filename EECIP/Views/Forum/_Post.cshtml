@@ -158,13 +158,12 @@
                     @using (Html.BeginForm("PostFileUpload", "Forum", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
                         <div class="input-group input-group-sm">
-
                             <span class="input-group-btn">
                                 <span class="btn btn-default btn-file">
                                     Browse: <input type="file" name="files" id="files" value="" multiple="multiple">
                                 </span>
                             </span>
-                            <input type="text" class="form-control" readonly="">
+                            <input id="filename1" type="text" class="form-control" readonly="">
                         </div>
                         <p>
                             <input type="submit" value="Upload Files" class="btn-mvc btn-mvc-small postuploadbutton" />

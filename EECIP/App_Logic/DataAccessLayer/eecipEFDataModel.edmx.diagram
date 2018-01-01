@@ -86,6 +86,9 @@
         <EntityTypeShape EntityType="EECIPModel.PostFile" Width="1.5" PointX="31" PointY="9.75" />
         <AssociationConnector Association="EECIPModel.FK__PostFile__Member__60C757A0" />
         <AssociationConnector Association="EECIPModel.FK__PostFile__Post_I__5FD33367" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_DOCUMENTS" Width="1.5" PointX="15.25" PointY="0.75" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

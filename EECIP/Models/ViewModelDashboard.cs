@@ -12,6 +12,9 @@ namespace EECIP.Models
         public List<UserBadgeDisplay> UserBadges { get; set; }
         public string UserName { get; set; }
         public List<T_OE_PROJECTS> ProjectsNeedingReview { get; set; }
+        public List<UserMostPointsDisplay> UserPointLeaders { get; set; }
+        public List<ProjectShortDisplayType> LatestProjects { get; set; }
+        public List<TopicOverviewDisplay> LatestTopics { get; set; }
     }
 
 
@@ -137,6 +140,22 @@ namespace EECIP.Models
         public T_OE_ORGANIZATION UserOrg { get; set; }
         public List<string> SelectedExpertise { get; set; }
         public List<UserBadgeDisplay> UserBadges { get; set; }
+
+    }
+
+
+    public class vmDashboardGovernance {
+        public bool UnlockedInd { get; set; }
+        public List<T_OE_PROJECTS> projects { get; set; }
+        public Guid? selAgency { get; set; }
+        public string selAgencyName { get; set; }
+        public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
+
+        //initialize
+        public vmDashboardGovernance()
+        {
+            ddl_Agencies = ddlHelpers.get_ddl_organizations_all_governance();
+        }
 
     }
 }

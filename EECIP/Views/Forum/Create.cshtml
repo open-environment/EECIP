@@ -23,13 +23,20 @@
     @Scripts.Render("~/bundles/select2")
     <script type="text/javascript">
         $(document).ready(function () {
-            console.log('d');
+
             //function to initiate Select2
             $(".search-select").select2({
                 placeholder: "",
                 allowClear: true,
                 tags: true,
                 width: ''
+            });
+
+
+            //file upload display filename
+            $("input[id='files']").change(function (e) {
+                var $this = $(this);
+                $("#filename1").val($this.val().split('\\').pop());
             });
         });
 

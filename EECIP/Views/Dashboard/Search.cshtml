@@ -508,6 +508,14 @@
                 $('#norepostform').submit();
             });
 
+            $('a[href="#tab6"]').on('shown.bs.tab', function (e) {
+                $('#facetDataType').val('');
+                $('#facetState').val('Governance');
+                $('#activeTab').val('6');
+                $('#currentPage').val(1);
+                $('#norepostform').submit();
+            });
+
             $('a[href="#tab7"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('Discussion');
                 $('#activeTab').val('7');

@@ -352,11 +352,11 @@ namespace EECIP.Controllers
         }
 
 
-        // POST: /Admin/RefTagEdit
+        // POST: /Admin/RefBadge
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult RefBadge(vmAdminRefBadges model)
         {
-            Guid? SuccID = db_Forum.InsertUpdatetBadge(model.edit_badge.Id, model.edit_badge.Type, model.edit_badge.Name, model.edit_badge.DisplayName, model.edit_badge.Description, model.edit_badge.Image, 
+            Guid? SuccID = db_Forum.InsertUpdateBadge(model.edit_badge.Id, model.edit_badge.Type, model.edit_badge.Name, model.edit_badge.DisplayName, model.edit_badge.Description, model.edit_badge.Image, 
                 model.edit_badge.AwardsPoints);
 
             if (SuccID != null)
@@ -534,8 +534,18 @@ namespace EECIP.Controllers
         public ActionResult SearchAdminSynonymEdit(vmAdminSearch model)
         {
             int UserIDX = db_Accounts.GetUserIDX();
-
-            int SuccID = db_Ref.InsertUpdatetT_OE_REF_SYNONYMS(model.edit_synonym_idx, model.edit_synonym_text, UserIDX);
+            int SuccID = 0;
+            if (model.edit_synonym_text != null)
+            {
+                SuccID = db_Ref.InsertUpdatetT_OE_REF_SYNONYMS(model.edit_synonym_idx, model.edit_synonym_text, UserIDX);
+            }
+            else if (model.edit_synonym_bulk != null)
+            {
+                foreach (string row in model.edit_synonym_bulk.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    SuccID = db_Ref.InsertUpdatetT_OE_REF_SYNONYMS(null, row, UserIDX);
+                }
+            }
 
             if (SuccID > 0)
             {

@@ -119,7 +119,7 @@ namespace EECIP.Models
         [DisplayName("Subscribe to Topic")]
         public bool SubscribeToTopic { get; set; }
 
-        [DisplayName("Upload Files")]
+        [DisplayName("Upload File")]
         public HttpPostedFileBase[] Files { get; set; }
 
         // Permissions stuff

@@ -246,6 +246,11 @@ namespace EECIP.Controllers
                 //expertise
                 model.SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(id ?? 0);
                 model.AllExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX_All(id ?? 0).Select(x => new SelectListItem { Value = x, Text = x });
+
+                //org name
+                T_OE_ORGANIZATION org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.OrgIDX.ConvertOrDefault<Guid>());
+                if (org != null)
+                    model.OrgName = org.ORG_NAME;
             }
 
             return View(model);

@@ -45,6 +45,11 @@
                         <span class="title">Agency Projects </span>
                     </a>
                 </li>
+                <li class="@Html.ActivePage("Dashboard", "Governance")">
+                    <a href="@Url.Action("Governance", "Dashboard")">
+                        <span class="title">Governance Materials </span>
+                    </a>
+                </li>
             </ul>
         </li>
 
@@ -110,7 +115,7 @@
                 </li>
                 <li class="@Html.ActivePage("Admin", "ImportData")">
                     <a href="@Url.Action("ImportData","Admin")">
-                        <span class="title">Import Data </span>
+                        <span class="title">Data Import/Export</span>
                     </a>
                 </li>
                 <li class="@Html.ActivePage("Admin", "Settings")">
@@ -124,7 +129,7 @@
                     </a>
                 </li>
                 <li class="@Html.ActivePage("Admin", "Analytics")">
-                    <a href="@Url.Action("Analytics","Admin")">
+                    <a href="https://analytics.google.com" target="_blank">
                         <span class="title">Analytics </span>
                     </a>
                 </li>

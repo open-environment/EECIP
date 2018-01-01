@@ -3,23 +3,26 @@
     ViewBag.Title = "Projects";
     ViewBag.SubTitle = "View and edit the projects for " + Model.selAgencyName;
 }
+<div class="row">
+    <div class="col-md-1">
+        <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency  })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+    </div>
 @if (User.IsInRole("Admins"))
-{
-    <div class="row">
-        <div class="col-sm-12">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-sm-1 control-label" for="form-field-1">
-                        Select Agency:
-                    </label>
-                    <div class="col-sm-5">
-                        @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Projects?selAgency=' + this.options[this.selectedIndex].value;" })
-                    </div>
+{  
+    <div class="col-sm-11">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">
+                    Select Agency:
+                </label>
+                <div class="col-sm-5">
+                    @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Projects?selAgency=' + this.options[this.selectedIndex].value;" })
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 }
+</div>
 <div class="row">
     <div class="col-sm-12">
         <section class="panel panel-default">
@@ -31,7 +34,7 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div class="table-responsive">
+                <div class="table-responsive"  style="max-height:700px;">
                     <table class="table table-striped m-b-none" data-ride="datatables">
                         <tr>
                             <th></th>
@@ -101,12 +104,6 @@
                             </tr>
                         }
                     </table>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-md-12">
-                        <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency  })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
-                    </div>
                 </div>
             </div>
         </section>

@@ -8,6 +8,7 @@ $(function () {
         // data-delete-id: (attribute) key for record being deleted
         // data-delete-id2: (attribute) secondary id to optionally pass to the deletion action. This is sometimes used to redirect back to original page after deletion action finishes
         // data-delete-type: (attribute) helps indicate which parent html block should be removed upon deletion. If blank, assume a table row . If 'cells' then delete the row contents but keep row
+        // data-success-url: (attribute) optional redirect to another page upon successful deletion
 
         var deleteLink = $(this);
         deleteLink.hide();
@@ -24,7 +25,7 @@ $(function () {
         //appPath needed to overcome difference in localhost path versus deployed in MVC envirionment 
         var appPath = (window.location.pathname.split("/")[1] == confirmButton.attr('data-delete-p').split("/")[1] ? '' : window.location.pathname.split("/")[1]);
         var delPath = window.location.protocol + "//" + window.location.host + "/" + appPath + confirmButton.attr('data-delete-p');
-
+        
         var deleteItem = function () {
             removeEvents();
             confirmButton.fadeOut(700);
@@ -34,6 +35,13 @@ $(function () {
                 AddAntiForgeryToken({ id: confirmButton.attr('data-delete-id'), id2: confirmButton.attr('data-delete-id2') }))
                 .done(function (response) {
                     if (response == "Success") {
+
+                        if (confirmButton.attr('data-success-url')!=null && confirmButton.attr('data-success-url').length > 0) {
+                            var redirPath = window.location.protocol + "//" + window.location.host + "/" + appPath + confirmButton.attr('data-success-url');
+                            console.log(redirPath);
+                            window.location.replace(redirPath);
+                        }
+
                         var idType = confirmButton.attr('data-delete-type');
                         var parentRow = deleteLink.parents("tr:first");
 
