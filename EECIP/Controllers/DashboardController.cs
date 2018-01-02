@@ -225,14 +225,8 @@ namespace EECIP.Controllers
                     selAgency = u.ORG_IDX.ConvertOrDefault<Guid>();                    
             }
 
-            //if still no agency
-            if (selAgency == null || selAgency == Guid.Empty)
-            {
-                TempData["Error"] = "You are not associated with an agency.";
-                return RedirectToAction("AccessDenied", "Home");
-            }
-
-            if (!User.IsInRole("Admins") && !db_Accounts.UserCanEditOrgIDX(UserIDX, selAgency.ConvertOrDefault<Guid>()))
+            //if still no agency (and not an Admin, then return error)
+            if (!User.IsInRole("Admins") && (selAgency == null || selAgency == Guid.Empty || !db_Accounts.UserCanEditOrgIDX(UserIDX, selAgency.ConvertOrDefault<Guid>())))
             {
                 TempData["Error"] = "You are not associated with an agency.";
                 return RedirectToAction("AccessDenied", "Home");
@@ -246,6 +240,10 @@ namespace EECIP.Controllers
 
             model.projects = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(selAgency.ConvertOrDefault<Guid>());
             model.selAgency = selAgency;
+
+            if (User.IsInRole("Admins"))
+                model.ddl_Agencies = ddlHelpers.get_ddl_organizations(true, true);
+
             return View(model);
         }
 
@@ -264,11 +262,22 @@ namespace EECIP.Controllers
                         ORG_IDX = orgIDX,
                         PROJECT_IDX = Guid.NewGuid()
                     };
+                    model.NewProjInd = true;
                 }
                 else
                 {
+                    //org stuff
+                    T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(orgIDX.ConvertOrDefault<Guid>());
+                    if (_org != null)
+                    {
+                        model.orgName = _org.ORG_NAME;
+                        model.orgType = _org.ORG_TYPE;
+                    }
+
+
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
                     model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
+                    model.files_existing = db_EECIP.GetT_OE_DOCUMENTS_ByProjectID(model.project.PROJECT_IDX);
                 }
                 model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
                 model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
@@ -285,33 +294,63 @@ namespace EECIP.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult ProjectEdit(vmDashboardProjectDetails model)
         {
+            int UserIDX = db_Accounts.GetUserIDX();
+
             //CHECK PERMISSIONS
-            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), model.project.ORG_IDX.ConvertOrDefault<Guid>()))
+            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(UserIDX, model.project.ORG_IDX.ConvertOrDefault<Guid>()))
             {
                 //update project data
-                Guid? SuccID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, model.project.ORG_IDX, model.project.PROJ_NAME,
+                Guid? newProjID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, model.project.ORG_IDX, model.project.PROJ_NAME,
                     model.project.PROJ_DESC, model.project.MEDIA_TAG, model.project.START_YEAR, model.project.PROJ_STATUS,
                     model.project.DATE_LAST_UPDATE, model.project.RECORD_SOURCE, model.project.PROJECT_URL, model.project.MOBILE_IND,
                     model.project.MOBILE_DESC, model.project.ADV_MON_IND, model.project.ADV_MON_DESC, model.project.BP_MODERN_IND,
-                    model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, model.project.PROJECT_CONTACT, true, false, db_Accounts.GetUserIDX());
+                    model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, model.project.PROJECT_CONTACT, true, false, UserIDX);
 
-                if (SuccID != null)
+                if (newProjID != null)
                 {
+                    Guid newProjID2 = newProjID.ConvertOrDefault<Guid>();
                     //update program area tags
-                    db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area");
+                    db_EECIP.DeleteT_OE_PROJECT_TAGS(newProjID2, "Program Area");
                     foreach (string expertise in model.SelectedProgramAreas ?? new List<string>())
-                        db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Program Area", expertise);
+                        db_EECIP.InsertT_OE_PROJECT_TAGS(newProjID2, "Program Area", expertise);
 
 
                     //update feature tags
-                    db_EECIP.DeleteT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature");
+                    db_EECIP.DeleteT_OE_PROJECT_TAGS(newProjID2, "Project Feature");
                     foreach (string feature in model.SelectedFeatures ?? new List<string>())
-                        db_EECIP.InsertT_OE_PROJECT_TAGS(model.project.PROJECT_IDX, "Project Feature", feature);
+                        db_EECIP.InsertT_OE_PROJECT_TAGS(newProjID2, "Project Feature", feature);
+
+                    //update files
+                    if (model.files != null)
+                    {
+                        foreach (HttpPostedFileBase file in model.files)
+                        {
+                            byte[] fileBytes = null;
+
+                            if (file != null)
+                            {
+                                using (Stream inputStream = file.InputStream)
+                                {
+                                    MemoryStream memoryStream = inputStream as MemoryStream;
+                                    if (memoryStream == null)
+                                    {
+                                        memoryStream = new MemoryStream();
+                                        inputStream.CopyTo(memoryStream);
+                                    }
+                                    fileBytes = memoryStream.ToArray();
+
+                                    //insert to database
+                                    db_EECIP.InsertUpdateT_OE_DOCUMENTS(null, fileBytes, file.FileName, "project", file.ContentType, fileBytes.Length, null, null, newProjID2, null, UserIDX);
+                                }
+                            }
+                        }
+                    }
 
                     //now update the Azure search
-                    AzureSearch.PopulateSearchIndexProject(SuccID);
+                    AzureSearch.PopulateSearchIndexProject(newProjID2);
 
                     TempData["Success"] = "Update successful.";
+                    return RedirectToAction("ProjectDetails", "Dashboard", new { id = newProjID2, orgIDX = model.project.ORG_IDX });
                 }
                 else
                     TempData["Error"] = "Error updating data.";
@@ -451,7 +490,7 @@ namespace EECIP.Controllers
         }
 
 
-        private static void UploadProjectFiles(HttpPostedFileBase[] files, int UserIDX, Guid postID)
+        private static void UploadProjectFiles(HttpPostedFileBase[] files, int UserIDX, Guid keyID)
         {
             // Loop through each file and get the file info and save to the users folder and Db
             foreach (var file in files)
@@ -471,11 +510,70 @@ namespace EECIP.Controllers
                         fileBytes = memoryStream.ToArray();
 
                         //insert to database
-                        db_EECIP.inse db_Forum. InsertUpdatePostFile(null, file.FileName, postID, fileBytes, file.FileName, file.ContentType, UserIDX);
+                        db_EECIP.InsertUpdateT_OE_DOCUMENTS(null, fileBytes, file.FileName, "project", file.ContentType, fileBytes.Length, null, null, keyID, null, UserIDX);
                     }
                 }
             }
         }
+
+
+
+        public ActionResult ProjectFileDownload(Guid? id)
+        {
+            try
+            {
+                T_OE_DOCUMENTS doc = db_EECIP.GetT_OE_DOCUMENTS_ByID(id.ConvertOrDefault<Guid>());
+                var cd = new System.Net.Mime.ContentDisposition
+                {
+                    FileName = doc.DOC_NAME,
+                    Inline = false
+                };
+
+                Response.AppendHeader("Content-Disposition", cd.ToString());
+                if (doc.DOC_CONTENT != null)
+                    return File(doc.DOC_CONTENT, doc.DOC_FILE_TYPE ?? "application/octet-stream");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            TempData["Error"] = "Unable to download document.";
+            return RedirectToAction("Index", "Forum");
+        }
+
+
+        public ActionResult ProjectFileDelete(Guid? id)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            //get project, then org to check permissions
+            T_OE_DOCUMENTS doc = db_EECIP.GetT_OE_DOCUMENTS_ByID(id.ConvertOrDefault<Guid>());
+            if (doc != null)
+            {
+
+                T_OE_PROJECTS _project = db_EECIP.GetT_OE_PROJECTS_ByIDX(doc.PROJECT_IDX);
+                if (_project != null)
+                {
+                    //actual permissions check
+                    if (db_Accounts.UserCanEditOrgIDX(UserIDX, _project.ORG_IDX.ConvertOrDefault<Guid>()) || User.IsInRole("Admins"))
+                    {
+                        int SuccID = db_EECIP.DeleteT_OE_DOCUMENTS(id.ConvertOrDefault<Guid>());
+                        if (SuccID > 0)
+                        {
+                            TempData["Success"] = "File removed.";
+                            return RedirectToAction("ProjectDetails", "Dashboard", new { id = _project.PROJECT_IDX });
+                        }
+                    }
+                    TempData["Error"] = "Unable to delete document.";
+                    return RedirectToAction("ProjectDetails", "Dashboard", new { id = _project.PROJECT_IDX });
+                }
+            }
+
+            TempData["Error"] = "Unable to delete document.";
+            return RedirectToAction("ProjectDetails", "Dashboard");
+        }
+
 
         #endregion
 
@@ -556,12 +654,30 @@ namespace EECIP.Controllers
 
 
         [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult GovernanceOrgAdd(vmDashboardGovernance model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(null, model.edit_org_abbr, model.edit_org_name, null, null, "Governance", null, null, true, UserIDX);
+
+            if (SuccID != null)
+                TempData["Success"] = "Governance Group Added";
+            else
+                TempData["Error"] = "Unable to add group";
+
+            return RedirectToAction("Governance");
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult GovernanceUnlock()
         {
             int UserIDX = db_Accounts.GetUserIDX();
             db_Accounts.UpdateT_OE_USERS_UnlockGovernance(UserIDX);
             return RedirectToAction("Governance");
         }
+
+
+
 
     }
 }

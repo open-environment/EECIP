@@ -62,5 +62,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<Vote> Votes { get; set; }
         public virtual DbSet<PostFile> PostFiles { get; set; }
         public virtual DbSet<T_OE_DOCUMENTS> T_OE_DOCUMENTS { get; set; }
+        public virtual DbSet<T_OE_APP_SETTINGS_CUSTOM> T_OE_APP_SETTINGS_CUSTOM { get; set; }
     }
 }

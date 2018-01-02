@@ -18,7 +18,7 @@ namespace EECIP.Controllers
 
             if (UserIDX > 0)
             {
-                model.Notifications = db_EECIP.GetT_OE_USER_NOTIFICATION_byUserIDX(UserIDX);
+                model.Notifications = db_EECIP.GetT_OE_USER_NOTIFICATION_byUserIDX(UserIDX, true);
                 model.NotifyCount = model.Notifications == null ? 0 : model.Notifications.Count;
             }
 

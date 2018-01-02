@@ -2,6 +2,7 @@
 using EECIP.App_Logic.DataAccessLayer;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using System.ComponentModel;
 
 namespace EECIP.Models
 {
@@ -19,6 +20,11 @@ namespace EECIP.Models
     {
         public List<T_OE_APP_SETTINGS> app_settings { get; set; }
         public T_OE_APP_SETTINGS edit_app_setting { get; set; }
+
+        [DisplayName("Terms & Conditions")]
+        [UIHint("forumeditor"), AllowHtml]
+        [StringLength(6000)]
+        public string TermsAndConditions { get; set; }
 
     }
 

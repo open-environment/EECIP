@@ -98,8 +98,10 @@ namespace EECIP.Controllers
         // GET: /Account/Register
         public ActionResult Register()
         {
+            T_OE_APP_SETTINGS_CUSTOM cust = db_Ref.GetT_OE_APP_SETTING_CUSTOM();
             var model = new vmAccountRegister();
-            return View("Register", model);
+            model.termsConditions = cust.TERMS_AND_CONDITIONS;
+            return View(model);
         }
 
 
@@ -501,6 +503,61 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+
+        public ActionResult Notifications()
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            var model = new vmAccountNotifications();
+            model.notifications = db_EECIP.GetT_OE_USER_NOTIFICATION_byUserIDX(UserIDX, false);
+            return View(model);  
+        }
+
+
+        [HttpPost]
+        public JsonResult NotificationDelete(Guid? id) {
+
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            //CHECK PERMISSIONS
+            T_OE_USER_NOTIFICATION n = db_EECIP.GetT_OE_USER_NOTIFICATION_byID(id);
+            if (n != null)
+            {
+                if (User.IsInRole("Admins") || UserIDX == n.USER_IDX)
+                {
+                    int SuccID = db_EECIP.DeleteT_OE_NOTIFICATION(id.ConvertOrDefault<Guid>());
+                    if (SuccID > 0)
+                    {
+                        return Json("Success");
+                    }
+                }
+            }
+
+            //if got this far, general error
+            return Json("Unable to delete notification.");
+        }
+
+        // POST: /Forum/PostAnswer
+        [HttpPost]
+        public JsonResult NotificationRead(Guid? id)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            //CHECK PERMISSIONS
+            T_OE_USER_NOTIFICATION n = db_EECIP.GetT_OE_USER_NOTIFICATION_byID(id);
+            if (n != null)
+            {
+                if (User.IsInRole("Admins") || UserIDX == n.USER_IDX)
+                {
+                    Guid? SuccID = db_EECIP.InsertUpdateT_OE_USER_NOTIFICATION(n.NOTIFICATION_IDX, n.USER_IDX, null, null, null, null, true, null, true, null, false);
+                    if (SuccID != null)
+                        return Json(new { msg = "Success" });
+                }
+            }
+
+            //return ERROR
+            return Json(new { msg = "Unable to mark read." });
+
+        }
 
         #region Helpers
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)

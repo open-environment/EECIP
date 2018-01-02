@@ -1,7 +1,10 @@
 ﻿@using EECIP.App_Logic.DataAccessLayer
 @model EECIP.Models.vmDashboardUserCard
 @{
-    ViewBag.Title = Model.User.FNAME + " " + Model.User.LNAME;
+    if (Model.User != null)
+    {
+        ViewBag.Title = Model.User.FNAME + " " + Model.User.LNAME;
+    }
     ViewBag.ShowBack = true;
 }
 
@@ -12,7 +15,10 @@
             </div>
             <div class="circle-tile-content dark-blue">
                 <div class="circle-tile-description text-faded">
-                    @Model.UserOrg.ORG_NAME
+                    @if (Model.UserOrg != null)
+                    {
+                        @Model.UserOrg.ORG_NAME
+                    }
                 </div>
                 <div class="circle-tile-number text-faded">
                     @Model.User.FNAME @Model.User.LNAME

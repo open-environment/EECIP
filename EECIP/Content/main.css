@@ -2162,7 +2162,6 @@ span.star:before {
 .accordion-custom .panel-heading {
 	padding: 0;
 	background-image: none;
-	height: auto;
 	box-shadow: none;
 	border-radius: 0;
 }

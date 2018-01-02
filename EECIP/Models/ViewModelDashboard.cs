@@ -5,6 +5,8 @@ using System.Web.Mvc;
 using EECIP.App_Logic.BusinessLogicLayer;
 using Microsoft.Azure.Search.Models;
 using System.Linq;
+using System.ComponentModel;
+using System.Web;
 
 namespace EECIP.Models
 {
@@ -65,7 +67,7 @@ namespace EECIP.Models
             ddl_Cloud = ddlHelpers.get_ddl_tags_by_category_stringy("Cloud");
             ddl_API = ddlHelpers.get_ddl_tags_by_category_stringy("API");
             ddl_Status = db_Ref.GetT_OE_REF_TAGS_ByCategory_ProjStatus(false);
-            ddl_Agencies = ddlHelpers.get_ddl_organizations_all_active();
+            ddl_Agencies = ddlHelpers.get_ddl_organizations(true, true);
         }
 
     }
@@ -86,15 +88,11 @@ namespace EECIP.Models
         public Guid? selAgency { get; set; }
         public string selAgencyName { get; set; }
         public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
-
-        //initialize
-        public vmDashboardProjects()
-        {
-            ddl_Agencies = ddlHelpers.get_ddl_organizations_all_active();
-        }
     }
 
     public class vmDashboardProjectDetails {
+        public string orgName { get; set; }
+        public string orgType { get; set; }
         public T_OE_PROJECTS project { get; set; }
         public IEnumerable<SelectListItem> ddl_Media { get; set; }
         public IEnumerable<SelectListItem> ddl_Status { get; set; }
@@ -105,6 +103,11 @@ namespace EECIP.Models
         public List<string> SelectedProgramAreas { get; set; }
         public IEnumerable<SelectListItem> AllFeatures { get; set; }
         public List<string> SelectedFeatures { get; set; }
+        public bool NewProjInd { get; set; }
+        [DisplayName("Upload File")]
+        public HttpPostedFileBase[] files { get; set; }
+        public List<T_OE_DOCUMENTS> files_existing { get; set; }
+
         public vmDashboardProjectDetails()
         {
             ddl_Media = ddlHelpers.get_ddl_tags_by_category("Project Media");
@@ -150,6 +153,8 @@ namespace EECIP.Models
         public Guid? selAgency { get; set; }
         public string selAgencyName { get; set; }
         public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
+        public string edit_org_name { get; set; }
+        public string edit_org_abbr { get; set; }
 
         //initialize
         public vmDashboardGovernance()
@@ -158,4 +163,7 @@ namespace EECIP.Models
         }
 
     }
+
+
+
 }

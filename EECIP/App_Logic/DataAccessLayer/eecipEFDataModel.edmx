@@ -17,6 +17,13 @@
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
         </EntityType>
+        <EntityType Name="T_OE_APP_SETTINGS_CUSTOM">
+          <Key>
+            <PropertyRef Name="SETTING_CUSTOM_IDX" />
+          </Key>
+          <Property Name="SETTING_CUSTOM_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TERMS_AND_CONDITIONS" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="T_OE_DOCUMENTS">
           <Key>
             <PropertyRef Name="DOC_IDX" />
@@ -1088,6 +1095,7 @@
         </Association>
         <EntityContainer Name="EECIPModelStoreContainer">
           <EntitySet Name="T_OE_APP_SETTINGS" EntityType="Self.T_OE_APP_SETTINGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_APP_SETTINGS_CUSTOM" EntityType="Self.T_OE_APP_SETTINGS_CUSTOM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_DOCUMENTS" EntityType="Self.T_OE_DOCUMENTS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION" EntityType="Self.T_OE_ORGANIZATION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="Self.T_OE_ORGANIZATION_EMAIL_RULE" Schema="dbo" store:Type="Tables" />
@@ -1605,6 +1613,7 @@
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
             <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
           </AssociationSet>
+          <EntitySet Name="T_OE_APP_SETTINGS_CUSTOM" EntityType="EECIPModel.T_OE_APP_SETTINGS_CUSTOM" />
           </EntityContainer>
         <EntityType Name="T_OE_APP_SETTINGS">
           <Key>
@@ -2719,6 +2728,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="T_OE_APP_SETTINGS_CUSTOM">
+          <Key>
+            <PropertyRef Name="SETTING_CUSTOM_IDX" />
+          </Key>
+          <Property Name="SETTING_CUSTOM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TERMS_AND_CONDITIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3239,6 +3255,14 @@
                 <ScalarProperty Name="DOC_NAME" ColumnName="DOC_NAME" />
                 <ScalarProperty Name="DOC_CONTENT" ColumnName="DOC_CONTENT" />
                 <ScalarProperty Name="DOC_IDX" ColumnName="DOC_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_APP_SETTINGS_CUSTOM">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_APP_SETTINGS_CUSTOM">
+              <MappingFragment StoreEntitySet="T_OE_APP_SETTINGS_CUSTOM">
+                <ScalarProperty Name="TERMS_AND_CONDITIONS" ColumnName="TERMS_AND_CONDITIONS" />
+                <ScalarProperty Name="SETTING_CUSTOM_IDX" ColumnName="SETTING_CUSTOM_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,9 +1,11 @@
-﻿@model EECIP.Models.vmDashboardProjectDetails
+﻿@using EECIP.App_Logic.BusinessLogicLayer
+@model EECIP.Models.vmDashboardProjectDetails
 @{
     ViewBag.Title = "Project Details";
+    ViewBag.SubTitle = "for " + Model.orgName;
 }
 
-@using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id="norepostform" }))
+@using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id="norepostform", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.project.ORG_IDX)
@@ -176,23 +178,59 @@
                     </div>
                 </div>
                 <div class="row">
-                    <h3>Profile Files</h3>
-                    <div class="postuploadholder" style="display:none;">
-                        @using (Html.BeginForm("ProjectFileUpload", "Dashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    <div class="col-md-12">
+                        <h3>Project Files</h3>
+
+
+                        @if (Model.files_existing != null && Model.files_existing.Count > 0)
                         {
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-btn">
-                                    <span class="btn btn-default btn-file">
-                                        Browse: <input type="file" name="files" id="files" value="" multiple="multiple">
-                                    </span>
-                                </span>
-                                <input id="filename1" type="text" class="form-control" readonly="">
+                
+                            <div class="postuploadedfilesholder clearfix">
+                                <p>Attached Files</p>
+                                <ul>
+                                    @foreach (var file in Model.files_existing.OrderByDescending(o => o.CREATE_DT))
+                                    {
+                                        <li>
+                                            <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
+                                        
+
+                                                @if (Utils.FileIsImage(file.DOC_NAME))
+                                                {
+                                                    <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                                                }
+                                            </a>
+                                            <a href="@Url.Action("ProjectFileDelete", "Dashboard", new { id = file.DOC_IDX })" class="deleteupload" title="Delete">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                            </a>
+                                    
+                                            <div class="postedfilename">@file.DOC_NAME</div>
+                                        </li>
+                                    }
+                                </ul>
                             </div>
-                            <p>
-                                <input type="submit" value="Upload Files" class="btn-mvc btn-mvc-small postuploadbutton" />
-                                <input type="hidden" name="uploadPostId" id="uploadPostId" value="@Model.project.PROJECT_IDX" />
-                            </p>
                         }
+
+
+
+                        <div class="col-md-5 col-md-offset-1 topiccategory">
+                                <div class="form-group createuploadfiles">
+                                    @Html.LabelFor(x => x.files)
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-btn">
+                                            <span class="btn btn-default btn-file">
+                                                Browse <input type="file" name="files" id="files" value="">
+                                            </span>
+                                        </span>
+                                        <input id="filename1" type="text" class="form-control" readonly="">
+                                    </div>
+                                    @Html.ValidationMessageFor(x => x.files)
+                                </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -202,7 +240,17 @@
 <div class="row">
     <div class="col-md-12">
         <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
-        <a href="@Url.Action("Projects", "Dashboard")" class="btn btn-default">Close</a>
+
+        @if(Model.orgType == "Governance")
+        {
+            <a href="@Url.Action("Governance", "Dashboard")" class="btn btn-default">Close</a>
+        }
+        else
+        {
+            <a href="@Url.Action("Projects", "Dashboard")" class="btn btn-default">Close</a>
+        }
+
+
         @if (Model.project.PROJ_NAME != null) {
         <div class="delete-section" style="display:inline">
             <a class=" btn btn-danger delete-link">Delete</a>
@@ -236,10 +284,23 @@
                 });
             });
 
+            //file upload display attach file
+            //$("#btnFile").click(function (e) {
+            //    e.preventDefault();
+            //    $(".postuploadholder").toggle();
+            //});
+
             //file upload display filename
             $("input[id='files']").change(function (e) {
                 var $this = $(this);
-                $("#filename1").val($this.val().split('\\').pop());
+                var FileSize = this.files[0].size / 1024 / 1024;
+                if (FileSize > 20) {
+                    $('#files').val('');
+                    alert('Project files cannot exceed 20 MB');
+                }
+                else {
+                    $("#filename1").val($this.val().split('\\').pop());
+                }
             });
 
             //handling div visibility

@@ -30,10 +30,10 @@ namespace EECIP.Models
             });
         }
 
-        public static IEnumerable<SelectListItem> get_ddl_organizations_all_active()
+        public static IEnumerable<SelectListItem> get_ddl_organizations(bool activeInd, bool excludeGovernInd)
         {
 
-            return db_Ref.GetT_OE_ORGANIZATION(true).Select(x => new SelectListItem
+            return db_Ref.GetT_OE_ORGANIZATION(activeInd, excludeGovernInd).Select(x => new SelectListItem
             {
                 Value = x.ORG_IDX.ToString(),
                 Text = x.ORG_NAME

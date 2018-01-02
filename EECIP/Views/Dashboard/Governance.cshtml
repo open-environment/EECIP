@@ -30,23 +30,27 @@ else
         @*<div class="col-md-1">
                 <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency  })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
             </div>*@
-        @if (User.IsInRole("Admins"))
-        {
+
             <div class="col-sm-11">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">
+                        <label class="col-sm-2 control-label" for="form-field-1">
                             Select Governance Group:
                         </label>
-                        <div class="col-sm-5">
-                            @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Governance?selAgency=' + this.options[this.selectedIndex].value;" })
-                            <a href="@Url.Action("GovernanceAddGroup","Dashboard")" class="btn btn-rounded btn-info"><i class="glyphicon glyphicon-plus"></i> Add New Group</a>
-
+                        <div class="col-sm-9">
+                            <div class="input-group">
+                                @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Governance?selAgency=' + this.options[this.selectedIndex].value;" })
+                                <span class="input-group-btn">
+                                    <a href="#modal-form" data-toggle="modal" class="btn btn-info">
+                                        <i class="glyphicon glyphicon-plus"></i> Add New Group
+                                    </a>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
-        }
+
     </div>
 
     if (Model.projects != null)
@@ -83,7 +87,7 @@ else
                                 {
                                     <tr>
                                         <td style="min-width: 68px;">
-                                            <a href="@Url.Action("GovernanceDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
                                             <div class="delete-section" style="display:inline">
                                                 <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
                                                 <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
@@ -141,11 +145,69 @@ else
         </div>
     }
 
+    if (Model.selAgency != null)
+    {
+    <div class="col-md-1">
+        <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New Project</a>
+    </div>
+    }
 }
 
+
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("GovernanceOrgAdd", "Dashboard", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-tital">New Governance Group</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Governance Group Name</label>
+                                            @Html.TextBoxFor(model => model.edit_org_name, new { @class = "form-control", @maxlength = "200" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Abbreviation</label>
+                                            @Html.TextBoxFor(model => model.edit_org_abbr, new { @class = "form-control", @maxlength = "100" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- END MODAL FORM -->
 
 
 @section Scripts {
     @Scripts.Render("~/bundles/confirmdelete")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //create an event when button is clicked to display modal
+        });
+    </script>
 }
 

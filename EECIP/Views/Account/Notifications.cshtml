@@ -1,0 +1,91 @@
+﻿@model EECIP.Models.vmAccountNotifications
+@{
+    ViewBag.Title = "Notifications";
+}
+
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th></th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                    </tr>
+
+                    @foreach (var item in Model.notifications)
+                    {
+                        <tr class="@(item.READ_IND != true ? "text-bold" : "text-grey")">
+                            <td>
+                                <div class="delete-section" style="display:inline">
+                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.NOTIFICATION_IDX" data-delete-p="/Account/NotificationDelete"><b>Confirm Delete</b></div>
+                                </div>
+                                @if (item.READ_IND != true)
+                                {
+                                <a data-id="@item.NOTIFICATION_IDX" href="#" class="btn btn-rounded btn-xs btn-info markread" title="Mark as Read"><i class="glyphicon glyphicon-eye-open"></i></a>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NOTIFY_DT)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NOTIFY_TYPE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NOTIFY_TITLE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.NOTIFY_DESC)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/confirmdelete")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        //mark read event handling
+        $(".markread").on('click', function (e) {
+            e.preventDefault();
+            var _id = $(this).attr('data-id');
+            var linker = $(this);
+
+            $.post('@Url.Action("NotificationRead", "Account")',
+            AddAntiForgeryToken({ id: _id }))
+                .done(function (response) {
+                    if (response.msg == "Success") {
+                        linker.parent().parent().addClass("text-grey");
+                        linker.parent().parent().removeClass("text-bold");
+                        linker.remove();
+                        toastr.success("Marked as read");
+                    }
+                    else {
+                        toastr.warning(response.msg);
+                    }
+                }).fail(function (data) {
+                    toastr.warning("Unable to mark read.");
+                });
+
+        });
+    });
+
+    AddAntiForgeryToken = function (data) {
+        data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
+        return data;
+    };
+</script>
+}

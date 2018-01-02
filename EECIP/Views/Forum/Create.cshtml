@@ -36,7 +36,14 @@
             //file upload display filename
             $("input[id='files']").change(function (e) {
                 var $this = $(this);
-                $("#filename1").val($this.val().split('\\').pop());
+                var FileSize = this.files[0].size / 1024 / 1024;
+                if (FileSize > 20) {
+                    $('#files').val('');
+                    alert('Project files cannot exceed 20 MB');
+                }
+                else {
+                    $("#filename1").val($this.val().split('\\').pop());
+                }
             });
         });
 

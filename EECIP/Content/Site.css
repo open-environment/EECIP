@@ -429,6 +429,9 @@ ul.main-navigation-menu > li.active > a {
     color: #8e44ad;
 }
 
+.text-grey {
+    color: #bbb;
+}
 
 
 /*************************************************************************************************************************************************/
@@ -481,6 +484,11 @@ ul.main-navigation-menu > li.active > a {
     line-height: 19px;
 }
 
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
 .btn-file input[type=file] {
     position: absolute;
     top: 0;
@@ -496,6 +504,8 @@ ul.main-navigation-menu > li.active > a {
     cursor: inherit;
     display: block;
 }
+
+
 
 .postuploadholder p {
     text-align: right;

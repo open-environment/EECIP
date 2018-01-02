@@ -126,9 +126,12 @@ namespace EECIP.Controllers
         //GET: /Admin/Settings
         public ActionResult Settings()
         {
+            T_OE_APP_SETTINGS_CUSTOM custSettings = db_Ref.GetT_OE_APP_SETTING_CUSTOM();
+
             var model = new vmAdminSettings
             {
-                app_settings = db_Ref.GetT_OE_APP_SETTING_List()
+                app_settings = db_Ref.GetT_OE_APP_SETTING_List(),
+                TermsAndConditions = custSettings.TERMS_AND_CONDITIONS
             };
             return View(model);
         }
@@ -148,13 +151,29 @@ namespace EECIP.Controllers
             return RedirectToAction("Settings");
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult CustomSettings(vmAdminSettings model)
+        {
+            if (ModelState.IsValid)
+            {
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(model.TermsAndConditions);
+                if (SuccID > 0)
+                    TempData["Success"] = "Data Saved.";
+                else
+                    TempData["Error"] = "Data Not Saved.";
+            }
+
+            return RedirectToAction("Settings");
+        }
+
+
 
         //*************************************** AGENCIES **********************************************************
         // GET: /Admin/Agencies
         public ActionResult RefAgencies() {
             var model = new vmAdminAgencies
             {
-                agencies = db_Ref.GetT_OE_ORGANIZATION(false)
+                agencies = db_Ref.GetT_OE_ORGANIZATION(false, false)
             };
             return View(model);
         }

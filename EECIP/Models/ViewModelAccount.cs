@@ -49,6 +49,7 @@ namespace EECIP.Models
         public Boolean suggestAgencyInd { get; set; }
        
         public string suggestAgency { get; set; }
+        public string termsConditions { get; set; }
     }
 
 
@@ -79,7 +80,7 @@ namespace EECIP.Models
         //initialize
         public vmAccountUserProfile()
         {
-            ddl_Agencies = ddlHelpers.get_ddl_organizations_all_active();
+            ddl_Agencies = ddlHelpers.get_ddl_organizations(true, true);
         }
     }
 
@@ -127,5 +128,10 @@ namespace EECIP.Models
     public class vmAccountUsers {
         public List<T_OE_USERS> users { get; set;}
 
+    }
+
+    public class vmAccountNotifications
+    {
+        public List<T_OE_USER_NOTIFICATION> notifications { get; set; }
     }
 }

@@ -139,7 +139,15 @@
                             }
                         </a>
                     </li>
-                    <li><a href="#tab6" data-toggle="tab">Governance</a></li>
+                    <li>
+                        <a href="#tab6" data-toggle="tab">
+                            Governance
+                            @if (Model.searchResults != null && Model.searchResults.Facets != null && Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Governance") != null)
+                            {
+                                <span class="badge badge-eecip-bluegreen">@Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Governance").Count</span>
+                            }
+                        </a>
+                    </li>
                     <li>
                         <a href="#tab7" data-toggle="tab">
                             Discussion

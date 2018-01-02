@@ -558,7 +558,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 AgencyAbbreviation = o.ORG_ABBR,
                                 State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
                                 KeyID = a.PROJECT_IDX.ToString(),
-                                DataType = "Project",
+                                DataType = (o.ORG_TYPE == "Governance" ? "Governance" : "Project"),
                                 Record_Source = a.RECORD_SOURCE,
                                 Name = a.PROJ_NAME,
                                 Description = a.PROJ_DESC,
@@ -1132,18 +1132,67 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
-
-        //******************************* NOTIFICATIONS ***************************************
-        public static List<T_OE_USER_NOTIFICATION> GetT_OE_USER_NOTIFICATION_byUserIDX(int? UserIDX)
+        //*******************************DOCUMENTS *********************************************
+        public static Guid? InsertUpdateT_OE_DOCUMENTS(Guid? dOC_IDX, byte[] dOC_CONTENT, string dOC_NAME, string dOC_TYPE, string dOC_FILE_TYPE, int? dOC_SIZE, string dOC_COMMENT, 
+            string dOC_AUTHOR, Guid? pROJECT_IDX, int? oRG_ENT_SVCS_IDX, int? UserIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
-                    if (UserIDX == null) return null;
+                    Boolean insInd = false;
 
-                    return (from a in ctx.T_OE_USER_NOTIFICATION
-                            where a.USER_IDX == UserIDX
+                    T_OE_DOCUMENTS e = (from c in ctx.T_OE_DOCUMENTS
+                                        where c.DOC_IDX == dOC_IDX
+                                        select c).FirstOrDefault();
+
+                    //insert case
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_DOCUMENTS();
+                        e.DOC_IDX = Guid.NewGuid();
+                        e.CREATE_DT = System.DateTime.UtcNow;
+                        e.CREATE_USERIDX = UserIDX ?? 0;
+                    }
+                    else
+                    {
+                        e.MODIFY_DT = System.DateTime.UtcNow;
+                        e.MODIFY_USERIDX = UserIDX ?? 0;
+                    }
+
+                    if (dOC_CONTENT != null) e.DOC_CONTENT = dOC_CONTENT;
+                    if (dOC_NAME != null) e.DOC_NAME = dOC_NAME;
+                    if (dOC_TYPE != null) e.DOC_TYPE = dOC_TYPE;
+                    if (dOC_FILE_TYPE != null) e.DOC_FILE_TYPE = dOC_FILE_TYPE;
+                    if (dOC_SIZE != null) e.DOC_SIZE = dOC_SIZE;
+                    if (dOC_COMMENT != null) e.DOC_COMMENT = dOC_COMMENT;
+                    if (dOC_AUTHOR != null) e.DOC_AUTHOR = dOC_AUTHOR;
+                    if (pROJECT_IDX != null) e.PROJECT_IDX = pROJECT_IDX;
+                    if (oRG_ENT_SVCS_IDX != null) e.ORG_ENT_SVCS_IDX = oRG_ENT_SVCS_IDX;
+
+                    if (insInd)
+                        ctx.T_OE_DOCUMENTS.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.DOC_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<T_OE_DOCUMENTS> GetT_OE_DOCUMENTS_ByProjectID(Guid ProjectIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_DOCUMENTS
+                            where a.PROJECT_IDX == ProjectIDX
                             select a).ToList();
                 }
                 catch (Exception ex)
@@ -1154,6 +1203,108 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static T_OE_DOCUMENTS GetT_OE_DOCUMENTS_ByID(Guid DocIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_DOCUMENTS
+                            where a.DOC_IDX == DocIDX
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int DeleteT_OE_DOCUMENTS(Guid DocIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_DOCUMENTS rec = (from a in ctx.T_OE_DOCUMENTS
+                                    where a.DOC_IDX == DocIDX
+                                    select a).FirstOrDefault();
+
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
+
+        //******************************* NOTIFICATIONS ***************************************
+        public static List<T_OE_USER_NOTIFICATION> GetT_OE_USER_NOTIFICATION_byUserIDX(int? UserIDX, bool OnlyUnread)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    if (UserIDX == null) return null;
+
+                    return (from a in ctx.T_OE_USER_NOTIFICATION
+                            where a.USER_IDX == UserIDX
+                            && (OnlyUnread == true ? a.READ_IND == false : true)
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static T_OE_USER_NOTIFICATION GetT_OE_USER_NOTIFICATION_byID(Guid? Id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_USER_NOTIFICATION
+                            where a.NOTIFICATION_IDX == Id
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int DeleteT_OE_NOTIFICATION(Guid id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_USER_NOTIFICATION rec = new T_OE_USER_NOTIFICATION { NOTIFICATION_IDX = id };
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
         public static Guid? InsertUpdateT_OE_USER_NOTIFICATION(Guid? nOTIFICATION_IDX, int uSER_IDX, DateTime? nOTIFY_DT, string nOTIFY_TYPE, string nOTIFY_TITLE,
             string nOTIFY_DESC, Boolean rEAD_IND, int? fROM_USER_IDX, Boolean aCT_IND, int? cREATE_USER, bool SendEmailInd)

@@ -24,7 +24,6 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'UA-108934202-1');
     </script>
 
@@ -54,7 +53,11 @@
                     @if (Request.IsAuthenticated)
                     {
                         @Html.Action("_PartialHeadNotification", "Shared")
-
+                        <li>
+                            <a  title="Invite others to join the EECIP and make it a better community!" href="mailto:?subject=Join the e-Enterprise Community Information Platform&body=@User.Identity.Name has invited you to the e-Enterprise Community Information Platform at http://13.82.106.55/">
+                                <i class="clip-user-plus"></i>
+                            </a>
+                        </li>
                         <!-- start: USER DROPDOWN -->
                         <li class="dropdown current-user" style="float:left;">
                             <a data-toggle="dropdown" @*data-hover="dropdown"*@ class="dropdown-toggle" data-close-others="true" href="#">
@@ -147,7 +150,7 @@
             <span class="go-top" style="margin-left:20px;"><i class="clip-chevron-up"></i></span>
         </div>
         <div class=" footer-items footer-right">
-            <a href="">Terms & Conditions </a>
+            <a href="@Url.Action("TermsAndConditions","Home")" >Terms & Conditions </a>
         </div>
         <div class=" footer-items footer-right">
             <a href="https://e-enterprisefortheenvironment.net/our-projects/shared-services-projects/ee_inventory/" target="_blank">Contact </a> |
@@ -166,6 +169,8 @@
     <script>
         jQuery(document).ready(function () {
             Main.init();
+
+            $('[data-toggle="tooltip"]').tooltip();  
         });
     </script>
     @Html.Partial("_Alerts")

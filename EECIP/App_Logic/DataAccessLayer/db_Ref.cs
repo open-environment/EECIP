@@ -87,9 +87,61 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+        //*****************APP SETTINGS_CUSTOM**********************************
+        public static T_OE_APP_SETTINGS_CUSTOM GetT_OE_APP_SETTING_CUSTOM()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_APP_SETTINGS_CUSTOM
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int InsertUpdateT_OE_APP_SETTING_CUSTOM(string tERMS_AND_CONDITIONS)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Boolean insInd = false;
+
+                    T_OE_APP_SETTINGS_CUSTOM e = (from c in ctx.T_OE_APP_SETTINGS_CUSTOM
+                                           select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_APP_SETTINGS_CUSTOM();
+                    }
+
+                    if (tERMS_AND_CONDITIONS != null) e.TERMS_AND_CONDITIONS = Utils.GetSafeHtml(tERMS_AND_CONDITIONS);
+
+                    if (insInd)
+                        ctx.T_OE_APP_SETTINGS_CUSTOM.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.SETTING_CUSTOM_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
 
         //***************** ORGANZIATIONS ******************************
-        public static List<T_OE_ORGANIZATION> GetT_OE_ORGANIZATION(bool actInd)
+        public static List<T_OE_ORGANIZATION> GetT_OE_ORGANIZATION(bool actInd, bool ExcludeGovernanceInd)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -97,6 +149,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     return (from a in ctx.T_OE_ORGANIZATION
                             where (actInd == true ? a.ACT_IND == true : true)
+                            && (ExcludeGovernanceInd == true ? a.ORG_TYPE != "Governance" : true)
                             orderby a.ORG_NAME
                             select a).ToList();
                 }
@@ -116,6 +169,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     return (from a in ctx.T_OE_ORGANIZATION
                             where a.ORG_TYPE == oRG_TYPE
+                            && a.ACT_IND == true
                             orderby a.ORG_NAME
                             select a).ToList();
                 }
@@ -270,6 +324,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     var xxx = (from a in ctx.T_OE_ORGANIZATION
                                join s in ctx.T_OE_REF_STATE on a.STATE_CD equals s.STATE_CD into sr1 from x1 in sr1.DefaultIfEmpty() //left join
                                where a.SYNC_IND == false
+                               && a.ORG_TYPE != "Governance"
                                && a.ACT_IND == true
                                && (OrgIDX == null ? true : a.ORG_IDX == OrgIDX)
                                select new EECIP_Index
