@@ -192,6 +192,7 @@
           </Key>
           <Property Name="STATE_CD" Type="varchar" MaxLength="5" Nullable="false" />
           <Property Name="STATE_NAME" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="POP_DENSITY" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="T_OE_REF_SYNONYMS">
           <Key>
@@ -1656,6 +1657,7 @@
           <Property Name="STATE_CD" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="STATE_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_REF_STATE" ToRole="T_OE_ORGANIZATION" />
+          <Property Name="POP_DENSITY" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="T_OE_USERS">
           <Key>
@@ -2828,6 +2830,7 @@
           <EntitySetMapping Name="T_OE_REF_STATE">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_STATE">
               <MappingFragment StoreEntitySet="T_OE_REF_STATE">
+                <ScalarProperty Name="POP_DENSITY" ColumnName="POP_DENSITY" />
                 <ScalarProperty Name="STATE_NAME" ColumnName="STATE_NAME" />
                 <ScalarProperty Name="STATE_CD" ColumnName="STATE_CD" />
               </MappingFragment>

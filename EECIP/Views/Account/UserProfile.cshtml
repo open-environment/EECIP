@@ -50,9 +50,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
+
+
                                     <div class="form-group">
                                         <label>Phone</label>
-                                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control", data_format = "(ddd) ddd-dddd" })
+                                        <div class="input-group">
+                                            <span class="input-group-addon"> <i class="glyphicon glyphicon-phone-alt"></i> </span>
+                                            @Html.TextBoxFor(model => model.Phone, new { @class = "form-control ", @maxlength="12" })
+                                        </div>
                                         @Html.ValidationMessageFor(model => model.Phone)
                                     </div>
                                 </div>
@@ -67,38 +72,31 @@
                                 <div class="col-md-12">
                                     @if (Model.uListInd != "a")
                                     {
-                                    <a class=" btn btn-orange pull-right" href="@Url.Action("SetPermPassword" )">Change Password</a>
+                                    <a class=" btn btn-orange " href="@Url.Action("SetPermPassword" )">Change Password</a>
                                     }
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Profile Picture</label>
+                                <label>Upload a Profile Picture</label>
                                 <div class="btn-primary">
-                                    @Html.TextBox("imageBrowes", "", new { type = "file" })
+                                    @Html.TextBox("imageBrowes", "", new { type = "file", accept = ".png, .jpg, .jpeg, .bmp" })
                                 </div>
-                                <hr />
-                                @if (Model.HasAvatar == false)
-                                {
-                                    <div id="imgPreview" class="thumbnail" style="display:none">
-                                        <img class="img-responsive" id="targetImg" />
-                                        <div class="caption">
-                                            <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
-                                            <span id="description"></span>
-                                        </div>
+                                <div id="imgPreview" class="thumbnail" style="@(Model.HasAvatar==true ? "" : "display:none")">
+                                    @if (Model.HasAvatar == true)
+                                    {
+                                        <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(Model.UserIDX).png?r=@Model.ImageUniqueStr" />
+                                    }
+                                    else
+                                    {
+                                        <img class="img-responsive" id="targetImg" src="" />
+                                    }
+                                    <div class="caption" style="@(Model.HasAvatar!=true ? "" : "display:none")">
+                                        <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
+                                        <span id="description"></span>
                                     </div>
-                                }
-                                else
-                                {
-                                    <div id="imgPreview" class="thumbnail" style="max-width:200px">
-                                        <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(Model.UserIDX).png" />
-                                        <div class="caption">
-                                            <a href="#" onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
-                                            <span id="description"></span>
-                                        </div>
-                                    </div>
-                                }
+                                </div>
 
                             </div>
                         </div>
@@ -128,7 +126,7 @@
                                 }
                                 else
                                 {
-                                    @Html.LabelFor(model => model.OrgName)
+                                    @Html.TextBoxFor(model => model.OrgName, new { @class = "form-control", @readonly=true})
                                 }
                             </div>
                         </div>
@@ -156,8 +154,8 @@
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="form-field-select-4">Node Admin</label>
-                                @Html.CheckBox("NodeAdmin", Model.NodeAdmin ?? false, new { @class = "form-control" })
+                                <label for="form-field-select-4">Are you a Node Administrator?</label>
+                                @Html.CheckBox("NodeAdmin", Model.NodeAdmin ?? false, new { @class = "checkbox" })
                             </div>
                         </div>
                     </div>
@@ -195,17 +193,17 @@
                 tags: true
             });
 
-            //avatar handling
+            //handler for when a new image is selected
             $("#imageBrowes").change(function () {
                 var File = this.files;
                 if (File && File[0]) {
                     ReadImage(File[0]);
                 }
-            })
+            });
 
         });
 
-        //avatar handling
+        //handler for when a new image is selected
         var ReadImage = function (file) {
 
             var reader = new FileReader;
@@ -225,15 +223,16 @@
                     $("#targetImg").attr('src', _file.target.result);
                     $("#description").text("Size:" + size + ", " + height + "X " + width + ", " + type + "");
                     $("#imgPreview").show();
+                    $(".caption").show();
                 }
             }
         }
 
+        //handler for clearing preview
         var ClearPreview = function () {
             $("#imageBrowes").val('');
             $("#description").text('');
             $("#imgPreview").hide();
-
         }
 
     </script>

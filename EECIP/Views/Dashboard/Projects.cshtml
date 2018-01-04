@@ -1,4 +1,5 @@
-﻿@model EECIP.Models.vmDashboardProjects
+﻿@using EECIP.App_Logic.BusinessLogicLayer
+@model EECIP.Models.vmDashboardProjects
 @{
     ViewBag.Title = "Projects";
     ViewBag.SubTitle = "View and edit the projects for " + Model.selAgencyName;
@@ -63,7 +64,7 @@
                                     @Html.DisplayFor(modelItem => item.PROJ_NAME)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.PROJ_DESC)
+                                    @Utils.ReturnAmountWordsFromString(item.PROJ_DESC, 50)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.T_OE_REF_TAGS2.TAG_NAME)

@@ -58,7 +58,8 @@ namespace EECIP.Controllers
                         return RedirectToAction("SetPermPassword");
                     else
                     {
-                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, null, null, null, null, null);
+                        //set last login time and reset failed login attempts
+                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null);
                         return RedirectToAction("Index", "Dashboard");
                     }
 
@@ -217,11 +218,13 @@ namespace EECIP.Controllers
         }
 
 
+        [Authorize]
         // GET: /Account/UserProfile/2
         public ActionResult UserProfile(int? id, string a)
         {
             if (id == null)
                 id = db_Accounts.GetUserIDX();
+
             //security validation (only allow site admin or user to edit their own profile)
             if ((!User.IsInRole("Admins")) && (id != db_Accounts.GetUserIDX())) return RedirectToAction("AccessDenied", "Home");
             
@@ -241,8 +244,8 @@ namespace EECIP.Controllers
                 model.JobTitle = u.JOB_TITLE;
                 model.LinkedIn = u.LINKEDIN;
                 model.NodeAdmin = u.NODE_ADMIN;
-                //model.GetImage = u.USER_AVATAR;
                 model.HasAvatar = (u.USER_AVATAR != null);
+                model.ImageUniqueStr = (u.MODIFY_DT ?? u.CREATE_DT).ConvertOrDefault<DateTime>().Ticks.ToString();
                 model.uListInd = a;
 
                 //expertise
@@ -259,51 +262,14 @@ namespace EECIP.Controllers
         }
 
 
-        public ActionResult ImageUpload(vmAccountUserProfile model)
-        {
-            int UserIDX = db_Accounts.GetUserIDX();
-
-            var file = model.ImageFile;
-            if (file != null)
-            {
-                // ******************** VALIDATION START ********************************
-                //File too big check
-                if (file.ContentLength > 10240)
-                {
-                    TempData["Error"] = "File cannot exceed 10MB";
-                    return RedirectToAction("UserProfile", new { a = model.uListInd });
-                }
-
-                //invalid file extension check
-                var fileExtension = Path.GetExtension(file.FileName);
-                List<string> allowedExtensions = new List<string> { ".jpg", ".jpeg", ".png", ".bmp" };
-                if (!allowedExtensions.Contains(fileExtension))
-                {
-                    TempData["Error"] = "Invalid file type";
-                    return RedirectToAction("UserProfile", new { a = model.uListInd });
-                }
-                // ******************** VALIDATION END ********************************
-
-
-                // Convert to Png
-                var outputStream = file.InputStream.ConvertImage(ImageFormat.Png);
-
-                //save to db
-                db_Accounts.UpdateT_OE_USERS_Avatar(UserIDX, Utils.ConvertGenericStreamToByteArray(outputStream));
-
-                //save to file system
-                file.SaveAs(Server.MapPath("/Content/Images/Users/" + UserIDX.ToString() + ".png"));
-            }
-            return RedirectToAction("UserProfile", new { a = model.uListInd });
-        }
-
-
         // POST: /Account/UserProfile
+        [Authorize]
         [HttpPost]
         public ActionResult UserProfile(vmAccountUserProfile model)
         {
             //security validation (only allow site admin or user to edit their own profile)
-            if ((!User.IsInRole("Admins")) && (model.UserIDX != db_Accounts.GetUserIDX())) return RedirectToAction("AccessDenied", "Home");
+            if ((!User.IsInRole("Admins")) && (model.UserIDX != db_Accounts.GetUserIDX()))
+                return RedirectToAction("AccessDenied", "Home");
 
             if (ModelState.IsValid)
             {
@@ -348,7 +314,9 @@ namespace EECIP.Controllers
                         db_Accounts.UpdateT_OE_USERS_Avatar(model.UserIDX, Utils.ConvertGenericStreamToByteArray(outputStream));
 
                         //save to file system
-                        model.imageBrowes.SaveAs(Server.MapPath("/Content/Images/Users/" + model.UserIDX.ToString() + ".png"));
+                        //string fileName1 = model.UserIDX.ToString() + ".png?x=" + System.DateTime.Now.Millisecond.ToString();
+                        string fileName1 = model.UserIDX.ToString() + ".png";
+                        model.imageBrowes.SaveAs(Server.MapPath("/Content/Images/Users/" + fileName1));
 
                     }
 
@@ -503,7 +471,7 @@ namespace EECIP.Controllers
             return View(model);
         }
 
-
+        [Authorize]
         public ActionResult Notifications()
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -512,7 +480,7 @@ namespace EECIP.Controllers
             return View(model);  
         }
 
-
+        [Authorize]
         [HttpPost]
         public JsonResult NotificationDelete(Guid? id) {
 
@@ -537,6 +505,7 @@ namespace EECIP.Controllers
         }
 
         // POST: /Forum/PostAnswer
+        [Authorize]
         [HttpPost]
         public JsonResult NotificationRead(Guid? id)
         {

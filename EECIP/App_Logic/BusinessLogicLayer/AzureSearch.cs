@@ -50,6 +50,12 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         public string PersonPhone { get; set; }
         public string PersonEmail { get; set; }
         public string PersonLinkedIn { get; set; }
+        [IsFilterable, IsFacetable]
+        public string Population_Density { get; set; }
+        [IsFilterable, IsFacetable]
+        public string EPA_Region { get; set; }
+        [IsFilterable, IsFacetable]
+        public string Status { get; set; }
     }
 
 
@@ -231,7 +237,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                             {
                                 Guid proj_idx = Guid.Parse(p.KeyID);
                                 db_EECIP.InsertUpdatetT_OE_PROJECTS(proj_idx, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                                    null, null, null, null, true, true, null, null);
+                                    null, null, null, null, null, true, true, null, null);
                             }
 
                         }
@@ -244,6 +250,9 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                                 "Failed to index some of the documents: {0}",
                                 String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
                             PendingRecs = false;
+                            db_Ref.InsertT_OE_SYS_LOG("Search Pop1", e.Message.SubStringPlus(0,2000));
+                            
+                            return;
                         }
                     }
                     else
@@ -255,6 +264,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
             catch (Exception ex)
             {
+                db_Ref.InsertT_OE_SYS_LOG("Search Pop2", ex.Message.SubStringPlus(0, 2000));
                 throw ex;
             }
         }
@@ -537,6 +547,41 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
+        public static void DeleteSearchIndexUsers(int UserIDX)
+        {
+            try
+            {
+                //connect to Azure Search
+                SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+                //get ent service needing to delete sync
+                IEnumerable<string> ss = new List<string>() { UserIDX.ToString() };
+                var batch = IndexBatch.Delete("KeyID", ss);
+
+                try
+                {
+                    ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                    indexClient.Documents.Index(batch);
+                }
+                catch (IndexBatchException e)
+                {
+                    // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                    // the batch. Depending on your application, you can take compensating actions like delaying and
+                    // retrying. For this simple demo, we just log the failed document keys and continue.
+                    Console.WriteLine(
+                        "Failed to index some of the documents: {0}",
+                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", (ex.InnerException != null ? ex.InnerException.ToString() : ex.Message).SubStringPlus(0, 2000));
+            }
+        }
+
+
         public static void DeleteForumTopic(Guid? TopicID)
         {
             try
@@ -575,7 +620,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
         //******************************** METHODS FOR QUERYING INDEX ******************************************
         public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr, string dataTypeFacet = "", string mediaFacet = "", 
-            string recordSourceFacet = "", string agencyFacet = "", string stateFacet = "", string tagsFacet = "", int? currentPage = 1, string sortType = "")
+            string recordSourceFacet = "", string agencyFacet = "", string stateFacet = "", string tagsFacet = "", string popDensityFacet = "", 
+            string regionFacet = "", string statusFacet = "", int? currentPage = 1, string sortType = "")
         {
             try
             {
@@ -588,8 +634,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 {
                     Top = 50,
                     Skip = ((currentPage ?? 1) - 1) * 50,
-                    Facets = new List<string> { "DataType", "Record_Source", "State_or_Tribal", "Media", "Tags" },
-                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State_or_Tribal", "Name", "Description", "Media", "Tags", "PersonPhone", "PersonEmail", "PersonLinkedIn" },
+                    Facets = new List<string> { "DataType", "State_or_Tribal", "Tags", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State_or_Tribal", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn" },
                     IncludeTotalResultCount = true
                 };
 
@@ -606,6 +652,12 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "State_or_Tribal eq '" + stateFacet + "' ";
                 if ((tagsFacet ?? "").Length > 0)
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Tags/any(t: t eq '" + tagsFacet + "') ";
+                if ((popDensityFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Population_Density eq '" + popDensityFacet + "' ";
+                if ((regionFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "EPA_Region eq '" + regionFacet + "' ";
+                if ((statusFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Status eq '" + statusFacet + "' ";
 
                 //sort handling
                 if (sortType == "alpha")

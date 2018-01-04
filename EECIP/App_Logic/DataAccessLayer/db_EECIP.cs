@@ -398,6 +398,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Record_Source = a.RECORD_SOURCE,
                                    Name = e.ENT_PLATFORM_NAME,
                                    Description = a.PROJECT_NAME,
+                                   Population_Density = x1.POP_DENSITY,
+                                   EPA_Region = o.EPA_REGION.ToString(),
+                                   Status = a.IMPLEMENT_STATUS
                                }).ToList();
 
                     return xxx;
@@ -561,9 +564,12 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 DataType = (o.ORG_TYPE == "Governance" ? "Governance" : "Project"),
                                 Record_Source = a.RECORD_SOURCE,
                                 Name = a.PROJ_NAME,
-                                Description = a.PROJ_DESC,
-                                Media = x.TAG_NAME
-                            }).Take(250).ToList();
+                                Description = (a.PROJ_DESC.Length>2000) ? a.PROJ_DESC.Substring(0,2000) : a.PROJ_DESC,
+                                Media = x.TAG_NAME,
+                                Population_Density = x1.POP_DENSITY,
+                                EPA_Region = o.EPA_REGION.ToString(),
+                                Status = a.PROJ_STATUS
+                            }).Take(50).ToList();
 
                     foreach (EECIP_Index e in xxx)
                         e.Tags = GetT_OE_PROJECT_TAGS_ByTwoAttributeSelected(new Guid(e.KeyID), "Project Feature", "Program Area").ToArray();
@@ -603,7 +609,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
         public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, int? mEDIA_TAG, int? sTART_YEAR,
             string pROJ_STATUS, int? dATE_LAST_UPDATE, string rECORD_SOURCE, string pROJECT_URL, int? mOBILE_IND, string mOBILE_DESC, int? aDV_MON_IND, 
-            string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, string pROJECT_CONTACT, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
+            string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, string pROJECT_CONTACT, int? pROJECT_CONTACT_IDX, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
             string iMPORT_ID = null)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -623,6 +629,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                         e.PROJECT_IDX = Guid.NewGuid();
                         e.CREATE_DT = System.DateTime.Now;
                         e.CREATE_USERIDX = cREATE_USER;
+
+                        //set project contact to person who created it
+                        if (e.PROJECT_CONTACT_IDX == null)
+                            e.PROJECT_CONTACT_IDX = cREATE_USER;
                     }
                     else
                     {
@@ -650,6 +660,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (cOTS != null) e.COTS = cOTS;
                     if (vENDOR != null) e.VENDOR = vENDOR;
                     if (pROJECT_CONTACT != null) e.PROJECT_CONTACT = pROJECT_CONTACT;
+                    if (pROJECT_CONTACT_IDX != null) e.PROJECT_CONTACT_IDX = pROJECT_CONTACT_IDX;
 
                     e.ACT_IND = aCT_IND;
                     if (sYNC_IND != null) e.SYNC_IND = sYNC_IND ?? false;
@@ -747,6 +758,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     List<ConfigInfoType> _allRules = Utils.GetAllColumnInfo("P");
 
                     //explicitly validate mandatory fields
+
                     foreach (string entry in Utils.GetMandatoryImportFieldList("P"))
                         T_OE_PROJECT_validate(ref e, _allRules, colVals, entry);
 
@@ -893,8 +905,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                 else if (_rules._datatype == "int")
                     typeof(T_OE_PROJECTS).GetProperty(f).SetValue(a.T_OE_PROJECT, _value.ConvertOrDefault<int?>());
             }
-            catch (Exception ex) {
-                throw ex;
+            catch {
+                //let fail silently (non T_OE_PROJECTS fields will fail)
             }
         }
 

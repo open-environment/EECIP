@@ -13,10 +13,30 @@
                 @Html.ValidationSummary(false)
                 @Html.AntiForgeryToken()
                 @Html.Partial("CreateEdit_TopicPost", Model)
-                
+
             }
 
         </div>
     </div>
     @Html.Partial("_CommonSideNav")
 </div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/select2")
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //function to initiate Select2
+        $(".search-select").select2({
+            placeholder: "",
+            allowClear: true,
+            tags: true,
+            width: ''
+        });
+
+    });
+
+</script>
+    }

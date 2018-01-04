@@ -77,15 +77,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Project Contact</label>
-                            @Html.TextBoxFor(model => model.project.PROJECT_CONTACT, new { @class = "form-control", @maxlength = "100" })
-                            @Html.ValidationMessageFor(model => model.project.PROJECT_CONTACT)
-                        </div>
-                    </div>
-                </div>
             </div>
         </section>
     </div>
@@ -177,66 +168,124 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Project Files</h3>
 
-
-                        @if (Model.files_existing != null && Model.files_existing.Count > 0)
-                        {
-                
-                            <div class="postuploadedfilesholder clearfix">
-                                <p>Attached Files</p>
-                                <ul>
-                                    @foreach (var file in Model.files_existing.OrderByDescending(o => o.CREATE_DT))
-                                    {
-                                        <li>
-                                            <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
-                                        
-
-                                                @if (Utils.FileIsImage(file.DOC_NAME))
-                                                {
-                                                    <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                                                }
-                                            </a>
-                                            <a href="@Url.Action("ProjectFileDelete", "Dashboard", new { id = file.DOC_IDX })" class="deleteupload" title="Delete">
-                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                            </a>
-                                    
-                                            <div class="postedfilename">@file.DOC_NAME</div>
-                                        </li>
-                                    }
-                                </ul>
-                            </div>
-                        }
-
-
-
-                        <div class="col-md-5 col-md-offset-1 topiccategory">
-                                <div class="form-group createuploadfiles">
-                                    @Html.LabelFor(x => x.files)
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-btn">
-                                            <span class="btn btn-default btn-file">
-                                                Browse <input type="file" name="files" id="files" value="">
-                                            </span>
-                                        </span>
-                                        <input id="filename1" type="text" class="form-control" readonly="">
-                                    </div>
-                                    @Html.ValidationMessageFor(x => x.files)
-                                </div>
-                        </div>
-
-                    </div>
-                </div>
             </div>
         </section>
     </div>
 </div>
+
+<div class="row">
+    <section class="col-md-6">
+        <section class="panel panel-default @(Model.NewProjInd == false && Model.project.PROJECT_CONTACT_IDX == null ? "danger" : "") ">
+            <div class="panel-heading">
+                Project Contact
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                @if(Model.NewProjInd == false && Model.project.PROJECT_CONTACT_IDX == null && Model.orgType != "Governance")
+                {
+                    <div class="alert alert-block alert-danger fade in">
+                        <button data-dismiss="alert" class="close" type="button">×</button>
+                        <h4 class="alert-heading"><i class="fa fa-times-circle"></i> Claim this Project!</h4>
+                        <p>
+                            Help other agencies get in touch with you by selecting a project contact from the list below.
+                        </p>
+                    </div>
+                }
+
+                @if(Model.orgType != "Governance")
+                {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Select user below:</label>
+                            @Html.DropDownListFor(model => model.project.PROJECT_CONTACT_IDX, Model.ddl_AgencyUsers, "", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                }
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @if (Model.orgType != "Governance") {
+                            <label>Or if user doesn't have an EECIP account, enter contact info here:</label>
+                            } else {
+                            <label>Governance group contact:</label>
+                            }
+                            @Html.TextBoxFor(model => model.project.PROJECT_CONTACT, new { @class = "form-control", @maxlength = "100" })
+                            @Html.ValidationMessageFor(model => model.project.PROJECT_CONTACT)
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </section>
+    </section>
+    <section class="col-md-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Project Files
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                @if (Model.files_existing != null && Model.files_existing.Count > 0)
+                {
+                    <div class="postuploadedfilesholder clearfix">
+                        <p>Attached Files</p>
+                        <ul>
+                            @foreach (var file in Model.files_existing.OrderByDescending(o => o.CREATE_DT))
+                            {
+                                <li>
+                                    <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
+                                    @if (Utils.FileIsImage(file.DOC_NAME))
+                                    {
+                                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                                    }
+                                    </a>
+                                    <a href="@Url.Action("ProjectFileDelete", "Dashboard", new { id = file.DOC_IDX })" class="deleteupload" title="Delete">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                    </a>
+                                    
+                                    <div class="postedfilename">@file.DOC_NAME</div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+                <div class="col-md-10 col-md-offset-1 topiccategory">
+                    <div class="form-group createuploadfiles">
+                        @Html.LabelFor(x => x.files)
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-btn">
+                                <span class="btn btn-default btn-file">
+                                    Browse <input type="file" name="files" id="files" value="">
+                                </span>
+                            </span>
+                            <input id="filename1" type="text" class="form-control" readonly="">
+                        </div>
+                        @Html.ValidationMessageFor(x => x.files)
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </section>
+
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
@@ -283,12 +332,6 @@
                     "event_label": "Agency Project"
                 });
             });
-
-            //file upload display attach file
-            //$("#btnFile").click(function (e) {
-            //    e.preventDefault();
-            //    $(".postuploadholder").toggle();
-            //});
 
             //file upload display filename
             $("input[id='files']").change(function (e) {
@@ -342,10 +385,7 @@
                     $(b).hide();
                 }
             }
-
         });
-
-
 
     </script>
 }

@@ -30,6 +30,9 @@ namespace EECIP.Models
         public string facetAgency { get; set; }
         public string facetState { get; set; }
         public string facetTags { get; set; }
+        public string facetPopDensity { get; set; }
+        public string facetRegion { get; set; }
+        public string facetStatus { get; set; }
         public string activeTab { get; set; }
         public int? currentPage { get; set; }
         public string sortType { get; set; }
@@ -98,6 +101,8 @@ namespace EECIP.Models
         public IEnumerable<SelectListItem> ddl_Status { get; set; }
         public IEnumerable<SelectListItem> ddl_UseAmount { get; set; }
         public IEnumerable<SelectListItem> ddl_COTS { get; set; }
+
+        public IEnumerable<SelectListItem> ddl_AgencyUsers { get; set; }
 
         public IEnumerable<SelectListItem> AllProgramAreas { get; set; }
         public List<string> SelectedProgramAreas { get; set; }

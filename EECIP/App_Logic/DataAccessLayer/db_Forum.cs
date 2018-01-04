@@ -1269,7 +1269,27 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-        
+
+
+        public static List<TopicNotification> GetTopicNotification_ByTopic(Guid topic_id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.TopicNotifications.AsNoTracking()
+                               where a.Topic_Id == topic_id
+                               select a).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
 
 
         //************************************POST **************************************************

@@ -12,6 +12,7 @@ using System.IO;
 
 namespace EECIP.Controllers
 {
+    [Authorize]
     public class ForumController : Controller
     {
         private CheckCreateTopicPermissions GetOptionalPermissions()
@@ -94,11 +95,6 @@ namespace EECIP.Controllers
                     return RedirectToAction("Index", "Home");
                 }
 
-                //reject if no post content
-                if (topicViewModel.Content == null) {
-                    TempData["Error"] = "Post content is required";
-                    RedirectToAction("Create");
-                }
 
                 // Check Permissions for topic opions
                 if (!topicViewModel.OptionalPermissions.CanLockTopic)
@@ -240,7 +236,15 @@ namespace EECIP.Controllers
             Topic _topic = db_Forum.GetTopic_ByID(model.TopicId);
             if (_topic != null)
             {
+                Guid? newPostID = db_Forum.InsertUpdatePost(model.Id, model.Content, null, null, null, null, null, null, null, null, null, true);
 
+                // 7. Tag handling
+                db_Forum.DeleteTopicTags(model.TopicId, "Topic Tag");
+                foreach (string feature in model.SelectedTags ?? new List<string>())
+                    db_Forum.InsertUpdateTopicTags(model.TopicId, "Topic Tag", feature);
+
+                // 11. Update Azure search
+                AzureSearch.PopulateSearchIndexForumTopic(model.TopicId);
             }
 
             return RedirectToAction("ShowTopic", "Forum", new { slug = _topic.Slug });
@@ -388,7 +392,7 @@ namespace EECIP.Controllers
             if (_postID != null)
             {
                 // Success send any notifications
-                //NotifyNewTopics(topic, unitOfWork);
+                NotifyTopics(model.Topic.Id, UserIDX, "Post");
             }
 
 
@@ -462,6 +466,11 @@ namespace EECIP.Controllers
                 {
                     // Badge Checking
                     db_Forum.EarnBadgeUpVotePost(UserIDX);
+
+                    //send notifications
+                    Post _post = db_Forum.GetPost_ByID(id.ConvertOrDefault<Guid>());
+                    if (_post != null)
+                        NotifyTopics(_post.Topic_Id, UserIDX, "Upvote");
                 }
             }
             else if (typ == "removeup" || typ == "removedown")
@@ -515,6 +524,25 @@ namespace EECIP.Controllers
         }
 
 
+        private void NotifyTopics(Guid topicID, int PosterUserIDX, string notifyType)
+        {
+            Topic _topic = db_Forum.GetTopic_ByID(topicID);
+            if (_topic != null)
+            {
+                List<TopicNotification> ts = db_Forum.GetTopicNotification_ByTopic(topicID);
+                if (ts != null)
+                {
+                    foreach (TopicNotification t in ts)
+                    {
+                        if (t.MembershipUser_Id != PosterUserIDX)
+                        {
+                            db_EECIP.InsertUpdateT_OE_USER_NOTIFICATION(null, t.MembershipUser_Id, System.DateTime.UtcNow, "Topic", ("New " + notifyType + " in: " + _topic.Name).SubStringPlus(0,50), "A new " + notifyType + " has been made in a discussion topic you are subscribed to.", false, PosterUserIDX, true, 0, true);
+                        }
+                    }
+                }
+            }
+
+        }
 
         /****************POST FILES **********************/
 

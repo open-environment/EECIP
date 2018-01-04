@@ -337,7 +337,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Record_Source = "EECIP Supplied",
                                    Name = a.ORG_ABBR,
                                    Description = a.ORG_NAME,
-                                   Media = ""
+                                   Population_Density = x1.POP_DENSITY,
+                                   EPA_Region = a.EPA_REGION.ToString()
                                }).ToList();
 
                     foreach (EECIP_Index e in xxx)

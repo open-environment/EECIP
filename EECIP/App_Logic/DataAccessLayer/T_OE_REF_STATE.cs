@@ -22,6 +22,7 @@ namespace EECIP.App_Logic.DataAccessLayer
     
         public string STATE_CD { get; set; }
         public string STATE_NAME { get; set; }
+        public string POP_DENSITY { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_ORGANIZATION> T_OE_ORGANIZATION { get; set; }

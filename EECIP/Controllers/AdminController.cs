@@ -57,6 +57,23 @@ namespace EECIP.Controllers
 
         }
 
+        // POST: /Dashboard/ProjectsDelete
+        [HttpPost]
+        public JsonResult UserDelete(int id)
+        {
+
+            int SuccID = db_Accounts.DeleteT_OE_USERS(id);
+            if (SuccID>0)
+            {
+                //SUCCESS - now delete user from Azure search
+                AzureSearch.DeleteSearchIndexUsers(id);
+                return Json("Success");
+            }
+            else
+                return Json("Unable to Delete User");
+        }
+
+
 
         //************************************* ROLES ************************************************************
         // GET: /Admin/Roles
@@ -661,7 +678,7 @@ namespace EECIP.Controllers
                     T_OE_PROJECTS x = ps.T_OE_PROJECT;
                     Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, x.ORG_IDX, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS, 
                         x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
-                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, true, false, UserIDX, x.IMPORT_ID);
+                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, null, true, false, UserIDX, x.IMPORT_ID);
 
                     //import features
                     if (ps.FEATURES != null)

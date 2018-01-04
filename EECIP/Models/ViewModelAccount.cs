@@ -70,10 +70,10 @@ namespace EECIP.Models
         public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
         public Guid? OrgIDX { get; set; }
         public string OrgName  { get; set; }
-        public HttpPostedFileBase imageBrowes { get; set; }
-        public HttpPostedFileBase ImageFile { get; set; }
-        public byte[] GetImage { get; set; }
-        public bool HasAvatar { get; set; }
+
+        public HttpPostedFileBase imageBrowes { get; set; }  //handling the posted file from client (1 direction)
+        public bool HasAvatar { get; set; }  //lets client know if an avatar exists in DB
+        public string ImageUniqueStr { get; set; }
 
         public string uListInd { get; set; }
 

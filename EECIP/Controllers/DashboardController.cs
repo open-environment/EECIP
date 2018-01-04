@@ -35,7 +35,7 @@ namespace EECIP.Controllers
         }
 
         // GET: Dashboard/Search
-        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string activeTab, string currentPage, string sortType)
+        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType)
         {
             var model = new vmDashboardSearch();
             model.q = q;
@@ -45,28 +45,16 @@ namespace EECIP.Controllers
             model.facetAgency = facetAgency;
             model.facetState = facetState;
             model.facetTags = facetTags;
+            model.facetPopDensity = facetPopDensity;
+            model.facetRegion = facetRegion;
+            model.facetStatus = facetStatus;
             model.activeTab = activeTab ?? "1";
             model.currentPage = currentPage.ConvertOrDefault<int?>() ?? 1;
             model.sortType = sortType;
 
-            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.currentPage, model.sortType);
+            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.facetPopDensity, model.facetRegion, model.facetStatus, model.currentPage, model.sortType);
             return View(model);
         }
-
-        // POST: Dashboard/Search
-        //[HttpPost]
-        //public ActionResult Search(vmDashboardSearch model)
-        //{
-        //    if (model.currentPage == null)
-        //        model.currentPage = 1;
-
-        //    model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.currentPage);
-        //    return View(model);
-        //}
-
-
-
-        // GET: Agency
 
         #endregion
 
@@ -247,47 +235,71 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+
         // GET: /Dashboard/ProjectDetails/1
+        /// <param name="id">Only supply for existing case</param>
+        /// <param name="orgIDX">Only supply for new case</param>
         public ActionResult ProjectDetails(Guid? id, Guid? orgIDX)
         {
-            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), orgIDX.ConvertOrDefault<Guid>()))
+            int UserIDX = db_Accounts.GetUserIDX();
+            var model = new vmDashboardProjectDetails();
+
+            //new case
+            if (id == null)
             {
-                var model = new vmDashboardProjectDetails();
+                //if new case and either no org supplied or the org supplied the user doesn't have rights to edit, then fail
+                if ((orgIDX == null) || (User.IsInRole("Admins") == false && db_Accounts.UserCanEditOrgIDX(UserIDX, orgIDX.ConvertOrDefault<Guid>()) == false ))
+                {
+                    TempData["Error"] = "You cannot edit projects for this agency.";
+                    return RedirectToAction("AccessDenied", "Home");
+                }
+
+                //if got this far then initialize valid new project
+                model.project = new T_OE_PROJECTS
+                {
+                    ORG_IDX = orgIDX,
+                    PROJECT_IDX = Guid.NewGuid(),
+                };
+                model.NewProjInd = true;
+            }
+            else
+            {
                 model.project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
                 if (model.project == null)
                 {
-                    //case: new project
-                    model.project = new T_OE_PROJECTS
-                    {
-                        ORG_IDX = orgIDX,
-                        PROJECT_IDX = Guid.NewGuid()
-                    };
-                    model.NewProjInd = true;
+                    TempData["Error"] = "Project not found.";
+                    return RedirectToAction("AccessDenied", "Home");
                 }
                 else
                 {
-                    //org stuff
-                    T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(orgIDX.ConvertOrDefault<Guid>());
-                    if (_org != null)
+                    //should be existing case
+                    if (User.IsInRole("Admins") == false && db_Accounts.UserCanEditOrgIDX(UserIDX, model.project.ORG_IDX.ConvertOrDefault<Guid>()) == false)
                     {
-                        model.orgName = _org.ORG_NAME;
-                        model.orgType = _org.ORG_TYPE;
+                        TempData["Error"] = "You cannot edit projects for this agency.";
+                        return RedirectToAction("AccessDenied", "Home");
                     }
 
-
+                    //existing case, no failure
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
                     model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
                     model.files_existing = db_EECIP.GetT_OE_DOCUMENTS_ByProjectID(model.project.PROJECT_IDX);
                 }
-                model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
-                model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
-                return View(model);
             }
-            else
+
+
+            //if got this far (regardless of new or existing) then add more to the model
+            T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.project.ORG_IDX.ConvertOrDefault<Guid>());
+            if (_org != null)
             {
-                TempData["Error"] = "You cannot edit projects for this agency.";
-                return RedirectToAction("AccessDenied", "Home");
+                model.orgName = _org.ORG_NAME;
+                model.orgType = _org.ORG_TYPE;
             }
+
+            model.ddl_AgencyUsers = ddlHelpers.get_ddl_users_by_organization(model.project.ORG_IDX.ConvertOrDefault<Guid>());
+            model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
+            model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
+            return View(model);
+
         }
 
         // POST: /Dashboard/ProjectEdit
@@ -304,7 +316,7 @@ namespace EECIP.Controllers
                     model.project.PROJ_DESC, model.project.MEDIA_TAG, model.project.START_YEAR, model.project.PROJ_STATUS,
                     model.project.DATE_LAST_UPDATE, model.project.RECORD_SOURCE, model.project.PROJECT_URL, model.project.MOBILE_IND,
                     model.project.MOBILE_DESC, model.project.ADV_MON_IND, model.project.ADV_MON_DESC, model.project.BP_MODERN_IND,
-                    model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, model.project.PROJECT_CONTACT, true, false, UserIDX);
+                    model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, model.project.PROJECT_CONTACT, model.project.PROJECT_CONTACT_IDX, true, false, UserIDX);
 
                 if (newProjID != null)
                 {
@@ -350,13 +362,13 @@ namespace EECIP.Controllers
                     AzureSearch.PopulateSearchIndexProject(newProjID2);
 
                     TempData["Success"] = "Update successful.";
-                    return RedirectToAction("ProjectDetails", "Dashboard", new { id = newProjID2, orgIDX = model.project.ORG_IDX });
+                    return RedirectToAction("ProjectDetails", "Dashboard", new { id = newProjID2 });
                 }
                 else
                     TempData["Error"] = "Error updating data.";
             }
             else
-                TempData["Error"] = "Error updating data.";
+                TempData["Error"] = "You don't have permissions to edit this project.";
 
             return RedirectToAction("Projects", new { selAgency = model.project.ORG_IDX } );
         }

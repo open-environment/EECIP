@@ -31,24 +31,35 @@
                 <span class="help-block">
                     @if (!string.IsNullOrEmpty(Model.facetAgency))
                     {
-                        <a href="javascript:void(0)" data-id2="Agency" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetAgency</a>
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Agency" class="removeFacet">X @Model.facetAgency</a></span>
                     }
                     @if (!string.IsNullOrEmpty(Model.facetState))
                     {
-                        <a href="javascript:void(0)" data-id2="State_or_Tribal" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetState</a>
+                        <span class="tag" style="margin-left:15px;"><a href="javascript:void(0)" data-id2="State_or_Tribal" class="removeFacet">X @Model.facetState</a></span>
                     }
-
                     @if (!string.IsNullOrEmpty(Model.facetMedia))
                     {
-                        <a href="javascript:void(0)" data-id2="Media" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetMedia</a>
+                        <span class="tag" style="margin-left:15px;"><a href="javascript:void(0)" data-id2="Media" class="removeFacet">X @Model.facetMedia</a></span>
                     }
                     @if (!string.IsNullOrEmpty(Model.facetRecordSource))
                     {
-                        <a href="javascript:void(0)" data-id2="Record_Source" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetRecordSource</a>
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Record_Source" class="removeFacet" >X @Model.facetRecordSource</a></span>
                     }
                     @if (!string.IsNullOrEmpty(Model.facetTags))
                     {
-                        <a href="javascript:void(0)" data-id2="Tags" class="removeFacet select2-selection__choice" style="margin-left:15px !important;"><b>X</b> @Model.facetTags</a>
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Tags" class="removeFacet" >X @Model.facetTags</a></span>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.facetPopDensity))
+                    {
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Population_Density" class="removeFacet" >X @Model.facetPopDensity</a></span>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.facetRegion))
+                    {
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="EPA_Region" class="removeFacet" >X @Model.facetRegion</a></span>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.facetStatus))
+                    {
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Status" class="removeFacet" >X @Model.facetStatus</a></span>
                     }
 
                 </span>
@@ -64,6 +75,9 @@
     @Html.HiddenFor(model => model.facetAgency)
     @Html.HiddenFor(model => model.facetState)
     @Html.HiddenFor(model => model.facetTags)
+    @Html.HiddenFor(model => model.facetPopDensity)
+    @Html.HiddenFor(model => model.facetRegion)
+    @Html.HiddenFor(model => model.facetStatus)
     @Html.HiddenFor(model => model.activeTab)
     @Html.HiddenFor(model => model.currentPage)
     @Html.HiddenFor(model => model.sortType)
@@ -81,12 +95,12 @@
                         if (item.Key != "DataType")
                         {
                             <h4>@Html.DisplayFor(modelItem => item.Key).ToString().Replace("_", " ")</h4>
-                            <ul>
-                                @foreach (var subitem in item.Value)
+                                foreach (var subitem in item.Value)
                                 {
-                                    <li><a id="@Html.DisplayFor(modelItem => subitem.Value)" data-id2="Facet" href="@Html.DisplayFor(modelItem => item.Key)">@Html.DisplayFor(modelItem => subitem.Value) (@Html.DisplayFor(modelItem => subitem.Count))</a></li>
+                                    if (!string.IsNullOrEmpty(subitem.Value.ToString().Trim())) {
+                                <a id="@Html.DisplayFor(modelItem => subitem.Value)" class="facetItem" data-id2="Facet" href="@Html.DisplayFor(modelItem => item.Key)">@Html.DisplayFor(modelItem => subitem.Value) (@Html.DisplayFor(modelItem => subitem.Count))</a>
+                                    }
                                 }
-                            </ul>
                         }
                     }
                 </div>
@@ -191,8 +205,11 @@
                                 <th>Name</th>
                                 <th>Description</th>
                                 <th>Record Source</th>
+                                @if (Model.activeTab != "5" && Model.activeTab != "7")
+                                {
                                 <th>Media</th>
                                 <th>Status</th>
+                                }
                                 <th>Tags</th>
                             </tr>
 
@@ -230,12 +247,14 @@
                                         @Html.DisplayFor(modelItem => item.Document.Name)
                                     </td>
                                     <td>
-                                        @if(item.Document.DataType != "Discussion") { 
+                                        @if (item.Document.DataType != "Discussion")
+                                        {
                                             <span class="resDesc">
                                                 @Html.DisplayFor(modelItem => item.Document.Description)
                                             </span>
                                         }
-                                        else {
+                                        else
+                                        {
                                             <span class="resDesc">
                                                 @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item.Document.Description), 50)
                                             </span>
@@ -244,10 +263,15 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Document.Record_Source)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Document.Media)
-                                    </td>
-                                    <td></td>
+                                    @if (Model.activeTab != "5" && Model.activeTab != "7")
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Document.Media)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Document.Status)
+                                        </td>
+                                    }
                                     <td>
                                         @foreach (string tag in item.Document.Tags)
                                         {
@@ -268,54 +292,6 @@
                 else
                 {
                     <!-- ************** PEOPLE ****************************-->
-                    @*<div class="row aligned-row">
-                        @foreach (var item in Model.searchResults.Results)
-                        {
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="circle-tile">
-                                    <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })">
-                                        <div class="circle-tile-heading" style="background-image:url(/Content/Images/Users/@(item.Document.KeyID).png)">
-                                        </div>
-                                    </a>
-                                    <div class="circle-tile-content dark-blue">
-                                        <div class="circle-tile-description text-faded">
-                                            @item.Document.Agency
-                                        </div>
-                                        <div class="circle-tile-number text-faded">
-                                            @item.Document.Name
-                                        </div>
-                                        <div class="circle-tile-title text-faded">
-                                            @item.Document.Description
-                                        </div>
-                                        <div class="circle-tile-buttons text-faded">
-                                            <a href="tel:@(item.Document.PersonPhone)" class="btn btn-primary">
-                                                <i class="clip-phone"></i>
-                                            </a>
-                                            <a href="mailto:@(item.Document.PersonEmail)" class="btn btn-primary">
-                                                <i class="glyphicon glyphicon-envelope"></i>
-                                            </a>
-                                            <a href="https://www.linkedin.com/in/@(item.Document.PersonLinkedIn)" class="btn btn-primary" target="_blank">
-                                                <i class="clip-linkedin"></i>
-                                            </a>
-                                        </div>
-                                        @if (item.Document.Tags != null)
-                                        {
-                                            <div style="padding-bottom:10px; ">
-                                                @foreach (string tag in item.Document.Tags)
-                                                {
-                                                    <span class="select2-selection__choice" style="font-size:12px !important">@Html.DisplayFor(modelItem => tag)</span>
-                                                }
-
-                                            </div>
-                                        }
-                                        <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })" class="circle-tile-footer">More Info <i class="fa fa-chevron-circle-right"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>*@
-
-
                     <div class="table-responsive">
                         <table class="table table-striped m-b-none" data-ride="datatables">
                             <tr>
@@ -323,7 +299,7 @@
                                 <th>Name</th>
                                 <th>Agency</th>
                                 <th>Title</th>
-                                <th>Tags</th>
+                                <th>Expertise/Interest</th>
                             </tr>
 
                             @foreach (var item in Model.searchResults.Results)
@@ -347,7 +323,7 @@
                                     <td>
                                         @foreach (string tag in item.Document.Tags)
                                         {
-                                            <span class="select2-selection__choice">@Html.DisplayFor(modelItem => tag)</span>
+                                            <span class="tag">@Html.DisplayFor(modelItem => tag)</span>
                                         }
                                     </td>
                                 </tr>
@@ -526,6 +502,7 @@
 
             $('a[href="#tab7"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('Discussion');
+                $('#facetState').val('');
                 $('#activeTab').val('7');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
@@ -545,6 +522,12 @@
                     $('#facetState').val(_id);
                 if (_facTyp == "Tags")
                     $('#facetTags').val(_id);
+                if (_facTyp == "Population_Density")
+                    $('#facetPopDensity').val(_id);
+                if (_facTyp == "EPA_Region")
+                    $('#facetRegion').val(_id);
+                if (_facTyp == "Status")
+                    $('#facetStatus').val(_id);
 
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
@@ -553,7 +536,6 @@
             $('.removeFacet').click(function (e) {
                 e.preventDefault();
                 var _facTyp = $(this).attr('data-id2');
-
                 if (_facTyp == "Media")
                     $('#facetMedia').val('');
                 if (_facTyp == "Record_Source")
@@ -564,6 +546,12 @@
                     $('#facetState').val('');
                 if (_facTyp == "Tags")
                     $('#facetTags').val('');
+                if (_facTyp == "Population_Density")
+                    $('#facetPopDensity').val('');
+                if (_facTyp == "EPA_Region")
+                    $('#facetRegion').val('');
+                if (_facTyp == "Status")
+                    $('#facetStatus').val('');
 
                 $('#currentPage').val(1);
                 $('#norepostform').submit();

@@ -4,21 +4,12 @@ body {
     margin: 0;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-/*.dl-horizontal dt {
-    white-space: normal;
-}*/
-
-
 /****************SITE CUSTOM CSS *****************************/
-/* EENTERPRISE STYLING 
+/* EENTERPRISE STYLING KEY
     #82B9DE  blue
     #199C98 blue-green
     #A9D2A2 green
     #383838 dark grey header
-
 */
 
 html {
@@ -106,6 +97,17 @@ ul.main-navigation-menu > li.active > a {
     color: #199C98;
 }
 
+/***************     FACET STYLING     ******************/
+.facetItem {
+    display:block;
+    margin-left:10px;
+
+}
+
+    .facetItem:hover {
+        text-decoration: none;
+        background-color:#f2f2f2;
+    }
 
 /***************     BREADCRUMB STYLING     ******************/
 .breadcrumb {
@@ -136,6 +138,23 @@ ul.main-navigation-menu > li.active > a {
 
 
 /***************     PANEL STYLING     ******************/
+.panel-heading {
+    font-size: 15px;
+    font-weight: 600;
+    padding-top: 8px;
+    font-family: 'Raleway', sans-serif;
+    letter-spacing: 1px;
+    color: #646464 !important;
+    border-bottom: solid 2px #199C98 !important;
+    padding-left: 10px;
+    min-height: 40px;
+    padding-bottom: 20px !important;
+}
+
+    .panel-heading > .panel-tools:hover {
+        background-color: #B3B3B3;
+    }
+
 .panel-tools .btn.expand:before {
     content: "\e161";
     display: inline;
@@ -177,30 +196,23 @@ ul.main-navigation-menu > li.active > a {
 }
 
     .panel-default.ee > .panel-heading {
-        color: #094e4c !important;
+        color: #fff !important;
         border-bottom-color: #199C98 !important;
-        background-image: linear-gradient(to bottom, #fff 0%, #92d8d6 100%);
+        background-image: linear-gradient(to bottom, #38c1bd 0%, #199C98 100%);
+        border-radius: 3px 3px 0px 0px;
+        box-shadow: none;
     }
+        .panel-default.ee > .panel-heading > .panel-tools > a {
+            color:#fff;
+        }
 
-.panel-heading {
-    font-size: 15px;
-    font-weight: 600;
-    padding-top: 8px;
-    font-family: 'Raleway', sans-serif;
-    letter-spacing: 1px;
-    color: #646464 !important;
-    border-bottom: solid 2px #199C98 !important;
-    padding-left: 10px;
-    min-height: 40px;
-    padding-bottom: 20px !important;
+
+
+
+/*************** SELECT2 /  CUSTOM TAG STYLING     ******************/
+.select2 {
+    display: block;
 }
-
-    .panel-heading > .panel-tools:hover {
-        background-color: #B3B3B3;
-    }
-
-
-/***************     TAG STYLING     ******************/
 
 .select2-selection__choice {
     border: none !important;
@@ -208,13 +220,11 @@ ul.main-navigation-menu > li.active > a {
     color: #fff !important;
     border-radius: 0 3px 3px 0 !important;
     text-transform: uppercase !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
     margin-right: 6px !important;
     margin-left: 6px !important;
     padding: 0 4px 0 2px !important;
     display: inline-block !important;
-    /*line-height: 19px !important;
-    height: 19px !important;*/
     position: relative !important;
     margin-right: 10px !important;
 }
@@ -250,43 +260,7 @@ ul.main-navigation-menu > li.active > a {
 
 
 
-/************************SELECT 2 STYLING  ******************/
-.select2 {
-    display:block;
-}
-
-/*.form-group .select2-container {
-    position: relative;
-    z-index: 2;
-    float: left;
-    width: 100%;
-    margin-bottom: 0;
-    display: table;
-    table-layout: fixed;
-}
-
-@media screen and (max-width: 767px) {
-    .select2 {
-        width: 100% !important;
-    }
-}*/
-
-
-/************************CARD STYLING  ******************/
-
-.div-card {
-    padding: 5px;
-    background-color: rgba(25, 156, 152, 0.26);
-    border: 1px solid rgba(25, 156, 152, 1);
-    min-height: 120px;
-    font-size: 14px;
-    border-radius: 8px;
-    /*height: 120px;*/
-}
-
-    .div-card > dl {
-        margin-bottom: 0px;
-    }
+/************************PROJECT CARD STYLING  ******************/
 
 .dl-horizontal dt {
     width: 220px;
@@ -336,10 +310,6 @@ ul.main-navigation-menu > li.active > a {
     border-radius: 8px
 }
 
-/*.circle-tile-description {
-    text-transform: uppercase;
-}*/
-
 .circle-tile-title {
     margin: 0;
     padding: 5px;
@@ -379,6 +349,9 @@ ul.main-navigation-menu > li.active > a {
         background-color: rgba(0,0,0,0.4);
     }
 
+
+/* -- Color Helper Classes */
+
 .dark-blue {
     background-color: #34495e;
 }
@@ -403,7 +376,6 @@ ul.main-navigation-menu > li.active > a {
     background-color: #8e44ad;
 }
 
-/* -- Text Color Helper Classes */
 
 .text-dark-blue {
     color: #34495e;
@@ -454,11 +426,9 @@ ul.main-navigation-menu > li.active > a {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    -o-user-select: none;
     user-select: none;
     background-image: none;
     border: 1px solid transparent;
-    -ms-border-radius: 3px;
     border-radius: 3px;
     text-decoration: none;
     background-color: #efefef;
@@ -595,7 +565,6 @@ span.tag {
     line-height: 19px;
     height: 19px;
     position: relative;
-    -ms-border-radius: 0 3px 3px 0;
     border-radius: 0 3px 3px 0;
     background-color: #6fa8e3;
     color: #fff;
@@ -781,7 +750,6 @@ span.tag a, span.tag a:visited {
 }
 
     .rowcreater img {
-        -ms-border-radius: 10px;
         border-radius: 10px;
         max-width: 50px;
     }
@@ -858,8 +826,6 @@ span.tag a, span.tag a:visited {
 
 /***badges*/
 .publicbadgeline {
-    /*padding: 12px 0;*/
-    /*border-bottom: 1px #ecf0f1 solid;*/
     float: left;
 }
 

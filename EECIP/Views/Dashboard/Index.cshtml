@@ -10,7 +10,7 @@
 {
     <section class="panel panel-default ee">
         <div class="panel-heading">
-            Projects Needing Your Review
+            <i class="glyphicon glyphicon-exclamation-sign"></i> Projects Needing Your Review
             <div class="panel-tools">
                 <a class="btn btn-xs panel-collapse collapses" href="#">
                 </a>
@@ -52,7 +52,7 @@
                                     @Html.DisplayFor(modelItem => item.PROJ_NAME)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.PROJ_DESC)
+                                    @Utils.ReturnAmountWordsFromString(item.PROJ_DESC,50)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.RECORD_SOURCE)

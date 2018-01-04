@@ -117,6 +117,14 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
+                    //if governance, anyone can edit
+                    T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(orgIDX);
+                    if (_org != null)
+                        if (_org.ORG_TYPE == "Governance")
+                            return true;
+
+
+                    //otherwise, check if user belongs
                     int c =  (from a in ctx.T_OE_USERS
                               where a.ORG_IDX == orgIDX
                               select a).Count();
@@ -238,7 +246,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Description = a.JOB_TITLE,
                                    PersonPhone = a.PHONE,
                                    PersonEmail = a.EMAIL,
-                                   PersonLinkedIn = a.LINKEDIN
+                                   PersonLinkedIn = a.LINKEDIN,
+                                   Population_Density = x1.POP_DENSITY,
+                                   EPA_Region = o.EPA_REGION.ToString()
                                }).ToList();
 
                     foreach (EECIP_Index e in xxx)
