@@ -5,6 +5,7 @@
     ViewBag.HideTitle = true;
     ViewBag.Title = "Browse or Search Content";
     ViewBag.SubTitle = "Find projects, agencies, people, or discussions that match your interests";
+    int counter = 1;
 }
 
 @using (Html.BeginForm("Search", "Dashboard", FormMethod.Get, new { @id = "norepostform" }))
@@ -43,23 +44,23 @@
                     }
                     @if (!string.IsNullOrEmpty(Model.facetRecordSource))
                     {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Record_Source" class="removeFacet" >X @Model.facetRecordSource</a></span>
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Record_Source" class="removeFacet">X @Model.facetRecordSource</a></span>
                     }
                     @if (!string.IsNullOrEmpty(Model.facetTags))
                     {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Tags" class="removeFacet" >X @Model.facetTags</a></span>
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Tags" class="removeFacet">X @Model.facetTags</a></span>
                     }
                     @if (!string.IsNullOrEmpty(Model.facetPopDensity))
                     {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Population_Density" class="removeFacet" >X @Model.facetPopDensity</a></span>
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Population_Density" class="removeFacet">X @Model.facetPopDensity</a></span>
                     }
                     @if (!string.IsNullOrEmpty(Model.facetRegion))
                     {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="EPA_Region" class="removeFacet" >X @Model.facetRegion</a></span>
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="EPA_Region" class="removeFacet">X @Model.facetRegion</a></span>
                     }
                     @if (!string.IsNullOrEmpty(Model.facetStatus))
                     {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Status" class="removeFacet" >X @Model.facetStatus</a></span>
+                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Status" class="removeFacet">X @Model.facetStatus</a></span>
                     }
 
                 </span>
@@ -82,6 +83,7 @@
     @Html.HiddenFor(model => model.currentPage)
     @Html.HiddenFor(model => model.sortType)
 
+
     <div class="row">
 
         <!-- ******************************* LEFT PANEL FACETS **********************************-->
@@ -89,18 +91,33 @@
         {
             <div id="leftFacets" class="col-sm-2" style="border-right-width:1px; border-right-style:solid; border-color:#ccc; min-height:500px; ">
                 <div>
-                    <h3 style="margin-top:0px;padding-bottom: 20px;">Data Filters</h3>
-                    @foreach (var item in Model.searchResults.Facets)
-                    {
-                        if (item.Key != "DataType")
+                    <h3 style="margin-top:0px;">Data Filters</h3>
+                    @{
+
+                        foreach (var item in Model.searchResults.Facets)
                         {
-                            <h4>@Html.DisplayFor(modelItem => item.Key).ToString().Replace("_", " ")</h4>
-                                foreach (var subitem in item.Value)
+                            if (item.Key != "DataType")
+                            {
+                                if (item.Value.Count > 0)
                                 {
-                                    if (!string.IsNullOrEmpty(subitem.Value.ToString().Trim())) {
-                                <a id="@Html.DisplayFor(modelItem => subitem.Value)" class="facetItem" data-id2="Facet" href="@Html.DisplayFor(modelItem => item.Key)">@Html.DisplayFor(modelItem => subitem.Value) (@Html.DisplayFor(modelItem => subitem.Count))</a>
-                                    }
+                                    <div class="collapse-chevron">
+                                        <div class="facetHead" data-toggle="collapse" data-target="#facetItemContainer@(counter)">
+                                            <span class="glyphicon glyphicon-chevron-down"></span>
+                                            @Html.DisplayFor(modelItem => item.Key).ToString().Replace("_", " ")
+                                        </div>
+                                        <div id="facetItemContainer@(counter)" class="facContainter collaspe in facetItemContainer@(counter)">
+                                            @foreach (var subitem in item.Value)
+                                            {
+                                                if (!string.IsNullOrEmpty(subitem.Value.ToString().Trim()))
+                                                {
+                                                    <a id="@Html.DisplayFor(modelItem => subitem.Value)" class="facetItem" data-id2="Facet" href="@Html.DisplayFor(modelItem => item.Key)"><i class="clip-chevron-left"></i> @Html.DisplayFor(modelItem => subitem.Value) (@Html.DisplayFor(modelItem => subitem.Count))</a>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
                                 }
+                            }
+                            counter++;
                         }
                     }
                 </div>
@@ -207,8 +224,8 @@
                                 <th>Record Source</th>
                                 @if (Model.activeTab != "5" && Model.activeTab != "7")
                                 {
-                                <th>Media</th>
-                                <th>Status</th>
+                                    <th>Media</th>
+                                    <th>Status</th>
                                 }
                                 <th>Tags</th>
                             </tr>
@@ -296,6 +313,7 @@
                         <table class="table table-striped m-b-none" data-ride="datatables">
                             <tr>
                                 <th></th>
+                                <th>Contact</th>
                                 <th>Name</th>
                                 <th>Agency</th>
                                 <th>Title</th>
@@ -310,6 +328,23 @@
                                             <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(item.Document.KeyID).png)">
                                             </div>
                                         </a>
+                                    </td>
+                                    <td>
+                                        @if (item.Document.PersonPhone != null && item.Document.PersonPhone.Length > 5)
+                                        {
+                                        <a href="tel:@(item.Document.PersonPhone)" class="btn btn-primary">
+                                            <i class="clip-phone"></i>
+                                        </a>
+                                        }
+                                        <a href="mailto:@(item.Document.PersonEmail)" class="btn btn-primary">
+                                            <i class="glyphicon glyphicon-envelope"></i>
+                                        </a>
+                                        @if (item.Document.PersonLinkedIn != null && item.Document.PersonLinkedIn.Length > 5)
+                                        {
+                                        <a href="https://www.linkedin.com/in/@(item.Document.PersonLinkedIn)" class="btn btn-primary" target="_blank">
+                                            <i class="clip-linkedin"></i>
+                                        </a>
+                                        }
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Document.Name)
@@ -339,60 +374,6 @@
 
                 }
             }
-            else
-            {
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Latest Questions</h3>
-                        <hr>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Most Liked Answers</h3>
-                        <hr>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Newly Added Projects</h3>
-                        <hr>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Most Active Users</h3>
-                        <hr>
-                    </div>
-                </div>
-
-                if (Model.active_agencies != null)
-                {
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h3>Most Active Agencies</h3>
-                            <hr>
-
-                            @foreach (T_OE_ORGANIZATION agency in Model.active_agencies)
-                            {
-                                <div class="col-md-3">
-                                    <div class="user-left">
-                                        <div class="center" style="padding-bottom:20px">
-                                            <div class="user-image">
-                                                <img src="@Url.Content(String.Format("~/Content/Images/Agencies/{0}.png", agency.ORG_ABBR))" alt="logo" width="200px" />
-                                            </div>
-                                            <h4>@Html.Raw(agency.ORG_ABBR)</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-
-                        </div>
-                    </div>
-                }
-            }
-
-
 
         </div>
     </div>

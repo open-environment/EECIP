@@ -98,16 +98,46 @@ ul.main-navigation-menu > li.active > a {
 }
 
 /***************     FACET STYLING     ******************/
-.facetItem {
-    display:block;
-    margin-left:10px;
-
+.facetHead {
+    background-color: #ccc;
+    padding: 4px 4px;
+    margin-top: 16px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.75em;
+    border: solid #ccc;
+    border-width: 0 0 1px;
+    color: #2C5987;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
 }
 
-    .facetItem:hover {
+.collapse-chevron .glyphicon {
+    transition: .3s transform ease-in-out;
+}
+
+.collapse-chevron .collapsed .glyphicon {
+    transform: rotate(-90deg);
+}
+
+.facContainter {
+    max-height: 150px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.facetItem {
+    display: block;
+    margin-left: 6px;
+    font-size: 12px;
+}
+
+    .facetItem:hover, .facetItem:active, .facetItem:visited, .facetItem:focus {
         text-decoration: none;
-        background-color:#f2f2f2;
+        background-color: #f2f2f2;
     }
+
 
 /***************     BREADCRUMB STYLING     ******************/
 .breadcrumb {

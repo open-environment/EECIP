@@ -60,7 +60,7 @@
             <span class="stats topicanswers"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> @Model.postCount</span>
             <span class="stats topicviews"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> @Model._topic.Views</span>
             <span class="stats topicupvotes"><span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span> @Model.upVoteCount</span>
-            <span class="stats topicdownvotes"><span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> @Model.upVoteCount</span>
+            <span class="stats topicdownvotes"><span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span> @Model.downVoteCount</span>
             @if (Model._topic.Solved)
             {
                 <span class="stats topicsolved text-green text-bold"><span class="glyphicon glyphicon-ok text-green" aria-hidden="true"></span> Solved</span>

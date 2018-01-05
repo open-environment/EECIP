@@ -18,33 +18,41 @@
                         <th>Job Title</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <th>Created</th>
+                        <th>Last Login</th>
                     </tr>
 
                     @foreach (var item in Model.users)
                     {
-                        <tr>
-                            <td>
-                                <a href="@Url.Action("UserProfile","Account", new { id=item.USER_IDX, a="a" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
-                                <div class="delete-section" style="display:inline">
-                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
-                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.USER_IDX" data-delete-p="/Admin/UserDelete"><b>Confirm Delete</b></div>
-                                </div>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FNAME)
-                                &nbsp;
-                                @Html.DisplayFor(modelItem => item.LNAME)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.JOB_TITLE)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.EMAIL)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.PHONE)
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("UserProfile","Account", new { id=item.USER_IDX, a="a" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <div class="delete-section" style="display:inline">
+                                <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.USER_IDX" data-delete-p="/Admin/UserDelete"><b>Confirm Delete</b></div>
+                            </div>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.FNAME)
+                            &nbsp;
+                            @Html.DisplayFor(modelItem => item.LNAME)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.JOB_TITLE)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EMAIL)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PHONE)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CREATE_DT)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LASTLOGIN_DT)
+                        </td>
+                    </tr>
                     }
                 </table>
             </div>

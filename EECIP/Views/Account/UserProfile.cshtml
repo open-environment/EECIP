@@ -49,21 +49,22 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-9">
 
 
                                     <div class="form-group">
-                                        <label>Phone</label>
+                                        <label>Work Phone</label>
                                         <div class="input-group">
                                             <span class="input-group-addon"> <i class="glyphicon glyphicon-phone-alt"></i> </span>
-                                            @Html.TextBoxFor(model => model.Phone, new { @class = "form-control ", @maxlength="12" })
+                                            @Html.TextBoxFor(model => model.Phone, new { @class = "form-control ", @maxlength = "12" })
                                         </div>
+                                        <span class="help-block"><i class="clip-info"></i> Other members of the community might want to contact you for help with a project</span>
                                         @Html.ValidationMessageFor(model => model.Phone)
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Phone Ext</label>
+                                        <label>Ext</label>
                                         @Html.TextBoxFor(model => model.PhoneExt, new { @class = "form-control", @placeholder = "", @maxlength = "4" })
                                     </div>
                                 </div>
@@ -139,15 +140,16 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>LinkedIn</label>
+                                <label>LinkedIn URL</label>
                                 @Html.TextBoxFor(model => model.LinkedIn, new { @class = "form-control", @placeholder = "", @maxlength = "100" })
                                 @Html.ValidationMessageFor(model => model.LinkedIn)
+                                <span class="help-block"><i class="clip-info"></i> This gives other users more information about you without having to reenter it here.</span>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label for="form-field-select-4">Expertise</label>
+                                <label for="form-field-select-4">Expertise and/or Interests</label>
                                 @Html.ListBoxFor(model => model.SelectedExpertise, Model.AllExpertise, new { multiple = "multiple", @id = "form-field-select-4", @class="form-control search-select" })
                             </div>
                         </div>

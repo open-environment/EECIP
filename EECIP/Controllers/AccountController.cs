@@ -276,10 +276,16 @@ namespace EECIP.Controllers
                 if (model.UserIDX > 0)
                 {
                     var strippedPhone = Regex.Replace(model.Phone ?? "", "[^0-9]", "");
-
+                    if (model.LinkedIn.Contains("www"))
+                    {
+                        try {
+                            Uri uri = new Uri(model.LinkedIn);
+                            model.LinkedIn = uri.Segments.Last();
+                        } catch { }
+                    }
                     int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, null, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin);
 
-                    //update user experience
+                    //update user expertise
                     db_EECIP.DeleteT_OE_USER_EXPERTISE(model.UserIDX);
                     foreach (string expertise in model.SelectedExpertise ?? new List<string>())
                     {
@@ -314,7 +320,6 @@ namespace EECIP.Controllers
                         db_Accounts.UpdateT_OE_USERS_Avatar(model.UserIDX, Utils.ConvertGenericStreamToByteArray(outputStream));
 
                         //save to file system
-                        //string fileName1 = model.UserIDX.ToString() + ".png?x=" + System.DateTime.Now.Millisecond.ToString();
                         string fileName1 = model.UserIDX.ToString() + ".png";
                         model.imageBrowes.SaveAs(Server.MapPath("/Content/Images/Users/" + fileName1));
 
