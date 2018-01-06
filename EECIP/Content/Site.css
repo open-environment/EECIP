@@ -271,7 +271,7 @@ ul.main-navigation-menu > li.active > a {
         height: 0;
         border-color: transparent #6fa8e3 transparent transparent;
         border-style: solid;
-        border-width: 9px 6px 9px 0;
+        border-width: 7px 6px 8px 0;
     }
     .select2-selection__choice:hover::before {
         border-color: transparent #4891dc transparent transparent;

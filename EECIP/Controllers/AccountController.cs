@@ -292,6 +292,10 @@ namespace EECIP.Controllers
                         db_EECIP.InsertT_OE_USER_EXPERTISE(model.UserIDX, expertise);
                     }
 
+                    //award profile badge
+                    if (db_Accounts.GetUserIDX() == model.UserIDX)
+                        db_Forum.EarnBadgeController(model.UserIDX, "UserProfile");
+
                     ////avatar handling
                     if (model.imageBrowes != null)
                     {
@@ -322,6 +326,10 @@ namespace EECIP.Controllers
                         //save to file system
                         string fileName1 = model.UserIDX.ToString() + ".png";
                         model.imageBrowes.SaveAs(Server.MapPath("/Content/Images/Users/" + fileName1));
+
+                        //award badge
+                        if (db_Accounts.GetUserIDX() == model.UserIDX)
+                            db_Forum.EarnBadgeController(model.UserIDX, "Photogenic");
 
                     }
 
@@ -509,6 +517,30 @@ namespace EECIP.Controllers
             return Json("Unable to delete notification.");
         }
 
+        [Authorize]
+        public ActionResult NotificationDelete2(Guid? id)
+        {
+
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            //CHECK PERMISSIONS
+            T_OE_USER_NOTIFICATION n = db_EECIP.GetT_OE_USER_NOTIFICATION_byID(id);
+            if (n != null)
+            {
+                if (User.IsInRole("Admins") || UserIDX == n.USER_IDX)
+                {
+                    int SuccID = db_EECIP.DeleteT_OE_NOTIFICATION(id.ConvertOrDefault<Guid>());
+                    if (SuccID > 0)
+                        TempData["Success"] = "Deleted";
+                    else
+                        TempData["Error"] = "Unable to delete notification";
+                }
+            }
+
+            return RedirectToAction("Notifications", "Account");
+        }
+
+
         // POST: /Forum/PostAnswer
         [Authorize]
         [HttpPost]
@@ -533,6 +565,7 @@ namespace EECIP.Controllers
 
         }
 
+        
         #region Helpers
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {

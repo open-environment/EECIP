@@ -489,6 +489,27 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int GetT_OE_PROJECTS_CountAddedByUserIDX(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_PROJECTS
+                               where a.CREATE_USERIDX == UserIDX
+                               select a).Count();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
         public static List<T_OE_PROJECTS> GetT_OE_PROJECTS_NeedingReview(int UserIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1270,6 +1291,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     return (from a in ctx.T_OE_USER_NOTIFICATION
                             where a.USER_IDX == UserIDX
                             && (OnlyUnread == true ? a.READ_IND == false : true)
+                            orderby a.CREATE_DT descending
                             select a).ToList();
                 }
                 catch (Exception ex)

@@ -332,16 +332,16 @@
                                     <td>
                                         @if (item.Document.PersonPhone != null && item.Document.PersonPhone.Length > 5)
                                         {
-                                        <a href="tel:@(item.Document.PersonPhone)" class="btn btn-primary">
+                                        <a href="tel:@(item.Document.PersonPhone)" class="btn btn-xs btn-info" style="margin-bottom: 4px;">
                                             <i class="clip-phone"></i>
                                         </a>
                                         }
-                                        <a href="mailto:@(item.Document.PersonEmail)" class="btn btn-primary">
+                                        <a href="mailto:@(item.Document.PersonEmail)" class="btn btn-xs btn-info" style="margin-bottom: 4px;">
                                             <i class="glyphicon glyphicon-envelope"></i>
                                         </a>
                                         @if (item.Document.PersonLinkedIn != null && item.Document.PersonLinkedIn.Length > 5)
                                         {
-                                        <a href="https://www.linkedin.com/in/@(item.Document.PersonLinkedIn)" class="btn btn-primary" target="_blank">
+                                        <a href="https://www.linkedin.com/in/@(item.Document.PersonLinkedIn)" class="btn btn-xs btn-info"  style="margin-bottom: 4px;" target="_blank">
                                             <i class="clip-linkedin"></i>
                                         </a>
                                         }

@@ -110,29 +110,40 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
-            //update general agency data
-            Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(model.agency.ORG_IDX, null, null, null, null, null, model.agency.CLOUD, model.agency.API, true, UserIDX);
+            //CHECK PERMISSIONS
+            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(UserIDX, model.agency.ORG_IDX.ConvertOrDefault<Guid>()))
+            {
+                //update general agency data
+                Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(model.agency.ORG_IDX, null, null, null, null, null, model.agency.CLOUD, model.agency.API, true, UserIDX);
 
 
-            //update database tags
-            db_Ref.DeleteT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "Database");
-            foreach (string expertise in model.SelectedDatabase ?? new List<string>())
-                db_Ref.InsertT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "Database", expertise);
+                //update database tags
+                db_Ref.DeleteT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "Database");
+                foreach (string expertise in model.SelectedDatabase ?? new List<string>())
+                    db_Ref.InsertT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "Database", expertise);
 
 
-            //update app framework tags
-            db_Ref.DeleteT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "App Framework");
-            foreach (string expertise in model.SelectedAppFramework ?? new List<string>())
-                db_Ref.InsertT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "App Framework", expertise);
-
-            //now update the Azure search
-            AzureSearch.PopulateSearchIndexOrganization(SuccID);
+                //update app framework tags
+                db_Ref.DeleteT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "App Framework");
+                foreach (string expertise in model.SelectedAppFramework ?? new List<string>())
+                    db_Ref.InsertT_OE_ORGANIZATION_TAGS(model.agency.ORG_IDX, "App Framework", expertise);
 
 
-            if (SuccID != null)
-                TempData["Success"] = "Update successful.";
-            else
-                TempData["Error"] = "Error updating data.";
+                //award agency profile badge
+                if (db_Accounts.UserCanEditOrgIDX(UserIDX, model.agency.ORG_IDX.ConvertOrDefault<Guid>()))
+                    db_Forum.EarnBadgeController(UserIDX, "AgencyProfile");
+
+
+                //now update the Azure search
+                AzureSearch.PopulateSearchIndexOrganization(SuccID);
+
+
+                if (SuccID != null)
+                    TempData["Success"] = "Update successful.";
+                else
+                    TempData["Error"] = "Error updating data.";
+            }
+
 
             return RedirectToAction("Agency", new { selAgency = model.agency.ORG_IDX });
         }
@@ -354,9 +365,22 @@ namespace EECIP.Controllers
                                     //insert to database
                                     db_EECIP.InsertUpdateT_OE_DOCUMENTS(null, fileBytes, file.FileName, "project", file.ContentType, fileBytes.Length, null, null, newProjID2, null, UserIDX);
                                 }
+
+
+                                //award profile badge
+                                if (db_Accounts.UserCanEditOrgIDX(UserIDX, model.project.ORG_IDX.ConvertOrDefault<Guid>()))
+                                    db_Forum.EarnBadgeController(UserIDX, "ProjectDocument");
+
                             }
                         }
+
+
+
                     }
+
+                    //award badges for new project
+                    if (newProjID2 != model.project.PROJECT_IDX)//new case
+                        db_Forum.EarnBadgeAddProject(UserIDX);
 
                     //now update the Azure search
                     AzureSearch.PopulateSearchIndexProject(newProjID2);

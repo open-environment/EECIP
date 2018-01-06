@@ -21,10 +21,7 @@
                     {
                         <tr class="@(item.READ_IND != true ? "text-bold" : "text-grey")">
                             <td>
-                                <div class="delete-section" style="display:inline">
-                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
-                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.NOTIFICATION_IDX" data-delete-p="/Account/NotificationDelete"><b>Confirm Delete</b></div>
-                                </div>
+                                <a href="@Url.Action("NotificationDelete2","Account", new { id=item.NOTIFICATION_IDX })" class="btn btn-rounded btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                 @if (item.READ_IND != true)
                                 {
                                 <a data-id="@item.NOTIFICATION_IDX" href="#" class="btn btn-rounded btn-xs btn-info markread" title="Mark as Read"><i class="glyphicon glyphicon-eye-open"></i></a>
@@ -52,7 +49,6 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/confirmdelete")
 
 <script type="text/javascript">
     $(document).ready(function () {

@@ -333,8 +333,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
+        
         public static bool EarnBadgeUpVoteProject(int UserIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -350,6 +349,32 @@ namespace EECIP.App_Logic.DataAccessLayer
                         return EarnBadgeController(UserIDX, "UserProjectLikeFive");
                     else if (UpvoteCount == 10)
                         return EarnBadgeController(UserIDX, "UserProjectLikeTen");
+                    else
+                        return false;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
+        public static bool EarnBadgeAddProject(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    //get post count of user
+                    int projCount = db_EECIP.GetT_OE_PROJECTS_CountAddedByUserIDX(UserIDX);
+
+                    if (projCount == 1)
+                        return EarnBadgeController(UserIDX, "ProjectProfile");
+                    else if (projCount == 5)
+                        return EarnBadgeController(UserIDX, "ProjectProfileFive");
+                    else if (projCount == 10)
+                        return EarnBadgeController(UserIDX, "ProjectProfileTen");
                     else
                         return false;
                 }
@@ -1745,14 +1770,14 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     var tags = ctx.MembershipUserPoints
                         .GroupBy(x => x.MembershipUser_Id)
-                        .Select(g => new { g.Key, Count = g.Count() });
+                        .Select(g => new { g.Key, Sum = g.Sum(_ => _.Points) });
 
                     var yyy = (from a in ctx.T_OE_USERS
                                join b in tags on a.USER_IDX equals b.Key
-                               orderby b.Count descending
+                               orderby b.Sum descending
                                select new UserMostPointsDisplay {
                                    _User = a,
-                                   UserPoints = b.Count
+                                   UserPoints = b.Sum
                                }).Take(recCount).ToList();
 
                     return yyy;
