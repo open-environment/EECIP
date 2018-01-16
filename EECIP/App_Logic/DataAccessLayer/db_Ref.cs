@@ -335,8 +335,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    KeyID = a.ORG_IDX.ToString(),
                                    DataType = "Agency",
                                    Record_Source = "EECIP Supplied",
-                                   Name = a.ORG_ABBR,
-                                   Description = a.ORG_NAME,
+                                   Name = a.ORG_NAME,
+                                   Description = a.ORG_ABBR,
                                    Population_Density = x1.POP_DENSITY,
                                    EPA_Region = a.EPA_REGION.ToString()
                                }).ToList();

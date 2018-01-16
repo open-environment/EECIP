@@ -146,7 +146,6 @@
                 </div>
             </div>
             <div class="panel-body">
-
                 <div class="table-responsive" style="max-height:400px;">
                     <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
                         <thead class="thead-inverse">
@@ -158,13 +157,11 @@
                             </tr>
                         </thead>
                         <tbody>
-
-
                             @foreach (var item in Model.LatestProjects)
                             {
                                 <tr>
                                     <td>
-                                        <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-info-sign"></i> Info</a>
+                                        <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-info-sign"></i> Info</a>
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.PROJ_NAME)
@@ -180,14 +177,9 @@
                         </tbody>
                     </table>
                 </div>
-
-
-
             </div>
         </section>
-
     </div>
-
 
     <!--  **************  LATEST DISCUSSIONS **************************************-->
     @if (Model.LatestTopics != null && Model.LatestTopics.Count>0)

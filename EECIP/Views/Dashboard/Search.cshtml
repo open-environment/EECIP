@@ -1,5 +1,4 @@
-﻿@using EECIP.App_Logic.DataAccessLayer;
-@using EECIP.App_Logic.BusinessLogicLayer;
+﻿@using EECIP.App_Logic.BusinessLogicLayer;
 @model EECIP.Models.vmDashboardSearch
 @{
     ViewBag.HideTitle = true;
@@ -219,7 +218,10 @@
                             <tr>
                                 <th>Type</th>
                                 <th>Agency</th>
-                                <th>Name</th>
+                                @if (Model.activeTab != "5")
+                                {
+                                    <th>Name</th>
+                                }
                                 <th>Description</th>
                                 <th>Record Source</th>
                                 @if (Model.activeTab != "5" && Model.activeTab != "7")
@@ -260,9 +262,12 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Document.Agency)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Document.Name)
-                                    </td>
+                                    @if (Model.activeTab != "5")
+                                    {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Document.Name)
+                                        </td>
+                                     }
                                     <td>
                                         @if (item.Document.DataType != "Discussion")
                                         {
@@ -439,6 +444,7 @@
 
             $('a[href="#tab1"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('');
+                $('#facetState').val('');
                 $('#activeTab').val('1');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
@@ -446,6 +452,7 @@
 
             $('a[href="#tab2"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('Project');
+                $('#facetState').val('');
                 $('#activeTab').val('2');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
@@ -453,6 +460,7 @@
 
             $('a[href="#tab3"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('Enterprise Service');
+                $('#facetState').val('');
                 $('#activeTab').val('3');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
@@ -460,6 +468,7 @@
 
             $('a[href="#tab4"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('User');
+                $('#facetState').val('');
                 $('#activeTab').val('4');
                 $('#currentPage').val(1);
                 $('#sortType').val('alpha');
@@ -468,8 +477,10 @@
 
             $('a[href="#tab5"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('Agency');
+                $('#facetState').val('');
                 $('#activeTab').val('5');
                 $('#currentPage').val(1);
+                $('#sortType').val('alpha');
                 $('#norepostform').submit();
             });
 

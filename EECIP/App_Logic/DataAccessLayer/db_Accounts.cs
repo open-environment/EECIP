@@ -127,6 +127,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     //otherwise, check if user belongs
                     int c =  (from a in ctx.T_OE_USERS
                               where a.ORG_IDX == orgIDX
+                              && a.USER_IDX == idx
                               select a).Count();
 
                     return (c > 0);
@@ -134,7 +135,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 catch (Exception ex)
                 {
                     db_Ref.LogEFException(ex);
-                    throw ex;
+                    return false;
                 }
             }
         }

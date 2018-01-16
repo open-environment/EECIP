@@ -36,15 +36,18 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         public string State_or_Tribal { get; set; }
 
         [IsSearchable, IsSortable]
+        [Analyzer(AnalyzerName.AsString.EnLucene)]
         public string Name { get; set; }
 
         [IsSearchable, IsFilterable]
+        [Analyzer(AnalyzerName.AsString.EnLucene)]
         public string Description { get; set; }
 
         [IsFilterable, IsSortable, IsFacetable]
         public string Media { get; set; }
 
         [IsSearchable, IsFacetable, IsFilterable]
+        [Analyzer(AnalyzerName.AsString.EnLucene)]
         public string[] Tags { get; set; }
 
         public string PersonPhone { get; set; }
@@ -92,11 +95,11 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
                 //defining the suggester
-                Suggester sg = new Suggester();
-                sg.Name = "eecip_suggest";
-                //sg.SearchMode = SuggesterSearchMode.AnalyzingInfixMatching;
-                sg.SourceFields = new List<string>() { "Name" };
-
+                Suggester sg = new Suggester
+                {
+                    Name = "eecip_suggest",
+                    SourceFields = new List<string>() { "Name" }
+                };
 
                 var definition = new Index()
                 {
@@ -277,7 +280,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
                 //get all projects needing to sync
                 List<EECIP_Index> _ps = db_Ref.GetT_OE_ORGANIZATION_ReadyToSync(OrgIDX);
-                if (_ps != null)
+                if (_ps != null && _ps.Count > 0)
                 {
                     var batch = IndexBatch.Upload(_ps);
 
@@ -301,7 +304,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", ex.InnerException.ToString().SubStringPlus(0, 2000));
             }
         }
 
@@ -314,34 +317,31 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
                 //get all ent services needing to sync
                 List<EECIP_Index> _ps = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_ReadyToSync(EntSvcIDX);
-                if (_ps != null)
+                if (_ps != null && _ps.Count > 0)
                 {
-                    if (_ps.Count > 0)
+                    var batch = IndexBatch.Upload(_ps);
+
+                    try
                     {
-                        var batch = IndexBatch.Upload(_ps);
+                        //send to Azure
+                        ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                        indexClient.Documents.Index(batch);
 
-                        try
+                        //then update local rec sync ind
+                        foreach (EECIP_Index p in _ps)
                         {
-                            //send to Azure
-                            ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
-                            indexClient.Documents.Index(batch);
-
-                            //then update local rec sync ind
-                            foreach (EECIP_Index p in _ps)
-                            {
-                                db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(p.KeyID.ConvertOrDefault<int>()-100000, null, null, null, null, null, null, null, null, true, null);
-                            }
-
+                            db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(p.KeyID.ConvertOrDefault<int>()-100000, null, null, null, null, null, null, null, null, true, null);
                         }
-                        catch (IndexBatchException e)
-                        {
-                            // Sometimes when your Search service is under load, indexing will fail for some of the documents in
-                            // the batch. Depending on your application, you can take compensating actions like delaying and
-                            // retrying. For this simple demo, we just log the failed document keys and continue.
-                            Console.WriteLine(
-                                "Failed to index some of the documents: {0}",
-                                String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
-                        }
+
+                    }
+                    catch (IndexBatchException e)
+                    {
+                        // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                        // the batch. Depending on your application, you can take compensating actions like delaying and
+                        // retrying. For this simple demo, we just log the failed document keys and continue.
+                        Console.WriteLine(
+                            "Failed to index some of the documents: {0}",
+                            String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
                     }
                 }
 
@@ -349,7 +349,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
             catch (Exception ex)
             {
-                throw ex;
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", ex.InnerException.ToString().SubStringPlus(0, 2000));
             }
         }
 
@@ -362,7 +362,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
                 //get all projects needing to sync
                 List<EECIP_Index> _ps = db_Accounts.GetT_OE_USERS_ReadyToSync(UserIDX);
-                if (_ps != null)
+                if (_ps != null && _ps.Count > 0)
                 {
                     var batch = IndexBatch.Upload(_ps);
 

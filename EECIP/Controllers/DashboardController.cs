@@ -642,6 +642,7 @@ namespace EECIP.Controllers
             //return RedirectToAction("Index", "Dashboard");
         }
 
+
         public ActionResult UserCard(string strid)
         {
             int UserIDX = strid.ConvertOrDefault<int>();
@@ -712,8 +713,6 @@ namespace EECIP.Controllers
             return RedirectToAction("Governance");
         }
 
-
-
-
+        
     }
 }

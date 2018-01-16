@@ -225,8 +225,13 @@ namespace EECIP.Controllers
             if (id == null)
                 id = db_Accounts.GetUserIDX();
 
+            //security validation: only admins can (only allow site admin or user to edit their own profile)
+            if (!User.IsInRole("Admins") && a=="a")
+                return RedirectToAction("AccessDenied", "Home");
+
             //security validation (only allow site admin or user to edit their own profile)
-            if ((!User.IsInRole("Admins")) && (id != db_Accounts.GetUserIDX())) return RedirectToAction("AccessDenied", "Home");
+            if ((!User.IsInRole("Admins")) && (id != db_Accounts.GetUserIDX()))
+                return RedirectToAction("AccessDenied", "Home");
             
 
             var model = new vmAccountUserProfile();
@@ -276,7 +281,7 @@ namespace EECIP.Controllers
                 if (model.UserIDX > 0)
                 {
                     var strippedPhone = Regex.Replace(model.Phone ?? "", "[^0-9]", "");
-                    if (model.LinkedIn.Contains("www"))
+                    if ((model.LinkedIn ?? "").Contains("www"))
                     {
                         try {
                             Uri uri = new Uri(model.LinkedIn);

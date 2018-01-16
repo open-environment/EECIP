@@ -134,7 +134,7 @@
                                             @Html.DisplayFor(modelItem => item.JOB_TITLE)
                                         </td>
                                         <td>
-                                            @if (item.PHONE.Length > 0)
+                                            @if (item.PHONE != null && item.PHONE.Length > 0)
                                             {
                                                 <a href="tel:@(item.PHONE)" class="btn btn-xs btn-info">
                                                     <i class="clip-phone"></i>
