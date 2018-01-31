@@ -5,11 +5,12 @@
 
     <div class="rowcreater hidden-xs">
         <a href="@Url.Action("UserCard", "Dashboard", new { strid = Model._topic.MembershipUser_Id })">
-            <img src="/Content/Images/Users/@(Model._topic.MembershipUser_Id).png" alt="@Model.topicCreator">
+            <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(Model._topic.MembershipUser_Id).png)"  alt="@Model.topicCreator">
+            </div>
         </a>
     </div>
 
-    <div class="rowdetails">
+    <div class="rowdetails"  style="margin-left:90px;">
         @*<p class="category categorysolved@(Model._topic.Solved.ToString().ToLower())" style=" ">Category: <a href="#">Category Name</a></p>*@
         <h3>
             <a title="#" href="@Url.Action("ShowTopic", "Forum", new { slug = Model._topic.Slug })">

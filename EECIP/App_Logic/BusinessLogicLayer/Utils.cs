@@ -564,6 +564,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         {
             if (!string.IsNullOrEmpty(input))
             {
+                input = HttpUtility.HtmlDecode(input);
                 input = Regex.Replace(input, @"</?\w+((\s+\w+(\s*=\s*(?:"".*?""|'.*?'|[^'"">\s]+))?)+\s*|\s*)/?>", string.Empty, RegexOptions.Singleline);
                 input = Regex.Replace(input, @"\[[^]]+\]", "");
             }

@@ -1094,6 +1094,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="SP_ENT_SVC_COUNT_DISPLAY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="EECIPModelStoreContainer">
           <EntitySet Name="T_OE_APP_SETTINGS" EntityType="Self.T_OE_APP_SETTINGS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_APP_SETTINGS_CUSTOM" EntityType="Self.T_OE_APP_SETTINGS_CUSTOM" Schema="dbo" store:Type="Tables" />
@@ -1615,6 +1616,7 @@
             <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
           </AssociationSet>
           <EntitySet Name="T_OE_APP_SETTINGS_CUSTOM" EntityType="EECIPModel.T_OE_APP_SETTINGS_CUSTOM" />
+          <FunctionImport Name="SP_ENT_SVC_COUNT_DISPLAY" ReturnType="Collection(EECIPModel.SP_ENT_SVC_COUNT_DISPLAY_Result)" />
           </EntityContainer>
         <EntityType Name="T_OE_APP_SETTINGS">
           <Key>
@@ -2737,6 +2739,13 @@
           <Property Name="SETTING_CUSTOM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TERMS_AND_CONDITIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
+        <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
+          <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
+          <Property Type="String" Name="ENT_PLATFORM_NAME" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="ENT_PLATFORM_DESC" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="ENT_PLATFORM_EXAMPLE" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="CNT" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3269,6 +3278,17 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_ENT_SVC_COUNT_DISPLAY" FunctionName="EECIPModel.Store.SP_ENT_SVC_COUNT_DISPLAY">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EECIPModel.SP_ENT_SVC_COUNT_DISPLAY_Result">
+                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
+                <ScalarProperty Name="ENT_PLATFORM_NAME" ColumnName="ENT_PLATFORM_NAME" />
+                <ScalarProperty Name="ENT_PLATFORM_DESC" ColumnName="ENT_PLATFORM_DESC" />
+                <ScalarProperty Name="ENT_PLATFORM_EXAMPLE" ColumnName="ENT_PLATFORM_EXAMPLE" />
+                <ScalarProperty Name="CNT" ColumnName="CNT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

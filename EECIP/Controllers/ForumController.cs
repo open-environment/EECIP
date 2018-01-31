@@ -45,8 +45,6 @@ namespace EECIP.Controllers
                 Categories = ddlForumHelpers.get_ddl_categories(),
                 OptionalPermissions = GetOptionalPermissions(),
                 IsTopicStarter = true,
-                //PollAnswers = new List<string>(),
-                //PollCloseAfterDays = 0,
                 SelectedTags = new List<string>(),
                 AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
         };
@@ -215,7 +213,7 @@ namespace EECIP.Controllers
                     IsTopicStarter = _post.IsTopicStarter ?? false,
                     PollAnswers = new List<string>(),
                     PollCloseAfterDays = 0,
-                    AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
+                    AllTags = db_Forum.GetTopicTags_ByAttributeAll(_topic.Id, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
                 };
 
                 return View(viewModel);

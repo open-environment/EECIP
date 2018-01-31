@@ -3,75 +3,116 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-<section class="wrapper wrapper-grey">
-    <!-- start: GENERIC CONTENT CONTAINER -->
+<section class="wrapper">
     <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <img src="~/Content/Images/front-logo.png" class="img-responsive animate-if-visible" data-animation-options='{"animation":"tada", "duration":"600"}'/>
-            </div>
-            <div class="col-sm-6">
-                <h2 style="color:#199C98">E-Enterprise Community Inventory Platform</h2>
-                <hr class="fade-right">
-                <p>
-                    The E-Enterprise Community Inventory Platform provides an online inventory of agency profiles for the state, tribal, and territorial partners of E-Enterprise.                     
-                </p>
-                <p>
-                    This site contains a broad scope of information, including partner agencies’ information technology infrastructure, data exchange nodes and flows, process improvement efforts, and other program modernizations (e.g. advanced monitoring). 
-                </p>
-                <p>
-                    This allows the E-Enterprise community of co-regulators to have a more complete understanding of their partner agencies’ plans, priorities, and constraints, and to plan and collaborate more strategically across agencies.
-                </p>
-                <hr class="fade-right">
-                <a class="btn btn-success" href="@Url.Action("Login","Account")" style="margin-right:30px;"><i class="clip-arrow-right"></i> Log In</a>
-                <a class="btn btn-primary" href="@Url.Action("Register","Account")"><i class="clip-arrow-right"></i> Register</a>
+        <div class="row" style="min-height:180px;">
+            <div class="col-sm-12 center">
+                <h2 style="color:#199C98;padding-bottom:40px;">Welcome to the E-Enterprise Community Inventory Platform</h2>
+                <a class="btn btn-success btn-lg" href="@Url.Action("Login","Account")" style="margin-right:30px;"><i class="clip-arrow-right"></i> Log In</a>
+                <a class="btn btn-primary  btn-lg" href="@Url.Action("Register","Account")"><i class="clip-arrow-right"></i> Register</a>
             </div>
         </div>
     </div>
-    <!-- end: GENERIC CONTENT CONTAINER -->
 </section>
-<section>
-    <!-- start: CORE BOXES CONTAINER -->
-    <div class="container">
+<section class="wrapper wrapper-grey ">
+    <div class="container" style="padding-left:50px !important; padding-right:50px !important;">
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-md-12">
+                <h2 style="color:#199C98" class="center">What It Is</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-7">
+                <p>&nbsp;</p>
+                <p class="" style="font-size:16px; padding-top:20px; padding-bottom:20px;">
+                    The e-Enterprise Community Inventory Platform is an <strong style="color:#">online community</strong> and <strong style="color:#">living project inventory</strong> for e-Enterprise State and Tribal participant members across the US.
+                </p>
+                <p class="" style="font-size:16px; padding-top:20px; padding-bottom:20px;">
+                    The inventory has a broad focus, including <strong style="color:#">IT, process improvement, and advanced monitoring</strong>, along with traditional topics such as <strong style="color:#">Exchange Network Nodes and dataflows</strong>.
+                </p>
+            </div>
+            <div class="col-sm-3">
+                <img src="~/Content/Images/front-logo.png" class="img-responsive animate-if-visible" data-animation-options='{"animation":"tada", "duration":"600"}' />
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+</section>
+
+
+<section class="wrapper">
+    <div class="container" style="padding-left:50px !important; padding-right:50px !important;">
+        <div class="row">
+            <div class="col-md-12" style="padding-bottom:35px;">
+                <h2 style="color:#199C98" class="center">How It Works</h2>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="core-box">
+                <div class="heading">
+                    <i class="clip-question circle-icon"></i>
+                    <h2 style="color:#199C98">Ask Questions</h2>
+                </div>
+                <div class="content">
+                    Users ask questions, and other users in the community answer them.
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="core-box">
+                <div class="heading">
+                    <i class="clip-book circle-icon"></i>
+                    <h2 style="color:#199C98">Enter Information</h2>
+                </div>
+                <div class="content">
+                    Users enter information about projects their agencies have undertaken, their agency's technical environment, and their own professional interests.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-3">
                 <div class="core-box">
                     <div class="heading">
                         <i class="clip-search circle-icon"></i>
                         <h2 style="color:#199C98">Advanced Search</h2>
                     </div>
                     <div class="content">
-                        EECIP includes advanced search techniques such as synonym matching (e.g. 303D = ATTAINS), full document text searching, and search suggestions.
+                        Users search for projects, agencies, discussion topics, and other users who might be relevant to their work. EECIP helps by joining tagged content and suggesting connections.
                     </div>
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="core-box">
-                    <div class="heading">
-                        <i class="clip-question-2 circle-icon"></i>
-                        <h2 style="color:#199C98">Ask & Answer Questions</h2>
-                    </div>
-                    <div class="content">
-                        Ask questions in the community forum and gain access to assistance from other in the community.
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
+            <div class="col-sm-6 col-md-3">
                 <div class="core-box">
                     <div class="heading">
                         <i class="clip-heart-2 circle-icon"></i>
-                        <h2 style="color:#199C98">Help & Be Recognized</h2>
+                        <h2 style="color:#199C98">Connect</h2>
                     </div>
                     <div class="content">
-                        Gain recognition by helping fellow community members by earning badges for a variety of activities.
+                        Users find contact information for other users and connect to share information about their projects. Gain recognition by helping fellow community members by earning badges for a variety of activities.
                     </div>
                     @*<a class="view-more" href="#">
-                        View More <i class="fa fa-angle-right"></i>
-                    </a>*@
+                    View More <i class="fa fa-angle-right"></i>
+                </a>*@
                 </div>
             </div>
         </div>
     </div>
-    <!-- end: CORE BOXES CONTAINER -->
 </section>
+
+@section customstyles {
+    <style>
+        .page-header {
+            display:none;
+        }
+        .main-content {
+            margin-left: 0px;
+        }
+        .main-content .container {
+            padding:0 !important;
+        }
+        .core-box {
+            min-height:170px;
+        }
+    </style>
+}

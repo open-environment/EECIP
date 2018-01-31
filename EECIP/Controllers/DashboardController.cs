@@ -613,6 +613,21 @@ namespace EECIP.Controllers
 
         #endregion
 
+        public ActionResult EnterpriseSvcOverview() {
+            var model = new vmDashboardEntSvcOverview();
+            model.EntSvcOverviewDisplay = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_Overview();
+            return View(model);
+        }
+
+
+        public ActionResult EnterpriseSvc(int id)
+        {
+            var model = new vmDashboardEntSvcOverview();
+            model.EntSvcOverviewDisplay = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_Overview();
+            return View(model);
+        }
+
+
 
         public ActionResult EnterpriseSvcCard(string strid)
         {

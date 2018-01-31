@@ -3,6 +3,12 @@
 @{
     ViewBag.Title = "Discussion Topic";
     ViewBag.ShowBack = true;
+
+    string orderBy = "newest";
+    if (HttpContext.Current.Request.QueryString["order"] != null)
+    {   
+        orderBy = HttpContext.Current.Request.QueryString["order"].ToString();
+    }
 }
 
 <div class="row">
@@ -88,9 +94,8 @@
                         @if (Model.Posts != null && Model.Posts.Count() > 1)
                         {
                             <text> Order By:
-                                <a href="@Url.Action("ShowTopic", "Forum", new { slug = Model.Topic.Slug, order="" })">Standard</a> |
-                                <a href="@Url.Action("ShowTopic", "Forum", new { slug = Model.Topic.Slug, order="newest" })">Newest First</a> |
-                                <a href="@Url.Action("ShowTopic", "Forum", new { slug = Model.Topic.Slug, order="votes" })">Votes</a>
+                                <a href="@Url.Action("ShowTopic", "Forum", new { slug = Model.Topic.Slug, order="newest" })" class="@(orderBy=="votes" ? "" : "text-bold")">Newest First</a> |
+                                <a href="@Url.Action("ShowTopic", "Forum", new { slug = Model.Topic.Slug, order="votes" })" class="@(orderBy=="votes" ? "text-bold" : "")">Votes</a>
                             </text>
                         }
                     </div>

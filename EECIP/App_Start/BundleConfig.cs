@@ -29,6 +29,9 @@ namespace EECIP
             bundles.Add(new ScriptBundle("~/bundles/anchorme").Include("~/Scripts/anchorme.js"));
             bundles.Add(new ScriptBundle("~/bundles/pagination").Include("~/Scripts/jquery.twbsPagination.js"));
             bundles.Add(new ScriptBundle("~/bundles/trunk8").Include("~/Scripts/trunk8.js"));
+            bundles.Add(new ScriptBundle("~/bundles/bootstraptour").Include(
+                "~/Scripts/bootstrap-tour.js",
+                "~/Scripts/bootstrap-tour-dtl.js"));
 
             //****************** CSS ***********************************
             //****************** CSS ***********************************
@@ -41,6 +44,7 @@ namespace EECIP
                 "~/Content/theme_dark.css",
                 "~/Content/css/select2.css",
                 "~/Content/auto-complete.css",
+                "~/Content/bootstrap-tour.css",
                 "~/Content/toastr.css",
                 "~/Content/site.css"));
         }

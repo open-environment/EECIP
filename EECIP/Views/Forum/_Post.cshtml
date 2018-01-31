@@ -6,10 +6,11 @@
 <div class="post">
     <div class="rowcreater hidden-xs">
         <a href="@Url.Action("UserCard", "Dashboard", new { strid = Model.Post.MembershipUser_Id })">
-            <img src="/Content/Images/Users/@(Model.Post.MembershipUser_Id).png" alt="@Model.Post.MembershipUser_Id">
+            <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(Model.Post.MembershipUser_Id).png)">
+            </div>
         </a>
     </div>
-    <div class="rowdetails clearfix">
+    <div class="rowdetails clearfix"   style="margin-left:90px;">
 
         <!-- POST ACTIONS RIGHT BAR -->
         <div class="postadmin">

@@ -4,24 +4,18 @@
 }
 
 <div class="box-forgot" style="display: block;">
-    <h3>@ViewBag.Title</h3>
     <form class="form-forgot" novalidate="novalidate">
-
         <div class="alert alert-success">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <h4><i class="fa fa-ok-sign"></i>Verification Required!</h4>
+            <h4><i class="fa fa-ok-sign"></i>Email Verification Required!</h4>
             <br />
-            You will need to verify your account. Please <b>check your email</b> and click the link in the email to verify your account.
-            <br/><br/>
-
-            <!-- render the validation summary -->
+            You will need to verify your account. Please <b>check your email</b> and <b>click the link in the email</b> to verify your account.
+            <br/>
+            <br/>
             @Html.Partial("~/Views/Shared/_ValidationSummary.cshtml")
         </div>
         <div class="text-center">
             <a href="@Url.Action("Index", "Home") " class="btn btn-primary">Return to Home Page</a>
         </div>
-
-
     </form>
 </div>
 

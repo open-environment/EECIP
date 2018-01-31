@@ -1188,12 +1188,15 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     var xx1 = (from a in ctx.Topic_Tags
                                where a.Topic_Id == topic_id
-                               && a.TopicTagAttribute == aTTRIBUTE
+                               && a.TopicTagAttribute == "Topic Tag"
                                select a.TopicTag);
+
+                    var ss1 = xx1.ToList();
 
                     var xx2 = (from a in ctx.T_OE_REF_TAGS
                                where a.TAG_CAT_NAME == aTTRIBUTE
                                select a.TAG_NAME);
+                    var ss2 = xx2.ToList();
 
                     return xx1.Union(xx2).ToList();
 
@@ -1469,7 +1472,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
                                where a.Topic_Id == topic_id
                                && a.IsTopicStarter == false
-                               orderby a.DateCreated
+//                               orderby a.DateCreated
                                select new vmForumPost
                                {
                                    Post = a,
@@ -1493,10 +1496,13 @@ namespace EECIP.App_Logic.DataAccessLayer
                                                 }).ToList()
                                }).ToList();
 
-                    if (orderBy == "votes")
-                        xxx.OrderByDescending(x => x.UpVoteCount);
 
-                    return xxx;
+                    if (orderBy == "votes")
+                        return xxx.OrderByDescending(x => x.UpVoteCount).ToList();
+                    else
+                        return xxx.OrderBy(x => x.Post.DateCreated).ToList(); 
+
+//                    return xxx;
                 }
                 catch (Exception ex)
                 {

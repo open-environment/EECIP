@@ -12,6 +12,8 @@ namespace EECIP.App_Logic.DataAccessLayer
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class EECIPEntities : DbContext
     {
@@ -63,5 +65,10 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<PostFile> PostFiles { get; set; }
         public virtual DbSet<T_OE_DOCUMENTS> T_OE_DOCUMENTS { get; set; }
         public virtual DbSet<T_OE_APP_SETTINGS_CUSTOM> T_OE_APP_SETTINGS_CUSTOM { get; set; }
+    
+        public virtual ObjectResult<SP_ENT_SVC_COUNT_DISPLAY_Result> SP_ENT_SVC_COUNT_DISPLAY()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ENT_SVC_COUNT_DISPLAY_Result>("SP_ENT_SVC_COUNT_DISPLAY");
+        }
     }
 }

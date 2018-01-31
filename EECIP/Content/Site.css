@@ -64,12 +64,34 @@ html {
     background-color: #4F4F4F;
 }
 
+
+.wrapper {
+    clear: both;
+    min-height: 100px;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.wrapper-grey {
+    box-shadow: 0 1px 3px rgba(0,0,0,.1) inset;
+    background-color: #efefef;
+    color: #888;
+    border-top: 1px solid #E1E1E1;
+    border-bottom: 1px solid #E1E1E1;
+}
+.wrapper.padding50 {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+
 /***************     TOP AND LEFT MENU STYLING     ******************/
 .navbar-inverse {
 background-color: #393939;
 }
-    .navbar-inverse .navbar-brand i, .navbar-inverse .navbar-brand:hover i {
-        color: #A9D2A2;
+.navbar-inverse .navbar-brand i, .navbar-inverse .navbar-brand:hover i {
+       color: #A9D2A2;
     }
 
 .nav > li.dropdown .dropdown-toggle .badge-green {
@@ -295,6 +317,111 @@ ul.main-navigation-menu > li.active > a {
 .dl-horizontal dt {
     width: 220px;
     padding-right: 10px;
+}
+
+/**********************ENT SVC CARD STYLING *********************/
+.flip {
+    -webkit-perspective: 800;
+    perspective: 800;
+    position: relative;
+    text-align: center;
+}
+
+    .flip .card.flipped {
+        -webkit-transform: rotatey(-180deg);
+        transform: rotatey(-180deg);
+    }
+
+    .flip .card {
+        height: 200px;
+        margin-bottom: 20px;
+        background-image: url(../Content/Images/sep-half.png);
+        background-color: #4f4f4f;
+        -webkit-transform-style: preserve-3d;
+        -webkit-transition: 0.5s;
+        transform-style: preserve-3d;
+        transition: 0.5s;
+    }
+
+        .flip .card .face {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            z-index: 2;
+        }
+
+        .flip .card .front {
+            z-index: 1;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+        }
+            .flip .card .front .hd1 {
+                font-family: Raleway,sans-serif;
+                font-weight: 400;
+                font-size: 24px;
+                color: #45d3ce;
+            }
+
+        .flip .card .back {
+            -webkit-transform: rotatey(-180deg);
+            transform: rotatey(-180deg);
+        }
+
+.flipinner {
+    margin: 0px !important;
+}
+
+
+
+.dash-unit {
+    border: 1px solid #383737;
+    background-image: url(../Content/Images/sep-half.png);
+    background-color: #808080;
+    color: #fff;
+    height: 200px;
+    display: table;
+    width: 100%
+}
+    /*.dash-unit:hover {
+        background-color: #4f4f4f;
+        -moz-box-shadow: 3px 3px 2px 0 #151515;
+        -webkit-box-shadow: 3px 3px 2px 0 #151515;
+        box-shadow: 3px 3px 2px 0 #151515;
+    }*/
+    .dash-unit > div {
+        display: table-row;
+    }
+    .dash-unit .dtitle {
+        text-transform: uppercase;
+        font-family: Raleway,sans-serif;
+        font-weight: 300;
+        font-size: 14px;
+        background-color: #3d3d3d;
+        letter-spacing: 0;
+        height: 10px;
+    }
+    .dash-unit .dash-body {
+        font-size: 11px;
+    }
+
+    .dash-unit .dash-footer {
+        height: 50px;
+        font-size: 18px;
+        line-height: 18px;
+    }
+
+.dash-foot-green {
+    background-color: #199C98;
+    height: 50px;
+    padding-top: 6px;
+}
+.dash-foot-dark-green {
+    background-color: #094644;
+    height: 50px;
+    padding-top: 6px;
 }
 
 

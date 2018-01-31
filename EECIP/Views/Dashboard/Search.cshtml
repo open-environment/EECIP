@@ -28,41 +28,6 @@
                         </button>
                     </span>
                 </div>
-                <span class="help-block">
-                    @if (!string.IsNullOrEmpty(Model.facetAgency))
-                    {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Agency" class="removeFacet">X @Model.facetAgency</a></span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.facetState))
-                    {
-                        <span class="tag" style="margin-left:15px;"><a href="javascript:void(0)" data-id2="State_or_Tribal" class="removeFacet">X @Model.facetState</a></span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.facetMedia))
-                    {
-                        <span class="tag" style="margin-left:15px;"><a href="javascript:void(0)" data-id2="Media" class="removeFacet">X @Model.facetMedia</a></span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.facetRecordSource))
-                    {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Record_Source" class="removeFacet">X @Model.facetRecordSource</a></span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.facetTags))
-                    {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Tags" class="removeFacet">X @Model.facetTags</a></span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.facetPopDensity))
-                    {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Population_Density" class="removeFacet">X @Model.facetPopDensity</a></span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.facetRegion))
-                    {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="EPA_Region" class="removeFacet">X @Model.facetRegion</a></span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.facetStatus))
-                    {
-                        <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Status" class="removeFacet">X @Model.facetStatus</a></span>
-                    }
-
-                </span>
             </div>
         </div>
     </div>
@@ -109,7 +74,42 @@
                                             {
                                                 if (!string.IsNullOrEmpty(subitem.Value.ToString().Trim()))
                                                 {
-                                                    <a id="@Html.DisplayFor(modelItem => subitem.Value)" class="facetItem" data-id2="Facet" href="@Html.DisplayFor(modelItem => item.Key)"><i class="clip-chevron-left"></i> @Html.DisplayFor(modelItem => subitem.Value) (@Html.DisplayFor(modelItem => subitem.Count))</a>
+                                                    if (!string.IsNullOrEmpty(@Model.facetState) && (item.Key == "State_or_Tribal"))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="State_or_Tribal" class="removeFacet">X Remove Filter</a></span>
+                                                    }
+                                                    else if (!string.IsNullOrEmpty(Model.facetAgency) && (item.Key == "Agency"))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Agency" class="removeFacet">X Remove Filter</a></span>
+                                                    }
+                                                    else if (!string.IsNullOrEmpty(Model.facetMedia) && (item.Key == "Media"))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px;"><a href="javascript:void(0)" data-id2="Media" class="removeFacet">X Remove Filters</a></span>
+                                                    }
+                                                    else if (!string.IsNullOrEmpty(Model.facetRecordSource) && (item.Key == "Record_Source"))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Record_Source" class="removeFacet">X Remove Filter</a></span>
+                                                    }
+                                                    else if (!string.IsNullOrEmpty(Model.facetTags) && (item.Key == "Tags") && (Model.facetTags == subitem.Value.ToString()))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Tags" class="removeFacet">X Remove Filter </a></span>
+                                                    }
+                                                    else if (!string.IsNullOrEmpty(Model.facetPopDensity) && (item.Key == "Population_Density"))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Population_Density" class="removeFacet">X Remove Filter</a></span>
+                                                    }
+                                                    else if (!string.IsNullOrEmpty(Model.facetRegion) && (item.Key == "EPA_Region"))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="EPA_Region" class="removeFacet">X Remove Filter</a></span>
+                                                    }
+                                                    else if (!string.IsNullOrEmpty(Model.facetStatus) && (item.Key == "Status"))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Status" class="removeFacet">X Remove Filter</a></span>
+                                                    }
+                                                    else {
+                                                        <a id="@Html.DisplayFor(modelItem => subitem.Value)" class="facetItem" data-id2="Facet" href="@Html.DisplayFor(modelItem => item.Key)"><i class="clip-chevron-left"></i> @Html.DisplayFor(modelItem => subitem.Value) (@Html.DisplayFor(modelItem => subitem.Count))</a>
+                                                    }
+
                                                 }
                                             }
                                         </div>
@@ -223,9 +223,9 @@
                                     <th>Name</th>
                                 }
                                 <th>Description</th>
-                                <th>Record Source</th>
                                 @if (Model.activeTab != "5" && Model.activeTab != "7")
                                 {
+                                    <th>Record Source</th>
                                     <th>Media</th>
                                     <th>Status</th>
                                 }
@@ -254,7 +254,11 @@
                                         }
                                         @if (item.Document.DataType == "Discussion")
                                         {
-                                            <a href="@Url.Action("Index", "Forum", new { strid = item.Document.KeyID })" class="label label-purple" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Discussion</a>
+                                            <a href="@Url.Action("ShowTopic", "Forum", new { id = item.Document.KeyID })" class="label label-purple" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Discussion</a>
+                                        }
+                                        @if (item.Document.DataType == "Governance")
+                                        {
+                                            <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br/>Project</a>
                                         }
                                         @if (User.IsInRole("Admins"))
                                         {<span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>}
@@ -282,11 +286,11 @@
                                             </span>
                                         }
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Document.Record_Source)
-                                    </td>
                                     @if (Model.activeTab != "5" && Model.activeTab != "7")
                                     {
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Document.Record_Source)
+                                        </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Document.Media)
                                         </td>
@@ -423,7 +427,7 @@
 
             //make left small
             //if ($("#txtSearch").val().length > 0) {
-            //    $('body').addClass("navigation-small");
+                $('body').addClass("navigation-small");
             //}
 
             //autocomplete

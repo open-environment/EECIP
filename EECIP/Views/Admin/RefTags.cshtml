@@ -18,6 +18,9 @@
 }
 <div class="row">
     <div class="col-sm-12">
+@if (!string.IsNullOrEmpty(Model.sel_tag_cat))
+{
+
         <section class="panel panel-default">
             <div class="table-responsive">
                 <table class="table table-striped m-b-none" data-ride="datatables">
@@ -60,6 +63,7 @@
         <p>
             <a id="add-it" href="#modal-form" data-toggle="modal" class="add-it btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
         </p>
+}
     </div>
 </div>
 

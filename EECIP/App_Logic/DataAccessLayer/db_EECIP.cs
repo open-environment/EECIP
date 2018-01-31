@@ -413,6 +413,26 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<SP_ENT_SVC_COUNT_DISPLAY_Result> GetT_OE_ORGANIZATION_ENT_SVCS_Overview()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var x = (from a in ctx.SP_ENT_SVC_COUNT_DISPLAY()
+                             orderby a.CNT descending
+                             select a).ToList();
+
+                    return x;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
 
 
         //***************************PROJECTS****************************************

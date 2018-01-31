@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="@Url.Content("~/Content/Images/favicon-16x16.png")">
     <link rel="shortcut icon" href="@Url.Content("~/favicon.ico")">
     @Styles.Render("~/Content/styles")
+    @RenderSection("customstyles", required: false)
     @Scripts.Render("~/bundles/modernizr")
 
     @if (IsSectionDefined("HeaderJS"))

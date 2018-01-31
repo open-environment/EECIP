@@ -52,7 +52,7 @@
                                     @Html.DisplayFor(modelItem => item.PROJ_NAME)
                                 </td>
                                 <td>
-                                    @Utils.ReturnAmountWordsFromString(item.PROJ_DESC,50)
+                                    @Utils.ReturnAmountWordsFromString(item.PROJ_DESC, 50)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.RECORD_SOURCE)
@@ -86,18 +86,18 @@
                         {
                             if (@Model.UserBadges.Count > i)
                             {
-                            <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
-                                <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
-                                <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
-                                @if (Model.UserBadges[i].EarnedDate.HasValue)
-                                {
-                                    <p class="publicbadgeawards" style="color:green"><b>Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</b></p>
-                                }
-                                else
-                                {
-                                    <p class="publicbadgeawards">Not Awarded</p>
-                                }
-                            </div>
+                                <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
+                                    <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
+                                    <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
+                                    @if (Model.UserBadges[i].EarnedDate.HasValue)
+                                    {
+                                        <p class="publicbadgeawards" style="color:green"><b>Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</b></p>
+                                    }
+                                    else
+                                    {
+                                        <p class="publicbadgeawards">Not Awarded</p>
+                                    }
+                                </div>
                             }
                         }
                     </div>
@@ -108,19 +108,19 @@
                         {
                             if (@Model.UserBadges.Count > i)
                             {
-                            <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
-                                <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
-                                <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
-                                @if (Model.UserBadges[i].EarnedDate.HasValue)
-                                {
+                                <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
+                                    <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
+                                    <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
+                                    @if (Model.UserBadges[i].EarnedDate.HasValue)
+                                    {
 
-                                    <p class="publicbadgeawards" style="color:green">Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</p>
-                                }
-                                else
-                                {
-                                    <p class="publicbadgeawards">Not Awarded</p>
-                                }
-                            </div>
+                                        <p class="publicbadgeawards" style="color:green">Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="publicbadgeawards">Not Awarded</p>
+                                    }
+                                </div>
                             }
                         }
                     </div>
@@ -182,7 +182,7 @@
     </div>
 
     <!--  **************  LATEST DISCUSSIONS **************************************-->
-    @if (Model.LatestTopics != null && Model.LatestTopics.Count>0)
+    @if (Model.LatestTopics != null && Model.LatestTopics.Count > 0)
     {
         <div class="col-md-6">
             <section class="panel panel-default ">
@@ -199,26 +199,17 @@
                         <div class="topicrow" style="padding: 5px;">
                             <div class="rowcreater hidden-xs">
                                 <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._topic.MembershipUser_Id })">
-                                    <img src="/Content/Images/Users/@(item._topic.MembershipUser_Id).png" alt="">
+                                    <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(item._topic.MembershipUser_Id).png)">
+                                    </div>
                                 </a>
                             </div>
-
-                            <div class="rowdetails">
+                            <div class="rowdetails" style="margin-left:90px;">
                                 <h3>
                                     <a title="#" href="@Url.Action("ShowTopic", "Forum", new { slug = item._topic.Slug })">
                                         @Html.Raw(item._topic.Name)
                                     </a>
                                 </h3>
                                 @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item._postStart.PostContent), 50)
-                                @*@if (Model._topic != null)
-                                    {
-                                    <div class="tagsinput clearfix">
-                                        @foreach (var tag in Model.topicTags)
-                                        {
-                                        <span class="tag"><span><a href="@Url.Action("Index", "Forum", new { tag = tag.TopicTag })">@Html.Raw(tag.TopicTag)</a></span></span>
-                                        }
-                                    </div>
-                                    }*@
                                 <p class="topicrowfooterinfo">
                                     Latest By
                                     <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._postLatest.Post.MembershipUser_Id })">@item._postLatest.PosterDisplayName</a>
@@ -284,18 +275,14 @@
 
 
 @section Scripts {
+    @Scripts.Render("~/bundles/bootstraptour")
+
     <script type="text/javascript">
         $('#badgefooter').click(function () {
             $(this).html(function (i, old) {
                 return old == 'Show Less <i class="glyphicon clip-arrow-up"></i>' ? 'Show All <i class="glyphicon clip-arrow-down"></i>' : 'Show Less <i class="glyphicon clip-arrow-up"></i>';
             });
         });
-
-        $('#badgefooterPoints').click(function () {
-            $(this).html(function (i, old) {
-                return old == 'Show Less <i class="glyphicon clip-arrow-up"></i>' ? 'Show All <i class="glyphicon clip-arrow-down"></i>' : 'Show Less <i class="glyphicon clip-arrow-up"></i>';
-            });
-        });
-
     </script>
+
 }

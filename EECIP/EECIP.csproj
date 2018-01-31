@@ -203,6 +203,9 @@
     <Compile Include="App_Logic\DataAccessLayer\PostFile.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\SP_ENT_SVC_COUNT_DISPLAY_Result.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\Topic.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -330,6 +333,8 @@
     <Content Include="Content\auto-complete.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap-tour.css" />
+    <Content Include="Content\bootstrap-tour.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\select2.css" />
@@ -432,6 +437,7 @@
     <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\Images\menu-white-arrow.png" />
     <Content Include="Content\Images\seal.png" />
+    <Content Include="Content\Images\sep-half.png" />
     <Content Include="Content\Images\Users\dummy.txt" />
     <Content Include="Content\main-responsive.css" />
     <Content Include="Content\main.css" />
@@ -465,6 +471,9 @@
     <Content Include="Scripts\anchorme.min.js" />
     <Content Include="Scripts\auto-complete.js" />
     <Content Include="Scripts\auto-complete.min.js" />
+    <Content Include="Scripts\bootstrap-tour-dtl.js" />
+    <Content Include="Scripts\bootstrap-tour.js" />
+    <Content Include="Scripts\bootstrap-tour.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\clip-font.eot" />
@@ -778,6 +787,8 @@
     <Content Include="Views\Dashboard\Governance.cshtml" />
     <Content Include="Views\Home\TermsAndConditions.cshtml" />
     <Content Include="Views\Account\Notifications.cshtml" />
+    <Content Include="Views\Dashboard\EnterpriseSvcOverview.cshtml" />
+    <Content Include="Views\Dashboard\EnterpriseSvc.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
