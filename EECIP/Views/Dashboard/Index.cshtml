@@ -1,288 +1,270 @@
-﻿@using EECIP.App_Logic.DataAccessLayer
-@using EECIP.App_Logic.BusinessLogicLayer
+﻿@using EECIP.App_Logic.BusinessLogicLayer
 @model EECIP.Models.vmDashboardIndex
 @{
     ViewBag.Title = "Welcome " + Model.UserName + "!";
+    ViewBag.SubSubTitle = "A community platform for environmental agency staff to learn and collaborate on projects about business process, IT, advanced monitoring and more.";
+    ViewBag.ShowBadge = true;
+    ViewBag.BadgeCount = Model.UserBadgeEarnedCount;
+    ViewBag.ShowTour = false;
 }
 
-<!--  ************  PROJECTS NEEDING REVIEW *************-->
-@if (Model.ProjectsNeedingReview != null && Model.ProjectsNeedingReview.Count > 0)
+@if (!string.IsNullOrEmpty(Model.Announcement))
 {
-    <section class="panel panel-default ee">
-        <div class="panel-heading">
-            <i class="glyphicon glyphicon-exclamation-sign"></i> Projects Needing Your Review
-            <div class="panel-tools">
-                <a class="btn btn-xs panel-collapse collapses" href="#">
-                </a>
-            </div>
-        </div>
-        <div class="panel-body" id="collapseProj">
-
-            <div class="table-responsive" style="max-height:200px;">
-                <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
-                    <thead class="thead-inverse">
-                        <tr>
-                            <th></th>
-                            <th>Reason for Review</th>
-                            <th>Project Name</th>
-                            <th>Description</th>
-                            <th>Record Source</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-
-                        @foreach (var item in Model.ProjectsNeedingReview)
-                        {
-                            <tr>
-                                <td>
-                                    <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i> Review</a>
-                                </td>
-                                <td style="color:#dc3545; font-weight:bold">
-                                    @if (item.PROJECT_CONTACT_IDX == null)
-                                    {
-                                        <text>Project is unclaimed</text>
-                                    }
-                                    else
-                                    {
-                                        <text>Project hasn't been updated in 6 months</text>
-                                    }
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PROJ_NAME)
-                                </td>
-                                <td>
-                                    @Utils.ReturnAmountWordsFromString(item.PROJ_DESC, 50)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.RECORD_SOURCE)
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    </section>
+<div class="alert alert-block alert-info fade in">
+    <button data-dismiss="alert" class="close" type="button">×</button>
+    @Html.Raw(HttpUtility.HtmlDecode(Model.Announcement))
+</div>
 }
 
-
-<!--  ************ BADGES *********-->
-<section class="panel panel-default ">
-    <div class="panel-heading">
-        Your Badge Progress
-        <div class="panel-tools">
-            <a class="btn btn-xs panel-collapse collapses" href="#">
-            </a>
-        </div>
-    </div>
-    <div class="panel-body">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="badgeholder">
-                    <div class="publicbadgeline" style="width:100%">
-                        @for (int i = 0; i < 6; i++)
-                        {
-                            if (@Model.UserBadges.Count > i)
-                            {
-                                <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
-                                    <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
-                                    <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
-                                    @if (Model.UserBadges[i].EarnedDate.HasValue)
-                                    {
-                                        <p class="publicbadgeawards" style="color:green"><b>Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</b></p>
-                                    }
-                                    else
-                                    {
-                                        <p class="publicbadgeawards">Not Awarded</p>
-                                    }
-                                </div>
-                            }
-                        }
-                    </div>
-
-
-                    <div id="collapseThree" class="publicbadgeline panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree" style="width:100%">
-                        @for (int i = 6; i < Model.UserBadges.Count; i++)
-                        {
-                            if (@Model.UserBadges.Count > i)
-                            {
-                                <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@Model.UserBadges[i]._Badge.Description">
-                                    <img src="/Content/Images/badges/@(Model.UserBadges[i]._Badge.Image)" alt="@Model.UserBadges[i]._Badge.DisplayName" class="@(Model.UserBadges[i].UserEarnedInd ? "fff" : "grey")">
-                                    <p class="publicbadgenamedesc">@Model.UserBadges[i]._Badge.DisplayName</p>
-                                    @if (Model.UserBadges[i].EarnedDate.HasValue)
-                                    {
-
-                                        <p class="publicbadgeawards" style="color:green">Awarded @(Model.UserBadges[i].EarnedDate.HasValue ? Model.UserBadges[i].EarnedDate.Value.ToShortDateString() : "")</p>
-                                    }
-                                    else
-                                    {
-                                        <p class="publicbadgeawards">Not Awarded</p>
-                                    }
-                                </div>
-                            }
-                        }
+<div class="row">
+    <div class="col-sm-3">
+        <button onclick="location.href='@Url.Action("Search", "Dashboard")';return false;" class="btn btn-icon btn-block" id="btnSearch">
+            <i class="clip-search"></i>
+            Search the Inventory
+            <div class="badge badge-new">
+                <div class="carousel slide carousel-fade inline auto aside text-left pull-left pull-none-xs" data-interval="3000"  data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            @Model.ProjectCount Projects
+                        </div>
+                        <div class="item ">
+                            @Model.DiscussionCount  Discussions
+                        </div>
+                        <div class="item ">
+                            @Model.AgencyCount Agencies
+                        </div>
+                        <div class="item">
+                            @Model.GovernanceCount Governance Projects
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </button>
     </div>
-    <a id="badgefooter" class="collapsed panel-footer" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="width: 100%;display: block;text-align: center; text-decoration: none;">
-        Show All <i class="glyphicon clip-arrow-down"></i>
-    </a>
-</section>
-
+    @if (Model.ProjectsNeedingReviewCount > 0)
+    {
+        <div class="col-sm-3">
+            <button onclick="location.href='@Url.Action("ProjectReview", "Dashboard")';return false;" class="btn btn-icon btn-block" style="background-color:#e07a84" id="btnReview">
+                <i class="clip-warning"></i>
+                Projects Needing Review<span class="badge badge-danger"> @Model.ProjectsNeedingReviewCount </span>
+            </button>
+        </div>
+    }
+    <div class="col-sm-3">
+        <button onclick="location.href='@Url.Action("Projects", "Dashboard")';return false;" class="btn btn-icon btn-block">
+            <i class="clip-file-3"></i>
+            Add a New Project
+        </button>
+    </div>
+    <div class="col-sm-3">
+        <button onclick="location.href='@Url.Action("Index", "Forum")';return false;" class="btn btn-icon btn-block">
+            <i class="clip-question"></i>
+            Ask a Question
+        </button>
+    </div>
+</div>
 
 <div class="row">
-    <!--  **************  MOST RECENT PROJECTS **************************************-->
-    <div class="col-md-6">
+    <div class="col-md-12">
         <section class="panel panel-default ">
             <div class="panel-heading">
-                Most Recent Projects
+                Recent Items Matching Your Interest
+                <div class="panel-tools">
+                    <a href="@Url.Action("UserProfile", "Account", new { callout="tag" })" class="btn btn-rounded btn-xs btn-info" style="background-color:rgb(25, 156, 152)"><i class="glyphicon glyphicon-cog"></i> Setup</a>
+                </div>
+            </div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 style="margin-top:0px;">Recent Projects @(Model.LatestProjects[0].TagMatch == true ? "(matching your tag interest)" : "")</h3>
+
+                        <!--  **************  MOST RECENT PROJECTS **************************************-->
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th></th>
+                                        <th>Project Name</th>
+                                        <th>Agency</th>
+                                        <th>Last Updated</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.LatestProjects)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-eecip"><i class="glyphicon glyphicon-info-sign"></i> Info</a>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PROJ_NAME)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ORG_NAME)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LAST_ACTIVITY_DATE)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-6">
+                        <h3 style="margin-top:0px;">
+                            Recent Discussion Topics @(Model.LatestTopics[0].postCount == 999 ? "(matching your tag interest)" : "")
+                        </h3>
+
+                        <!--  **************  LATEST DISCUSSIONS **************************************-->
+                        @if (Model.LatestTopics != null && Model.LatestTopics.Count > 0)
+                        {
+                            <section class="panel panel-default ">
+                                <div class="panel-body">
+                                    @foreach (var item in Model.LatestTopics)
+                                    {
+                                        <div class="topicrow" style="padding: 5px;">
+                                            <div class="rowcreater hidden-xs">
+                                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._topic.MembershipUser_Id })">
+                                                    <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(item._topic.MembershipUser_Id).png)">
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="rowdetails" style="margin-left:90px;">
+                                                <h3>
+                                                    <a title="#" href="@Url.Action("ShowTopic", "Forum", new { slug = item._topic.Slug })" style="font-size:18px;">
+                                                        @Html.Raw(item._topic.Name)
+                                                    </a>
+                                                </h3>
+                                                @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item._postStart.PostContent), 50)
+                                                <p class="topicrowfooterinfo">
+                                                    Latest By
+                                                    <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._postLatest.Post.MembershipUser_Id })">@item._postLatest.PosterDisplayName</a>
+                                                    @EECIP.App_Logic.BusinessLogicLayer.Utils.GetPrettyDate(item._postLatest.Post.DateCreated.ToString())
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </section>
+
+                        }
+
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+<!--  **************  MOST ACTIVE USERS **************************************-->
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel panel-default ">
+            <div class="panel-heading">
+                Most Active Users
                 <div class="panel-tools">
                     <a class="btn btn-xs panel-collapse collapses" href="#">
                     </a>
                 </div>
             </div>
             <div class="panel-body">
-                <div class="table-responsive" style="max-height:400px;">
-                    <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
-                        <thead class="thead-inverse">
-                            <tr>
-                                <th></th>
-                                <th>Project Name</th>
-                                <th>Agency</th>
-                                <th>Last Updated</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.LatestProjects)
-                            {
-                                <tr>
-                                    <td>
-                                        <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-info-sign"></i> Info</a>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.PROJ_NAME)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.ORG_NAME)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.LAST_ACTIVITY_DATE)
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="badgeholder">
+                            <div class="publicbadgeline" style="width:100%">
+                                @for (int i = 0; i < 6; i++)
+                                {
+                                    if (@Model.UserPointLeaders.Count > i)
+                                    {
+                                        <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@(Model.UserPointLeaders[i]._User.FNAME + " " + Model.UserPointLeaders[i]._User.LNAME)">
+                                            <a href="/Dashboard/UserCard?strid=@Model.UserPointLeaders[i]._User.USER_IDX" style="height:82px;display:block;">
+                                                <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(Model.UserPointLeaders[i]._User.USER_IDX).png)">
+                                                </div>
+                                            </a>
+                                            <p class="publicbadgenamedesc">
+                                                @Model.UserPointLeaders[i]._User.FNAME @Model.UserPointLeaders[i]._User.LNAME
+                                            </p>
+                                            <p class="publicbadgeawards">
+                                                @Model.UserPointLeaders[i].UserPoints points
+                                            </p>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
-
-    <!--  **************  LATEST DISCUSSIONS **************************************-->
-    @if (Model.LatestTopics != null && Model.LatestTopics.Count > 0)
-    {
-        <div class="col-md-6">
-            <section class="panel panel-default ">
-                <div class="panel-heading">
-                    Most Recent Discussion Topics @(Model.LatestTopics[0].postCount == 999 ? "(matching your tag interest)" : "")
-                    <div class="panel-tools">
-                        <a class="btn btn-xs panel-collapse collapses" href="#">
-                        </a>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    @foreach (var item in Model.LatestTopics)
-                    {
-                        <div class="topicrow" style="padding: 5px;">
-                            <div class="rowcreater hidden-xs">
-                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._topic.MembershipUser_Id })">
-                                    <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(item._topic.MembershipUser_Id).png)">
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="rowdetails" style="margin-left:90px;">
-                                <h3>
-                                    <a title="#" href="@Url.Action("ShowTopic", "Forum", new { slug = item._topic.Slug })">
-                                        @Html.Raw(item._topic.Name)
-                                    </a>
-                                </h3>
-                                @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item._postStart.PostContent), 50)
-                                <p class="topicrowfooterinfo">
-                                    Latest By
-                                    <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._postLatest.Post.MembershipUser_Id })">@item._postLatest.PosterDisplayName</a>
-                                    @EECIP.App_Logic.BusinessLogicLayer.Utils.GetPrettyDate(item._postLatest.Post.DateCreated.ToString())
-                                </p>
-
-                            </div>
-                        </div>
-
-                    }
-                </div>
-            </section>
-        </div>
-    }
-
 </div>
 
 
-<!--  **************  MOST ACTIVE USERS **************************************-->
-<div class="col-md-12">
-    <section class="panel panel-default ">
-        <div class="panel-heading">
-            Most Active Users
-            <div class="panel-tools">
-                <a class="btn btn-xs panel-collapse collapses" href="#">
-                </a>
+
+<!-- START MODAL -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width:100%;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h3 class="modal-title">View Badge Progress</h3>
             </div>
-        </div>
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="badgeholder">
-                        <div class="publicbadgeline" style="width:100%">
-                            @for (int i = 0; i < 6; i++)
-                            {
-                                if (@Model.UserPointLeaders.Count > i)
+            <div class="modal-body">
+                <div class="row ">
+                    <div class="col-md-12 ">
+                        <div class="badgeholder">
+                            <div class="publicbadgeline aligned-row" style="width:100%">
+
+                                @foreach (var item in Model.UserBadges)
                                 {
-                                    <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@(Model.UserPointLeaders[i]._User.FNAME + " " + Model.UserPointLeaders[i]._User.LNAME)">
-                                        <a href="/Dashboard/UserCard?strid=@Model.UserPointLeaders[i]._User.USER_IDX">
-                                            <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(Model.UserPointLeaders[i]._User.USER_IDX).png)">
-                                            </div>
-                                        </a>
-                                        <p class="publicbadgenamedesc">
-                                            @Model.UserPointLeaders[i]._User.FNAME @Model.UserPointLeaders[i]._User.LNAME
-                                        </p>
-                                        <p class="publicbadgeawards">
-                                            @Model.UserPointLeaders[i].UserPoints points
-                                        </p>
+                                    <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6 aligned-row" data-original-title="@item._Badge.Description">
+                                        <img src="/Content/Images/badges/@(item._Badge.Image)" alt="@item._Badge.DisplayName" class="@(item.UserEarnedInd ? "" : "grey")" style="margin:auto">
+                                        <p class="publicbadgenamedesc">@item._Badge.DisplayName</p>
+                                        @if (item.EarnedDate.HasValue)
+                                        {
+                                            <p class="publicbadgeawards" style="color:green"><b>Awarded @(item.EarnedDate.HasValue ? item.EarnedDate.Value.ToShortDateString() : "")</b></p>
+                                        }
+                                        else
+                                        {
+                                            <p class="publicbadgeawards">Not Awarded</p>
+                                        }
                                     </div>
                                 }
-                            }
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
-    </section>
-
+    </div>
 </div>
+<!-- END MODAL FORM -->
+
 
 
 
 @section Scripts {
-    @Scripts.Render("~/bundles/bootstraptour")
-
-    <script type="text/javascript">
-        $('#badgefooter').click(function () {
-            $(this).html(function (i, old) {
-                return old == 'Show Less <i class="glyphicon clip-arrow-up"></i>' ? 'Show All <i class="glyphicon clip-arrow-down"></i>' : 'Show Less <i class="glyphicon clip-arrow-up"></i>';
-            });
+    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
+    <script>
+        Chaperone.init({
+            "api_key": "lBuTEvIH43bg5g",
+            //"trigger": {
+            //    "element": "#btnTour",
+            //    "event": "click",
+            //    "tutorial": 4048
+            //}
         });
     </script>
-
 }

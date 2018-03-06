@@ -105,7 +105,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static int InsertUpdateT_OE_APP_SETTING_CUSTOM(string tERMS_AND_CONDITIONS)
+        public static int InsertUpdateT_OE_APP_SETTING_CUSTOM(string tERMS_AND_CONDITIONS, string aNNOUNCEMENTS)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -123,6 +123,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     }
 
                     if (tERMS_AND_CONDITIONS != null) e.TERMS_AND_CONDITIONS = Utils.GetSafeHtml(tERMS_AND_CONDITIONS);
+                    if (aNNOUNCEMENTS != null) e.ANNOUNCEMENTS = Utils.GetSafeHtml(aNNOUNCEMENTS);
 
                     if (insInd)
                         ctx.T_OE_APP_SETTINGS_CUSTOM.Add(e);
@@ -180,6 +181,25 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+        public static int GetT_OE_ORGANIZATION_Count()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_ORGANIZATION
+                            where a.ORG_TYPE != "Governance"
+                            select a).Count();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
 
 
         public static T_OE_ORGANIZATION GetT_OE_ORGANIZATION_ByID(Guid id)
@@ -338,7 +358,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Name = a.ORG_NAME,
                                    Description = a.ORG_ABBR,
                                    Population_Density = x1.POP_DENSITY,
-                                   EPA_Region = a.EPA_REGION.ToString()
+                                   EPA_Region = a.EPA_REGION.ToString(),
+                                   LastUpdated = a.MODIFY_DT ?? a.CREATE_DT
                                }).ToList();
 
                     foreach (EECIP_Index e in xxx)
@@ -997,7 +1018,16 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
             else
-                err = (ex.InnerException != null ? ex.InnerException.Message : "");
+            {
+                if (ex.InnerException != null) {
+                    if (ex.InnerException.Message == "An error occurred while updating the entries. See the inner exception for details.")
+                    {
+                        err = ex.InnerException.InnerException.ToString();
+                    }
+                }
+                else
+                    err = (ex.InnerException != null ? ex.InnerException.Message : "");
+            }
 
             db_Ref.InsertT_OE_SYS_LOG("ERROR", err.SubStringPlus(0, 2000));
 

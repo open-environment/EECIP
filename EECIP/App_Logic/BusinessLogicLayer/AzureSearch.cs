@@ -51,14 +51,22 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         public string[] Tags { get; set; }
 
         public string PersonPhone { get; set; }
+
         public string PersonEmail { get; set; }
+
         public string PersonLinkedIn { get; set; }
+
         [IsFilterable, IsFacetable]
         public string Population_Density { get; set; }
+
         [IsFilterable, IsFacetable]
         public string EPA_Region { get; set; }
+
         [IsFilterable, IsFacetable]
         public string Status { get; set; }
+
+        [IsFilterable]
+        public DateTime? LastUpdated { get; set; }
     }
 
 
@@ -101,12 +109,34 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     SourceFields = new List<string>() { "Name" }
                 };
 
+                //defining the scoring profile //boosts items updated in the last 180 days
+                ScoringProfile sp = new ScoringProfile {
+                    Name = "date_scoring"
+                };
+
+                var freshnessFunction = new FreshnessScoringFunction() {
+                    FieldName = "LastUpdated",
+                    Boost = 20,
+                    Parameters = new FreshnessScoringParameters(new TimeSpan(180, 0, 0, 0)),
+                    Interpolation = ScoringFunctionInterpolation.Linear
+                };
+                // Assigns the freshness function to the scoring profile
+                sp.Functions = new List<ScoringFunction>() { freshnessFunction };
+
+
+                //define the index (the fields, and link in the suggester and scoring)
                 var definition = new Index()
                 {
                     Name = "eecip",
                     Fields = FieldBuilder.BuildForType<EECIP_Index>(),
-                    Suggesters = new List<Suggester> { sg }
+                    Suggesters = new List<Suggester> { sg },
+                    ScoringProfiles = new List<ScoringProfile>() { sp }
                 };
+
+
+
+
+
 
                 serviceClient.Indexes.Create(definition);
             }
@@ -138,9 +168,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     Format = "solr",
                     Synonyms = synstr
                 };
-
                 serviceClient.SynonymMaps.CreateOrUpdate(synonymMap);
-
             }
             catch (Exception ex)
             {
@@ -191,8 +219,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 throw ex;
             }
         }
-
-
+        
         private static SearchServiceClient CreateSearchServiceClient()
         {
             string searchServiceName = db_Ref.GetT_OE_APP_SETTING("AZURE_SEARCH_SVC_NAME");
@@ -239,7 +266,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                             {
                                 Guid proj_idx = Guid.Parse(p.KeyID);
                                 db_EECIP.InsertUpdatetT_OE_PROJECTS(proj_idx, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                                    null, null, null, null, null, true, true, null, null);
+                                    null, null, null, null, null, true, true, null, null, false);
                             }
 
                         }
@@ -330,7 +357,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                         //then update local rec sync ind
                         foreach (EECIP_Index p in _ps)
                         {
-                            db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(p.KeyID.ConvertOrDefault<int>()-100000, null, null, null, null, null, null, null, null, true, null);
+                            db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(p.KeyID.ConvertOrDefault<int>()-100000, null, null, null, null, null, null, null, null, true, null, false);
                         }
 
                     }
@@ -634,7 +661,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     Top = 50,
                     Skip = ((currentPage ?? 1) - 1) * 50,
                     Facets = new List<string> { "DataType", "State_or_Tribal,count:40", "Tags", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
-                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State_or_Tribal", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn" },
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State_or_Tribal", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn", "LastUpdated" },
                     IncludeTotalResultCount = true
                 };
 

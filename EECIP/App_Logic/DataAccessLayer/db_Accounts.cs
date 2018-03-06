@@ -195,6 +195,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
                 catch (Exception ex)
                 {
+                    //set to inactive if cannot delete
+                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null);
                     db_Ref.LogEFException(ex);
                     return 0;
                 }
@@ -249,7 +251,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    PersonEmail = a.EMAIL,
                                    PersonLinkedIn = a.LINKEDIN,
                                    Population_Density = x1.POP_DENSITY,
-                                   EPA_Region = o.EPA_REGION.ToString()
+                                   EPA_Region = o.EPA_REGION.ToString(),
+                                   LastUpdated = a.MODIFY_DT ?? a.CREATE_DT
                                }).ToList();
 
                     foreach (EECIP_Index e in xxx)

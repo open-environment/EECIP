@@ -1,7 +1,8 @@
 ﻿@model EECIP.Models.vmDashboardGovernance
 @{
     ViewBag.Title = "Governance Materials";
-    ViewBag.SubTitle = "Share project and materials created by e-Enterprise Governance or other active workgroups";
+    ViewBag.SubTitle = "Share project and materials created by E-Enterprise Governance or other active workgroups";
+    ViewBag.ShowTour = false;
 }
 
 @if (Model.UnlockedInd == false)
@@ -10,7 +11,7 @@
         <div class="col-md-12">
             <div class="alert alert-warning">
                 <p>
-                    If you participate in an e-Enterprise or Exchange Network related workgroup, you can share your progress and materials here. Click below to unlock this feature.
+                    If you participate in an E-Enterprise or Exchange Network related workgroup, you can share your progress and materials here. Click below to unlock this feature.
                 </p>
                 <br />
                 <p>
@@ -27,25 +28,25 @@
 else
 {
     <div class="row">
-            <div class="col-sm-11">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label" for="form-field-1">
-                            Select Governance Group:
-                        </label>
-                        <div class="col-sm-9">
-                            <div class="input-group">
-                                @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Governance?selAgency=' + this.options[this.selectedIndex].value;" })
-                                <span class="input-group-btn">
-                                    <a href="#modal-form" data-toggle="modal" class="btn btn-info">
-                                        <i class="glyphicon glyphicon-plus"></i> Add New Group
-                                    </a>
-                                </span>
-                            </div>
+        <div class="col-sm-11">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="form-field-1">
+                        Select Governance Group:
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Governance?selAgency=' + this.options[this.selectedIndex].value;" })
+                            <span class="input-group-btn">
+                                <a href="#modal-form" data-toggle="modal" class="btn btn-info">
+                                    <i class="glyphicon glyphicon-plus"></i> Add New Group
+                                </a>
+                            </span>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
+        </div>
 
     </div>
 
@@ -83,7 +84,7 @@ else
                                 {
                                     <tr>
                                         <td style="min-width: 68px;">
-                                            <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency, returnURL="Governance" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
                                             <div class="delete-section" style="display:inline">
                                                 <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
                                                 <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
@@ -143,9 +144,9 @@ else
 
     if (Model.selAgency != null)
     {
-    <div class="col-md-1">
-        <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New Project</a>
-    </div>
+        <div class="col-md-1">
+            <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency, returnURL="Governance" })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New Project</a>
+        </div>
     }
 }
 
@@ -200,9 +201,15 @@ else
 @section Scripts {
     @Scripts.Render("~/bundles/confirmdelete")
 
+    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            //create an event when button is clicked to display modal
+        Chaperone.init({
+            "api_key": "lBuTEvIH43bg5g",
+            "trigger": {
+                "element": "#btnTour",
+                "event": "click",
+                "tutorial": 4074
+            }
         });
     </script>
 }

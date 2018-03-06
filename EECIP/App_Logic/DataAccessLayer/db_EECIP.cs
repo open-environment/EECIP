@@ -52,6 +52,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string PROJ_NAME { get; set; }
         public string ORG_NAME { get; set; }
         public DateTime LAST_ACTIVITY_DATE { get; set; }
+        public bool? TagMatch { get; set; }
     }
 
 
@@ -109,7 +110,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                select a.EXPERTISE_TAG);
 
                     var xx2 = (from a in ctx.T_OE_REF_TAGS
-                               where a.TAG_CAT_NAME == "Expertise"
+                               //where a.TAG_CAT_NAME == "Expertise"
+                               where a.TAG_CAT_NAME == "Project Feature"
                                select a.TAG_NAME);
 
                     return xx1.Union(xx2).ToList();
@@ -175,25 +177,48 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
-                    return (from a in ctx.T_OE_REF_ENTERPRISE_PLATFORM
-                            join b in ctx.T_OE_ORGANIZATION_ENT_SVCS on a.ENT_PLATFORM_IDX equals b.ENT_PLATFORM_IDX
-                                into sr from x in sr.DefaultIfEmpty()  //left join
-                            where (x == null ? true : x.ORG_IDX == OrgID)
-                            select new OrganizationEntServicesDisplayType
-                            {
-                                ORG_ENT_SVCS_IDX = x.ORG_ENT_SVCS_IDX,
-                                ORG_IDX = x.ORG_IDX,
-                                ENT_PLATFORM_IDX = a.ENT_PLATFORM_IDX,
-                                ENT_PLATFORM_NAME = a.ENT_PLATFORM_NAME,
-                                PROJECT_NAME = x.PROJECT_NAME,
-                                VENDOR = x.VENDOR,
-                                IMPLEMENT_STATUS = x.IMPLEMENT_STATUS, 
-                                COMMENTS = x.COMMENTS,
-                                PROJECT_CONTACT = x.PROJECT_CONTACT,
-                                ACTIVE_INTEREST_IND = x.ACTIVE_INTEREST_IND ?? false,
-                                CREATE_DT = x.CREATE_DT, 
-                                MODIFY_DT = x.MODIFY_DT
-                            }).ToList();
+                    var yyy = (from a in ctx.T_OE_REF_ENTERPRISE_PLATFORM
+                               join b in ctx.T_OE_ORGANIZATION_ENT_SVCS.Where(o => o.ORG_IDX == OrgID) on a.ENT_PLATFORM_IDX equals b.ENT_PLATFORM_IDX
+                                   into sr
+                               from x in sr.DefaultIfEmpty()  //left join
+                               //where (b == null ? true : x.ORG_IDX == OrgID)
+                               select new OrganizationEntServicesDisplayType
+                               {
+                                   ORG_ENT_SVCS_IDX = x.ORG_ENT_SVCS_IDX,
+                                   ORG_IDX = x.ORG_IDX,
+                                   ENT_PLATFORM_IDX = a.ENT_PLATFORM_IDX,
+                                   ENT_PLATFORM_NAME = a.ENT_PLATFORM_NAME,
+                                   PROJECT_NAME = x.PROJECT_NAME,
+                                   VENDOR = x.VENDOR,
+                                   IMPLEMENT_STATUS = x.IMPLEMENT_STATUS,
+                                   COMMENTS = x.COMMENTS,
+                                   PROJECT_CONTACT = x.PROJECT_CONTACT,
+                                   ACTIVE_INTEREST_IND = x.ACTIVE_INTEREST_IND ?? false,
+                                   CREATE_DT = x.CREATE_DT,
+                                   MODIFY_DT = x.MODIFY_DT
+                               }).ToList();
+
+                    //var xxx = (from a in ctx.T_OE_REF_ENTERPRISE_PLATFORM
+                    //        join b in ctx.T_OE_ORGANIZATION_ENT_SVCS on a.ENT_PLATFORM_IDX equals b.ENT_PLATFORM_IDX
+                    //            into sr from x in sr.DefaultIfEmpty()  //left join
+                    //        where (x == null ? true : x.ORG_IDX == OrgID)
+                    //        select new OrganizationEntServicesDisplayType
+                    //        {
+                    //            ORG_ENT_SVCS_IDX = x.ORG_ENT_SVCS_IDX,
+                    //            ORG_IDX = x.ORG_IDX,
+                    //            ENT_PLATFORM_IDX = a.ENT_PLATFORM_IDX,
+                    //            ENT_PLATFORM_NAME = a.ENT_PLATFORM_NAME,
+                    //            PROJECT_NAME = x.PROJECT_NAME,
+                    //            VENDOR = x.VENDOR,
+                    //            IMPLEMENT_STATUS = x.IMPLEMENT_STATUS, 
+                    //            COMMENTS = x.COMMENTS,
+                    //            PROJECT_CONTACT = x.PROJECT_CONTACT,
+                    //            ACTIVE_INTEREST_IND = x.ACTIVE_INTEREST_IND ?? false,
+                    //            CREATE_DT = x.CREATE_DT, 
+                    //            MODIFY_DT = x.MODIFY_DT
+                    //        }).ToList();
+
+                    return yyy;
                 }
                 catch (Exception ex)
                 {
@@ -273,7 +298,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
         public static int InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(int? oRG_ENT_SVCS_IDX, Guid? oRG_IDX, int? eNT_PLATFORM_IDX, string pROJECT_NAME, 
-            string vENDOR, string iMPLEMENT_STATUS, string cOMMENTS, string pROJECT_CONTACT, bool? aCTIVE_INTEREST_IND, bool? syncInd, int? cREATE_USER = 0)
+            string vENDOR, string iMPLEMENT_STATUS, string cOMMENTS, string pROJECT_CONTACT, bool? aCTIVE_INTEREST_IND, bool? syncInd, int? cREATE_USER = 0, bool markUpdated = false)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -303,8 +328,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                     }
                     else
                     {
-                        e.MODIFY_DT = System.DateTime.Now;
-                        e.MODIFY_USERIDX = cREATE_USER;
+                        if (markUpdated) {
+                            e.MODIFY_DT = System.DateTime.Now;
+                            e.MODIFY_USERIDX = cREATE_USER;
+                        }
                         if (syncInd != null) e.SYNC_IND = syncInd ?? false;
                     }
                   
@@ -400,7 +427,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Description = a.PROJECT_NAME,
                                    Population_Density = x1.POP_DENSITY,
                                    EPA_Region = o.EPA_REGION.ToString(),
-                                   Status = a.IMPLEMENT_STATUS
+                                   Status = a.IMPLEMENT_STATUS,
+                                   LastUpdated = a.MODIFY_DT ?? a.CREATE_DT
                                }).ToList();
 
                     return xxx;
@@ -529,6 +557,49 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int GetT_OE_PROJECTS_CountNonGovernance()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_PROJECTS
+                               join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                               where o.ORG_TYPE != "Governance"
+                               select a).Count();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int GetT_OE_PROJECTS_CountGovernance()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_PROJECTS
+                               join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                               where o.ORG_TYPE == "Governance"
+                               select a).Count();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
 
         public static List<T_OE_PROJECTS> GetT_OE_PROJECTS_NeedingReview(int UserIDX)
         {
@@ -543,7 +614,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         return (from a in ctx.T_OE_PROJECTS
                                 where a.ORG_IDX == u.ORG_IDX
                                 && ((a.MODIFY_DT != null ? a.MODIFY_DT < staleDate : a.CREATE_DT < staleDate)
-                                || (a.PROJECT_CONTACT_IDX == null))
+                                || (a.PROJECT_CONTACT_IDX == null && (a.PROJECT_CONTACT == null || a.PROJECT_CONTACT == "")))
                                 select a).ToList();
                     }
                     else
@@ -558,23 +629,82 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdated()
+        public static int GetT_OE_PROJECTS_NeedingReviewCount(int UserIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
-                    return (from a in ctx.T_OE_PROJECTS
-                            join b in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals b.ORG_IDX
-                            orderby a.MODIFY_DT ?? a.CREATE_DT descending
-                            select new ProjectShortDisplayType {
-                                PROJECT_IDX = a.PROJECT_IDX,
-                                ORG_IDX = a.ORG_IDX,
-                                PROJ_NAME = a.PROJ_NAME,
-                                ORG_NAME = b.ORG_NAME,
-                                LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now
-                            }).Take(6).ToList();
+                    DateTime staleDate = System.DateTime.Now.AddMonths(-6);
+                    T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+                    if (u != null)
+                    {
+                        return (from a in ctx.T_OE_PROJECTS
+                                where a.ORG_IDX == u.ORG_IDX
+                                && ((a.MODIFY_DT != null ? a.MODIFY_DT < staleDate : a.CREATE_DT < staleDate)
+                                || (a.PROJECT_CONTACT_IDX == null && (a.PROJECT_CONTACT == null || a.PROJECT_CONTACT == "")))
+                                select a).ToList().Count();
+                    }
+                    else
+                        return 0;
 
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
+        public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    List<ProjectShortDisplayType> xxx = null;
+
+                    //get interest tags
+                    List<string> user_tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
+
+                    if (user_tags != null)
+                    {
+                        xxx = (from a in ctx.T_OE_PROJECTS
+                               join b in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals b.ORG_IDX
+                               join c in ctx.T_OE_PROJECT_TAGS on a.PROJECT_IDX equals c.PROJECT_IDX
+                               where user_tags.Contains(c.PROJECT_TAG_NAME)
+                               orderby a.MODIFY_DT ?? a.CREATE_DT descending
+                                select new ProjectShortDisplayType
+                                {
+                                    PROJECT_IDX = a.PROJECT_IDX,
+                                    ORG_IDX = a.ORG_IDX,
+                                    PROJ_NAME = a.PROJ_NAME,
+                                    ORG_NAME = b.ORG_NAME,
+                                    LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
+                                    TagMatch = true
+                                }).Take(6).ToList();
+                    }
+
+                    if (xxx == null || xxx.Count() == 0)
+                    {
+                        xxx = (from a in ctx.T_OE_PROJECTS
+                               join b in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals b.ORG_IDX
+                               orderby a.MODIFY_DT ?? a.CREATE_DT descending
+                               select new ProjectShortDisplayType
+                               {
+                                   PROJECT_IDX = a.PROJECT_IDX,
+                                   ORG_IDX = a.ORG_IDX,
+                                   PROJ_NAME = a.PROJ_NAME,
+                                   ORG_NAME = b.ORG_NAME,
+                                   LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
+                                   TagMatch = false
+                               }).Take(6).ToList();
+                    }
+
+
+                    return xxx;
                 }
                 catch (Exception ex)
                 {
@@ -609,7 +739,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 Media = x.TAG_NAME,
                                 Population_Density = x1.POP_DENSITY,
                                 EPA_Region = o.EPA_REGION.ToString(),
-                                Status = a.PROJ_STATUS
+                                Status = a.PROJ_STATUS,
+                                LastUpdated = a.MODIFY_DT ?? a.CREATE_DT
                             }).Take(50).ToList();
 
                     foreach (EECIP_Index e in xxx)
@@ -651,7 +782,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, int? mEDIA_TAG, int? sTART_YEAR,
             string pROJ_STATUS, int? dATE_LAST_UPDATE, string rECORD_SOURCE, string pROJECT_URL, int? mOBILE_IND, string mOBILE_DESC, int? aDV_MON_IND, 
             string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, string pROJECT_CONTACT, int? pROJECT_CONTACT_IDX, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
-            string iMPORT_ID = null)
+            string iMPORT_ID = null, bool markUpdated = false)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -677,8 +808,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                     }
                     else
                     {
-                        e.MODIFY_DT = System.DateTime.Now;
-                        e.MODIFY_USERIDX = cREATE_USER;
+                        if (markUpdated)
+                        {
+                            e.MODIFY_DT = System.DateTime.Now;
+                            e.MODIFY_USERIDX = cREATE_USER;
+                        }
                     }
 
                     if (oRG_IDX != null) e.ORG_IDX = oRG_IDX.ConvertOrDefault<Guid>();
@@ -686,8 +820,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (pROJ_DESC != null) e.PROJ_DESC = pROJ_DESC;
                     if (mEDIA_TAG != null) e.MEDIA_TAG = mEDIA_TAG;
                     if (sTART_YEAR != null) e.START_YEAR = sTART_YEAR;
+                    if (sTART_YEAR == -1) e.START_YEAR = null;  //handling blanking out
                     if (pROJ_STATUS != null) e.PROJ_STATUS = pROJ_STATUS;
                     if (dATE_LAST_UPDATE != null) e.DATE_LAST_UPDATE = dATE_LAST_UPDATE;
+                    if (dATE_LAST_UPDATE == -1) e.DATE_LAST_UPDATE = null; //handling blanking out
                     if (rECORD_SOURCE != null) e.RECORD_SOURCE = rECORD_SOURCE;
                     if (e.RECORD_SOURCE == null)
                         e.RECORD_SOURCE = "Agency supplied";
@@ -702,6 +838,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (vENDOR != null) e.VENDOR = vENDOR;
                     if (pROJECT_CONTACT != null) e.PROJECT_CONTACT = pROJECT_CONTACT;
                     if (pROJECT_CONTACT_IDX != null) e.PROJECT_CONTACT_IDX = pROJECT_CONTACT_IDX;
+                    if (pROJECT_CONTACT_IDX == -1) e.PROJECT_CONTACT_IDX = null; //handling blanking out
 
                     e.ACT_IND = aCT_IND;
                     if (sYNC_IND != null) e.SYNC_IND = sYNC_IND ?? false;
@@ -1399,6 +1536,17 @@ namespace EECIP.App_Logic.DataAccessLayer
                         ctx.T_OE_USER_NOTIFICATION.Add(e);
 
                     ctx.SaveChanges();
+
+                    //send email notification too
+                    if (SendEmailInd)
+                    {
+                        T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(uSER_IDX);
+                        if (u != null)
+                        {
+                            Utils.SendEmail(db_Ref.GetT_OE_APP_SETTING("EMAIL_FROM"), u.EMAIL, null, null, nOTIFY_TITLE, nOTIFY_DESC, null, null, nOTIFY_DESC);
+                        }
+                    }
+
                     return e.NOTIFICATION_IDX;
                 }
                 catch (Exception ex)

@@ -137,21 +137,23 @@ CREATE TABLE [forum].[MembershipUserPoints](
 	[Notes] [nvarchar](400) NULL,
 	[MembershipUser_Id] [int] NOT NULL,
  CONSTRAINT [forum.PK_MembershipUserPoints] PRIMARY KEY CLUSTERED ([Id] ASC),
- FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
+ FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]) ON DELETE CASCADE,
 ) ON [PRIMARY]
 GO
 
-
+--ALTER TABLE [forum].[MembershipUserPoints] ADD CONSTRAINT FK_MembershipUserPoints FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]) ON DELETE CASCADE;
 
 CREATE TABLE [forum].[TopicNotification](
 	[Id] [uniqueidentifier] NOT NULL,
 	[Topic_Id] [uniqueidentifier] NOT NULL,
 	[MembershipUser_Id] [int] NOT NULL,
  CONSTRAINT [forum.PK_TopicNotification] PRIMARY KEY CLUSTERED ([Id] ASC),
- FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
+ FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]) ON DELETE CASCADE,
  FOREIGN KEY ([Topic_Id]) references [forum].[Topic] ([Id]) ON DELETE CASCADE
 ) ON [PRIMARY]
 GO
+
+--ALTER TABLE [forum].[TopicNotification] ADD CONSTRAINT FK_TopicNotification FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]) ON DELETE CASCADE;
 
 
 CREATE TABLE [forum].[Vote](
@@ -162,12 +164,14 @@ CREATE TABLE [forum].[Vote](
 	[MembershipUser_Id] [int] NOT NULL,
 	[VotedByMembershipUser_Id] [int] NULL,
  CONSTRAINT [forum.PK_Vote] PRIMARY KEY CLUSTERED  ([Id] ASC ),
- FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
- FOREIGN KEY ([VotedByMembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
+ FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]) ,
+ FOREIGN KEY ([VotedByMembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]) ON DELETE CASCADE ,
  FOREIGN KEY ([Post_Id]) references [forum].[Post] ([Id]) ON DELETE CASCADE 
 ) ON [PRIMARY]
 GO
 
+--ALTER TABLE [forum].[Vote] ADD CONSTRAINT FK_VoteMembership FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]);
+--ALTER TABLE [forum].[Vote] ADD CONSTRAINT FK_VoteMembershipBy FOREIGN KEY ([VotedByMembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]) ON DELETE CASCADE;
 
 
 CREATE TABLE [forum].[Favourite](

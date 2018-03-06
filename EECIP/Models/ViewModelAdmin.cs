@@ -26,6 +26,11 @@ namespace EECIP.Models
         [StringLength(6000)]
         public string TermsAndConditions { get; set; }
 
+        [DisplayName("Announcements")]
+        [UIHint("forumeditor"), AllowHtml]
+        [StringLength(6000)]
+        public string Announcements { get; set; }
+
     }
 
 

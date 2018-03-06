@@ -6,7 +6,7 @@
 }
 <div class="row">
     <div class="col-md-1">
-        <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency  })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+        <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency, returnURL="Projects"  })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
     </div>
 @if (User.IsInRole("Admins"))
 {  
@@ -46,7 +46,7 @@
                             <th>Status</th>
                             <th>Record Source</th>
                             <th>Program Area</th>
-                            <th>Features</th>
+                            <th>Tags</th>
                             <th>More Info</th>
                         </tr>
 
@@ -54,7 +54,7 @@
                         {
                             <tr>
                                 <td style="min-width: 68px;">
-                                    <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency, returnURL="Projects" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
                                     <div class="delete-section" style="display:inline">
                                         <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
                                         <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>

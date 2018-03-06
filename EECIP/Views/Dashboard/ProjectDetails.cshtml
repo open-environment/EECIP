@@ -10,9 +10,10 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.project.ORG_IDX)
     @Html.HiddenFor(model => model.project.PROJECT_IDX)
+    @Html.HiddenFor(model => model.ReturnURL)
 
-<div class="row">
-    <div class="col-sm-6">
+<div class="row ">
+    <div class="col-sm-6 ">
         <section class="panel panel-default">
             <div class="panel-heading">
                 Project Overview
@@ -34,7 +35,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Project Description</label>
-                            @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "5" })
+                            @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "7" })
                             @Html.ValidationMessageFor(model => model.project.PROJ_DESC)
                         </div>
                     </div>
@@ -77,10 +78,12 @@
                         </div>
                     </div>
                 </div>
+                <span class="help-inline col-sm-12"> <i class="clip-info"></i> Record source:  @Model.project.RECORD_SOURCE</span>
+                <span class="help-inline col-sm-12"> <i class="clip-info"></i> Data last updated: @(Model.project.MODIFY_DT ?? @Model.project.CREATE_DT)</span>
             </div>
         </section>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6 ">
         <section class="panel panel-default">
             <div class="panel-heading">
                 Project Attributes
@@ -93,7 +96,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label>Features</label>
+                            <label>Tags (what aspects of this project would be of most interest to your peers in other agencies)</label>
                             @Html.ListBoxFor(model => model.SelectedFeatures, Model.AllFeatures, new { multiple = "multiple", @class = "form-control search-select", @style = "display: block;" })
                         </div>
                     </div>
@@ -162,7 +165,10 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Project URL</label>
-                            @Html.TextBoxFor(model => model.project.PROJECT_URL, new { @class = "form-control", @maxlength = "200" })
+                            <span class="input-icon input-icon-right">
+                                @Html.TextBoxFor(model => model.project.PROJECT_URL, new { @class = "form-control", @maxlength = "200" })
+                                <i class="clip-question-2 input-tooltip popovers" data-content="Provide a link to the project's website" data-placement="left" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                            </span>
                             @Html.ValidationMessageFor(model => model.project.PROJECT_URL)
                             <span class="help-block"><i class="clip-info"></i> Provide a link to the project's website</span>
                         </div>
@@ -174,9 +180,9 @@
     </div>
 </div>
 
-<div class="row">
-    <section class="col-md-6">
-        <section class="panel panel-default @(Model.NewProjInd == false && Model.project.PROJECT_CONTACT_IDX == null ? "danger" : "") ">
+<div class="row aligned-row">
+    <section class="col-md-6 ">
+        <section class="panel panel-default @(Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && Model.orgType != "Governance" ? "danger" : "") ">
             <div class="panel-heading">
                 Project Contact
                 <div class="panel-tools">
@@ -185,7 +191,7 @@
                 </div>
             </div>
             <div class="panel-body">
-                @if(Model.NewProjInd == false && Model.project.PROJECT_CONTACT_IDX == null && Model.orgType != "Governance")
+                @if(Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT))  && Model.orgType != "Governance")
                 {
                     <div class="alert alert-block alert-danger fade in">
                         <button data-dismiss="alert" class="close" type="button">×</button>
@@ -226,7 +232,7 @@
             </div>
         </section>
     </section>
-    <section class="col-md-6">
+    <section class="col-md-6 aligned-row">
         <section class="panel panel-default">
             <div class="panel-heading">
                 Project Files
@@ -289,26 +295,16 @@
 <div class="row">
     <div class="col-md-12">
         <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
-
-        @if(Model.orgType == "Governance")
-        {
-            <a href="@Url.Action("Governance", "Dashboard")" class="btn btn-default">Close</a>
-        }
-        else
-        {
-            <a href="@Url.Action("Projects", "Dashboard")" class="btn btn-default">Close</a>
-        }
-
-
+        <a href="@Url.Action(Model.ReturnURL, "Dashboard")" class="btn btn-default">Close</a>
         @if (Model.project.PROJ_NAME != null) {
         <div class="delete-section" style="display:inline">
-            <a class=" btn btn-danger delete-link">Delete</a>
+            <a class=" btn btn-danger delete-link">Delete Project</a>
             <div class="btn btn-warning delete-confirm" style="display:none" data-delete-id="@Model.project.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Index"><b>Confirm Delete</b></div>
         </div>
         }
     </div>
 </div>
-
+<p></p>
 }
 
 @section Scripts {
@@ -347,21 +343,21 @@
             });
 
             //handling div visibility
-            toggleDIV('#project_MOBILE_IND option:selected', '#mobiledesc');
-            toggleDIV('#project_ADV_MON_IND option:selected', '#advmondesc');
-            toggleDIV('#project_BP_MODERN_IND option:selected', '#bpdesc');
+            toggleDIV('#project_MOBILE_IND option:selected', '#mobiledesc', false);
+            toggleDIV('#project_ADV_MON_IND option:selected', '#advmondesc', false);
+            toggleDIV('#project_BP_MODERN_IND option:selected', '#bpdesc', false);
             toggleCOTS();
 
             $('#project_MOBILE_IND').change(function () {
-                toggleDIV('#project_MOBILE_IND option:selected', '#mobiledesc');
+                toggleDIV('#project_MOBILE_IND option:selected', '#mobiledesc', 'Mobile', true);
             });
 
             $('#project_ADV_MON_IND').change(function () {
-                toggleDIV('#project_ADV_MON_IND option:selected', '#advmondesc');
+                toggleDIV('#project_ADV_MON_IND option:selected', '#advmondesc', 'Advanced Monitoring', true);
             });
 
             $('#project_BP_MODERN_IND').change(function () {
-                toggleDIV('#project_BP_MODERN_IND option:selected', '#bpdesc');
+                toggleDIV('#project_BP_MODERN_IND option:selected', '#bpdesc', 'Process Modernization', true);
             });
 
             $('#project_COTS').change(function () {
@@ -377,9 +373,20 @@
                 }
             }
 
-            function toggleDIV(a, b) {
+            function toggleDIV(a, b, c, d) {
                 if ($(a).text() == 'Yes: Major Component' || $(a).text() == 'Yes: Minor Component') {
                     $(b).show();
+
+
+                    if (d == true) {
+                        var select = $('#SelectedFeatures');
+                        var option = $('<option></option>').
+                            attr('selected', true).
+                            text(c).
+                            val(c);
+                        option.appendTo(select);
+                        select.trigger('change');
+                    }
                 }
                 else {
                     $(b).hide();

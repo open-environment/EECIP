@@ -234,6 +234,9 @@ namespace EECIP.Controllers
             Topic _topic = db_Forum.GetTopic_ByID(model.TopicId);
             if (_topic != null)
             {
+                // Update the Topic
+                db_Forum.InsertUpdateTopic(model, 0);
+
                 Guid? newPostID = db_Forum.InsertUpdatePost(model.Id, model.Content, null, null, null, null, null, null, null, null, null, true);
 
                 // 7. Tag handling
@@ -532,9 +535,9 @@ namespace EECIP.Controllers
                 {
                     foreach (TopicNotification t in ts)
                     {
-                        if (t.MembershipUser_Id != PosterUserIDX)
+                        if (t.MembershipUser_Id != PosterUserIDX)  //don't send notification to the person making the post
                         {
-                            db_EECIP.InsertUpdateT_OE_USER_NOTIFICATION(null, t.MembershipUser_Id, System.DateTime.UtcNow, "Topic", ("New " + notifyType + " in: " + _topic.Name).SubStringPlus(0,50), "A new " + notifyType + " has been made in a discussion topic you are subscribed to.", false, PosterUserIDX, true, 0, true);
+                            db_EECIP.InsertUpdateT_OE_USER_NOTIFICATION(null, t.MembershipUser_Id, System.DateTime.UtcNow, "Topic", ("New " + notifyType + " in: " + _topic.Name).SubStringPlus(0,50), "A new " + notifyType + " has been made to the discussion topic " + _topic.Name + " that you are subscribed to. Click <a href='" + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Forum/ShowTopic?id=" + topicID + "'>here</a> to view.", false, PosterUserIDX, true, 0, true);
                         }
                     }
                 }

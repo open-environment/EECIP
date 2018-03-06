@@ -22,10 +22,16 @@ namespace EECIP.Controllers
 
             var model = new vmDashboardIndex();
             model.UserBadges = db_Forum.GetBadgesForUser(UserIDX);  //badge progress
-            model.ProjectsNeedingReview = db_EECIP.GetT_OE_PROJECTS_NeedingReview(UserIDX);  //projects needing review
+            model.ProjectsNeedingReviewCount = db_EECIP.GetT_OE_PROJECTS_NeedingReviewCount(UserIDX);  //projects needing review
             model.UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(6);  //user point leaders
-            model.LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdated();  //latest projects
+            model.LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX);  //latest projects
             model.LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX); //latest topics matching interest
+            model.ProjectCount = db_EECIP.GetT_OE_PROJECTS_CountNonGovernance();
+            model.GovernanceCount = db_EECIP.GetT_OE_PROJECTS_CountGovernance();
+            model.DiscussionCount = db_Forum.GetTopicCount();
+            model.AgencyCount = db_Ref.GetT_OE_ORGANIZATION_Count();
+            model.UserBadgeEarnedCount = db_Forum.GetBadgesForUserCount(UserIDX);
+            model.Announcement = db_Ref.GetT_OE_APP_SETTING_CUSTOM().ANNOUNCEMENTS;
             T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
             if (u != null)
             {
@@ -156,7 +162,7 @@ namespace EECIP.Controllers
             {
                 var z = model.edit_ent_services;
                 int SuccID = db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(z.ENT_PLATFORM_IDX, model.agency.ORG_IDX, z.ENT_PLATFORM_IDX, z.PROJECT_NAME, z.VENDOR, z.IMPLEMENT_STATUS,
-                    z.COMMENTS, z.PROJECT_CONTACT, z.ACTIVE_INTEREST_IND, false, db_Accounts.GetUserIDX());
+                    z.COMMENTS, z.PROJECT_CONTACT, z.ACTIVE_INTEREST_IND, false, db_Accounts.GetUserIDX(), true);
                 if (SuccID > 0)
                 {
                     //sync to search service
@@ -246,11 +252,21 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+        // GET: /Dashboard/ProjectReview
+        public ActionResult ProjectReview()
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            var model = new vmDashboardProjectReview();
+            model.ProjectsNeedingReview = db_EECIP.GetT_OE_PROJECTS_NeedingReview(UserIDX);  //projects needing review
+            return View(model);
+        }
+
+
 
         // GET: /Dashboard/ProjectDetails/1
         /// <param name="id">Only supply for existing case</param>
         /// <param name="orgIDX">Only supply for new case</param>
-        public ActionResult ProjectDetails(Guid? id, Guid? orgIDX)
+        public ActionResult ProjectDetails(Guid? id, Guid? orgIDX, string returnURL)
         {
             int UserIDX = db_Accounts.GetUserIDX();
             var model = new vmDashboardProjectDetails();
@@ -309,6 +325,7 @@ namespace EECIP.Controllers
             model.ddl_AgencyUsers = ddlHelpers.get_ddl_users_by_organization(model.project.ORG_IDX.ConvertOrDefault<Guid>());
             model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
             model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
+            model.ReturnURL = returnURL ?? "Projects";
             return View(model);
 
         }
@@ -323,11 +340,11 @@ namespace EECIP.Controllers
             if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(UserIDX, model.project.ORG_IDX.ConvertOrDefault<Guid>()))
             {
                 //update project data
-                Guid? newProjID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, model.project.ORG_IDX, model.project.PROJ_NAME,
-                    model.project.PROJ_DESC, model.project.MEDIA_TAG, model.project.START_YEAR, model.project.PROJ_STATUS,
-                    model.project.DATE_LAST_UPDATE, model.project.RECORD_SOURCE, model.project.PROJECT_URL, model.project.MOBILE_IND,
-                    model.project.MOBILE_DESC, model.project.ADV_MON_IND, model.project.ADV_MON_DESC, model.project.BP_MODERN_IND,
-                    model.project.BP_MODERN_DESC, model.project.COTS, model.project.VENDOR, model.project.PROJECT_CONTACT, model.project.PROJECT_CONTACT_IDX, true, false, UserIDX);
+                Guid? newProjID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, model.project.ORG_IDX, model.project.PROJ_NAME ?? "",
+                    model.project.PROJ_DESC ?? "", model.project.MEDIA_TAG, model.project.START_YEAR ?? -1, model.project.PROJ_STATUS ?? "",
+                    model.project.DATE_LAST_UPDATE ?? -1, model.project.RECORD_SOURCE ?? "", model.project.PROJECT_URL ?? "", model.project.MOBILE_IND,
+                    model.project.MOBILE_DESC ?? "", model.project.ADV_MON_IND, model.project.ADV_MON_DESC ?? "", model.project.BP_MODERN_IND,
+                    model.project.BP_MODERN_DESC ?? "", model.project.COTS ?? "", model.project.VENDOR ?? "", model.project.PROJECT_CONTACT ?? "", model.project.PROJECT_CONTACT_IDX ?? -1, true, false, UserIDX, null, true);
 
                 if (newProjID != null)
                 {
@@ -386,7 +403,7 @@ namespace EECIP.Controllers
                     AzureSearch.PopulateSearchIndexProject(newProjID2);
 
                     TempData["Success"] = "Update successful.";
-                    return RedirectToAction("ProjectDetails", "Dashboard", new { id = newProjID2 });
+                    return RedirectToAction("ProjectDetails", "Dashboard", new { id = newProjID2, returnURL = model.ReturnURL });
                 }
                 else
                     TempData["Error"] = "Error updating data.";
@@ -394,7 +411,7 @@ namespace EECIP.Controllers
             else
                 TempData["Error"] = "You don't have permissions to edit this project.";
 
-            return RedirectToAction("Projects", new { selAgency = model.project.ORG_IDX } );
+            return RedirectToAction(model.ReturnURL ?? "Projects", new { selAgency = model.project.ORG_IDX } );
         }
 
         // POST: /Dashboard/ProjectsDelete
@@ -456,6 +473,8 @@ namespace EECIP.Controllers
             TempData["Error"] = "No project found";
             return RedirectToAction("Index", "Dashboard");
         }
+
+
 
         // POST: /Dashboard/ProjectVote
         [HttpPost]

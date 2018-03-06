@@ -105,6 +105,24 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int GetBadgesForUserCount(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.MembershipUser_Badge
+                            where a.MembershipUser_Id == UserIDX
+                            select a).Count();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
         public static List<Badge> GetBadges()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -551,7 +569,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     Boolean insInd = false;
 
                     Topic e = (from c in ctx.Topics
-                                  where c.Id == model.Id
+                                  where c.Id == model.TopicId
                                   select c).FirstOrDefault();
 
                     //insert case
@@ -562,22 +580,22 @@ namespace EECIP.App_Logic.DataAccessLayer
                         {
                             Id = Guid.NewGuid(),
                             CreateDate = System.DateTime.UtcNow,
-                            Views = 0
+                            Views = 0,
+                            Solved = false,
+                            Post_Id = null,
+                            Poll_Id = null,
+                            MembershipUser_Id = UserIDX,
+                            Slug = GetUniqueTopicSlug(model.Name)
                         };
                     }
 
-                    e.Name = HttpUtility.HtmlDecode(Utils.SafePlainText(model.Name));  //sanitize 
-                    e.Solved = false;
-                    e.SolvedReminderSent = null;
-                    e.Slug = GetUniqueTopicSlug(model.Name);    // url slug generator
-                    //e.Slug = Utils.CreateUrl(model.Name, "-");    // url slug generator
+                    //insert or update case
+                    if (model.Name != null) e.Name = HttpUtility.HtmlDecode(Utils.SafePlainText(model.Name));  //sanitize 
+                    if (e.SolvedReminderSent != null) e.SolvedReminderSent = null;
                     e.IsSticky = model.IsSticky;
                     e.IsLocked = model.IsLocked;
                     e.Pending = null;
                     e.Category_Id = model.Category;
-                    e.Post_Id = null;
-                    e.Poll_Id = null;
-                    e.MembershipUser_Id = UserIDX;
 
                     if (insInd)
                         ctx.Topics.Add(e);
@@ -973,6 +991,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     //get interest tags
                     List<string> user_tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
+
                     if (user_tags != null)
                     {
 
@@ -1044,7 +1063,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    DataType = "Discussion",
                                    Record_Source = "User supplied",
                                    Name = a.Name,
-                                   Description = b.PostContent
+                                   Description = b.PostContent,
+                                   LastUpdated = b.DateEdited 
                                }).Take(250).ToList();
 
                     foreach (EECIP_Index e in xxx)
@@ -1087,6 +1107,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
         public static int DeleteTopic(Guid TopicID)
         {
             using (EECIPEntities ctx = new EECIPEntities())

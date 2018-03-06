@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="description" content="e-Enterprise Community Inventory Platform" />
+    <meta name="description" content="E-Enterprise Community Inventory Platform" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@ViewBag.Title - eEnterprise Community Information Platform</title>
+    <title>@ViewBag.Title - E-Enterprise Community Information Platform</title>
     <link rel="icon" type="image/png" sizes="96x96" href="@Url.Content("~/Content/Images/favicon-96x96.png")">
     <link rel="icon" type="image/png" sizes="48x48" href="@Url.Content("~/Content/Images/favicon-48x48.png")">
     <link rel="icon" type="image/png" sizes="32x32" href="@Url.Content("~/Content/Images/favicon-32x32.png")">
@@ -39,7 +39,7 @@
                 <a class="navbar-brand" href='@(Request.IsAuthenticated ? "/Dashboard" : "/Home")'>
                     <img src="~/Content/Images/seal.png" style="width:30px; float:left; padding-right:10px;" />
                     <span class="visible-xs visible-sm">EECIP</span>
-                    <span class="hidden-xs hidden-sm">e-Enterprise Community Inventory Platform</span>
+                    <span class="hidden-xs hidden-sm">E-Enterprise Community Inventory Platform</span>
                 </a>
             </div>
             <!-- start: XS MENU TOGGLER -->
@@ -55,7 +55,7 @@
                     {
                         @Html.Action("_PartialHeadNotification", "Shared")
                         <li>
-                            <a  title="Invite others to join the EECIP and make it a better community!" href="mailto:?subject=Join the e-Enterprise Community Information Platform&body=@User.Identity.Name has invited you to the e-Enterprise Community Information Platform at http://13.82.106.55/">
+                            <a  title="Invite others to join the EECIP and make it a better community!" href="mailto:?subject=Join the E-Enterprise Community Information Platform&body=@User.Identity.Name has invited you to the E-Enterprise Community Information Platform at http://13.82.106.55/">
                                 <i class="clip-user-plus"></i>
                             </a>
                         </li>
@@ -124,9 +124,17 @@
                             {
                                 <button type="button" class="btn btn-return pull-right" style="margin-top:20px;" onclick="history.go(-1);"><i class="glyphicon glyphicon-arrow-left"></i> Back</button>
                             }
+                            @if (ViewBag.ShowBadge == true)
+                            {
+                                <div href="#modal-form"  class="badge-alert pull-right  modal-it" data-toggle="modal">
+                                    <img src="/Content/Images/badges/recognised-post.png" alt="Badges" style="width:45px; margin-left:20px" />
+                                    <p class="publicbadgenamedesc" style="font-size:10px;">@ViewBag.BadgeCount Badges Earned</p>
+                                </div>
+                            }
                             <!-- start: PAGE TITLE & BREADCRUMB -->
                             <div class="page-header">
                                 <h1>@ViewBag.Title <small>@ViewBag.SubTitle</small></h1>
+                                <div class="subsubheader">@ViewBag.SubSubTitle</div>
                             </div>
                             <!-- end: PAGE TITLE & BREADCRUMB -->
                         </div>
@@ -154,10 +162,10 @@
             <a href="@Url.Action("TermsAndConditions","Home")" >Terms & Conditions </a>
         </div>
         <div class=" footer-items footer-right">
-            <a href="https://e-enterprisefortheenvironment.net/our-projects/shared-services-projects/ee_inventory/" target="_blank">Contact </a> |
+            <a href="https://e-enterprisefortheenvironment.net/our-projects/inventory/" target="_blank">Contact </a> |
         </div>
         <div class=" footer-items footer-right">
-            <a href="https://e-enterprisefortheenvironment.net/our-projects/shared-services-projects/ee_inventory/" target="_blank">About</a> |
+            <a href="https://e-enterprisefortheenvironment.net/our-projects/inventory/" target="_blank">About</a> |
         </div>
     </div>
     <!-- end: FOOTER -->
@@ -170,7 +178,6 @@
     <script>
         jQuery(document).ready(function () {
             Main.init();
-
             $('[data-toggle="tooltip"]').tooltip();  
         });
     </script>

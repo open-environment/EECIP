@@ -128,7 +128,7 @@ namespace EECIP.Controllers
                                 // PREVENT REGISTRATION IF NON US/GOV EMAIL
                                 if (model.UserName.Substring(model.UserName.Length - 4) != ".gov" && model.UserName.Substring(model.UserName.Length - 3) != ".us")
                                 {
-                                    TempData["Error"] = "Registration is only available for government employees. Please register using a government-issued email.";
+                                    TempData["Error"] = "We verify users based on email domain and it appears your domain is not in our system. Please email support@eecip.net and we will get your account set up. Apologies for the delay and thank you for your interest in the Inventory.";
                                     return View(model);
                                 }
                                 else
@@ -251,7 +251,9 @@ namespace EECIP.Controllers
                 model.NodeAdmin = u.NODE_ADMIN;
                 model.HasAvatar = (u.USER_AVATAR != null);
                 model.ImageUniqueStr = (u.MODIFY_DT ?? u.CREATE_DT).ConvertOrDefault<DateTime>().Ticks.ToString();
+                model.ActInd = u.ACT_IND;
                 model.uListInd = a;
+
 
                 //expertise
                 model.SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(id ?? 0);
@@ -288,7 +290,8 @@ namespace EECIP.Controllers
                             model.LinkedIn = uri.Segments.Last();
                         } catch { }
                     }
-                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, null, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin);
+
+                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin);
 
                     //update user expertise
                     db_EECIP.DeleteT_OE_USER_EXPERTISE(model.UserIDX);
@@ -498,29 +501,6 @@ namespace EECIP.Controllers
             return View(model);  
         }
 
-        [Authorize]
-        [HttpPost]
-        public JsonResult NotificationDelete(Guid? id) {
-
-            int UserIDX = db_Accounts.GetUserIDX();
-
-            //CHECK PERMISSIONS
-            T_OE_USER_NOTIFICATION n = db_EECIP.GetT_OE_USER_NOTIFICATION_byID(id);
-            if (n != null)
-            {
-                if (User.IsInRole("Admins") || UserIDX == n.USER_IDX)
-                {
-                    int SuccID = db_EECIP.DeleteT_OE_NOTIFICATION(id.ConvertOrDefault<Guid>());
-                    if (SuccID > 0)
-                    {
-                        return Json("Success");
-                    }
-                }
-            }
-
-            //if got this far, general error
-            return Json("Unable to delete notification.");
-        }
 
         [Authorize]
         public ActionResult NotificationDelete2(Guid? id)

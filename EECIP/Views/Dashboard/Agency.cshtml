@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = Model.agency.ORG_NAME;
     ViewBag.SubTitle = "";
+    ViewBag.ShowTour = false;
 }
 @if (User.IsInRole("Admins"))
 {
@@ -171,8 +172,7 @@
             <div class="panel-heading">
                 Enterprise Services
                 <div class="panel-tools">
-                    <a class="btn btn-xs panel-collapse collapses" href="#">
-                    </a>
+                    <a href="@Url.Action("EnterpriseSvcOverview", "Dashboard")" class="btn btn-rounded btn-xs btn-info" style="background-color:rgb(25, 156, 152)"><i class="glyphicon glyphicon-question-sign"></i> More info</a>
                 </div>
             </div>
             <div class="panel-body">
@@ -203,10 +203,10 @@
                                             </div>
                                         }
 
-                                        @if (item.ACTIVE_INTEREST_IND != null && item.ACTIVE_INTEREST_IND == true)
+                                        @*@if (item.ACTIVE_INTEREST_IND != null && item.ACTIVE_INTEREST_IND == true)
                                         {
                                             <a><i class="glyphicon glyphicon-heart" style="font-size: 20px; color:forestgreen; float:right" title="Active Interest"></i></a>
-                                        }
+                                        }*@
 
                                         @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
                                         @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
@@ -340,6 +340,19 @@
 @section Scripts {
     @Scripts.Render("~/bundles/confirmdelete")
     @Scripts.Render("~/bundles/select2")
+
+
+    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
+    <script  type="text/javascript">
+        Chaperone.init({
+            "api_key": "lBuTEvIH43bg5g",
+            "trigger": {
+                "element": "#btnTour",
+                "event": "click",
+                "tutorial": 4073
+            }
+        });
+    </script>
 
     <script type="text/javascript">
         $(document).ready(function () {

@@ -789,6 +789,7 @@
     <Content Include="Views\Account\Notifications.cshtml" />
     <Content Include="Views\Dashboard\EnterpriseSvcOverview.cshtml" />
     <Content Include="Views\Dashboard\EnterpriseSvc.cshtml" />
+    <Content Include="Views\Dashboard\ProjectReview.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

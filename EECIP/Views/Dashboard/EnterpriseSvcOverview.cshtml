@@ -1,6 +1,10 @@
 ﻿@using EECIP.App_Logic.DataAccessLayer;
 @model EECIP.Models.vmDashboardEntSvcOverview
-
+@{
+    ViewBag.Title = "Description of Enterprise Services";
+    ViewBag.SubSubTitle = "This page provides a definition for the different enterprise services and counts the number of agencies who have expressed an interest in it.";
+    ViewBag.ShowBack = true;
+}
 
 @if (Model.EntSvcOverviewDisplay != null && Model.EntSvcOverviewDisplay.Count > 0)
 {
@@ -8,32 +12,33 @@
         <div class="col-md-12">
             @foreach (SP_ENT_SVC_COUNT_DISPLAY_Result entSvc in Model.EntSvcOverviewDisplay)
             {
-            <a href="@Url.Action("EnterpriseSvc", "Dashboard", new { id = entSvc.ENT_PLATFORM_IDX })">
-                <div class="col-sm-6 col-lg-3 col-md-6">
-                    <div class="flip">
-                        <div class="card">
-                            <div class="face front">
-                                <div class="inner">
-                                    <div class="hd1">@entSvc.ENT_PLATFORM_NAME</div>
+                <a href="#" @*href="@Url.Action("EnterpriseSvc", "Dashboard", new { id = entSvc.ENT_PLATFORM_IDX })"*@>
+                    <div class="col-sm-6 col-lg-3 col-md-6">
+                        <div class="flip">
+                            <div class="card">
+                                <div class="face front">
+                                    <div class="inner">
+                                        <div class="hd1">@entSvc.ENT_PLATFORM_NAME</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="face back">
-                                <div class="flipinner text-center">
-                                    <div class="dash-unit">
-                                        <div class="dtitle"><div style="padding:6px">@entSvc.ENT_PLATFORM_NAME</div></div>
-                                        <div class="dash-body"><div style="padding:6px">@entSvc.ENT_PLATFORM_DESC</div></div>
-                                        <div class="dash-footer">
-                                            <div class="col-xs-4 dash-foot-green tooltips" data-original-title="Number of agencies who have implemented or expressed an interest">
-                                                <i class="glyphicon glyphicon-user"></i>
-                                                <div>@entSvc.CNT</div>
-                                            </div>
-                                            <div class="col-xs-4 dash-foot-dark-green tooltips"  data-original-title="Number of discussion topics related to this Enterprise Service">
-                                                <i class="clip-bubble-dots-2"></i>
-                                                <div>0</div>
-                                            </div>
-                                            <div class="col-xs-4 dash-foot-green tooltips"  data-original-title="Number of documents related to this Enterprise Service">
-                                                <i class="glyphicon glyphicon-file"></i>
-                                                <div>0</div>
+                                <div class="face back">
+                                    <div class="flipinner text-center">
+                                        <div class="dash-unit">
+                                            <div class="dtitle"><div style="padding:6px">@entSvc.ENT_PLATFORM_NAME</div></div>
+                                            <div class="dash-body"><div style="padding:6px">@entSvc.ENT_PLATFORM_DESC</div></div>
+                                            <div class="dash-footer">
+                                                <div class="col-xs-12 dash-foot-green tooltips" data-original-title="Number of agencies who have implemented or expressed an interest">
+                                                    <i class="glyphicon glyphicon-user"></i>
+                                                    <div>@entSvc.CNT</div>
+                                                </div>
+                                                @*<div class="col-xs-4 dash-foot-dark-green tooltips"  data-original-title="Number of discussion topics related to this Enterprise Service">
+                                                        <i class="clip-bubble-dots-2"></i>
+                                                        <div>0</div>
+                                                    </div>
+                                                    <div class="col-xs-4 dash-foot-green tooltips"  data-original-title="Number of documents related to this Enterprise Service">
+                                                        <i class="glyphicon glyphicon-file"></i>
+                                                        <div>0</div>
+                                                    </div>*@
                                             </div>
                                         </div>
                                     </div>
@@ -41,8 +46,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </a>
+                </a>
 
             }
         </div>
@@ -51,10 +55,10 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $('.flip').hover(function(){
+        $('.flip').hover(function () {
             $(this).find('.card').toggleClass('flipped');
 
         });
 
     </script>
-    }
+}

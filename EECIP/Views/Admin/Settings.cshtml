@@ -32,29 +32,29 @@
                                     </tr>
 
                                     @foreach (var item in Model.app_settings)
-                        {
-                            <tr>
-                                <td>
-                                    <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
-                                    @Html.HiddenFor(modelItem => item.SETTING_IDX)
-                                    @Html.HiddenFor(modelItem => item.SETTING_NAME)
-                                    @if (item.ENCRYPT_IND != true)
-                        {
-                            @Html.HiddenFor(modelItem => item.SETTING_VALUE)
-            }
-                                    @Html.HiddenFor(modelItem => item.ENCRYPT_IND)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SETTING_NAME)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.SETTING_DESC)
-                                </td>
-                                <td>
-                                    @(item.ENCRYPT_IND != true ? item.SETTING_VALUE : "*********************")
-                                </td>
-                            </tr>
-            }
+                                    {
+                                        <tr>
+                                            <td>
+                                                <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                                @Html.HiddenFor(modelItem => item.SETTING_IDX)
+                                                @Html.HiddenFor(modelItem => item.SETTING_NAME)
+                                                @if (item.ENCRYPT_IND != true)
+                                                {
+                                                    @Html.HiddenFor(modelItem => item.SETTING_VALUE)
+                                                }
+                                                @Html.HiddenFor(modelItem => item.ENCRYPT_IND)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SETTING_NAME)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SETTING_DESC)
+                                            </td>
+                                            <td>
+                                                @(item.ENCRYPT_IND != true ? item.SETTING_VALUE : "*********************")
+                                            </td>
+                                        </tr>
+                                    }
                                 </table>
                             </div>
                         </section>
@@ -97,7 +97,32 @@
                 }
             </div>
         </div>
-
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false">
+                    Announcements
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false" style="height: 0px;">
+            <div class="panel-body">
+                @using (Html.BeginForm("CustomSettingsAnnounce", "Admin", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @Html.EditorFor(model => model.Announcements)
+                        @Html.ValidationMessageFor(model => model.Announcements)
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button id="btnSave" type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
 

@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "User Profile";
     ViewBag.SubTitle = Model.OrgName;
+    ViewBag.ShowTour = false;
 }
 
 @using (Html.BeginForm("UserProfile", "Account", FormMethod.Post, new { @class = "hbox stretch", @id = "norepostform", enctype = "multipart/form-data" }))
@@ -10,8 +11,8 @@
     @Html.HiddenFor(model => model.UserIDX)
     @Html.HiddenFor(model => model.uListInd)
 
-    <div class="row aligned-row ">
-        <div class="col-md-6">
+    <div class="row ">
+        <div class="col-md-6 ">
             <section class="panel panel-default ">
                 <div class="panel-heading">
                     Basic Info
@@ -73,7 +74,7 @@
                                 <div class="col-md-12">
                                     @if (Model.uListInd != "a")
                                     {
-                                    <a class=" btn btn-orange " href="@Url.Action("SetPermPassword" )">Change Password</a>
+                                        <a class=" btn btn-orange " href="@Url.Action("SetPermPassword" )">Change Password</a>
                                     }
                                 </div>
                             </div>
@@ -102,11 +103,28 @@
                             </div>
                         </div>
                     </div>
+
+                    @if (User.IsInRole("Admins"))
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="form-field-select-4">User is Active?</label>
+                                    @Html.CheckBox("ActInd", Model.ActInd, new { @class = "checkbox" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(model => model.ActInd)
+                    }
+
                 </div>
             </section>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 ">
             <section class="panel panel-default ">
                 <div class="panel-heading">
                     Professional Info
@@ -127,7 +145,7 @@
                                 }
                                 else
                                 {
-                                    @Html.TextBoxFor(model => model.OrgName, new { @class = "form-control", @readonly=true})
+                                    @Html.TextBoxFor(model => model.OrgName, new { @class = "form-control", @readonly = true })
                                 }
                             </div>
                         </div>
@@ -148,9 +166,19 @@
                         </div>
 
                         <div class="col-md-12">
+                            @if (Model.SelectedExpertise == null || Model.SelectedExpertise.Count == 0)
+                            {
+                                <div class="alert alert-block alert-danger fade in">
+                                    <button data-dismiss="alert" class="close" type="button">×</button>
+                                    <h4 class="alert-heading"><i class="fa fa-times-circle"></i> Share your interests!</h4>
+                                    <p>
+                                        By specifying your expertise and interests, content in EECIP can be tailored to your specified interests, and others know who to contact with questions or project ideas.
+                                    </p>
+                                </div>
+                            }
                             <div class="form-group">
                                 <label for="form-field-select-4">Expertise and/or Interests</label>
-                                @Html.ListBoxFor(model => model.SelectedExpertise, Model.AllExpertise, new { multiple = "multiple", @id = "form-field-select-4", @class="form-control search-select" })
+                                @Html.ListBoxFor(model => model.SelectedExpertise, Model.AllExpertise, new { multiple = "multiple", @id = "form-field-select-4", @class = "form-control search-select" })
                             </div>
                         </div>
 
@@ -166,7 +194,7 @@
 
         </div>
     </div>
-    
+
     if (Model.uListInd == "a")
     {
         <a class="btn btn-default" href="@Url.Action("Users", "Admin")">Close @TempData["Error"]</a>
@@ -183,6 +211,18 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/select2")
+
+    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
+    <script type="text/javascript">
+        Chaperone.init({
+            "api_key": "lBuTEvIH43bg5g",
+            "trigger": {
+                "element": "#btnTour",
+                "event": "click",
+                "tutorial": 4072
+            }
+        });
+    </script>
 
 
     <script type="text/javascript">

@@ -23,6 +23,7 @@
           </Key>
           <Property Name="SETTING_CUSTOM_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TERMS_AND_CONDITIONS" Type="varchar(max)" />
+          <Property Name="ANNOUNCEMENTS" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="T_OE_DOCUMENTS">
           <Key>
@@ -280,7 +281,7 @@
           <Property Name="NOTIFY_DT" Type="datetime2" Precision="0" Nullable="false" />
           <Property Name="NOTIFY_TYPE" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="NOTIFY_TITLE" Type="varchar" MaxLength="50" />
-          <Property Name="NOTIFY_DESC" Type="varchar" MaxLength="200" />
+          <Property Name="NOTIFY_DESC" Type="varchar" MaxLength="2000" />
           <Property Name="READ_IND" Type="bit" />
           <Property Name="FROM_USER_IDX" Type="int" />
           <Property Name="CREATE_USERIDX" Type="int" />
@@ -854,30 +855,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__PROJE__2C538F61">
-          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="0..1" />
-          <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_VOTES">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_PROJ__PROJE__73852659">
-          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="1" />
-          <End Role="T_OE_PROJECT_TAGS" Type="Self.T_OE_PROJECT_TAGS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_TAGS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__T_OE_PROJ__VOTED__2B5F6B28">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="0..1" />
           <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
@@ -1018,18 +995,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TopicNoti__Membe__3E723F9C">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
-          <End Role="TopicNotification" Type="Self.TopicNotification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="TopicNotification">
-              <PropertyRef Name="MembershipUser_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__TopicNoti__Topic__3F6663D5">
           <End Role="Topic" Type="Self.Topic" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -1041,18 +1006,6 @@
             </Principal>
             <Dependent Role="TopicNotification">
               <PropertyRef Name="Topic_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Vote__Membership__451F3D2B">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
-          <End Role="Vote" Type="Self.Vote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="Vote">
-              <PropertyRef Name="MembershipUser_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1070,8 +1023,78 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Vote__VotedByMem__46136164">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="0..1" />
+        <Association Name="FK_MembershipUserPoints">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MembershipUserPoints" Type="Self.MembershipUserPoints" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="MembershipUserPoints">
+              <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectTag_Project">
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_PROJECT_TAGS" Type="Self.T_OE_PROJECT_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_TAGS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectVote_Project">
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TopicNotification">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TopicNotification" Type="Self.TopicNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="TopicNotification">
+              <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VoteMembership">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
+          <End Role="Vote" Type="Self.Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="Vote">
+              <PropertyRef Name="MembershipUser_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_VoteMembershipBy">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Vote" Type="Self.Vote" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_USERS">
@@ -1246,14 +1269,6 @@
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__PROJE__2C538F61" Association="Self.FK__T_OE_PROJ__PROJE__2C538F61">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__PROJE__73852659" Association="Self.FK__T_OE_PROJ__PROJE__73852659">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_PROJECT_TAGS" EntitySet="T_OE_PROJECT_TAGS" />
-          </AssociationSet>
           <AssociationSet Name="FK__T_OE_PROJ__VOTED__2B5F6B28" Association="Self.FK__T_OE_PROJ__VOTED__2B5F6B28">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
@@ -1298,23 +1313,35 @@
             <End Role="Topic" EntitySet="Topic" />
             <End Role="Topic_Tags" EntitySet="Topic_Tags" />
           </AssociationSet>
-          <AssociationSet Name="FK__TopicNoti__Membe__3E723F9C" Association="Self.FK__TopicNoti__Membe__3E723F9C">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="TopicNotification" EntitySet="TopicNotification" />
-          </AssociationSet>
           <AssociationSet Name="FK__TopicNoti__Topic__3F6663D5" Association="Self.FK__TopicNoti__Topic__3F6663D5">
             <End Role="Topic" EntitySet="Topic" />
             <End Role="TopicNotification" EntitySet="TopicNotification" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Vote__Membership__451F3D2B" Association="Self.FK__Vote__Membership__451F3D2B">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="Vote" EntitySet="Vote" />
           </AssociationSet>
           <AssociationSet Name="FK__Vote__Post_Id__4707859D" Association="Self.FK__Vote__Post_Id__4707859D">
             <End Role="Post" EntitySet="Post" />
             <End Role="Vote" EntitySet="Vote" />
           </AssociationSet>
-          <AssociationSet Name="FK__Vote__VotedByMem__46136164" Association="Self.FK__Vote__VotedByMem__46136164">
+          <AssociationSet Name="FK_MembershipUserPoints" Association="Self.FK_MembershipUserPoints">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="MembershipUserPoints" EntitySet="MembershipUserPoints" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectTag_Project" Association="Self.FK_ProjectTag_Project">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_TAGS" EntitySet="T_OE_PROJECT_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectVote_Project" Association="Self.FK_ProjectVote_Project">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TopicNotification" Association="Self.FK_TopicNotification">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="TopicNotification" EntitySet="TopicNotification" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VoteMembership" Association="Self.FK_VoteMembership">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="Vote" EntitySet="Vote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_VoteMembershipBy" Association="Self.FK_VoteMembershipBy">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Vote" EntitySet="Vote" />
           </AssociationSet>
@@ -1885,7 +1912,7 @@
           <Property Name="NOTIFY_DT" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="NOTIFY_TYPE" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="NOTIFY_TITLE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="NOTIFY_DESC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="NOTIFY_DESC" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <Property Name="READ_IND" Type="Boolean" />
           <Property Name="FROM_USER_IDX" Type="Int32" />
           <Property Name="CREATE_USERIDX" Type="Int32" />
@@ -2738,6 +2765,7 @@
           </Key>
           <Property Name="SETTING_CUSTOM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TERMS_AND_CONDITIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ANNOUNCEMENTS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
           <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
@@ -3273,6 +3301,7 @@
           <EntitySetMapping Name="T_OE_APP_SETTINGS_CUSTOM">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_APP_SETTINGS_CUSTOM">
               <MappingFragment StoreEntitySet="T_OE_APP_SETTINGS_CUSTOM">
+                <ScalarProperty Name="ANNOUNCEMENTS" ColumnName="ANNOUNCEMENTS" />
                 <ScalarProperty Name="TERMS_AND_CONDITIONS" ColumnName="TERMS_AND_CONDITIONS" />
                 <ScalarProperty Name="SETTING_CUSTOM_IDX" ColumnName="SETTING_CUSTOM_IDX" />
               </MappingFragment>

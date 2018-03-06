@@ -1,0 +1,74 @@
+﻿@model EECIP.Models.vmDashboardProjectReview
+@using EECIP.App_Logic.BusinessLogicLayer
+@{
+    ViewBag.Title = "Projects Needing Your Review";
+    ViewBag.ShowBack = true;
+}
+
+@if (Model.ProjectsNeedingReview != null && Model.ProjectsNeedingReview.Count > 0)
+{
+    <section class="panel panel-default ee">
+        <div class="panel-heading">
+            <i class="glyphicon glyphicon-exclamation-sign"></i> Projects Needing Your Review
+            <div class="panel-tools">
+                <a class="btn btn-xs panel-collapse collapses" href="#">
+                </a>
+            </div>
+        </div>
+        <div class="panel-body" id="collapseProj">
+
+            <div class="table-responsive">
+                <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th></th>
+                            <th>Reason for Review</th>
+                            <th>Project Name</th>
+                            <th>Description</th>
+                            <th>Record Source</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ProjectsNeedingReview)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX, returnURL="ProjectReview" })" class="btn btn-rounded btn-xs btn-info btn-block" style="margin-bottom:6px"><i class="glyphicon glyphicon-pencil"></i> Review</a>
+                                    <div class="delete-section" style="display:inline">
+                                        <a class=" btn btn-rounded btn-xs btn-danger delete-link  btn-block"><i class="glyphicon glyphicon-remove"></i> Delete Project</a>
+                                        <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
+                                    </div>
+
+                                </td>
+                                <td style="color:#dc3545; font-weight:bold">
+                                    @if (item.PROJECT_CONTACT_IDX == null)
+                                    {
+                                        <text>Project is unclaimed</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Project hasn't been updated in 6 months</text>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_NAME)
+                                </td>
+                                <td>
+                                    @Utils.ReturnAmountWordsFromString(item.PROJ_DESC, 50)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RECORD_SOURCE)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/confirmdelete")
+}

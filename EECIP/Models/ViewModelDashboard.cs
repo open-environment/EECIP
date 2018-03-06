@@ -13,10 +13,16 @@ namespace EECIP.Models
     public class vmDashboardIndex {
         public List<UserBadgeDisplay> UserBadges { get; set; }
         public string UserName { get; set; }
-        public List<T_OE_PROJECTS> ProjectsNeedingReview { get; set; }
+        public int ProjectsNeedingReviewCount { get; set; }
         public List<UserMostPointsDisplay> UserPointLeaders { get; set; }
         public List<ProjectShortDisplayType> LatestProjects { get; set; }
         public List<TopicOverviewDisplay> LatestTopics { get; set; }
+        public int ProjectCount { get; set; }
+        public int DiscussionCount { get; set; }
+        public int AgencyCount { get; set; }
+        public int GovernanceCount { get; set; }
+        public int UserBadgeEarnedCount { get; set; }
+        public string Announcement { get; set; }
     }
 
 
@@ -93,6 +99,11 @@ namespace EECIP.Models
         public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
     }
 
+    public class vmDashboardProjectReview {
+        public List<T_OE_PROJECTS> ProjectsNeedingReview { get; set; }
+    }
+
+
     public class vmDashboardProjectDetails {
         public string orgName { get; set; }
         public string orgType { get; set; }
@@ -112,6 +123,7 @@ namespace EECIP.Models
         [DisplayName("Upload File")]
         public HttpPostedFileBase[] files { get; set; }
         public List<T_OE_DOCUMENTS> files_existing { get; set; }
+        public string ReturnURL { get; set; }
 
         public vmDashboardProjectDetails()
         {

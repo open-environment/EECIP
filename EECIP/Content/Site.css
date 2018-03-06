@@ -85,6 +85,54 @@ html {
     padding-bottom: 50px;
 }
 
+.input-tooltip {
+    color: #65BCDA !important;
+    font-size: 20px !important;
+}
+
+
+.help-button2 {
+    background-color: #65BCDA;
+    -moz-border-radius: 100%;
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+}
+    .help-button:before, .icon-question:before {
+        content: "\f128";
+    }
+
+.help-icon {
+
+}
+    .help-icon:hover {
+        cursor:pointer;
+    }
+
+
+.btn-icon {
+    background-color: #199C98;
+    border: 0px solid #199C98;
+}
+
+.btn-eecip {
+    color: #fff;
+    background-color: #199C98;
+    border-color: #1a8e8a;
+}
+    .btn-eecip:focus {
+        color: #fff;
+        background-color: #178c88;
+        border-color: #178c88;
+    }
+
+    .btn-eecip:hover {
+        color: #fff;
+        background-color: #178c88;
+        border-color: #178c88;
+    }
 
 /***************     TOP AND LEFT MENU STYLING     ******************/
 .navbar-inverse {
@@ -117,6 +165,14 @@ ul.main-navigation-menu > li.active > a {
 
 .clip-chevron-right {
     color: #199C98;
+}
+
+.subsubheader {
+    color: #888888;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0;
 }
 
 /***************     FACET STYLING     ******************/
@@ -560,6 +616,100 @@ ul.main-navigation-menu > li.active > a {
 
 .text-grey {
     color: #bbb;
+}
+
+
+
+
+
+
+
+
+
+
+.carousel-control {
+    width: 40px;
+    color: #999;
+    text-shadow: none;
+}
+
+    .carousel-control:hover,
+    .carousel-control:focus {
+        color: #ccc;
+        text-decoration: none;
+        opacity: 0.9;
+        filter: alpha(opacity=90);
+    }
+
+    .carousel-control.left,
+    .carousel-control.right {
+        background-image: none;
+        filter: none;
+    }
+
+    .carousel-control i {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 5;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        margin-left: -10px;
+    }
+
+.carousel-indicators.out {
+    bottom: -5px;
+}
+
+.carousel-indicators li {
+    -webkit-transition: background-color .25s;
+    transition: background-color .25s;
+    background: #ddd;
+    background-color: rgba(0,0,0,0.2);
+    border: none;
+}
+
+.carousel-indicators .active {
+    background: #f0f0f0;
+    background-color: rgba(200,200,200,0.2);
+    width: 10px;
+    height: 10px;
+    margin: 1px;
+}
+
+.carousel.carousel-fade .item {
+    -webkit-transition: opacity .25s;
+    transition: opacity .25s;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.carousel.carousel-fade .active {
+    opacity: 1;
+    filter: alpha(opacity=1);
+}
+
+    .carousel.carousel-fade .active.left,
+    .carousel.carousel-fade .active.right {
+        left: 0;
+        z-index: 2;
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+
+.carousel.carousel-fade .next,
+.carousel.carousel-fade .prev {
+    left: 0;
+    z-index: 1;
+}
+
+.carousel.carousel-fade .carousel-control {
+    z-index: 3;
 }
 
 
@@ -1027,5 +1177,19 @@ span.tag a, span.tag a:visited {
     opacity: 0.3;
 }
 
+.badge-alert {
+    font-family: 'Raleway', sans-serif;
+    color: #636267;
+    font-weight: 700;
+    margin-top: 10px;
+    padding: 10px 10px 0 10px;
+    background-color: #e2e2e2;
+    border: 2px solid #808080;
+    border-radius: 10px;
+    cursor: pointer;
+}
 
-
+    .badge-alert:hover {
+        box-shadow: 0 0 3px rgba(0, 0, 0, 1);
+        color: #444444;
+    }

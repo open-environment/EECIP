@@ -63,14 +63,14 @@ namespace EECIP.Controllers
         {
 
             int SuccID = db_Accounts.DeleteT_OE_USERS(id);
+            AzureSearch.DeleteSearchIndexUsers(id);
             if (SuccID>0)
             {
                 //SUCCESS - now delete user from Azure search
-                AzureSearch.DeleteSearchIndexUsers(id);
                 return Json("Success");
             }
             else
-                return Json("Unable to Delete User");
+                return Json("User has been made inactive instead of being deleted due to data in the database.");
         }
 
 
@@ -148,7 +148,8 @@ namespace EECIP.Controllers
             var model = new vmAdminSettings
             {
                 app_settings = db_Ref.GetT_OE_APP_SETTING_List(),
-                TermsAndConditions = custSettings.TERMS_AND_CONDITIONS
+                TermsAndConditions = custSettings.TERMS_AND_CONDITIONS,
+                Announcements = custSettings.ANNOUNCEMENTS
             };
             return View(model);
         }
@@ -173,7 +174,7 @@ namespace EECIP.Controllers
         {
             if (ModelState.IsValid)
             {
-                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(model.TermsAndConditions);
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(model.TermsAndConditions, null);
                 if (SuccID > 0)
                     TempData["Success"] = "Data Saved.";
                 else
@@ -183,6 +184,20 @@ namespace EECIP.Controllers
             return RedirectToAction("Settings");
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult CustomSettingsAnnounce(vmAdminSettings model)
+        {
+            if (ModelState.IsValid)
+            {
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, model.Announcements ?? "");
+                if (SuccID > 0)
+                    TempData["Success"] = "Data Saved.";
+                else
+                    TempData["Error"] = "Data Not Saved.";
+            }
+
+            return RedirectToAction("Settings");
+        }
 
 
         //*************************************** AGENCIES **********************************************************
@@ -678,7 +693,7 @@ namespace EECIP.Controllers
                     T_OE_PROJECTS x = ps.T_OE_PROJECT;
                     Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, x.ORG_IDX, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS, 
                         x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
-                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, null, true, false, UserIDX, x.IMPORT_ID);
+                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, null, true, false, UserIDX, x.IMPORT_ID, true);
 
                     //import features
                     if (ps.FEATURES != null)

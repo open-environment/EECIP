@@ -20,6 +20,7 @@
                         <th>Phone</th>
                         <th>Created</th>
                         <th>Last Login</th>
+                        <th>Active</th>
                     </tr>
 
                     @foreach (var item in Model.users)
@@ -50,6 +51,9 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.LASTLOGIN_DT)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ACT_IND)
                         </td>
                     </tr>
                     }

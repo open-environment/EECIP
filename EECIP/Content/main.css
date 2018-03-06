@@ -752,39 +752,36 @@ li.dropdown.current-user .dropdown-menu li a {
 	transition: all 0.3s ease 0s !important;
 }
 .btn-icon {
-	background-color: #EFEFEF;
-	background-image: -moz-linear-gradient(center top , #FAFAFA, #EFEFEF);
-	border: 1px solid #DDDDDD;
-	border-radius: 2px 2px 2px 2px;
-	box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-	cursor: pointer;
-	height: 80px;
-	display: block;
-	font-size: 14px;
-	margin-bottom: 15px;
-	margin-top: 15px;
-	padding: 5px 0 0;
-	position: relative;
-	text-align: center;
-	transition: all 0.3s ease 0s;
-	color: #333333;
+    background-color: #3D9400;
+    border: 0px solid #3D9400;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    height: 100px;
+    display: block;
+    font-size: 20px;
+    margin-bottom: 30px;
+    margin-top: 15px;
+    padding: 5px 0 0;
+    position: relative;
+    text-align: center;
+    transition: all 0.3s ease 0s;
+    color: #fff;
 }
 .btn-icon:hover {
 	border-color: #A5A5A5;
-	box-shadow: 0 0 3px rgba(0, 0, 0, 0.25);
+	box-shadow: 0 0 3px rgba(0, 0, 0, 1);
 	color: #444444;
-	text-decoration: none;
-	text-shadow: 0 1px 0 #FFFFFF;
 }
 .btn-icon .badge {
-	border-radius: 12px 12px 12px 12px !important;
+	border-radius: 6px 6px 6px 6px !important;
 	border-style: solid;
 	border-width: 0;
 	box-shadow: none;
 	color: #FFFFFF !important;
 	font-family: 'Open Sans';
 	font-size: 11px !important;
-	font-weight: 300;
+	font-weight: 500;
 	padding: 3px 7px;
 	position: absolute;
 	right: -5px;

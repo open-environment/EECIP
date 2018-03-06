@@ -157,56 +157,54 @@
                 </div>
             </div>
             <div class="panel-body">
-                            <dl class="dl-horizontal">
-                <dt style="width:30%">
-                    Project Features:
-                </dt>
-                <dd>
-                    @foreach (string pa in Model.SelectedFeatures)
-                    {
-                        <div class="select2-selection__choice">@pa</div> 
-                    }
-                </dd>
-                <hr />
-                <dt style="width:30%">
-                    Commercial Off the Shelf/In House:
-                </dt>
-                <dd>
-                    @Model.project.COTS
-                </dd>
-                <dt style="width:30%">
-                    Business Process Modernization:
-                </dt>
-                <dd>
-                    @if (Model.project.T_OE_REF_TAGS1 != null)
-                    {
-                        @Model.project.T_OE_REF_TAGS1.TAG_NAME
-                    }
-                    @Model.project.BP_MODERN_DESC
-                </dd>
-                <dt style="width:30%">
-                    Is there a Mobile component?:
-                </dt>
-                <dd>
-                    @if (Model.project.T_OE_REF_TAGS3 != null)
-                    {
-                        @Model.project.T_OE_REF_TAGS3.TAG_NAME
-                    }
-                    @Model.project.MOBILE_DESC
-                </dd>
-                <dt style="width:30%">
-                    Involve Advanced Monitoring:
-                </dt>
-                <dd>
-                    @if (Model.project.T_OE_REF_TAGS != null)
-                    {
-                        @Model.project.T_OE_REF_TAGS.TAG_NAME
-                    }
-                    @Model.project.ADV_MON_DESC
-                </dd>
-            </dl>
-
-
+                <dl class="dl-horizontal">
+                    <dt style="width:30%">
+                        Project Tags:
+                    </dt>
+                    <dd>
+                        @foreach (string pa in Model.SelectedFeatures)
+                        {
+                            <div class="select2-selection__choice">@pa</div> 
+                        }
+                    </dd>
+                    <hr />
+                    <dt style="width:30%">
+                        Commercial Off the Shelf/In House:
+                    </dt>
+                    <dd>
+                        @Model.project.COTS
+                    </dd>
+                    <dt style="width:30%">
+                        Business Process Modernization:
+                    </dt>
+                    <dd>
+                        @if (Model.project.T_OE_REF_TAGS1 != null)
+                        {
+                            @Model.project.T_OE_REF_TAGS1.TAG_NAME
+                        }
+                        @Model.project.BP_MODERN_DESC
+                    </dd>
+                    <dt style="width:30%">
+                        Is there a Mobile component?:
+                    </dt>
+                    <dd>
+                        @if (Model.project.T_OE_REF_TAGS3 != null)
+                        {
+                            @Model.project.T_OE_REF_TAGS3.TAG_NAME
+                        }
+                        @Model.project.MOBILE_DESC
+                    </dd>
+                    <dt style="width:30%">
+                        Involve Advanced Monitoring:
+                    </dt>
+                    <dd>
+                        @if (Model.project.T_OE_REF_TAGS != null)
+                        {
+                            @Model.project.T_OE_REF_TAGS.TAG_NAME
+                        }
+                        @Model.project.ADV_MON_DESC
+                    </dd>
+                </dl>
             </div>
         </section>
     </section>

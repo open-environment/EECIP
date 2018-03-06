@@ -15,7 +15,7 @@
         <!-- POST ACTIONS RIGHT BAR -->
         <div class="postadmin">
             <ul class="clearfix postadminlist">
-                @if (Model.Post.MembershipUser_Id == Model.UserIDX)
+                @if (Model.Post.MembershipUser_Id == Model.UserIDX || User.IsInRole("Admins"))
                 {
                     <li>
                         <a class="btn-mvc btn-mvc-small btn-mvc-fullwidth" onclick="return confirm('Are you sure you want to delete?')" href="@Url.Action("DeletePost", "Forum", new { id = Model.Post.Id })">Delete</a>

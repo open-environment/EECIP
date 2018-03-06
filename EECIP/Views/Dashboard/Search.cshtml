@@ -3,7 +3,7 @@
 @{
     ViewBag.HideTitle = true;
     ViewBag.Title = "Browse or Search Content";
-    ViewBag.SubTitle = "Find projects, agencies, people, or discussions that match your interests";
+    ViewBag.SubTitle = @"Find projects, agencies, people, or discussions that match your interests  (You can use "" and -  and + to refine your search)";
     int counter = 1;
 }
 
@@ -142,9 +142,10 @@
                             }
                         </a>
                     </li>
-                    <li>
-                        <a href="#tab3" data-toggle="tab">
-                            Enterprise Services
+                    <li  >
+                        <a href="#tab3" data-toggle="tab" >
+                            <i id="entHelp" class="clip-question-2 help-icon" ></i>                                                      
+                            Enterprise Services 
                             @if (Model.searchResults != null && Model.searchResults.Facets != null && Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Enterprise Service") != null)
                             {
                                 <span class="badge badge-eecip-bluegreen">@Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Enterprise Service").Count</span>
@@ -261,7 +262,10 @@
                                             <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br/>Project</a>
                                         }
                                         @if (User.IsInRole("Admins"))
-                                        {<span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>}
+                                        {
+                                            <span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>
+                                            <span style="font-weight: bold; font-size: 11px;display:block;">Updated: @Html.DisplayFor(modelItem => item.Document.LastUpdated).ToString()</span>
+                                        }
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Document.Agency)
@@ -444,6 +448,11 @@
 
 
             //tab handling
+            var EntUrl = '@Url.Action("EnterpriseSvcOverview", "Dashboard")';
+            $('#entHelp').on("click", function () {
+                window.location = EntUrl;
+            });
+
             $('.nav-tabs a[href="#tab' + $('#activeTab').val() + '"]').tab('show');             //do proper tab display from postback
 
             $('a[href="#tab1"]').on('shown.bs.tab', function (e) {
