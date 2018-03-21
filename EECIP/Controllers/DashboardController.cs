@@ -464,6 +464,13 @@ namespace EECIP.Controllers
                     model.ProjectVotePoints = db_EECIP.GetT_OE_PROJECT_VOTES_TotalByProject(model.project.PROJECT_IDX);
                     model.HasVoted = db_EECIP.GetT_OE_PROJECT_VOTES_HasVoted(model.project.PROJECT_IDX, UserIDX);
                     model.UserBelongsToProjectAgency = db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), model.project.ORG_IDX.ConvertOrDefault<Guid>());
+                    //project contact
+                    if (model.project.PROJECT_CONTACT_IDX != null)
+                    {
+                        model.ProjectContact = db_Accounts.GetT_OE_USERSByIDX(model.project.PROJECT_CONTACT_IDX??-1);
+                    }
+                    model.files_existing = db_EECIP.GetT_OE_DOCUMENTS_ByProjectID(model.project.PROJECT_IDX);
+
                 }
 
                 if (model.project != null)

@@ -432,13 +432,15 @@ namespace EECIP.Controllers
                         }
 
                         //then delete the topic
-                        db_Forum.DeleteTopic(post.Topic_Id);
+                        int SuccID = db_Forum.DeleteTopic(post.Topic_Id);
 
-                        //now sync with Azure
-                        AzureSearch.DeleteForumTopic(post.Topic_Id);
+                        if (SuccID > 0)
+                        {
+                            //now sync with Azure
+                            AzureSearch.DeleteForumTopic(post.Topic_Id);
 
-
-                        TempData["Success"] = "Topic deleted";
+                            TempData["Success"] = "Topic deleted";
+                        }
                         return RedirectToAction("Index", "Forum");
 
                     }

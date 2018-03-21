@@ -1585,6 +1585,21 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
+                    //first delete any Post Files
+                    List<PostFile> _postFiles = (from a in ctx.PostFiles
+                                           where a.Post_Id == PostID
+                                           select a).ToList();
+
+                    if (_postFiles != null && _postFiles.Count > 0)
+                    {
+                        foreach (PostFile _postFile in _postFiles)
+                        {
+                            DeletePostFile(_postFile.Id);
+                        }
+                    }
+
+
+                    //then delete the Post
                     Post rec = (from a in ctx.Posts
                                 where a.Id == PostID
                                 select a).FirstOrDefault();

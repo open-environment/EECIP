@@ -145,6 +145,8 @@ namespace EECIP.Models
         public int ProjectVotePoints { get; set; }
         public bool HasVoted { get; set; }
         public bool UserBelongsToProjectAgency { get; set; }
+        public T_OE_USERS ProjectContact { get; set; }
+        public List<T_OE_DOCUMENTS> files_existing { get; set; }
 
     }
 

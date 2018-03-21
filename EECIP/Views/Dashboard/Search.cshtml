@@ -106,7 +106,8 @@
                                                     {
                                                         @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="Status" class="removeFacet">X Remove Filter</a></span>
                                                     }
-                                                    else {
+                                                    else
+                                                    {
                                                         <a id="@Html.DisplayFor(modelItem => subitem.Value)" class="facetItem" data-id2="Facet" href="@Html.DisplayFor(modelItem => item.Key)"><i class="clip-chevron-left"></i> @Html.DisplayFor(modelItem => subitem.Value) (@Html.DisplayFor(modelItem => subitem.Count))</a>
                                                     }
 
@@ -142,10 +143,10 @@
                             }
                         </a>
                     </li>
-                    <li  >
-                        <a href="#tab3" data-toggle="tab" >
-                            <i id="entHelp" class="clip-question-2 help-icon" ></i>                                                      
-                            Enterprise Services 
+                    <li>
+                        <a href="#tab3" data-toggle="tab">
+                            <i id="entHelp" class="clip-question-2 help-icon"></i>
+                            Enterprise Services
                             @if (Model.searchResults != null && Model.searchResults.Facets != null && Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Enterprise Service") != null)
                             {
                                 <span class="badge badge-eecip-bluegreen">@Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Enterprise Service").Count</span>
@@ -259,7 +260,7 @@
                                         }
                                         @if (item.Document.DataType == "Governance")
                                         {
-                                            <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br/>Project</a>
+                                            <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br />Project</a>
                                         }
                                         @if (User.IsInRole("Admins"))
                                         {
@@ -275,7 +276,7 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Document.Name)
                                         </td>
-                                     }
+                                    }
                                     <td>
                                         @if (item.Document.DataType != "Discussion")
                                         {
@@ -345,18 +346,18 @@
                                     <td>
                                         @if (item.Document.PersonPhone != null && item.Document.PersonPhone.Length > 5)
                                         {
-                                        <a href="tel:@(item.Document.PersonPhone)" class="btn btn-xs btn-info" style="margin-bottom: 4px;">
-                                            <i class="clip-phone"></i>
-                                        </a>
+                                            <a href="tel:@(item.Document.PersonPhone)" class="btn btn-xs btn-info" style="margin-bottom: 4px;">
+                                                <i class="clip-phone"></i>
+                                            </a>
                                         }
                                         <a href="mailto:@(item.Document.PersonEmail)" class="btn btn-xs btn-info" style="margin-bottom: 4px;">
                                             <i class="glyphicon glyphicon-envelope"></i>
                                         </a>
                                         @if (item.Document.PersonLinkedIn != null && item.Document.PersonLinkedIn.Length > 5)
                                         {
-                                        <a href="https://www.linkedin.com/in/@(item.Document.PersonLinkedIn)" class="btn btn-xs btn-info"  style="margin-bottom: 4px;" target="_blank">
-                                            <i class="clip-linkedin"></i>
-                                        </a>
+                                            <a href="https://www.linkedin.com/in/@(item.Document.PersonLinkedIn)" class="btn btn-xs btn-info" style="margin-bottom: 4px;" target="_blank">
+                                                <i class="clip-linkedin"></i>
+                                            </a>
                                         }
                                     </td>
                                     <td>
@@ -395,7 +396,12 @@
     @Scripts.Render("~/bundles/autocomplete")
     @Scripts.Render("~/bundles/pagination")
     @Scripts.Render("~/bundles/trunk8")
-
+    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
+    <script>
+        Chaperone.init({
+            "api_key": "lBuTEvIH43bg5g"
+        });
+    </script>
 
     <script type="text/javascript">
 
