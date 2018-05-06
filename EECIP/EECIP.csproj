@@ -757,14 +757,6 @@
     <Content Include="Views\ForumAdmin\GetMainCategories.cshtml" />
     <Content Include="Views\ForumAdmin\_CategoryFields.cshtml" />
     <Content Include="Views\ForumAdmin\_CategoryTopNav.cshtml" />
-    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
-    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />
-    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.eot" />
-    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.woff" />
-    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
-    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
-    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
-    <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\Shared\EditorTemplates\colourpicker.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\forumeditor.cshtml" />
     <Content Include="Views\Forum\Index.cshtml" />
@@ -790,6 +782,14 @@
     <Content Include="Views\Dashboard\EnterpriseSvcOverview.cshtml" />
     <Content Include="Views\Dashboard\EnterpriseSvc.cshtml" />
     <Content Include="Views\Dashboard\ProjectReview.cshtml" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.eot" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.woff" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
+    <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
+    <Content Include="Scripts\tinymce\langs\readme.md" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

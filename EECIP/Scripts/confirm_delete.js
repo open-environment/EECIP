@@ -1,6 +1,12 @@
 ﻿
 $(function () {
     $("a.delete-link").click(function () {
+        //DESCRIPTION ****************************************
+        // Used in conjunction with toastr.js, this javascript performs 3 actions: 
+        //    (1) prompts user with deletion confirmation
+        //    (2) calls deletion action upon confirmation
+        //    (3) displays deletion confirmation message via toastr popup
+
         //USAGE **********************************************
         // delete-link: class applied to hyperlink that is originally clicked for deletion
         // delete-confirm: class applied to sibling div that contains the additional attributes needed for deletion
@@ -13,7 +19,6 @@ $(function () {
         var deleteLink = $(this);
         deleteLink.hide();
         var confirmButton = deleteLink.siblings(".delete-confirm");
-        //confirmButton.show("slide", { direction: "left" }, 1500);
         confirmButton.delay(100).fadeIn(700);
 
         var cancelDelete = function () {
