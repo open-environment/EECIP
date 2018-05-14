@@ -1816,6 +1816,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     var yyy = (from a in ctx.T_OE_USERS
                                join b in tags on a.USER_IDX equals b.Key
+                               where a.EXCLUDE_POINTS_IND == false
                                orderby b.Sum descending
                                select new UserMostPointsDisplay {
                                    _User = a,

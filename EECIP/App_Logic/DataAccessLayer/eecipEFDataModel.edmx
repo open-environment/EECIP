@@ -85,14 +85,14 @@
           <Property Name="VENDOR" Type="varchar" MaxLength="100" />
           <Property Name="IMPLEMENT_STATUS" Type="varchar" MaxLength="250" />
           <Property Name="COMMENTS" Type="varchar(max)" />
-          <Property Name="PROJECT_CONTACT" Type="varchar" MaxLength="100" />
-          <Property Name="ACTIVE_INTEREST_IND" Type="bit" />
-          <Property Name="RECORD_SOURCE" Type="varchar" MaxLength="50" />
-          <Property Name="SYNC_IND" Type="bit" Nullable="false" />
           <Property Name="CREATE_USERIDX" Type="int" />
           <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+          <Property Name="SYNC_IND" Type="bit" Nullable="false" />
+          <Property Name="RECORD_SOURCE" Type="varchar" MaxLength="50" />
+          <Property Name="PROJECT_CONTACT" Type="varchar" MaxLength="100" />
+          <Property Name="ACTIVE_INTEREST_IND" Type="bit" />
         </EntityType>
         <EntityType Name="T_OE_ORGANIZATION_TAGS">
           <Key>
@@ -117,6 +117,15 @@
           <Property Name="PROJECT_TAG_NAME" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="CREATE_USERIDX" Type="int" />
           <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_PROJECT_URLS">
+          <Key>
+            <PropertyRef Name="PROJECT_URL_IDX" />
+          </Key>
+          <Property Name="PROJECT_URL_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PROJECT_IDX" Type="uniqueidentifier" />
+          <Property Name="PROJECT_URL" Type="varchar" MaxLength="200" />
+          <Property Name="PROJ_URL_DESC" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="T_OE_PROJECT_VOTES">
           <Key>
@@ -330,6 +339,7 @@
           <Property Name="SYNC_IND" Type="bit" Nullable="false" />
           <Property Name="LINKEDIN" Type="varchar" MaxLength="100" />
           <Property Name="ALLOW_GOVERNANCE" Type="bit" Nullable="false" />
+          <Property Name="EXCLUDE_POINTS_IND" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Badge">
           <Key>
@@ -503,7 +513,7 @@
           <Property Name="MembershipUser_Id" Type="int" Nullable="false" />
           <Property Name="VotedByMembershipUser_Id" Type="int" />
         </EntityType>
-        <Association Name="FK__Category__Catego__41B8C09B">
+        <Association Name="FK__Category__Catego__29221CFB">
           <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
           <End Role="Category1" Type="Self.Category" Multiplicity="*" />
           <ReferentialConstraint>
@@ -515,7 +525,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Favourite__Membe__49E3F248">
+        <Association Name="FK__Favourite__Membe__15DA3E5D">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="Favourite" Type="Self.Favourite" Multiplicity="*" />
           <ReferentialConstraint>
@@ -527,7 +537,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Favourite__PostI__4AD81681">
+        <Association Name="FK__Favourite__PostI__16CE6296">
           <End Role="Post" Type="Self.Post" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -541,7 +551,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Favourite__Topic__4BCC3ABA">
+        <Association Name="FK__Favourite__Topic__17C286CF">
           <End Role="Topic" Type="Self.Topic" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -555,7 +565,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Membershi__Badge__6D6238AF">
+        <Association Name="FK__Membershi__Badge__51300E55">
           <End Role="Badge" Type="Self.Badge" Multiplicity="1" />
           <End Role="MembershipUser_Badge" Type="Self.MembershipUser_Badge" Multiplicity="*" />
           <ReferentialConstraint>
@@ -567,7 +577,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Membershi__Membe__14B10FFA">
+        <Association Name="FK__Membershi__Membe__3F115E1A">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="MembershipUserPoints" Type="Self.MembershipUserPoints" Multiplicity="*" />
           <ReferentialConstraint>
@@ -579,7 +589,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Membershi__Membe__6E565CE8">
+        <Association Name="FK__Membershi__Membe__5224328E">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="MembershipUser_Badge" Type="Self.MembershipUser_Badge" Multiplicity="*" />
           <ReferentialConstraint>
@@ -591,7 +601,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Poll__Membership__44952D46">
+        <Association Name="FK__Poll__Membership__2BFE89A6">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="Poll" Type="Self.Poll" Multiplicity="*" />
           <ReferentialConstraint>
@@ -603,7 +613,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PollAnswe__Poll___7AF13DF7">
+        <Association Name="FK__PollAnswe__Poll___2EDAF651">
           <End Role="Poll" Type="Self.Poll" Multiplicity="1" />
           <End Role="PollAnswer" Type="Self.PollAnswer" Multiplicity="*" />
           <ReferentialConstraint>
@@ -615,7 +625,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PollVote__Member__10E07F16">
+        <Association Name="FK__PollVote__Member__31B762FC">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="PollVote" Type="Self.PollVote" Multiplicity="*" />
           <ReferentialConstraint>
@@ -627,7 +637,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PollVote__PollAn__11D4A34F">
+        <Association Name="FK__PollVote__PollAn__32AB8735">
           <End Role="PollAnswer" Type="Self.PollAnswer" Multiplicity="1" />
           <End Role="PollVote" Type="Self.PollVote" Multiplicity="*" />
           <ReferentialConstraint>
@@ -639,7 +649,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Post__Membership__67DE6983">
+        <Association Name="FK__Post__Membership__3587F3E0">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="Post" Type="Self.Post" Multiplicity="*" />
           <ReferentialConstraint>
@@ -651,7 +661,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PostFile__Member__6497E884">
+        <Association Name="FK__PostFile__Member__1B9317B3">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -663,7 +673,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PostFile__Post_I__63A3C44B">
+        <Association Name="FK__PostFile__Post_I__1A9EF37A">
           <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
           <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
           <ReferentialConstraint>
@@ -675,7 +685,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
+        <Association Name="FK__T_OE_DOCU__ORG_E__2F9A1060">
           <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
@@ -689,7 +699,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_DOCU__PROJE__190BB0C3">
+        <Association Name="FK__T_OE_DOCU__PROJE__2EA5EC27">
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
           </End>
@@ -703,7 +713,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_ORGA__ENT_P__07220AB2">
+        <Association Name="FK__T_OE_ORGA__ENT_P__44FF419A">
           <End Role="T_OE_REF_ENTERPRISE_PLATFORM" Type="Self.T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -717,7 +727,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_ORGA__EPA_R__1DB06A4F">
+        <Association Name="FK__T_OE_ORGA__EPA_R__3D5E1FD2">
           <End Role="T_OE_REF_REGION" Type="Self.T_OE_REF_REGION" Multiplicity="0..1" />
           <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="*" />
           <ReferentialConstraint>
@@ -729,35 +739,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_ORGA__ORG_I__062DE679">
-          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_ORGA__ORG_I__1F63A897">
-          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="T_OE_ORGANIZATION_TAGS" Type="Self.T_OE_ORGANIZATION_TAGS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION_TAGS">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_ORGA__ORG_I__54CB950F">
+        <Association Name="FK__T_OE_ORGA__ORG_I__1BC821DD">
           <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -771,7 +753,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_ORGA__STATE__1CBC4616">
+        <Association Name="FK__T_OE_ORGA__ORG_I__440B1D61">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__70DDC3D8">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_ORGANIZATION_TAGS" Type="Self.T_OE_ORGANIZATION_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_TAGS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__STATE__3C69FB99">
           <End Role="T_OE_REF_STATE" Type="Self.T_OE_REF_STATE" Multiplicity="0..1" />
           <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="*" />
           <ReferentialConstraint>
@@ -783,7 +793,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__ADV_M__6EC0713C">
+        <Association Name="FK__T_OE_PROJ__ADV_M__66603565">
           <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="0..1" />
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -795,7 +805,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__BP_MO__6FB49575">
+        <Association Name="FK__T_OE_PROJ__BP_MO__6754599E">
           <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="0..1" />
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -807,7 +817,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__MEDIA__6CD828CA">
+        <Association Name="FK__T_OE_PROJ__MEDIA__6477ECF3">
           <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="0..1" />
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -819,7 +829,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__MOBIL__6DCC4D03">
+        <Association Name="FK__T_OE_PROJ__MOBIL__656C112C">
           <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="0..1" />
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -831,7 +841,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__ORG_E__2D47B39A">
+        <Association Name="FK__T_OE_PROJ__ORG_E__7849DB76">
           <End Role="T_OE_ORGANIZATION_ENT_SVCS" Type="Self.T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1" />
           <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
           <ReferentialConstraint>
@@ -843,7 +853,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
+        <Association Name="FK__T_OE_PROJ__ORG_I__6383C8BA">
           <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="0..1" />
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -855,7 +865,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__VOTED__2B5F6B28">
+        <Association Name="FK__T_OE_PROJ__PROJE__6BAEFA67">
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECT_URLS" Type="Self.T_OE_PROJECT_URLS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_URLS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__VOTED__76619304">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="0..1" />
           <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
           <ReferentialConstraint>
@@ -867,7 +889,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_REF___TAG_C__6B24EA82">
+        <Association Name="FK__T_OE_REF___TAG_C__2D27B809">
           <End Role="T_OE_REF_TAG_CATEGORIES" Type="Self.T_OE_REF_TAG_CATEGORIES" Multiplicity="1" />
           <End Role="T_OE_REF_TAGS" Type="Self.T_OE_REF_TAGS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -879,7 +901,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_USER__ORG_I__2CF2ADDF">
+        <Association Name="FK__T_OE_USER__ORG_I__4CA06362">
           <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="0..1" />
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="*" />
           <ReferentialConstraint>
@@ -891,7 +913,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_USER__ROLE___30C33EC3">
+        <Association Name="FK__T_OE_USER__ROLE___52593CB8">
           <End Role="T_OE_ROLES" Type="Self.T_OE_ROLES" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -905,21 +927,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_USER__USER___1C873BEC">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="T_OE_USER_EXPERTISE" Type="Self.T_OE_USER_EXPERTISE" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_USER_EXPERTISE">
-              <PropertyRef Name="USER_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_USER__USER___31B762FC">
+        <Association Name="FK__T_OE_USER__USER___534D60F1">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -933,7 +941,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Topic__Category___6E8B6712">
+        <Association Name="FK__T_OE_USER__USER___787EE5A0">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="T_OE_USER_EXPERTISE" Type="Self.T_OE_USER_EXPERTISE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USER_EXPERTISE">
+              <PropertyRef Name="USER_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Topic__Category___3864608B">
           <End Role="Category" Type="Self.Category" Multiplicity="1" />
           <End Role="Topic" Type="Self.Topic" Multiplicity="*" />
           <ReferentialConstraint>
@@ -945,7 +967,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Topic__Membershi__6F7F8B4B">
+        <Association Name="FK__Topic__Membershi__395884C4">
           <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
           <End Role="Topic" Type="Self.Topic" Multiplicity="*" />
           <ReferentialConstraint>
@@ -957,7 +979,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Topic__Poll_Id__7073AF84">
+        <Association Name="FK__Topic__Poll_Id__3A4CA8FD">
           <End Role="Poll" Type="Self.Poll" Multiplicity="0..1" />
           <End Role="Topic" Type="Self.Topic" Multiplicity="*" />
           <ReferentialConstraint>
@@ -969,7 +991,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Topic__Post_Id__7167D3BD">
+        <Association Name="FK__Topic__Post_Id__3B40CD36">
           <End Role="Post" Type="Self.Post" Multiplicity="0..1" />
           <End Role="Topic" Type="Self.Topic" Multiplicity="*" />
           <ReferentialConstraint>
@@ -981,7 +1003,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Topic_Tag__Topic__4242D080">
+        <Association Name="FK__Topic_Tag__Topic__0A688BB1">
           <End Role="Topic" Type="Self.Topic" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -995,7 +1017,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__TopicNoti__Topic__3F6663D5">
+        <Association Name="FK__TopicNoti__Topic__0E391C95">
           <End Role="Topic" Type="Self.Topic" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -1009,7 +1031,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Vote__Post_Id__4707859D">
+        <Association Name="FK__Vote__Post_Id__12FDD1B2">
           <End Role="Post" Type="Self.Post" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
@@ -1127,6 +1149,7 @@
           <EntitySet Name="T_OE_ORGANIZATION_ENT_SVCS" EntityType="Self.T_OE_ORGANIZATION_ENT_SVCS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION_TAGS" EntityType="Self.T_OE_ORGANIZATION_TAGS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_PROJECT_TAGS" EntityType="Self.T_OE_PROJECT_TAGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_PROJECT_URLS" EntityType="Self.T_OE_PROJECT_URLS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_PROJECT_VOTES" EntityType="Self.T_OE_PROJECT_VOTES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_PROJECTS" EntityType="Self.T_OE_PROJECTS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_REF_ENTERPRISE_PLATFORM" EntityType="Self.T_OE_REF_ENTERPRISE_PLATFORM" Schema="dbo" store:Type="Tables" />
@@ -1157,167 +1180,171 @@
           <EntitySet Name="Topic_Tags" EntityType="Self.Topic_Tags" Schema="forum" store:Type="Tables" />
           <EntitySet Name="TopicNotification" EntityType="Self.TopicNotification" Schema="forum" store:Type="Tables" />
           <EntitySet Name="Vote" EntityType="Self.Vote" Schema="forum" store:Type="Tables" />
-          <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="Self.FK__Category__Catego__41B8C09B">
+          <AssociationSet Name="FK__Category__Catego__29221CFB" Association="Self.FK__Category__Catego__29221CFB">
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
           </AssociationSet>
-          <AssociationSet Name="FK__Favourite__Membe__49E3F248" Association="Self.FK__Favourite__Membe__49E3F248">
+          <AssociationSet Name="FK__Favourite__Membe__15DA3E5D" Association="Self.FK__Favourite__Membe__15DA3E5D">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Favourite" EntitySet="Favourite" />
           </AssociationSet>
-          <AssociationSet Name="FK__Favourite__PostI__4AD81681" Association="Self.FK__Favourite__PostI__4AD81681">
+          <AssociationSet Name="FK__Favourite__PostI__16CE6296" Association="Self.FK__Favourite__PostI__16CE6296">
             <End Role="Post" EntitySet="Post" />
             <End Role="Favourite" EntitySet="Favourite" />
           </AssociationSet>
-          <AssociationSet Name="FK__Favourite__Topic__4BCC3ABA" Association="Self.FK__Favourite__Topic__4BCC3ABA">
+          <AssociationSet Name="FK__Favourite__Topic__17C286CF" Association="Self.FK__Favourite__Topic__17C286CF">
             <End Role="Topic" EntitySet="Topic" />
             <End Role="Favourite" EntitySet="Favourite" />
           </AssociationSet>
-          <AssociationSet Name="FK__Membershi__Badge__6D6238AF" Association="Self.FK__Membershi__Badge__6D6238AF">
+          <AssociationSet Name="FK__Membershi__Badge__51300E55" Association="Self.FK__Membershi__Badge__51300E55">
             <End Role="Badge" EntitySet="Badge" />
             <End Role="MembershipUser_Badge" EntitySet="MembershipUser_Badge" />
           </AssociationSet>
-          <AssociationSet Name="FK__Membershi__Membe__14B10FFA" Association="Self.FK__Membershi__Membe__14B10FFA">
+          <AssociationSet Name="FK__Membershi__Membe__3F115E1A" Association="Self.FK__Membershi__Membe__3F115E1A">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="MembershipUserPoints" EntitySet="MembershipUserPoints" />
           </AssociationSet>
-          <AssociationSet Name="FK__Membershi__Membe__6E565CE8" Association="Self.FK__Membershi__Membe__6E565CE8">
+          <AssociationSet Name="FK__Membershi__Membe__5224328E" Association="Self.FK__Membershi__Membe__5224328E">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="MembershipUser_Badge" EntitySet="MembershipUser_Badge" />
           </AssociationSet>
-          <AssociationSet Name="FK__Poll__Membership__44952D46" Association="Self.FK__Poll__Membership__44952D46">
+          <AssociationSet Name="FK__Poll__Membership__2BFE89A6" Association="Self.FK__Poll__Membership__2BFE89A6">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Poll" EntitySet="Poll" />
           </AssociationSet>
-          <AssociationSet Name="FK__PollAnswe__Poll___7AF13DF7" Association="Self.FK__PollAnswe__Poll___7AF13DF7">
+          <AssociationSet Name="FK__PollAnswe__Poll___2EDAF651" Association="Self.FK__PollAnswe__Poll___2EDAF651">
             <End Role="Poll" EntitySet="Poll" />
             <End Role="PollAnswer" EntitySet="PollAnswer" />
           </AssociationSet>
-          <AssociationSet Name="FK__PollVote__Member__10E07F16" Association="Self.FK__PollVote__Member__10E07F16">
+          <AssociationSet Name="FK__PollVote__Member__31B762FC" Association="Self.FK__PollVote__Member__31B762FC">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="PollVote" EntitySet="PollVote" />
           </AssociationSet>
-          <AssociationSet Name="FK__PollVote__PollAn__11D4A34F" Association="Self.FK__PollVote__PollAn__11D4A34F">
+          <AssociationSet Name="FK__PollVote__PollAn__32AB8735" Association="Self.FK__PollVote__PollAn__32AB8735">
             <End Role="PollAnswer" EntitySet="PollAnswer" />
             <End Role="PollVote" EntitySet="PollVote" />
           </AssociationSet>
-          <AssociationSet Name="FK__Post__Membership__67DE6983" Association="Self.FK__Post__Membership__67DE6983">
+          <AssociationSet Name="FK__Post__Membership__3587F3E0" Association="Self.FK__Post__Membership__3587F3E0">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Post" EntitySet="Post" />
           </AssociationSet>
-          <AssociationSet Name="FK__PostFile__Member__6497E884" Association="Self.FK__PostFile__Member__6497E884">
+          <AssociationSet Name="FK__PostFile__Member__1B9317B3" Association="Self.FK__PostFile__Member__1B9317B3">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="PostFile" EntitySet="PostFile" />
           </AssociationSet>
-          <AssociationSet Name="FK__PostFile__Post_I__63A3C44B" Association="Self.FK__PostFile__Post_I__63A3C44B">
+          <AssociationSet Name="FK__PostFile__Post_I__1A9EF37A" Association="Self.FK__PostFile__Post_I__1A9EF37A">
             <End Role="Post" EntitySet="Post" />
             <End Role="PostFile" EntitySet="PostFile" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_DOCU__ORG_E__19FFD4FC" Association="Self.FK__T_OE_DOCU__ORG_E__19FFD4FC">
+          <AssociationSet Name="FK__T_OE_DOCU__ORG_E__2F9A1060" Association="Self.FK__T_OE_DOCU__ORG_E__2F9A1060">
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
             <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_DOCU__PROJE__190BB0C3" Association="Self.FK__T_OE_DOCU__PROJE__190BB0C3">
+          <AssociationSet Name="FK__T_OE_DOCU__PROJE__2EA5EC27" Association="Self.FK__T_OE_DOCU__PROJE__2EA5EC27">
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
             <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ENT_P__07220AB2" Association="Self.FK__T_OE_ORGA__ENT_P__07220AB2">
+          <AssociationSet Name="FK__T_OE_ORGA__ENT_P__44FF419A" Association="Self.FK__T_OE_ORGA__ENT_P__44FF419A">
             <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__EPA_R__1DB06A4F" Association="Self.FK__T_OE_ORGA__EPA_R__1DB06A4F">
+          <AssociationSet Name="FK__T_OE_ORGA__EPA_R__3D5E1FD2" Association="Self.FK__T_OE_ORGA__EPA_R__3D5E1FD2">
             <End Role="T_OE_REF_REGION" EntitySet="T_OE_REF_REGION" />
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__062DE679" Association="Self.FK__T_OE_ORGA__ORG_I__062DE679">
-            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
-            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__1F63A897" Association="Self.FK__T_OE_ORGA__ORG_I__1F63A897">
-            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
-            <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__54CB950F" Association="Self.FK__T_OE_ORGA__ORG_I__54CB950F">
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__1BC821DD" Association="Self.FK__T_OE_ORGA__ORG_I__1BC821DD">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_ORGANIZATION_EMAIL_RULE" EntitySet="T_OE_ORGANIZATION_EMAIL_RULE" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__STATE__1CBC4616" Association="Self.FK__T_OE_ORGA__STATE__1CBC4616">
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__440B1D61" Association="Self.FK__T_OE_ORGA__ORG_I__440B1D61">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__70DDC3D8" Association="Self.FK__T_OE_ORGA__ORG_I__70DDC3D8">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__STATE__3C69FB99" Association="Self.FK__T_OE_ORGA__STATE__3C69FB99">
             <End Role="T_OE_REF_STATE" EntitySet="T_OE_REF_STATE" />
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__ADV_M__6EC0713C" Association="Self.FK__T_OE_PROJ__ADV_M__6EC0713C">
+          <AssociationSet Name="FK__T_OE_PROJ__ADV_M__66603565" Association="Self.FK__T_OE_PROJ__ADV_M__66603565">
             <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__BP_MO__6FB49575" Association="Self.FK__T_OE_PROJ__BP_MO__6FB49575">
+          <AssociationSet Name="FK__T_OE_PROJ__BP_MO__6754599E" Association="Self.FK__T_OE_PROJ__BP_MO__6754599E">
             <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__MEDIA__6CD828CA" Association="Self.FK__T_OE_PROJ__MEDIA__6CD828CA">
+          <AssociationSet Name="FK__T_OE_PROJ__MEDIA__6477ECF3" Association="Self.FK__T_OE_PROJ__MEDIA__6477ECF3">
             <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__MOBIL__6DCC4D03" Association="Self.FK__T_OE_PROJ__MOBIL__6DCC4D03">
+          <AssociationSet Name="FK__T_OE_PROJ__MOBIL__656C112C" Association="Self.FK__T_OE_PROJ__MOBIL__656C112C">
             <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__ORG_E__2D47B39A" Association="Self.FK__T_OE_PROJ__ORG_E__2D47B39A">
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_E__7849DB76" Association="Self.FK__T_OE_PROJ__ORG_E__7849DB76">
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
             <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6BE40491" Association="Self.FK__T_OE_PROJ__ORG_I__6BE40491">
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6383C8BA" Association="Self.FK__T_OE_PROJ__ORG_I__6383C8BA">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__VOTED__2B5F6B28" Association="Self.FK__T_OE_PROJ__VOTED__2B5F6B28">
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__6BAEFA67" Association="Self.FK__T_OE_PROJ__PROJE__6BAEFA67">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_URLS" EntitySet="T_OE_PROJECT_URLS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__VOTED__76619304" Association="Self.FK__T_OE_PROJ__VOTED__76619304">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_REF___TAG_C__6B24EA82" Association="Self.FK__T_OE_REF___TAG_C__6B24EA82">
+          <AssociationSet Name="FK__T_OE_REF___TAG_C__2D27B809" Association="Self.FK__T_OE_REF___TAG_C__2D27B809">
             <End Role="T_OE_REF_TAG_CATEGORIES" EntitySet="T_OE_REF_TAG_CATEGORIES" />
             <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_USER__ORG_I__2CF2ADDF" Association="Self.FK__T_OE_USER__ORG_I__2CF2ADDF">
+          <AssociationSet Name="FK__T_OE_USER__ORG_I__4CA06362" Association="Self.FK__T_OE_USER__ORG_I__4CA06362">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_USER__ROLE___30C33EC3" Association="Self.FK__T_OE_USER__ROLE___30C33EC3">
+          <AssociationSet Name="FK__T_OE_USER__ROLE___52593CB8" Association="Self.FK__T_OE_USER__ROLE___52593CB8">
             <End Role="T_OE_ROLES" EntitySet="T_OE_ROLES" />
             <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_USER__USER___1C873BEC" Association="Self.FK__T_OE_USER__USER___1C873BEC">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="T_OE_USER_EXPERTISE" EntitySet="T_OE_USER_EXPERTISE" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_USER__USER___31B762FC" Association="Self.FK__T_OE_USER__USER___31B762FC">
+          <AssociationSet Name="FK__T_OE_USER__USER___534D60F1" Association="Self.FK__T_OE_USER__USER___534D60F1">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
           </AssociationSet>
-          <AssociationSet Name="FK__Topic__Category___6E8B6712" Association="Self.FK__Topic__Category___6E8B6712">
+          <AssociationSet Name="FK__T_OE_USER__USER___787EE5A0" Association="Self.FK__T_OE_USER__USER___787EE5A0">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="T_OE_USER_EXPERTISE" EntitySet="T_OE_USER_EXPERTISE" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Topic__Category___3864608B" Association="Self.FK__Topic__Category___3864608B">
             <End Role="Category" EntitySet="Category" />
             <End Role="Topic" EntitySet="Topic" />
           </AssociationSet>
-          <AssociationSet Name="FK__Topic__Membershi__6F7F8B4B" Association="Self.FK__Topic__Membershi__6F7F8B4B">
+          <AssociationSet Name="FK__Topic__Membershi__395884C4" Association="Self.FK__Topic__Membershi__395884C4">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Topic" EntitySet="Topic" />
           </AssociationSet>
-          <AssociationSet Name="FK__Topic__Poll_Id__7073AF84" Association="Self.FK__Topic__Poll_Id__7073AF84">
+          <AssociationSet Name="FK__Topic__Poll_Id__3A4CA8FD" Association="Self.FK__Topic__Poll_Id__3A4CA8FD">
             <End Role="Poll" EntitySet="Poll" />
             <End Role="Topic" EntitySet="Topic" />
           </AssociationSet>
-          <AssociationSet Name="FK__Topic__Post_Id__7167D3BD" Association="Self.FK__Topic__Post_Id__7167D3BD">
+          <AssociationSet Name="FK__Topic__Post_Id__3B40CD36" Association="Self.FK__Topic__Post_Id__3B40CD36">
             <End Role="Post" EntitySet="Post" />
             <End Role="Topic" EntitySet="Topic" />
           </AssociationSet>
-          <AssociationSet Name="FK__Topic_Tag__Topic__4242D080" Association="Self.FK__Topic_Tag__Topic__4242D080">
+          <AssociationSet Name="FK__Topic_Tag__Topic__0A688BB1" Association="Self.FK__Topic_Tag__Topic__0A688BB1">
             <End Role="Topic" EntitySet="Topic" />
             <End Role="Topic_Tags" EntitySet="Topic_Tags" />
           </AssociationSet>
-          <AssociationSet Name="FK__TopicNoti__Topic__3F6663D5" Association="Self.FK__TopicNoti__Topic__3F6663D5">
+          <AssociationSet Name="FK__TopicNoti__Topic__0E391C95" Association="Self.FK__TopicNoti__Topic__0E391C95">
             <End Role="Topic" EntitySet="Topic" />
             <End Role="TopicNotification" EntitySet="TopicNotification" />
           </AssociationSet>
-          <AssociationSet Name="FK__Vote__Post_Id__4707859D" Association="Self.FK__Vote__Post_Id__4707859D">
+          <AssociationSet Name="FK__Vote__Post_Id__12FDD1B2" Association="Self.FK__Vote__Post_Id__12FDD1B2">
             <End Role="Post" EntitySet="Post" />
             <End Role="Vote" EntitySet="Vote" />
           </AssociationSet>
@@ -1644,6 +1671,11 @@
           </AssociationSet>
           <EntitySet Name="T_OE_APP_SETTINGS_CUSTOM" EntityType="EECIPModel.T_OE_APP_SETTINGS_CUSTOM" />
           <FunctionImport Name="SP_ENT_SVC_COUNT_DISPLAY" ReturnType="Collection(EECIPModel.SP_ENT_SVC_COUNT_DISPLAY_Result)" />
+          <EntitySet Name="T_OE_PROJECT_URLS" EntityType="EECIPModel.T_OE_PROJECT_URLS" />
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__6BAEFA67" Association="EECIPModel.FK__T_OE_PROJ__PROJE__6BAEFA67">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_URLS" EntitySet="T_OE_PROJECT_URLS" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="T_OE_APP_SETTINGS">
           <Key>
@@ -1734,6 +1766,7 @@
           <NavigationProperty Name="Votes1" Relationship="EECIPModel.FK__Vote__VotedByMem__46136164" FromRole="T_OE_USERS" ToRole="Vote" />
           <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Member__60C757A0" FromRole="T_OE_USERS" ToRole="PostFile" />
           <Property Name="ALLOW_GOVERNANCE" Type="Boolean" Nullable="false" />
+          <Property Name="EXCLUDE_POINTS_IND" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK__T_OE_USER__USER___6477ECF3">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1">
@@ -1972,6 +2005,7 @@
           <Property Name="PROJECT_CONTACT_IDX" Type="Int32" />
           <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_VOTES" />
           <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_PROJECTS" ToRole="T_OE_DOCUMENTS" />
+          <NavigationProperty Name="T_OE_PROJECT_URLS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__6BAEFA67" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_URLS" />
         </EntityType>
         <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
           <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
@@ -2774,6 +2808,28 @@
           <Property Type="String" Name="ENT_PLATFORM_EXAMPLE" Nullable="true" MaxLength="100" />
           <Property Type="Int32" Name="CNT" Nullable="true" />
         </ComplexType>
+        <EntityType Name="T_OE_PROJECT_URLS">
+          <Key>
+            <PropertyRef Name="PROJECT_URL_IDX" />
+          </Key>
+          <Property Name="PROJECT_URL_IDX" Type="Guid" Nullable="false" />
+          <Property Name="PROJECT_IDX" Type="Guid" />
+          <Property Name="PROJECT_URL" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PROJ_URL_DESC" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__6BAEFA67" FromRole="T_OE_PROJECT_URLS" ToRole="T_OE_PROJECTS" />
+        </EntityType>
+        <Association Name="FK__T_OE_PROJ__PROJE__6BAEFA67">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECT_URLS" Role="T_OE_PROJECT_URLS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_URLS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2876,6 +2932,7 @@
           <EntitySetMapping Name="T_OE_USERS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_USERS">
               <MappingFragment StoreEntitySet="T_OE_USERS">
+                <ScalarProperty Name="EXCLUDE_POINTS_IND" ColumnName="EXCLUDE_POINTS_IND" />
                 <ScalarProperty Name="ALLOW_GOVERNANCE" ColumnName="ALLOW_GOVERNANCE" />
                 <ScalarProperty Name="LINKEDIN" ColumnName="LINKEDIN" />
                 <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
@@ -3318,6 +3375,16 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="T_OE_PROJECT_URLS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECT_URLS">
+              <MappingFragment StoreEntitySet="T_OE_PROJECT_URLS">
+                <ScalarProperty Name="PROJ_URL_DESC" ColumnName="PROJ_URL_DESC" />
+                <ScalarProperty Name="PROJECT_URL" ColumnName="PROJECT_URL" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+                <ScalarProperty Name="PROJECT_URL_IDX" ColumnName="PROJECT_URL_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

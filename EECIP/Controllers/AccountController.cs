@@ -48,7 +48,7 @@ namespace EECIP.Controllers
             Session.Clear();
 
             if (ModelState.IsValid)
-            { 
+            {
                 if (Membership.ValidateUser(model.UserName, model.Password))
                 {
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
@@ -59,7 +59,7 @@ namespace EECIP.Controllers
                     else
                     {
                         //set last login time and reset failed login attempts
-                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null);
+                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null,false);
                         return RedirectToAction("Index", "Dashboard");
                     }
 
@@ -182,7 +182,7 @@ namespace EECIP.Controllers
                             }
 
                             //update first name, last name, and agency
-                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null);
+                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null,false);
 
                             //redirect user to registration success view
                             return RedirectToAction("RegisterSuccess", "Account");
@@ -253,6 +253,7 @@ namespace EECIP.Controllers
                 model.ImageUniqueStr = (u.MODIFY_DT ?? u.CREATE_DT).ConvertOrDefault<DateTime>().Ticks.ToString();
                 model.ActInd = u.ACT_IND;
                 model.uListInd = a;
+                model.ExcludeBadges = u.EXCLUDE_POINTS_IND;
 
 
                 //expertise
@@ -291,7 +292,7 @@ namespace EECIP.Controllers
                         } catch { }
                     }
 
-                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin);
+                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin, model.ExcludeBadges);
 
                     //update user expertise
                     db_EECIP.DeleteT_OE_USER_EXPERTISE(model.UserIDX);

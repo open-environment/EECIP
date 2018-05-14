@@ -77,7 +77,7 @@ namespace EECIP.Models
         public string ImageUniqueStr { get; set; }
 
         public string uListInd { get; set; }
-
+        public bool ExcludeBadges { get; set; }
         //initialize
         public vmAccountUserProfile()
         {
