@@ -13,6 +13,14 @@ INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[EN
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[ENCRYPT_IND],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('AZURE_SEARCH_ADMIN_KEY','change.me','The Admin Key for the Azure Search service.',1,0,GetDate());
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[ENCRYPT_IND],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('AZURE_SEARCH_QUERY_KEY','change.me','The Query Key for the Azure Search service.',1,0,GetDate());
 
+INSERT INTO T_OE_APP_SETTINGS_CUSTOM ([TERMS_AND_CONDITIONS],[ANNOUNCEMENTS]) values ('<p>The access and use of e-Enterprise Community Inventory Platform (EECIP) requires the creation of a user ID and password that I must maintain and keep confidential.</p>	
+<p>By proceeding, you acknowledge that you fully understand and consent to all of the following:</p>	
+<ul><li>Any communications or information used, transmitted, or stored on EECIP may be used or disclosed for any lawful government purpose, including but not limited to, administrative purposes, penetration testing, communication security monitoring, personnel misconduct measures, law enforcement, and counterintelligence inquiries</li>	
+<li>At any time, parties may for any lawful government purpose, without notice, monitor, intercept, search, and seize any authorized or unauthorized communication or information used or stored on EECIP</li>	
+</ul><p>&nbsp;</p>	
+<p><strong>Privacy Statement</strong><br> Personal identifying information you provide will be used for the expressed purpose of registration to this site and for updating and correcting agency information as necessary. This information will not be made available for other purposes unless required by law. Your information will not be sold or otherwise transferred to an outside third party.</p>	
+<p>&nbsp;</p>','');
+
 
 --****************APP ROLES *****************************************************************************************
 insert into T_OE_ROLES (ROLE_NAME, ROLE_DESC, CREATE_USERIDX, CREATE_DT) values ('Admins', 'Application Administrator can access administrative functions', 0, GetDate());

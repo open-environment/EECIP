@@ -338,8 +338,8 @@
     <Content Include="App_Data\1b_CreateDatabaseForum.sql" />
     <Content Include="App_Data\1_CreateDatabase.sql" />
     <Content Include="App_Data\2_PopulateData.sql" />
-    <Content Include="App_Data\migrate existing URLs to new child table_09052018.sql" />
-    <Content Include="App_Data\ProjectUrl_08052018.sql" />
+    <Content Include="App_Data\20180509_MigrateProjectURL.sql" />
+    <Content Include="App_Data\20180508_ProjectUrl.sql" />
     <Content Include="App_Docs\ImportColumnsConfig.xml">
       <SubType>Designer</SubType>
     </Content>
