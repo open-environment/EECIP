@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\AppleTech\EECIP-master\EECIP\App_Logic\DataAccessLayer\eecipEFDataModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\dougt\Dropbox\open-environment\products\EECIP\EECIP\App_Logic\DataAccessLayer\eecipEFDataModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
