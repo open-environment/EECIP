@@ -253,8 +253,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 ACTIVE_INTEREST_IND = b.ACTIVE_INTEREST_IND ?? false,
                                 CREATE_DT = b.CREATE_DT,
                                 MODIFY_DT = b.MODIFY_DT,
-                                CREATE_USERIDX= b.CREATE_USERIDX,
-                                MODIFY_USERIDX =b.MODIFY_USERIDX
+                                CREATE_USERIDX = b.CREATE_USERIDX,
+                                MODIFY_USERIDX = b.MODIFY_USERIDX
                             }).ToList();
                 }
                 catch (Exception ex)

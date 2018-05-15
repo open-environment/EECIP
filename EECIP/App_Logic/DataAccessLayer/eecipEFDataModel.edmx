@@ -1410,20 +1410,6 @@
           <EntitySet Name="T_OE_USER_NOTIFICATION" EntityType="EECIPModel.T_OE_USER_NOTIFICATION" />
           <EntitySet Name="T_OE_USER_ROLES" EntityType="EECIPModel.T_OE_USER_ROLES" />
           <EntitySet Name="T_OE_USERS" EntityType="EECIPModel.T_OE_USERS" />
-          <EntitySet Name="Badges" EntityType="EECIPModel.Badge" />
-          <EntitySet Name="Categories" EntityType="EECIPModel.Category" />
-          <EntitySet Name="Favourites" EntityType="EECIPModel.Favourite" />
-          <EntitySet Name="MembershipUser_Badge" EntityType="EECIPModel.MembershipUser_Badge" />
-          <EntitySet Name="MembershipUserPoints" EntityType="EECIPModel.MembershipUserPoint" />
-          <EntitySet Name="Polls" EntityType="EECIPModel.Poll" />
-          <EntitySet Name="PollAnswers" EntityType="EECIPModel.PollAnswer" />
-          <EntitySet Name="PollVotes" EntityType="EECIPModel.PollVote" />
-          <EntitySet Name="Posts" EntityType="EECIPModel.Post" />
-          <EntitySet Name="PostFiles" EntityType="EECIPModel.PostFile" />
-          <EntitySet Name="Topics" EntityType="EECIPModel.Topic" />
-          <EntitySet Name="Topic_Tags" EntityType="EECIPModel.Topic_Tags" />
-          <EntitySet Name="TopicNotifications" EntityType="EECIPModel.TopicNotification" />
-          <EntitySet Name="Votes" EntityType="EECIPModel.Vote" />
           <AssociationSet Name="FK__T_OE_DOCU__ORG_E__19FFD4FC" Association="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC">
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
             <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
@@ -1516,6 +1502,20 @@
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
           </AssociationSet>
+          <EntitySet Name="Badges" EntityType="EECIPModel.Badge" />
+          <EntitySet Name="Categories" EntityType="EECIPModel.Category" />
+          <EntitySet Name="Favourites" EntityType="EECIPModel.Favourite" />
+          <EntitySet Name="MembershipUser_Badge" EntityType="EECIPModel.MembershipUser_Badge" />
+          <EntitySet Name="MembershipUserPoints" EntityType="EECIPModel.MembershipUserPoint" />
+          <EntitySet Name="Polls" EntityType="EECIPModel.Poll" />
+          <EntitySet Name="PollAnswers" EntityType="EECIPModel.PollAnswer" />
+          <EntitySet Name="PollVotes" EntityType="EECIPModel.PollVote" />
+          <EntitySet Name="Posts" EntityType="EECIPModel.Post" />
+          <EntitySet Name="PostFiles" EntityType="EECIPModel.PostFile" />
+          <EntitySet Name="Topics" EntityType="EECIPModel.Topic" />
+          <EntitySet Name="Topic_Tags" EntityType="EECIPModel.Topic_Tags" />
+          <EntitySet Name="TopicNotifications" EntityType="EECIPModel.TopicNotification" />
+          <EntitySet Name="Votes" EntityType="EECIPModel.Vote" />
           <AssociationSet Name="FK__Favourite__Membe__49E3F248" Association="EECIPModel.FK__Favourite__Membe__49E3F248">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Favourite" EntitySet="Favourites" />
@@ -2022,218 +2022,6 @@
           <NavigationProperty Name="Votes" Relationship="EECIPModel.FK_VoteMembership" FromRole="T_OE_USERS" ToRole="Vote" />
           <NavigationProperty Name="Votes1" Relationship="EECIPModel.FK_VoteMembershipBy" FromRole="T_OE_USERS" ToRole="Vote" />
         </EntityType>
-        <EntityType Name="Badge">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Image" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AwardsPoints" Type="Int32" />
-          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
-          <Property Name="SORT_SEQ" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="MembershipUser_Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="Badge" ToRole="MembershipUser_Badge" />
-        </EntityType>
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
-          <Property Name="ModerateTopics" Type="Boolean" Nullable="false" />
-          <Property Name="ModeratePosts" Type="Boolean" Nullable="false" />
-          <Property Name="SortOrder" Type="Int32" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
-          <Property Name="PageTitle" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
-          <Property Name="Path" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" />
-          <Property Name="MetaDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Colour" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Image" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Category_Id" Type="Guid" />
-          <NavigationProperty Name="Category1" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category" ToRole="Category1" />
-          <NavigationProperty Name="Category2" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category1" ToRole="Category" />
-          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Category___6E8B6712" FromRole="Category" ToRole="Topic" />
-        </EntityType>
-        <EntityType Name="Favourite">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="MemberId" Type="Int32" Nullable="false" />
-          <Property Name="PostId" Type="Guid" Nullable="false" />
-          <Property Name="TopicId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Favourite__Membe__49E3F248" FromRole="Favourite" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Favourite" ToRole="Post" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Favourite" ToRole="Topic" />
-        </EntityType>
-        <EntityType Name="MembershipUser_Badge">
-          <Key>
-            <PropertyRef Name="MembershipUser_Id" />
-            <PropertyRef Name="Badge_Id" />
-          </Key>
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <Property Name="Badge_Id" Type="Guid" Nullable="false" />
-          <Property Name="DateEarned" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Membershi__Membe__6E565CE8" FromRole="MembershipUser_Badge" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="MembershipUser_Badge" ToRole="Badge" />
-        </EntityType>
-        <EntityType Name="MembershipUserPoint">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Points" Type="Int32" Nullable="false" />
-          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="PointsFor" Type="Int32" Nullable="false" />
-          <Property Name="PointsForId" Type="Guid" />
-          <Property Name="Notes" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Membershi__Membe__14B10FFA" FromRole="MembershipUserPoint" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK_MembershipUserPoints" FromRole="MembershipUserPoint" ToRole="T_OE_USERS" />
-        </EntityType>
-        <EntityType Name="Poll">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ClosePollAfterDays" Type="Int32" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Poll__Membership__44952D46" FromRole="Poll" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="PollAnswers" Relationship="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" FromRole="Poll" ToRole="PollAnswer" />
-          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Poll" ToRole="Topic" />
-        </EntityType>
-        <EntityType Name="PollAnswer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Answer" Type="String" Nullable="false" MaxLength="600" FixedLength="false" Unicode="true" />
-          <Property Name="Poll_Id" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" FromRole="PollAnswer" ToRole="Poll" />
-          <NavigationProperty Name="PollVotes" Relationship="EECIPModel.FK__PollVote__PollAn__11D4A34F" FromRole="PollAnswer" ToRole="PollVote" />
-        </EntityType>
-        <EntityType Name="PollVote">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="PollAnswer_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PollVote__Member__10E07F16" FromRole="PollVote" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="PollAnswer" Relationship="EECIPModel.FK__PollVote__PollAn__11D4A34F" FromRole="PollVote" ToRole="PollAnswer" />
-        </EntityType>
-        <EntityType Name="Post">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="PostContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="VoteCount" Type="Int32" Nullable="false" />
-          <Property Name="DateEdited" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsSolution" Type="Boolean" Nullable="false" />
-          <Property Name="IsTopicStarter" Type="Boolean" />
-          <Property Name="FlaggedAsSpam" Type="Boolean" />
-          <Property Name="IpAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Pending" Type="Boolean" />
-          <Property Name="SearchField" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InReplyTo" Type="Guid" />
-          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Post__Membership__67DE6983" FromRole="Post" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Post" ToRole="Favourite" />
-          <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Post_I__63A3C44B" FromRole="Post" ToRole="PostFile" />
-          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Post" ToRole="Topic" />
-          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Post" ToRole="Vote" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.forum_Topic_Post_FK" FromRole="Post" ToRole="Topic" />
-        </EntityType>
-        <EntityType Name="PostFile">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Filename" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Post_Id" Type="Guid" />
-          <Property Name="FileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="FileDecription" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="FileContentType" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PostFile__Member__6497E884" FromRole="PostFile" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__PostFile__Post_I__63A3C44B" FromRole="PostFile" ToRole="Post" />
-        </EntityType>
-        <EntityType Name="Topic">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Solved" Type="Boolean" Nullable="false" />
-          <Property Name="SolvedReminderSent" Type="Boolean" />
-          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
-          <Property Name="Views" Type="Int32" />
-          <Property Name="IsSticky" Type="Boolean" Nullable="false" />
-          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
-          <Property Name="Pending" Type="Boolean" />
-          <Property Name="Category_Id" Type="Guid" Nullable="false" />
-          <Property Name="Post_Id" Type="Guid" />
-          <Property Name="Poll_Id" Type="Guid" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Topic__Membershi__6F7F8B4B" FromRole="Topic" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Category" Relationship="EECIPModel.FK__Topic__Category___6E8B6712" FromRole="Topic" ToRole="Category" />
-          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Topic" ToRole="Favourite" />
-          <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Topic" ToRole="Poll" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Topic" ToRole="Post" />
-          <NavigationProperty Name="Posts" Relationship="EECIPModel.forum_Topic_Post_FK" FromRole="Topic" ToRole="Post" />
-          <NavigationProperty Name="Topic_Tags" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic" ToRole="Topic_Tags" />
-          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="Topic" ToRole="TopicNotification" />
-        </EntityType>
-        <EntityType Name="Topic_Tags">
-          <Key>
-            <PropertyRef Name="Topic_Id" />
-            <PropertyRef Name="TopicTagAttribute" />
-            <PropertyRef Name="TopicTag" />
-          </Key>
-          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
-          <Property Name="TopicTagAttribute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TopicTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic_Tags" ToRole="Topic" />
-        </EntityType>
-        <EntityType Name="TopicNotification">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK_TopicNotification" FromRole="TopicNotification" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="TopicNotification" ToRole="Topic" />
-        </EntityType>
-        <EntityType Name="Vote">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Amount" Type="Int32" Nullable="false" />
-          <Property Name="DateVoted" Type="DateTime" Precision="3" />
-          <Property Name="Post_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <Property Name="VotedByMembershipUser_Id" Type="Int32" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK_VoteMembership" FromRole="Vote" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK_VoteMembershipBy" FromRole="Vote" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Vote" ToRole="Post" />
-        </EntityType>
         <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
           <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
@@ -2534,6 +2322,218 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Badge">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Image" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AwardsPoints" Type="Int32" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="SORT_SEQ" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MembershipUser_Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="Badge" ToRole="MembershipUser_Badge" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
+          <Property Name="ModerateTopics" Type="Boolean" Nullable="false" />
+          <Property Name="ModeratePosts" Type="Boolean" Nullable="false" />
+          <Property Name="SortOrder" Type="Int32" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="PageTitle" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+          <Property Name="Path" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" />
+          <Property Name="MetaDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Colour" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Image" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Category_Id" Type="Guid" />
+          <NavigationProperty Name="Category1" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category" ToRole="Category1" />
+          <NavigationProperty Name="Category2" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category1" ToRole="Category" />
+          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Category___6E8B6712" FromRole="Category" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="Favourite">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MemberId" Type="Int32" Nullable="false" />
+          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <Property Name="TopicId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Favourite__Membe__49E3F248" FromRole="Favourite" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Favourite" ToRole="Post" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Favourite" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="MembershipUser_Badge">
+          <Key>
+            <PropertyRef Name="MembershipUser_Id" />
+            <PropertyRef Name="Badge_Id" />
+          </Key>
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <Property Name="Badge_Id" Type="Guid" Nullable="false" />
+          <Property Name="DateEarned" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Membershi__Membe__6E565CE8" FromRole="MembershipUser_Badge" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="MembershipUser_Badge" ToRole="Badge" />
+        </EntityType>
+        <EntityType Name="MembershipUserPoint">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Points" Type="Int32" Nullable="false" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PointsFor" Type="Int32" Nullable="false" />
+          <Property Name="PointsForId" Type="Guid" />
+          <Property Name="Notes" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Membershi__Membe__14B10FFA" FromRole="MembershipUserPoint" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK_MembershipUserPoints" FromRole="MembershipUserPoint" ToRole="T_OE_USERS" />
+        </EntityType>
+        <EntityType Name="Poll">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClosePollAfterDays" Type="Int32" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Poll__Membership__44952D46" FromRole="Poll" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="PollAnswers" Relationship="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" FromRole="Poll" ToRole="PollAnswer" />
+          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Poll" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="PollAnswer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Answer" Type="String" Nullable="false" MaxLength="600" FixedLength="false" Unicode="true" />
+          <Property Name="Poll_Id" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" FromRole="PollAnswer" ToRole="Poll" />
+          <NavigationProperty Name="PollVotes" Relationship="EECIPModel.FK__PollVote__PollAn__11D4A34F" FromRole="PollAnswer" ToRole="PollVote" />
+        </EntityType>
+        <EntityType Name="PollVote">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="PollAnswer_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PollVote__Member__10E07F16" FromRole="PollVote" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="PollAnswer" Relationship="EECIPModel.FK__PollVote__PollAn__11D4A34F" FromRole="PollVote" ToRole="PollAnswer" />
+        </EntityType>
+        <EntityType Name="Post">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="PostContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="VoteCount" Type="Int32" Nullable="false" />
+          <Property Name="DateEdited" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsSolution" Type="Boolean" Nullable="false" />
+          <Property Name="IsTopicStarter" Type="Boolean" />
+          <Property Name="FlaggedAsSpam" Type="Boolean" />
+          <Property Name="IpAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pending" Type="Boolean" />
+          <Property Name="SearchField" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InReplyTo" Type="Guid" />
+          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Post__Membership__67DE6983" FromRole="Post" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Post" ToRole="Favourite" />
+          <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Post_I__63A3C44B" FromRole="Post" ToRole="PostFile" />
+          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Post" ToRole="Topic" />
+          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Post" ToRole="Vote" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.forum_Topic_Post_FK" FromRole="Post" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="PostFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Filename" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Post_Id" Type="Guid" />
+          <Property Name="FileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="FileDecription" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="FileContentType" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PostFile__Member__6497E884" FromRole="PostFile" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__PostFile__Post_I__63A3C44B" FromRole="PostFile" ToRole="Post" />
+        </EntityType>
+        <EntityType Name="Topic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Solved" Type="Boolean" Nullable="false" />
+          <Property Name="SolvedReminderSent" Type="Boolean" />
+          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Views" Type="Int32" />
+          <Property Name="IsSticky" Type="Boolean" Nullable="false" />
+          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
+          <Property Name="Pending" Type="Boolean" />
+          <Property Name="Category_Id" Type="Guid" Nullable="false" />
+          <Property Name="Post_Id" Type="Guid" />
+          <Property Name="Poll_Id" Type="Guid" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Topic__Membershi__6F7F8B4B" FromRole="Topic" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Category" Relationship="EECIPModel.FK__Topic__Category___6E8B6712" FromRole="Topic" ToRole="Category" />
+          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Topic" ToRole="Favourite" />
+          <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Topic" ToRole="Poll" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Topic" ToRole="Post" />
+          <NavigationProperty Name="Posts" Relationship="EECIPModel.forum_Topic_Post_FK" FromRole="Topic" ToRole="Post" />
+          <NavigationProperty Name="Topic_Tags" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic" ToRole="Topic_Tags" />
+          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="Topic" ToRole="TopicNotification" />
+        </EntityType>
+        <EntityType Name="Topic_Tags">
+          <Key>
+            <PropertyRef Name="Topic_Id" />
+            <PropertyRef Name="TopicTagAttribute" />
+            <PropertyRef Name="TopicTag" />
+          </Key>
+          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
+          <Property Name="TopicTagAttribute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TopicTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic_Tags" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="TopicNotification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK_TopicNotification" FromRole="TopicNotification" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="TopicNotification" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="Vote">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="DateVoted" Type="DateTime" Precision="3" />
+          <Property Name="Post_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <Property Name="VotedByMembershipUser_Id" Type="Int32" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK_VoteMembership" FromRole="Vote" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK_VoteMembershipBy" FromRole="Vote" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Vote" ToRole="Post" />
+        </EntityType>
         <Association Name="FK__Favourite__Membe__49E3F248">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="1" />
           <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
