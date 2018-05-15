@@ -13,19 +13,22 @@ namespace EECIP.App_Logic.DataAccessLayer
 {
 
 using System;
+    using System.Collections.Generic;
     
-public partial class SP_ENT_SVC_COUNT_DISPLAY_Result
+public partial class T_OE_PROJECT_URLS
 {
 
-    public int ENT_PLATFORM_IDX { get; set; }
+    public System.Guid PROJECT_URL_IDX { get; set; }
 
-    public string ENT_PLATFORM_NAME { get; set; }
+    public Nullable<System.Guid> PROJECT_IDX { get; set; }
 
-    public string ENT_PLATFORM_DESC { get; set; }
+    public string PROJECT_URL { get; set; }
 
-    public string ENT_PLATFORM_EXAMPLE { get; set; }
+    public string PROJ_URL_DESC { get; set; }
 
-    public Nullable<int> CNT { get; set; }
+
+
+    public virtual T_OE_PROJECTS T_OE_PROJECTS { get; set; }
 
 }
 

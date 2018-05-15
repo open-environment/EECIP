@@ -23,19 +23,65 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            @Html.TextAreaFor(model => model.IMPORT_BLOCK, new { @class = "form-control", @placeholder = "(make sure to include column headers when pasting...)", @rows="10" })
+                            @Html.TextAreaFor(model => model.IMPORT_BLOCK, new { @class = "form-control", @placeholder = "(make sure to include column headers when pasting...)", @rows = "10" })
                             @Html.ValidationMessageFor(model => model.IMPORT_BLOCK)
                         </div>
-                        <button type="submit" class="btn btn-primary">Import Data</button>
                     </div>
-                </div>
-                <div class="row">
-                </div>
+                         <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary">Import Data</button>
+                        </div>
+                        <div class="col-md-2 no-padding">
+                            <a href="@Url.Content("~/App_Docs/EntServicesImportTemplate.xlsx")">Download Service import template</a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Content("~/App_Docs/ProjectImportTemplate.xlsx")">Download Project import template</a>
+                        </div>                    
+                 </div>
+              <div class="row">
+              </div>
             </div>
         </section>
 }
     </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("ExportData", "Admin", FormMethod.Post, new { @class = "", enctype = "multipart/form-data", @id = "norepostform" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <section class="panel panel-default ">               
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">                           
+                                    <div class="form-group">
+                                        <table>                                           
+                                            <tr>                                              
+                                                <td style="padding:5px;">Projects</td>
+                                                <td style="padding:5px;">
+                                                    <input type="checkbox" name="exportdata" value="Projects" />
+                                                </td>                                               
+                                            </tr>                                           
+                                            <tr>                                                
+                                                <td style="padding:5px;">Services</td>
+                                                <td style="padding:5px;">
+                                                    <input type="checkbox" name="exportdata" value="Services" />
+                                                </td>                                               
+                                            </tr>
+                                            </table>
+                                    </div>                                
+                            <button type="submit" class="btn btn-primary">Export Data</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                </div>
+            </section>
+        }
+    </div>
+</div>
+
+
 @if (Model.projects != null)
 {
 <h3>Validation Summary</h3>

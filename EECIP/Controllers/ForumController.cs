@@ -36,18 +36,35 @@ namespace EECIP.Controllers
             return View();
         }    
 
+        //[Authorize]
+        //public ActionResult Create()
+        //{
+        //    var viewModel = new vmForumTopicCreate
+        //    {
+        //        SubscribeToTopic = true,
+        //        Categories = ddlForumHelpers.get_ddl_categories(),
+        //        OptionalPermissions = GetOptionalPermissions(),
+        //        IsTopicStarter = true,
+        //        SelectedTags = new List<string>(),
+        //        AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
+        //};
+
+        //    return View(viewModel);
+        //}
+
         [Authorize]
-        public ActionResult Create()
+        public ActionResult Create(Guid? id)
         {
             var viewModel = new vmForumTopicCreate
             {
                 SubscribeToTopic = true,
                 Categories = ddlForumHelpers.get_ddl_categories(),
+                Category = id.ConvertOrDefault<Guid>(),
                 OptionalPermissions = GetOptionalPermissions(),
                 IsTopicStarter = true,
                 SelectedTags = new List<string>(),
                 AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
-        };
+            };
 
             return View(viewModel);
         }

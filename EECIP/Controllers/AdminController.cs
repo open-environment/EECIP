@@ -7,6 +7,11 @@ using EECIP.App_Logic.BusinessLogicLayer;
 using EECIP.App_Logic.DataAccessLayer;
 using EECIP.Models;
 using System.Web.Security;
+using System.IO;
+using System.Text;
+using System.Data;
+using ClosedXML.Excel;
+using System.Web.Hosting;
 
 namespace EECIP.Controllers
 {
@@ -37,7 +42,7 @@ namespace EECIP.Controllers
                 {
                     int UserIDX = (int)Membership.GetUser(model.newUserEmail).ProviderUserKey;
                     //update first name and last name
-                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null,false);
                     TempData["Success"] = "User created and verification email sent to user.";
                 }
                 else
@@ -205,7 +210,8 @@ namespace EECIP.Controllers
         public ActionResult RefAgencies() {
             var model = new vmAdminAgencies
             {
-                agencies = db_Ref.GetT_OE_ORGANIZATION(false, false)
+               // agencies = db_Ref.GetT_OE_ORGANIZATION(false, false)
+                agencies = db_Ref.GetT_OE_ORGANIZATION(false, true)
             };
             return View(model);
         }
@@ -301,8 +307,105 @@ namespace EECIP.Controllers
                 return Json("Success");
         }
 
+        //*************************************** AGENCIES GOVERNANCE GROUP **********************************************************
+        // GET: /Admin/RefGovernanceAgencies
+        public ActionResult RefGovernanceAgencies()
+        {
+            var model = new vmAdminAgencies
+            {                
+                agencies = db_Ref.GetT_OE_GOVERNANCE_ORGANIZATION(false)
+            };
+            return View(model);
+        }
+        // GET: /Admin/RefGovernanceAgencyEdit
+        public ActionResult RefGovernanceAgencyEdit(Guid? id)
+        {
+            var model = new vmAdminAgencyEdit();
+            if (id != null)
+            {
+                model.agency = db_Ref.GetT_OE_ORGANIZATION_ByID(id.ConvertOrDefault<Guid>());
+                model.agency_emails = db_Ref.GetT_OE_ORGANIZATION_EMAIL_RULES_ByID(id.ConvertOrDefault<Guid>());
+            }
+            else //add new case
+            {
+                model.agency = new T_OE_ORGANIZATION();
+                model.agency.ORG_IDX = Guid.NewGuid();
+                model.agency.ACT_IND = true;
+                model.agency_emails = new List<T_OE_ORGANIZATION_EMAIL_RULE>();
+            }
+
+            return View(model);
+        }
+        // POST: /Admin/RefAgencyEdit
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult RefGovernanceAgencyEdit(T_OE_ORGANIZATION agency)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(agency.ORG_IDX, agency.ORG_ABBR, agency.ORG_NAME, agency.STATE_CD, agency.EPA_REGION, agency.ORG_TYPE, null, null, true, UserIDX);
+
+            if (SuccID != null)
+            {
+                AzureSearch.PopulateSearchIndexOrganization(SuccID);
+                TempData["Success"] = "Update successful.";
+            }
+            else
+                TempData["Error"] = "Error updating data.";
+
+            //return View(model);
+            return RedirectToAction("RefGovernanceAgencyEdit", new { id = SuccID });
+
+        }
+
+        // POST: /Admin/RefAgencyDelete
+        [HttpPost]
+        public JsonResult RefGovernanceAgencyDelete(string id)
+        {
+            Guid org = new Guid(id);
+            int SuccID = db_Ref.DeleteT_OE_ORGANIZATION(org);
+
+            //now delete from Azure
+            AzureSearch.DeleteSearchIndexAgency(id);
+
+            string response = "Success";
+            if (SuccID == -1)
+                response = "Cannot delete agency because agency users exist.";
+            else if (SuccID == -2)
+                response = "Cannot delete agency because agency projects exist.";
+            else if (SuccID == -3)
+                response = "Cannot delete agency because agency enterprise services exist.";
+
+            return Json(response);
+        }
 
 
+        // POST: /Admin/RefAgencyEditEmail
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult RefGovernanceAgencyEditEmail(vmAdminAgencyEdit model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            int SuccID = db_Ref.InsertT_OE_ORGANIZATION_EMAIL_RULE(model.agency.ORG_IDX, model.new_email, UserIDX);
+
+            if (SuccID == 1)
+                TempData["Success"] = "Update successful.";
+            else
+                TempData["Error"] = "Error updating data.";
+
+            return RedirectToAction("RefGovernanceAgencyEdit", new { id = model.agency.ORG_IDX });
+        }
+
+        // POST: /Admin/RefAgencyEditEmailDelete
+        [HttpPost]
+        public JsonResult RefGovernanceAgencyEditEmailDelete(string id, string id2)
+        {
+            Guid org = new Guid(id);
+            int SuccID = db_Ref.DeleteT_OE_ORGANIZATION_EMAIL_RULE(org, id2);
+            if (SuccID == 0)
+                return Json("Unable to delete record.");
+            else
+                return Json("Success");
+        }
         //*************************************** REF ENTPERISE SERVICES **********************************************************
         // GET: /Admin/RefEntServices
         public ActionResult RefEntServices()
@@ -723,8 +826,226 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+        //*************************************** EXPORT DATA **********************************************************
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult ExportData(string[] exportdata)
+        {
+            DataTable dtProject = new DataTable("Project");
+            DataTable dtServices = new DataTable("Service");
+            Guid? selAgency = null;
+            int UserIDX = db_Accounts.GetUserIDX();
 
+            // get agency for which the logged in user is associated
+            T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+            if (u != null && u.ORG_IDX != null)
+                selAgency = u.ORG_IDX.ConvertOrDefault<Guid>();
 
+            //if still no agency (and not an Admin, then return error)
+            if (!User.IsInRole("Admins") && (selAgency == null || selAgency == Guid.Empty || !db_Accounts.UserCanEditOrgIDX(UserIDX, selAgency.ConvertOrDefault<Guid>())))
+            {
+                TempData["Error"] = "You are not associated with an agency.";
+                return RedirectToAction("AccessDenied", "Home");
+            }
+            T_OE_ORGANIZATION o = db_Ref.GetT_OE_ORGANIZATION_ByID(selAgency.ConvertOrDefault<Guid>());
 
+            List<T_OE_ORGANIZATION> oOrgList = new List<T_OE_ORGANIZATION>();
+            if (User.IsInRole("Admins"))
+            {
+                oOrgList = db_Ref.GetT_OE_ORGANIZATION(true, true);
+            }
+            if (exportdata.Contains("Projects"))
+            {
+                dtProject.Columns.AddRange(new DataColumn[24] {
+                                            new DataColumn("Agency Name"),
+                                            new DataColumn("Record Source"),
+                                            new DataColumn("Project Name"),
+                                            new DataColumn("Project Description"),
+                                            new DataColumn("Media"),
+                                            new DataColumn("Start Year"),
+                                            new DataColumn("Project Status"),
+                                            new DataColumn("Year Last Updated"),
+                                            new DataColumn("Project URL"),
+                                            new DataColumn("Mobile Ind"),
+                                            new DataColumn("Mobile Description"),
+                                            new DataColumn("Adv Mon Ind"),
+                                            new DataColumn("Adv Mon Description"),
+                                            new DataColumn("BP Improvement Ind"),
+                                            new DataColumn("BP Improvement Desc"),
+                                            new DataColumn("COTS"),
+                                            new DataColumn("Vendor"),
+                                            new DataColumn("Project Contact"),
+                                            new DataColumn("EECIP Project ID"),
+                                            new DataColumn("Import ID"),
+                                            new DataColumn("Program Areas"),
+                                            new DataColumn("Features"),
+                                            new DataColumn("Delete Ind"),
+                                            new DataColumn("External Source ID")
+                                           });
+                foreach (var oOneOrgName in oOrgList)
+                {
+                    List<T_OE_PROJECTS> oProject = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(oOneOrgName.ORG_IDX.ConvertOrDefault<Guid>());
+                    foreach (var oOneProject in oProject)
+                    {
+                        string AgencyName = oOneOrgName.ORG_NAME;
+                        string RecordSource = oOneProject.RECORD_SOURCE;
+                        string ProjectName = oOneProject.PROJ_NAME;
+                        string ProjectDescription = oOneProject.PROJ_DESC;
+                        string Media = "";
+                        if (oOneProject.T_OE_REF_TAGS2 != null)
+                        {
+                            Media = oOneProject.T_OE_REF_TAGS2.TAG_NAME;
+                        }
+                        int? StartYear = oOneProject.START_YEAR;
+                        string ProjectStatus = oOneProject.PROJ_STATUS;
+                        int? YearLastUpdated = oOneProject.DATE_LAST_UPDATE;
+                        string ProjectURL = "";
+
+                        List<T_OE_PROJECT_URLS> oURL = db_EECIP.GetT_OE_PROJECTS_URL_ByProjIDX(oOneProject.PROJECT_IDX);
+                        foreach (var suburl in oURL)
+                        {
+                            if (suburl.PROJECT_URL != "")
+                            {
+                                if (ProjectURL == "")
+                                {
+                                    ProjectURL = suburl.PROJECT_URL;
+                                }
+                                else
+                                {
+                                    ProjectURL = ProjectURL + "|" + suburl.PROJECT_URL;
+                                }
+                            }
+                        }
+
+                        int? MobileInd = oOneProject.MOBILE_IND;
+                        string MobileDescription = oOneProject.MOBILE_DESC;
+                        int? AdvMonInd = oOneProject.ADV_MON_IND;
+                        string AdvMonDescription = oOneProject.ADV_MON_DESC;
+                        int? BPImprovementInd = oOneProject.BP_MODERN_IND;
+                        string BPImprovementDesc = oOneProject.BP_MODERN_DESC;
+                        string COTS = oOneProject.COTS;
+                        string Vendor = oOneProject.VENDOR;
+                        string ProjectContact = oOneProject.PROJECT_CONTACT;
+                        Guid EECIPProjectID = oOneProject.PROJECT_IDX;
+                        string ImportID = oOneProject.IMPORT_ID;
+                        string ProgramAreas = "";
+                        foreach (var subitem in oOneProject.T_OE_PROJECT_TAGS)
+                        {
+                            if (subitem.PROJECT_ATTRIBUTE == "Program Area")
+                            {
+                                if (ProgramAreas == "")
+                                {
+                                    ProgramAreas = subitem.PROJECT_TAG_NAME;
+                                }
+                                else
+                                {
+                                    ProgramAreas = ProgramAreas + "|" + subitem.PROJECT_TAG_NAME;
+                                }
+                            }
+                        }
+                        string ProjectFeature = "";
+                        foreach (var subfeature in oOneProject.T_OE_PROJECT_TAGS)
+                        {
+                            if (subfeature.PROJECT_ATTRIBUTE == "Project Feature")
+                            {
+                                if (ProjectFeature == "")
+                                {
+                                    ProjectFeature = subfeature.PROJECT_TAG_NAME;
+                                }
+                                else
+                                {
+                                    ProjectFeature = ProjectFeature + "|" + subfeature.PROJECT_TAG_NAME;
+                                }
+                            }
+                        }
+
+                        dtProject.Rows.Add(AgencyName, RecordSource, ProjectName, ProjectDescription, Media, StartYear, ProjectStatus, YearLastUpdated, ProjectURL, MobileInd,
+                             MobileDescription, AdvMonInd, AdvMonDescription, BPImprovementInd, BPImprovementDesc, COTS, Vendor, ProjectContact, EECIPProjectID, ImportID,
+                             ProgramAreas, ProjectFeature, "", "");
+
+                    }
+                }
+            }
+            if (exportdata.Contains("Services"))
+            {
+                dtServices.Columns.AddRange(new DataColumn[15] {
+                                            new DataColumn("Agency Name"),
+                                            new DataColumn("Record Source"),
+                                            new DataColumn("Enterprise Service Name"),
+                                            new DataColumn("Active Interest IND"),
+                                            new DataColumn("Project Name"),
+                                            new DataColumn("Vendor"),
+                                            new DataColumn("Status"),
+                                            new DataColumn("Project Contact"),
+                                            new DataColumn("Comments"),
+                                            new DataColumn("EECIP Ent Service ID"),
+                                            new DataColumn("Import ID"),
+                                            new DataColumn("Created By"),
+                                            new DataColumn("Created Date"),
+                                            new DataColumn("Last Modified By"),
+                                            new DataColumn("Last Modified Date")
+                                           });
+                foreach (var oOneOrgName in oOrgList)
+                {
+                    List<OrganizationEntServicesDisplayType> oServicesList = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_NoLeftJoin(oOneOrgName.ORG_IDX.ConvertOrDefault<Guid>());
+
+                    foreach (var oOneService in oServicesList)
+                    {
+                        string AgencyName = oOneOrgName.ORG_NAME;
+                        string RecordSource = oOneService.RECORD_SOURCE;
+                        string EnterpriseServiceName = oOneService.ENT_PLATFORM_NAME;
+                        bool ActiveInterestIND = oOneService.ACTIVE_INTEREST_IND;
+                        string ProjectName = oOneService.PROJECT_NAME;
+                        string Vendor = oOneService.VENDOR;
+                        string ProjectStatus = oOneService.IMPLEMENT_STATUS;
+                        string ProjectContact = oOneService.PROJECT_CONTACT;
+                        string Comments = oOneService.COMMENTS;
+                        int? EECIPEntServiceID = oOneService.ORG_ENT_SVCS_IDX;
+                        string ImportID = "";
+                        int? CreatedBy = oOneService.CREATE_USERIDX;
+                        DateTime? CreatedDate = oOneService.CREATE_DT;
+                        int? LastModifiedBy = oOneService.MODIFY_USERIDX;
+                        DateTime? LastModifiedDate = oOneService.MODIFY_DT;
+
+                        dtServices.Rows.Add(AgencyName, RecordSource, EnterpriseServiceName, ActiveInterestIND, ProjectName, Vendor, ProjectStatus, ProjectContact,
+                            Comments, EECIPEntServiceID, ImportID, CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate);
+
+                    }
+                }
+            }
+            DataSet dsExport = new DataSet();
+            if (dtProject.Rows.Count > 0)
+            {
+                dsExport.Tables.Add(dtProject);
+            }
+            if (dtServices.Rows.Count > 0)
+            {
+                dsExport.Tables.Add(dtServices);
+            }
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dsExport);
+                wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                wb.Style.Font.Bold = true;
+
+                Response.Clear();
+                Response.Buffer = true;
+                Response.Charset = "";
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;filename= ProjectsAndServicesReport.xlsx");
+
+                using (MemoryStream MyMemoryStream = new MemoryStream())
+                {
+                    wb.SaveAs(MyMemoryStream);
+                    MyMemoryStream.WriteTo(Response.OutputStream);
+
+                    Response.Flush();
+                    Response.End();
+                }
+            }
+           
+            return View();
+        }
+
+       
     }
 }

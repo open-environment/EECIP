@@ -90,6 +90,8 @@
         <AssociationConnector Association="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_APP_SETTINGS_CUSTOM" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECT_URLS" Width="3.125" PointX="9.375" PointY="15.5" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__PROJE__6BAEFA67" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -14,6 +14,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Guid? ORG_IDX { get; set; }
         public int ENT_PLATFORM_IDX { get; set; }
         public string ENT_PLATFORM_NAME { get; set; }
+        public string RECORD_SOURCE { get; set; }
         public string ENT_PLATFORM_DESC { get; set; }
         public string PROJECT_NAME { get; set; }
         public string VENDOR { get; set; }
@@ -243,6 +244,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 ORG_IDX = b.ORG_IDX,
                                 ENT_PLATFORM_IDX = a.ENT_PLATFORM_IDX,
                                 ENT_PLATFORM_NAME = a.ENT_PLATFORM_NAME,
+                                RECORD_SOURCE = b.RECORD_SOURCE,
                                 PROJECT_NAME = b.PROJECT_NAME,
                                 VENDOR = b.VENDOR,
                                 IMPLEMENT_STATUS = b.IMPLEMENT_STATUS,
@@ -250,7 +252,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 PROJECT_CONTACT = b.PROJECT_CONTACT,
                                 ACTIVE_INTEREST_IND = b.ACTIVE_INTEREST_IND ?? false,
                                 CREATE_DT = b.CREATE_DT,
-                                MODIFY_DT = b.MODIFY_DT
+                                MODIFY_DT = b.MODIFY_DT,
+                                CREATE_USERIDX= b.CREATE_USERIDX,
+                                MODIFY_USERIDX =b.MODIFY_USERIDX
                             }).ToList();
                 }
                 catch (Exception ex)
@@ -489,7 +493,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     return null;
                 }
             }
-        }
+        }      
 
         public static T_OE_PROJECTS GetT_OE_PROJECTS_ByIDX(Guid? ProjectIDX)
         {
@@ -878,7 +882,68 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<T_OE_PROJECT_URLS> GetT_OE_PROJECTS_URL_ByProjIDX(Guid ProjectIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_PROJECT_URLS
+                               where a.PROJECT_IDX == ProjectIDX
+                               select a).ToList();
 
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int InsertT_OE_PROJECTS_URL(Guid pROJECT_IDX, string uRL, string pROJECT_URL_DESC)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_PROJECT_URLS e = new T_OE_PROJECT_URLS();
+                    e.PROJECT_URL_IDX = Guid.NewGuid();
+                    e.PROJECT_IDX = pROJECT_IDX;
+                    e.PROJECT_URL = uRL;
+                    e.PROJ_URL_DESC = pROJECT_URL_DESC;                   
+
+                    ctx.T_OE_PROJECT_URLS.Add(e);
+
+                    ctx.SaveChanges();
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int DeleteT_OE_PROJECTS_URL(Guid ProjectID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    ctx.Database.ExecuteSqlCommand("DELETE FROM T_OE_PROJECT_URLS where PROJECT_IDX = '" + ProjectID + "'");
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
         //***************************project local (temp when importing)****************************************
         /// <summary>

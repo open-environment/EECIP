@@ -142,7 +142,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
         public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, 
             DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE, 
-            string lINKED_IN, bool? NodeAdmin)
+            string lINKED_IN, bool? NodeAdmin, bool? ExcludeBadges)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -168,6 +168,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (jOB_TITLE != null) row.JOB_TITLE = jOB_TITLE;
                     if (lINKED_IN != null) row.LINKEDIN = lINKED_IN;
                     if (NodeAdmin != null) row.NODE_ADMIN = NodeAdmin ?? false;
+                    if (ExcludeBadges != null) row.EXCLUDE_POINTS_IND = (bool)ExcludeBadges;
 
                     row.MODIFY_DT = System.DateTime.Now;
 
@@ -196,7 +197,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 catch (Exception ex)
                 {
                     //set to inactive if cannot delete
-                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null);
+                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null,false);
                     db_Ref.LogEFException(ex);
                     return 0;
                 }

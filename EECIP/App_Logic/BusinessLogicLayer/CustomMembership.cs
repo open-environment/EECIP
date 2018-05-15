@@ -86,7 +86,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 string salt = GenerateSalt();
                 string hashpass = HashPassword(newPassword, _PasswordFormat, salt);
                 //save updated information
-                if (db_Accounts.UpdateT_OE_USERS(u.USER_IDX, hashpass, salt, null, null, null, null, false, null, null, null, null, 0, null, null, null, null, null) == 1)
+                if (db_Accounts.UpdateT_OE_USERS(u.USER_IDX, hashpass, salt, null, null, null, null, false, null, null, null, null, 0, null, null, null, null, null,false) == 1)
                     return true;
                 else
                     return false;
@@ -211,7 +211,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 string hashpass = HashPassword(newPass, _PasswordFormat, salt);
 
                 //save updated hashed password and salt
-                if (db_Accounts.UpdateT_OE_USERS(u.USER_IDX, hashpass, salt, null, null, null, null, true, null, null, null, null, null, 0, null, null, null, null) == 1)
+                if (db_Accounts.UpdateT_OE_USERS(u.USER_IDX, hashpass, salt, null, null, null, null, true, null, null, null, null, null, 0, null, null, null, null,false) == 1)
                 {
                     //encrypt username for email
                     string encryptOauth = new SimpleAES().Encrypt(newPass + "||" + username);
@@ -257,7 +257,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     return true;
                 else
                 {
-                    db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, u.LOG_ATMPT.ConvertOrDefault<int>() < MaxInvalidPasswordAttempts, null, null, null, null, null, null, u.LOG_ATMPT.ConvertOrDefault<int>() + 1, null, null, null, null);
+                    db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, u.LOG_ATMPT.ConvertOrDefault<int>() < MaxInvalidPasswordAttempts, null, null, null, null, null, null, u.LOG_ATMPT.ConvertOrDefault<int>() + 1, null, null, null, null,false);
 
                     //user account is locked due to too many invalid login attempts
                     if (u.LOG_ATMPT.ConvertOrDefault<int>() + 1 > MaxInvalidPasswordAttempts)

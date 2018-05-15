@@ -572,14 +572,43 @@
             //pagination handling
             $('.page-item a').click(function (e) {
                 var txt = $(e.target).text();
-                if (txt == 'Next')
-                    $('#currentPage').val($('#currentPage').val() + 1);
+                var _totalRec = @(Model.searchResults != null ? Model.searchResults.Count : 1);
+                var _totalPages = Math.round(_totalRec / 50) + 1;
+                if (txt == 'Next') {
+                    if (parseInt($('#currentPage').val()) == _totalPages) {
+                        return false;
+                    }
+                    else {
+                        $('#currentPage').val(parseInt($('#currentPage').val()) + 1);
+                    }
+                }
                 else if (txt == 'Previous')
-                    $('#currentPage').val($('#currentPage').val() - 1);
+                {
+                    if (parseInt($('#currentPage').val()) == 1) {
+                        return false;
+                    }
+                    else {
+                        $('#currentPage').val($('#currentPage').val() - 1);
+                    }
+                }
                 else if (txt == 'First')
-                    $('#currentPage').val(1);
+                {
+                    if (parseInt($('#currentPage').val()) == 1) {
+                        return false;
+                    }
+                    else {
+                        $('#currentPage').val(1);
+                    }
+                }
                 else if (txt == 'Last')
-                    $('#currentPage').val($('#currentPage').val() + 1);
+                {
+                    if (parseInt($('#currentPage').val()) == _totalPages) {
+                        return false;
+                    }
+                    else {
+                        $('#currentPage').val(_totalPages);
+                    }
+                }
                 else
                     $('#currentPage').val(txt);
                 $('#norepostform').submit();

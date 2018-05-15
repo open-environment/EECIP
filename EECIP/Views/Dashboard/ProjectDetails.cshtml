@@ -5,7 +5,7 @@
     ViewBag.SubTitle = "for " + Model.orgName;
 }
 
-@using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id="norepostform", enctype = "multipart/form-data" }))
+@using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id = "norepostform", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.project.ORG_IDX)
@@ -92,7 +92,7 @@
                     </a>
                 </div>
             </div>
-            <div class="panel-body">
+            <div class="panel-body" style="max-height: 500px;overflow-y: auto;">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -139,7 +139,7 @@
                             @Html.ValidationMessageFor(model => model.project.MOBILE_IND)
                         </div>
                     </div>
-                    <div id="mobiledesc" class="col-md-6" style="display: none;" >
+                    <div id="mobiledesc" class="col-md-6" style="display: none;">
                         <div class="form-group">
                             <label>Describe</label>
                             @Html.TextBoxFor(model => model.project.MOBILE_DESC, new { @class = "form-control", @maxlength = "100" })
@@ -161,20 +161,59 @@
                         </div>
                     </div>
                 </div>
+                @*<div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label>Project URL</label>
+                    <span class="input-icon input-icon-right">
+                        @Html.TextBoxFor(model => model.project.PROJECT_URL, new { @class = "form-control", @maxlength = "200" })
+                        <i class="clip-question-2 input-tooltip popovers" data-content="Provide a link to the project's website" data-placement="left" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                    </span>
+                    @Html.ValidationMessageFor(model => model.project.PROJECT_URL)
+                    <span class="help-block"><i class="clip-info"></i> Provide a link to the project's website</span>
+                </div>
+            </div>
+        </div>*@
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Project URL</label>
-                            <span class="input-icon input-icon-right">
-                                @Html.TextBoxFor(model => model.project.PROJECT_URL, new { @class = "form-control", @maxlength = "200" })
-                                <i class="clip-question-2 input-tooltip popovers" data-content="Provide a link to the project's website" data-placement="left" data-trigger="hover" data-rel="popover" data-original-title=""></i>
-                            </span>
-                            @Html.ValidationMessageFor(model => model.project.PROJECT_URL)
-                            <span class="help-block"><i class="clip-info"></i> Provide a link to the project's website</span>
+                        <div class="form-group">                        
+                            <input id="btnAdd" type="button" value="Add Project URL" onclick="AddProjectURL();" />
+                            <br />
+                            <br />
+                            <div id="divurl">
+                                <!--Textboxes will be added here -->
+                                @{
+                                    var index = 0;
+                                }
+                                @foreach (var item in Model.sProjectUrlList)
+                                {
+
+                                    var sProjectUrlLabel = "sProjectUrlList" + index + "_Name";
+                                    var sProjectUrl = "sProjectUrlList" + index + "_PROJECT_URL";
+                                    var sProjectUrlName = "sProjectUrlList[" + index + "].PROJECT_URL";
+
+                                    var sProjectDescLabel = "sProjectUrlList" + index + "_DESC";
+                                    var sProjectDesc = "sProjectUrlList" + index + "_PROJ_URL_DESC";
+                                    var sProjectDescName = "sProjectUrlList[" + index + "].PROJ_URL_DESC";
+
+                                <span>
+                                <label for=@sProjectUrlLabel>URL</label>
+                                <input id=@sProjectUrl class="text-box single-line"
+                                       type="text" value=@item.PROJECT_URL name=@sProjectUrlName>
+
+                                <label for=@sProjectDescLabel>Description</label>
+                                <input id=@sProjectDesc class="text-box single-line"
+                                       type="text" value="@item.PROJ_URL_DESC" name=@sProjectDescName>
+
+                                <a href="#" onclick="RemoveTextBox(this)">Remove</a>
+                                <br /><br />
+                                </span>
+                                index++;
+                                }
+                            </div>                          
                         </div>
                     </div>
-                </div>
-
+                </div>               
             </div>
         </section>
     </div>
@@ -226,9 +265,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </section>
     </section>
@@ -249,42 +285,50 @@
                         <ul>
                             @foreach (var file in Model.files_existing.OrderByDescending(o => o.CREATE_DT))
                             {
-                                <li>
-                                    <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
+                            <li>
+                                <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
                                     @if (Utils.FileIsImage(file.DOC_NAME))
                                     {
-                                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
                                     }
                                     else
                                     {
-                                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
                                     }
-                                    </a>
-                                    <a href="@Url.Action("ProjectFileDelete", "Dashboard", new { id = file.DOC_IDX })" class="deleteupload" title="Delete">
-                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                    </a>
-                                    
-                                    <div class="postedfilename">@file.DOC_NAME</div>
-                                </li>
+                                </a>
+                                <a href="@Url.Action("ProjectFileDelete", "Dashboard", new { id = file.DOC_IDX })" class="deleteupload" title="Delete">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </a>
+
+                                <div class="postedfilename">@file.DOC_NAME</div>
+                                <div>
+                                    @file.DOC_COMMENT
+                                </div>
+                            </li>
+                                
                             }
                         </ul>
                     </div>
                 }
 
-                <div class="col-md-10 col-md-offset-1 topiccategory">
-                    <div class="form-group createuploadfiles">
-                        @Html.LabelFor(x => x.files)
-                        <div class="input-group input-group-sm">
-                            <span class="input-group-btn">
-                                <span class="btn btn-default btn-file">
-                                    Browse <input type="file" name="files" id="files" value="">
+                    <div class="col-md-10 col-md-offset-1 topiccategory">
+                        <div class="form-group createuploadfiles">
+                            @Html.LabelFor(x => x.files)
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-btn">
+                                    <span class="btn btn-default btn-file">
+                                        Browse <input type="file" name="files" id="files" value="">
+                                    </span>
                                 </span>
-                            </span>
-                            <input id="filename1" type="text" class="form-control" readonly="">
+                                <input id="filename1" type="text" class="form-control" readonly="">
+                            </div>
+                            @Html.ValidationMessageFor(x => x.files)
                         </div>
-                        @Html.ValidationMessageFor(x => x.files)
+                        <div class="form-group">
+                            <label>Description</label>
+                            @Html.TextBoxFor(model => model.FileDescription, new { @class = "form-control", @maxlength = "200" })
+                        </div>
                     </div>
-                </div>
 
             </div>
         </section>
@@ -393,6 +437,35 @@
                 }
             }
         });
+       
+        function RemoveTextBox(button) {
+            $(button).parent().remove();
+        }
+       
+        function AddProjectURL() {
+            var m = $('#divurl input:last').attr('name');
+            var index = 0;
+            var indexnew = 0
+            if (m != null && m.length > 0) {
+                index = m.split('sProjectUrlList[')[1].replace('].PROJ_URL_DESC', '');
+                index++;
+            }
 
+            var html = '<span>'+
+                '<label for=\"sProjectUrlList' + index + '_Name\">URL</label>' +
+                '<input id=\"sProjectUrlList' + index + '_PROJECT_URL\" class=\"text-box single-line\"' +
+                ' type=\"text\" value=\"\" name=\"sProjectUrlList[' + index + '].PROJECT_URL\">' +
+
+                '<label for=\"sProjectUrlList' + index + '_DESC\">Description</label>' +
+                '<input id=\"sProjectUrlList' + index + '_PROJ_URL_DESC\" class=\"text-box single-line\"' +
+                ' type=\"text\" value=\"\" name=\"sProjectUrlList[' + index + '].PROJ_URL_DESC\">' +
+
+                '<a href="\#"\ onclick=\"RemoveTextBox(this)\">Remove</a>'+              
+                '<br/><br/></span>';
+
+
+            $('#divurl').append(html);
+
+        };
     </script>
 }
