@@ -30,7 +30,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<int> CREATE_USERIDX { get; set; }
         public Nullable<System.DateTime> CREATE_DT { get; set; }
     
-        public virtual T_OE_REF_TAG_CATEGORIES T_OE_REF_TAG_CATEGORIES { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_PROJECTS> T_OE_PROJECTS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -39,5 +38,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual ICollection<T_OE_PROJECTS> T_OE_PROJECTS2 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_PROJECTS> T_OE_PROJECTS3 { get; set; }
+        public virtual T_OE_REF_TAG_CATEGORIES T_OE_REF_TAG_CATEGORIES { get; set; }
     }
 }

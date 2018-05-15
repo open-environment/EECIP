@@ -20,10 +20,10 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<System.Guid> Post_Id { get; set; }
         public byte[] FileContent { get; set; }
         public string FileDecription { get; set; }
-        public int MembershipUser_Id { get; set; }
         public string FileContentType { get; set; }
+        public int MembershipUser_Id { get; set; }
     
-        public virtual Post Post { get; set; }
         public virtual T_OE_USERS T_OE_USERS { get; set; }
+        public virtual Post Post { get; set; }
     }
 }

@@ -17,8 +17,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Poll()
         {
-            this.Topics = new HashSet<Topic>();
             this.PollAnswers = new HashSet<PollAnswer>();
+            this.Topics = new HashSet<Topic>();
         }
     
         public System.Guid Id { get; set; }
@@ -27,10 +27,10 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<int> ClosePollAfterDays { get; set; }
         public int MembershipUser_Id { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Topic> Topics { get; set; }
+        public virtual T_OE_USERS T_OE_USERS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PollAnswer> PollAnswers { get; set; }
-        public virtual T_OE_USERS T_OE_USERS { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Topic> Topics { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public System.Guid PollAnswer_Id { get; set; }
         public int MembershipUser_Id { get; set; }
     
-        public virtual PollAnswer PollAnswer { get; set; }
         public virtual T_OE_USERS T_OE_USERS { get; set; }
+        public virtual PollAnswer PollAnswer { get; set; }
     }
 }

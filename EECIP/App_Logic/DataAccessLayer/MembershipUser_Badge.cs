@@ -18,7 +18,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public System.Guid Badge_Id { get; set; }
         public System.DateTime DateEarned { get; set; }
     
-        public virtual Badge Badge { get; set; }
         public virtual T_OE_USERS T_OE_USERS { get; set; }
+        public virtual Badge Badge { get; set; }
     }
 }

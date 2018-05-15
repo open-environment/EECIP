@@ -21,8 +21,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public int MembershipUser_Id { get; set; }
         public Nullable<int> VotedByMembershipUser_Id { get; set; }
     
-        public virtual Post Post { get; set; }
         public virtual T_OE_USERS T_OE_USERS { get; set; }
         public virtual T_OE_USERS T_OE_USERS1 { get; set; }
+        public virtual Post Post { get; set; }
     }
 }

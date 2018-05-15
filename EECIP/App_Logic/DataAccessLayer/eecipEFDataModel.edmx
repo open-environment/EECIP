@@ -1383,115 +1383,106 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="EECIPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="T_OE_ROLES">
-          <Key>
-            <PropertyRef Name="ROLE_IDX" />
-          </Key>
-          <Property Name="ROLE_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ROLE_NAME" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ROLE_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <Property Name="MODIFY_USERIDX" Type="Int32" />
-          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_USER_ROLES" Relationship="Self.FK__T_OE_USER__ROLE___1BFD2C07" FromRole="T_OE_ROLES" ToRole="T_OE_USER_ROLES" />
-        </EntityType>
-        <EntityType Name="T_OE_SYS_EMAIL_LOG">
-          <Key>
-            <PropertyRef Name="EMAIL_LOG_ID" />
-          </Key>
-          <Property Name="EMAIL_LOG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LOG_DT" Type="DateTime" Precision="0" />
-          <Property Name="LOG_FROM" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="LOG_TO" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="LOG_CC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="LOG_SUBJ" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="LOG_MSG" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="EMAIL_TYPE" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="T_OE_SYS_LOG">
-          <Key>
-            <PropertyRef Name="SYS_LOG_ID" />
-          </Key>
-          <Property Name="SYS_LOG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LOG_DT" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="LOG_USERIDX" Type="Int32" />
-          <Property Name="LOG_TYPE" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="LOG_MSG" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="T_OE_USER_ROLES">
-          <Key>
-            <PropertyRef Name="USER_ROLE_IDX" />
-          </Key>
-          <Property Name="USER_ROLE_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
-          <Property Name="ROLE_IDX" Type="Int32" Nullable="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_ROLES" Relationship="Self.FK__T_OE_USER__ROLE___1BFD2C07" FromRole="T_OE_USER_ROLES" ToRole="T_OE_ROLES" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__USER___31B762FC" FromRole="T_OE_USER_ROLES" ToRole="T_OE_USERS" />
-        </EntityType>
-        <Association Name="FK__T_OE_USER__ROLE___1BFD2C07">
-          <End Role="T_OE_ROLES" Type="Self.T_OE_ROLES" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="T_OE_USER_ROLES" Type="Self.T_OE_USER_ROLES" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ROLES">
-              <PropertyRef Name="ROLE_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_USER_ROLES">
-              <PropertyRef Name="ROLE_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="EECIPEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="T_OE_ROLES" EntityType="Self.T_OE_ROLES" />
-          <EntitySet Name="T_OE_SYS_EMAIL_LOG" EntityType="Self.T_OE_SYS_EMAIL_LOG" />
-          <EntitySet Name="T_OE_SYS_LOG" EntityType="Self.T_OE_SYS_LOG" />
-          <EntitySet Name="T_OE_USER_ROLES" EntityType="Self.T_OE_USER_ROLES" />
-          <AssociationSet Name="FK__T_OE_USER__ROLE___1BFD2C07" Association="Self.FK__T_OE_USER__ROLE___1BFD2C07">
-            <End Role="T_OE_ROLES" EntitySet="T_OE_ROLES" />
-            <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
-          </AssociationSet>
+          <FunctionImport Name="SP_ENT_SVC_COUNT_DISPLAY" ReturnType="Collection(EECIPModel.SP_ENT_SVC_COUNT_DISPLAY_Result)" />
           <EntitySet Name="T_OE_APP_SETTINGS" EntityType="EECIPModel.T_OE_APP_SETTINGS" />
+          <EntitySet Name="T_OE_APP_SETTINGS_CUSTOM" EntityType="EECIPModel.T_OE_APP_SETTINGS_CUSTOM" />
+          <EntitySet Name="T_OE_DOCUMENTS" EntityType="EECIPModel.T_OE_DOCUMENTS" />
+          <EntitySet Name="T_OE_ORGANIZATION" EntityType="EECIPModel.T_OE_ORGANIZATION" />
+          <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" />
+          <EntitySet Name="T_OE_ORGANIZATION_ENT_SVCS" EntityType="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" />
+          <EntitySet Name="T_OE_ORGANIZATION_TAGS" EntityType="EECIPModel.T_OE_ORGANIZATION_TAGS" />
+          <EntitySet Name="T_OE_PROJECT_TAGS" EntityType="EECIPModel.T_OE_PROJECT_TAGS" />
+          <EntitySet Name="T_OE_PROJECT_URLS" EntityType="EECIPModel.T_OE_PROJECT_URLS" />
+          <EntitySet Name="T_OE_PROJECT_VOTES" EntityType="EECIPModel.T_OE_PROJECT_VOTES" />
+          <EntitySet Name="T_OE_PROJECTS" EntityType="EECIPModel.T_OE_PROJECTS" />
           <EntitySet Name="T_OE_REF_ENTERPRISE_PLATFORM" EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" />
+          <EntitySet Name="T_OE_REF_ORG_TYPE" EntityType="EECIPModel.T_OE_REF_ORG_TYPE" />
           <EntitySet Name="T_OE_REF_REGION" EntityType="EECIPModel.T_OE_REF_REGION" />
           <EntitySet Name="T_OE_REF_STATE" EntityType="EECIPModel.T_OE_REF_STATE" />
+          <EntitySet Name="T_OE_REF_SYNONYMS" EntityType="EECIPModel.T_OE_REF_SYNONYMS" />
           <EntitySet Name="T_OE_REF_TAG_CATEGORIES" EntityType="EECIPModel.T_OE_REF_TAG_CATEGORIES" />
           <EntitySet Name="T_OE_REF_TAGS" EntityType="EECIPModel.T_OE_REF_TAGS" />
-          <AssociationSet Name="FK__T_OE_REF___TAG_C__6B24EA82" Association="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82">
-            <End Role="T_OE_REF_TAG_CATEGORIES" EntitySet="T_OE_REF_TAG_CATEGORIES" />
-            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
-          </AssociationSet>
-          <EntitySet Name="T_OE_ORGANIZATION_ENT_SVCS" EntityType="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" />
-          <AssociationSet Name="FK__T_OE_ORGA__ENT_P__17036CC0" Association="EECIPModel.FK__T_OE_ORGA__ENT_P__17036CC0">
-            <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
+          <EntitySet Name="T_OE_ROLES" EntityType="EECIPModel.T_OE_ROLES" />
+          <EntitySet Name="T_OE_SYS_EMAIL_LOG" EntityType="EECIPModel.T_OE_SYS_EMAIL_LOG" />
+          <EntitySet Name="T_OE_SYS_LOG" EntityType="EECIPModel.T_OE_SYS_LOG" />
+          <EntitySet Name="T_OE_USER_EXPERTISE" EntityType="EECIPModel.T_OE_USER_EXPERTISE" />
+          <EntitySet Name="T_OE_USER_NOTIFICATION" EntityType="EECIPModel.T_OE_USER_NOTIFICATION" />
+          <EntitySet Name="T_OE_USER_ROLES" EntityType="EECIPModel.T_OE_USER_ROLES" />
+          <EntitySet Name="T_OE_USERS" EntityType="EECIPModel.T_OE_USERS" />
+          <EntitySet Name="Badges" EntityType="EECIPModel.Badge" />
+          <EntitySet Name="Categories" EntityType="EECIPModel.Category" />
+          <EntitySet Name="Favourites" EntityType="EECIPModel.Favourite" />
+          <EntitySet Name="MembershipUser_Badge" EntityType="EECIPModel.MembershipUser_Badge" />
+          <EntitySet Name="MembershipUserPoints" EntityType="EECIPModel.MembershipUserPoint" />
+          <EntitySet Name="Polls" EntityType="EECIPModel.Poll" />
+          <EntitySet Name="PollAnswers" EntityType="EECIPModel.PollAnswer" />
+          <EntitySet Name="PollVotes" EntityType="EECIPModel.PollVote" />
+          <EntitySet Name="Posts" EntityType="EECIPModel.Post" />
+          <EntitySet Name="PostFiles" EntityType="EECIPModel.PostFile" />
+          <EntitySet Name="Topics" EntityType="EECIPModel.Topic" />
+          <EntitySet Name="Topic_Tags" EntityType="EECIPModel.Topic_Tags" />
+          <EntitySet Name="TopicNotifications" EntityType="EECIPModel.TopicNotification" />
+          <EntitySet Name="Votes" EntityType="EECIPModel.Vote" />
+          <AssociationSet Name="FK__T_OE_DOCU__ORG_E__19FFD4FC" Association="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC">
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
           </AssociationSet>
-          <EntitySet Name="T_OE_ORGANIZATION" EntityType="EECIPModel.T_OE_ORGANIZATION" />
+          <AssociationSet Name="FK__T_OE_DOCU__PROJE__190BB0C3" Association="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
+          </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__EPA_R__1DB06A4F" Association="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F">
             <End Role="T_OE_REF_REGION" EntitySet="T_OE_REF_REGION" />
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__245D67DE" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE">
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__062DE679" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__062DE679">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__1F63A897" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__54CB950F" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_ORGANIZATION_EMAIL_RULE" EntitySet="T_OE_ORGANIZATION_EMAIL_RULE" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__STATE__1CBC4616" Association="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616">
             <End Role="T_OE_REF_STATE" EntitySet="T_OE_REF_STATE" />
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
           </AssociationSet>
-          <EntitySet Name="T_OE_USER_NOTIFICATION" EntityType="EECIPModel.T_OE_USER_NOTIFICATION" />
-          <EntitySet Name="T_OE_PROJECT_TAGS" EntityType="EECIPModel.T_OE_PROJECT_TAGS" />
-          <EntitySet Name="T_OE_PROJECTS" EntityType="EECIPModel.T_OE_PROJECTS" />
           <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6BE40491" Association="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__PROJE__73852659" Association="EECIPModel.FK__T_OE_PROJ__PROJE__73852659">
+          <AssociationSet Name="FK__T_OE_USER__ORG_I__2CF2ADDF" Association="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_ORGA__ENT_P__07220AB2" Association="EECIPModel.FK__T_OE_ORGA__ENT_P__07220AB2">
+            <End Role="T_OE_REF_ENTERPRISE_PLATFORM" EntitySet="T_OE_REF_ENTERPRISE_PLATFORM" />
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_E__2D47B39A" Association="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A">
+            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectTag_Project" Association="EECIPModel.FK_ProjectTag_Project">
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
             <End Role="T_OE_PROJECT_TAGS" EntitySet="T_OE_PROJECT_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__795DFB40" Association="EECIPModel.FK__T_OE_PROJ__PROJE__795DFB40">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_URLS" EntitySet="T_OE_PROJECT_URLS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__VOTED__2B5F6B28" Association="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28">
+            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectVote_Project" Association="EECIPModel.FK_ProjectVote_Project">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_PROJ__ADV_M__6EC0713C" Association="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C">
             <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
@@ -1509,122 +1500,13 @@
             <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
-          <EntitySet Name="T_OE_USER_EXPERTISE" EntityType="EECIPModel.T_OE_USER_EXPERTISE" />
-          <EntitySet Name="T_OE_ORGANIZATION_TAGS" EntityType="EECIPModel.T_OE_ORGANIZATION_TAGS" />
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__1F63A897" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897">
-            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
-            <End Role="T_OE_ORGANIZATION_TAGS" EntitySet="T_OE_ORGANIZATION_TAGS" />
+          <AssociationSet Name="FK__T_OE_REF___TAG_C__6B24EA82" Association="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82">
+            <End Role="T_OE_REF_TAG_CATEGORIES" EntitySet="T_OE_REF_TAG_CATEGORIES" />
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
           </AssociationSet>
-          <EntitySet Name="T_OE_REF_SYNONYMS" EntityType="EECIPModel.T_OE_REF_SYNONYMS" />
-          <EntitySet Name="Categories" EntityType="EECIPModel.Category" />
-          <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="EECIPModel.FK__Category__Catego__41B8C09B">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Category1" EntitySet="Categories" />
-          </AssociationSet>
-          <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" />
-          <EntitySet Name="Polls" EntityType="EECIPModel.Poll" />
-          <AssociationSet Name="FK__T_OE_ORGA__ORG_I__54CB950F" Association="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F">
-            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
-            <End Role="T_OE_ORGANIZATION_EMAIL_RULE" EntitySet="T_OE_ORGANIZATION_EMAIL_RULE" />
-          </AssociationSet>
-          <EntitySet Name="Posts" EntityType="EECIPModel.Post" />
-          <EntitySet Name="Topics" EntityType="EECIPModel.Topic" />
-          <AssociationSet Name="FK__Topic__Category___6E8B6712" Association="EECIPModel.FK__Topic__Category___6E8B6712">
-            <End Role="Category" EntitySet="Categories" />
-            <End Role="Topic" EntitySet="Topics" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Topic__Poll_Id__7073AF84" Association="EECIPModel.FK__Topic__Poll_Id__7073AF84">
-            <End Role="Poll" EntitySet="Polls" />
-            <End Role="Topic" EntitySet="Topics" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Topic__Post_Id__7167D3BD" Association="EECIPModel.FK__Topic__Post_Id__7167D3BD">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Topic" EntitySet="Topics" />
-          </AssociationSet>
-          <AssociationSet Name="Forum_Topic_Post_FK" Association="EECIPModel.Forum_Topic_Post_FK">
-            <End Role="Topic" EntitySet="Topics" />
-            <End Role="Post" EntitySet="Posts" />
-          </AssociationSet>
-          <EntitySet Name="PollAnswers" EntityType="EECIPModel.PollAnswer" />
-          <EntitySet Name="PollVotes" EntityType="EECIPModel.PollVote" />
-          <AssociationSet Name="FK__PollAnswe__Poll___7AF13DF7" Association="EECIPModel.FK__PollAnswe__Poll___7AF13DF7">
-            <End Role="Poll" EntitySet="Polls" />
-            <End Role="PollAnswer" EntitySet="PollAnswers" />
-          </AssociationSet>
-          <AssociationSet Name="FK__PollVote__PollAn__11D4A34F" Association="EECIPModel.FK__PollVote__PollAn__11D4A34F">
-            <End Role="PollAnswer" EntitySet="PollAnswers" />
-            <End Role="PollVote" EntitySet="PollVotes" />
-          </AssociationSet>
-          <EntitySet Name="MembershipUserPoints" EntityType="EECIPModel.MembershipUserPoint" />
-          <EntitySet Name="Badges" EntityType="EECIPModel.Badge" />
-          <EntitySet Name="MembershipUser_Badge" EntityType="EECIPModel.MembershipUser_Badge" />
-          <AssociationSet Name="FK__Membershi__Badge__6D6238AF" Association="EECIPModel.FK__Membershi__Badge__6D6238AF">
-            <End Role="Badge" EntitySet="Badges" />
-            <End Role="MembershipUser_Badge" EntitySet="MembershipUser_Badge" />
-          </AssociationSet>
-          <EntitySet Name="T_OE_PROJECT_VOTES" EntityType="EECIPModel.T_OE_PROJECT_VOTES" />
-          <AssociationSet Name="FK__T_OE_PROJ__ORG_E__2D47B39A" Association="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A">
-            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
-            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__PROJE__2C538F61" Association="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
-          </AssociationSet>
-          <EntitySet Name="T_OE_REF_ORG_TYPE" EntityType="EECIPModel.T_OE_REF_ORG_TYPE" />
-          <EntitySet Name="Favourites" EntityType="EECIPModel.Favourite" />
-          <EntitySet Name="Topic_Tags" EntityType="EECIPModel.Topic_Tags" />
-          <EntitySet Name="TopicNotifications" EntityType="EECIPModel.TopicNotification" />
-          <EntitySet Name="Votes" EntityType="EECIPModel.Vote" />
-          <AssociationSet Name="FK__Favourite__PostI__4AD81681" Association="EECIPModel.FK__Favourite__PostI__4AD81681">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Favourite" EntitySet="Favourites" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Favourite__Topic__4BCC3ABA" Association="EECIPModel.FK__Favourite__Topic__4BCC3ABA">
-            <End Role="Topic" EntitySet="Topics" />
-            <End Role="Favourite" EntitySet="Favourites" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Vote__Post_Id__4707859D" Association="EECIPModel.FK__Vote__Post_Id__4707859D">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="Vote" EntitySet="Votes" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Topic_Tag__Topic__4242D080" Association="EECIPModel.FK__Topic_Tag__Topic__4242D080">
-            <End Role="Topic" EntitySet="Topics" />
-            <End Role="Topic_Tags" EntitySet="Topic_Tags" />
-          </AssociationSet>
-          <AssociationSet Name="FK__TopicNoti__Topic__3F6663D5" Association="EECIPModel.FK__TopicNoti__Topic__3F6663D5">
-            <End Role="Topic" EntitySet="Topics" />
-            <End Role="TopicNotification" EntitySet="TopicNotifications" />
-          </AssociationSet>
-          <EntitySet Name="PostFiles" EntityType="EECIPModel.PostFile" />
-          <AssociationSet Name="FK__PostFile__Post_I__5FD33367" Association="EECIPModel.FK__PostFile__Post_I__5FD33367">
-            <End Role="Post" EntitySet="Posts" />
-            <End Role="PostFile" EntitySet="PostFiles" />
-          </AssociationSet>
-          <EntitySet Name="T_OE_DOCUMENTS" EntityType="EECIPModel.T_OE_DOCUMENTS" />
-          <AssociationSet Name="FK__T_OE_DOCU__ORG_E__19FFD4FC" Association="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC">
-            <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
-            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_DOCU__PROJE__190BB0C3" Association="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
-          </AssociationSet>
-          <EntitySet Name="T_OE_APP_SETTINGS_CUSTOM" EntityType="EECIPModel.T_OE_APP_SETTINGS_CUSTOM" />
-          <FunctionImport Name="SP_ENT_SVC_COUNT_DISPLAY" ReturnType="Collection(EECIPModel.SP_ENT_SVC_COUNT_DISPLAY_Result)" />
-          <EntitySet Name="T_OE_PROJECT_URLS" EntityType="EECIPModel.T_OE_PROJECT_URLS" />
-          <AssociationSet Name="FK__T_OE_PROJ__PROJE__6BAEFA67" Association="EECIPModel.FK__T_OE_PROJ__PROJE__6BAEFA67">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_PROJECT_URLS" EntitySet="T_OE_PROJECT_URLS" />
-          </AssociationSet>
-          <EntitySet Name="T_OE_USERS" EntityType="EECIPModel.T_OE_USERS" />
-          <AssociationSet Name="FK__T_OE_USER__ORG_I__2CF2ADDF" Association="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF">
-            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__VOTED__2B5F6B28" Association="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          <AssociationSet Name="FK__T_OE_USER__ROLE___30C33EC3" Association="EECIPModel.FK__T_OE_USER__ROLE___30C33EC3">
+            <End Role="T_OE_ROLES" EntitySet="T_OE_ROLES" />
+            <End Role="T_OE_USER_ROLES" EntitySet="T_OE_USER_ROLES" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_USER__USER___1C873BEC" Association="EECIPModel.FK__T_OE_USER__USER___1C873BEC">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
@@ -1682,7 +1564,70 @@
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Vote" EntitySet="Votes" />
           </AssociationSet>
+          <AssociationSet Name="FK__Membershi__Badge__6D6238AF" Association="EECIPModel.FK__Membershi__Badge__6D6238AF">
+            <End Role="Badge" EntitySet="Badges" />
+            <End Role="MembershipUser_Badge" EntitySet="MembershipUser_Badge" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="EECIPModel.FK__Category__Catego__41B8C09B">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Category1" EntitySet="Categories" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Topic__Category___6E8B6712" Association="EECIPModel.FK__Topic__Category___6E8B6712">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="Topic" EntitySet="Topics" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Favourite__PostI__4AD81681" Association="EECIPModel.FK__Favourite__PostI__4AD81681">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Favourite" EntitySet="Favourites" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Favourite__Topic__4BCC3ABA" Association="EECIPModel.FK__Favourite__Topic__4BCC3ABA">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="Favourite" EntitySet="Favourites" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PollAnswe__Poll___7AF13DF7" Association="EECIPModel.FK__PollAnswe__Poll___7AF13DF7">
+            <End Role="Poll" EntitySet="Polls" />
+            <End Role="PollAnswer" EntitySet="PollAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Topic__Poll_Id__7073AF84" Association="EECIPModel.FK__Topic__Poll_Id__7073AF84">
+            <End Role="Poll" EntitySet="Polls" />
+            <End Role="Topic" EntitySet="Topics" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PollVote__PollAn__11D4A34F" Association="EECIPModel.FK__PollVote__PollAn__11D4A34F">
+            <End Role="PollAnswer" EntitySet="PollAnswers" />
+            <End Role="PollVote" EntitySet="PollVotes" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PostFile__Post_I__63A3C44B" Association="EECIPModel.FK__PostFile__Post_I__63A3C44B">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="PostFile" EntitySet="PostFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Topic__Post_Id__7167D3BD" Association="EECIPModel.FK__Topic__Post_Id__7167D3BD">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Topic" EntitySet="Topics" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vote__Post_Id__4707859D" Association="EECIPModel.FK__Vote__Post_Id__4707859D">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Vote" EntitySet="Votes" />
+          </AssociationSet>
+          <AssociationSet Name="forum_Topic_Post_FK" Association="EECIPModel.forum_Topic_Post_FK">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Topic_Tag__Topic__4242D080" Association="EECIPModel.FK__Topic_Tag__Topic__4242D080">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="Topic_Tags" EntitySet="Topic_Tags" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TopicNoti__Topic__3F6663D5" Association="EECIPModel.FK__TopicNoti__Topic__3F6663D5">
+            <End Role="Topic" EntitySet="Topics" />
+            <End Role="TopicNotification" EntitySet="TopicNotifications" />
+          </AssociationSet>
           </EntityContainer>
+        <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
+          <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
+          <Property Type="String" Name="ENT_PLATFORM_NAME" Nullable="true" MaxLength="80" />
+          <Property Type="String" Name="ENT_PLATFORM_DESC" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="ENT_PLATFORM_EXAMPLE" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="CNT" Nullable="true" />
+        </ComplexType>
         <EntityType Name="T_OE_APP_SETTINGS">
           <Key>
             <PropertyRef Name="SETTING_IDX" />
@@ -1695,114 +1640,35 @@
           <Property Name="MODIFY_USERIDX" Type="Int32" />
           <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
         </EntityType>
-        <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
+        <EntityType Name="T_OE_APP_SETTINGS_CUSTOM">
           <Key>
-            <PropertyRef Name="ENT_PLATFORM_IDX" />
+            <PropertyRef Name="SETTING_CUSTOM_IDX" />
           </Key>
-          <Property Name="ENT_PLATFORM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ENT_PLATFORM_NAME" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
-          <Property Name="ENT_PLATFORM_DESC" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="ENT_PLATFORM_EXAMPLE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="SEQ_NO" Type="Int32" />
-          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
-          <Property Name="MODIFY_USERIDX" Type="Int32" />
-          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_ORGA__ENT_P__17036CC0" FromRole="T_OE_REF_ENTERPRISE_PLATFORM" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
+          <Property Name="SETTING_CUSTOM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TERMS_AND_CONDITIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ANNOUNCEMENTS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="T_OE_REF_REGION">
+        <EntityType Name="T_OE_DOCUMENTS">
           <Key>
-            <PropertyRef Name="EPA_REGION" />
+            <PropertyRef Name="DOC_IDX" />
           </Key>
-          <Property Name="EPA_REGION" Type="Int32" Nullable="false" />
-          <Property Name="EPA_REGION_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F" FromRole="T_OE_REF_REGION" ToRole="T_OE_ORGANIZATION" />
-        </EntityType>
-        <EntityType Name="T_OE_REF_STATE">
-          <Key>
-            <PropertyRef Name="STATE_CD" />
-          </Key>
-          <Property Name="STATE_CD" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="STATE_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_REF_STATE" ToRole="T_OE_ORGANIZATION" />
-          <Property Name="POP_DENSITY" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="T_OE_REF_TAG_CATEGORIES">
-          <Key>
-            <PropertyRef Name="TAG_CAT_NAME" />
-          </Key>
-          <Property Name="TAG_CAT_NAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TAG_CAT_DESCRIPTION" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="TAG_CAT_COLOR" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAG_CATEGORIES" ToRole="T_OE_REF_TAGS" />
-        </EntityType>
-        <EntityType Name="T_OE_REF_TAGS">
-          <Key>
-            <PropertyRef Name="TAG_IDX" />
-          </Key>
-          <Property Name="TAG_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TAG_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="TAG_CAT_NAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="USER_CREATE_IND" Type="Boolean" Nullable="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_REF_TAG_CATEGORIES" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAGS" ToRole="T_OE_REF_TAG_CATEGORIES" />
-          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
-          <NavigationProperty Name="T_OE_PROJECTS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
-          <NavigationProperty Name="T_OE_PROJECTS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
-          <NavigationProperty Name="T_OE_PROJECTS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
-          </EntityType>
-        <Association Name="FK__T_OE_REF___TAG_C__6B24EA82">
-          <End Type="EECIPModel.T_OE_REF_TAG_CATEGORIES" Role="T_OE_REF_TAG_CATEGORIES" Multiplicity="1" />
-          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_REF_TAG_CATEGORIES">
-              <PropertyRef Name="TAG_CAT_NAME" />
-            </Principal>
-            <Dependent Role="T_OE_REF_TAGS">
-              <PropertyRef Name="TAG_CAT_NAME" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_ORGANIZATION_ENT_SVCS">
-          <Key>
-            <PropertyRef Name="ORG_ENT_SVCS_IDX" />
-          </Key>
-          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
-          <Property Name="ENT_PLATFORM_IDX" Type="Int32" Nullable="false" />
-          <Property Name="PROJECT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="VENDOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IMPLEMENT_STATUS" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="COMMENTS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_IDX" Type="Guid" Nullable="false" />
+          <Property Name="DOC_CONTENT" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="DOC_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_TYPE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_FILE_TYPE" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_SIZE" Type="Int32" />
+          <Property Name="DOC_COMMENT" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DOC_AUTHOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_IDX" Type="Guid" />
+          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" />
           <Property Name="CREATE_USERIDX" Type="Int32" />
           <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
           <Property Name="MODIFY_USERIDX" Type="Int32" />
           <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_REF_ENTERPRISE_PLATFORM" Relationship="EECIPModel.FK__T_OE_ORGA__ENT_P__17036CC0" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_REF_ENTERPRISE_PLATFORM" />
-          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_ORGANIZATION" />
-          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
-          <Property Name="RECORD_SOURCE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACTIVE_INTEREST_IND" Type="Boolean" />
-          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_PROJECT_VOTES" />
-          <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_DOCUMENTS" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" FromRole="T_OE_DOCUMENTS" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_DOCUMENTS" ToRole="T_OE_PROJECTS" />
         </EntityType>
-        <Association Name="FK__T_OE_ORGA__ENT_P__17036CC0">
-          <End Type="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Role="T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_REF_ENTERPRISE_PLATFORM">
-              <PropertyRef Name="ENT_PLATFORM_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
-              <PropertyRef Name="ENT_PLATFORM_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="T_OE_ORGANIZATION">
           <Key>
             <PropertyRef Name="ORG_IDX" />
@@ -1821,69 +1687,62 @@
           <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
           <Property Name="MODIFY_USERIDX" Type="Int32" />
           <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <Property Name="ORG_TYPE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="T_OE_REF_REGION" Relationship="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_REGION" />
-          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__245D67DE" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
-          <NavigationProperty Name="T_OE_REF_STATE" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_STATE" />
-          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__062DE679" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
           <NavigationProperty Name="T_OE_ORGANIZATION_TAGS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_TAGS" />
           <NavigationProperty Name="T_OE_ORGANIZATION_EMAIL_RULE" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_EMAIL_RULE" />
-          <Property Name="ORG_TYPE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_OE_REF_STATE" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_STATE" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_USERS" />
         </EntityType>
-        <Association Name="FK__T_OE_ORGA__EPA_R__1DB06A4F">
-          <End Type="EECIPModel.T_OE_REF_REGION" Role="T_OE_REF_REGION" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_REF_REGION">
-              <PropertyRef Name="EPA_REGION" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="EPA_REGION" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_ORGA__ORG_I__245D67DE">
-          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_ORGA__STATE__1CBC4616">
-          <End Type="EECIPModel.T_OE_REF_STATE" Role="T_OE_REF_STATE" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_REF_STATE">
-              <PropertyRef Name="STATE_CD" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="STATE_CD" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_USER_NOTIFICATION">
+        <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
           <Key>
-            <PropertyRef Name="NOTIFICATION_IDX" />
+            <PropertyRef Name="ORG_IDX" />
+            <PropertyRef Name="EMAIL_STRING" />
           </Key>
-          <Property Name="NOTIFICATION_IDX" Type="Guid" Nullable="false" />
-          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
-          <Property Name="NOTIFY_DT" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="NOTIFY_TYPE" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="NOTIFY_TITLE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="NOTIFY_DESC" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
-          <Property Name="READ_IND" Type="Boolean" />
-          <Property Name="FROM_USER_IDX" Type="Int32" />
+          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="EMAIL_STRING" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" FromRole="T_OE_ORGANIZATION_EMAIL_RULE" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <EntityType Name="T_OE_ORGANIZATION_ENT_SVCS">
+          <Key>
+            <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+          </Key>
+          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ENT_PLATFORM_IDX" Type="Int32" Nullable="false" />
+          <Property Name="PROJECT_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="VENDOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IMPLEMENT_STATUS" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="COMMENTS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACTIVE_INTEREST_IND" Type="Boolean" />
+          <Property Name="RECORD_SOURCE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
           <Property Name="CREATE_USERIDX" Type="Int32" />
           <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
           <Property Name="MODIFY_USERIDX" Type="Int32" />
           <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_DOCUMENTS" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__062DE679" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_ORGANIZATION" />
+          <NavigationProperty Name="T_OE_REF_ENTERPRISE_PLATFORM" Relationship="EECIPModel.FK__T_OE_ORGA__ENT_P__07220AB2" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_REF_ENTERPRISE_PLATFORM" />
+          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A" FromRole="T_OE_ORGANIZATION_ENT_SVCS" ToRole="T_OE_PROJECT_VOTES" />
+        </EntityType>
+        <EntityType Name="T_OE_ORGANIZATION_TAGS">
+          <Key>
+            <PropertyRef Name="ORG_IDX" />
+            <PropertyRef Name="ORG_ATTRIBUTE" />
+            <PropertyRef Name="ORG_TAG" />
+          </Key>
+          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ORG_ATTRIBUTE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ORG_TAG" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" FromRole="T_OE_ORGANIZATION_TAGS" ToRole="T_OE_ORGANIZATION" />
         </EntityType>
         <EntityType Name="T_OE_PROJECT_TAGS">
           <Key>
@@ -1896,7 +1755,31 @@
           <Property Name="PROJECT_TAG_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="CREATE_USERIDX" Type="Int32" />
           <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__73852659" FromRole="T_OE_PROJECT_TAGS" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK_ProjectTag_Project" FromRole="T_OE_PROJECT_TAGS" ToRole="T_OE_PROJECTS" />
+        </EntityType>
+        <EntityType Name="T_OE_PROJECT_URLS">
+          <Key>
+            <PropertyRef Name="PROJECT_URL_IDX" />
+          </Key>
+          <Property Name="PROJECT_URL_IDX" Type="Guid" Nullable="false" />
+          <Property Name="PROJECT_IDX" Type="Guid" />
+          <Property Name="PROJECT_URL" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PROJ_URL_DESC" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__795DFB40" FromRole="T_OE_PROJECT_URLS" ToRole="T_OE_PROJECTS" />
+        </EntityType>
+        <EntityType Name="T_OE_PROJECT_VOTES">
+          <Key>
+            <PropertyRef Name="PROJECT_VOTE_IDX" />
+          </Key>
+          <Property Name="PROJECT_VOTE_IDX" Type="Guid" Nullable="false" />
+          <Property Name="VOTE_AMOUNT" Type="Int32" Nullable="false" />
+          <Property Name="DATE_VOTED" Type="DateTime" Precision="3" />
+          <Property Name="PROJECT_IDX" Type="Guid" />
+          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" />
+          <Property Name="VOTED_BY_USER_IDX" Type="Int32" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK_ProjectVote_Project" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_PROJECTS" />
         </EntityType>
         <EntityType Name="T_OE_PROJECTS">
           <Key>
@@ -1926,19 +1809,525 @@
           <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
           <Property Name="MODIFY_USERIDX" Type="Int32" />
           <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <Property Name="IMPORT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_CONTACT_IDX" Type="Int32" />
+          <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_PROJECTS" ToRole="T_OE_DOCUMENTS" />
           <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_PROJECTS" ToRole="T_OE_ORGANIZATION" />
-          <NavigationProperty Name="T_OE_PROJECT_TAGS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__73852659" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_TAGS" />
+          <NavigationProperty Name="T_OE_PROJECT_TAGS" Relationship="EECIPModel.FK_ProjectTag_Project" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_TAGS" />
+          <NavigationProperty Name="T_OE_PROJECT_URLS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__795DFB40" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_URLS" />
+          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK_ProjectVote_Project" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_VOTES" />
           <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <NavigationProperty Name="T_OE_REF_TAGS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <NavigationProperty Name="T_OE_REF_TAGS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <NavigationProperty Name="T_OE_REF_TAGS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
-          <Property Name="IMPORT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PROJECT_CONTACT_IDX" Type="Int32" />
-          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_VOTES" />
-          <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_PROJECTS" ToRole="T_OE_DOCUMENTS" />
-          <NavigationProperty Name="T_OE_PROJECT_URLS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__6BAEFA67" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_URLS" />
         </EntityType>
+        <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
+          <Key>
+            <PropertyRef Name="ENT_PLATFORM_IDX" />
+          </Key>
+          <Property Name="ENT_PLATFORM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ENT_PLATFORM_NAME" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="ENT_PLATFORM_DESC" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="ENT_PLATFORM_EXAMPLE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SEQ_NO" Type="Int32" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_ORGA__ENT_P__07220AB2" FromRole="T_OE_REF_ENTERPRISE_PLATFORM" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_ORG_TYPE">
+          <Key>
+            <PropertyRef Name="ORG_TYPE" />
+          </Key>
+          <Property Name="ORG_TYPE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_REGION">
+          <Key>
+            <PropertyRef Name="EPA_REGION" />
+          </Key>
+          <Property Name="EPA_REGION" Type="Int32" Nullable="false" />
+          <Property Name="EPA_REGION_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F" FromRole="T_OE_REF_REGION" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_STATE">
+          <Key>
+            <PropertyRef Name="STATE_CD" />
+          </Key>
+          <Property Name="STATE_CD" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="STATE_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="POP_DENSITY" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_REF_STATE" ToRole="T_OE_ORGANIZATION" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_SYNONYMS">
+          <Key>
+            <PropertyRef Name="SYNONYM_IDX" />
+          </Key>
+          <Property Name="SYNONYM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SYNONYM_TEXT" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_TAG_CATEGORIES">
+          <Key>
+            <PropertyRef Name="TAG_CAT_NAME" />
+          </Key>
+          <Property Name="TAG_CAT_NAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TAG_CAT_DESCRIPTION" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TAG_CAT_COLOR" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAG_CATEGORIES" ToRole="T_OE_REF_TAGS" />
+        </EntityType>
+        <EntityType Name="T_OE_REF_TAGS">
+          <Key>
+            <PropertyRef Name="TAG_IDX" />
+          </Key>
+          <Property Name="TAG_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TAG_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TAG_CAT_NAME" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="USER_CREATE_IND" Type="Boolean" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_PROJECTS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_PROJECTS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_PROJECTS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
+          <NavigationProperty Name="T_OE_REF_TAG_CATEGORIES" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAGS" ToRole="T_OE_REF_TAG_CATEGORIES" />
+        </EntityType>
+        <EntityType Name="T_OE_ROLES">
+          <Key>
+            <PropertyRef Name="ROLE_IDX" />
+          </Key>
+          <Property Name="ROLE_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ROLE_NAME" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="ROLE_DESC" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_USER_ROLES" Relationship="EECIPModel.FK__T_OE_USER__ROLE___30C33EC3" FromRole="T_OE_ROLES" ToRole="T_OE_USER_ROLES" />
+        </EntityType>
+        <EntityType Name="T_OE_SYS_EMAIL_LOG">
+          <Key>
+            <PropertyRef Name="EMAIL_LOG_ID" />
+          </Key>
+          <Property Name="EMAIL_LOG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOG_DT" Type="DateTime" Precision="0" />
+          <Property Name="LOG_FROM" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_TO" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_CC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_SUBJ" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_MSG" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="EMAIL_TYPE" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_OE_SYS_LOG">
+          <Key>
+            <PropertyRef Name="SYS_LOG_ID" />
+          </Key>
+          <Property Name="SYS_LOG_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LOG_DT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="LOG_USERIDX" Type="Int32" />
+          <Property Name="LOG_TYPE" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="LOG_MSG" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="T_OE_USER_EXPERTISE">
+          <Key>
+            <PropertyRef Name="USER_IDX" />
+            <PropertyRef Name="EXPERTISE_TAG" />
+          </Key>
+          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
+          <Property Name="EXPERTISE_TAG" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__USER___1C873BEC" FromRole="T_OE_USER_EXPERTISE" ToRole="T_OE_USERS" />
+        </EntityType>
+        <EntityType Name="T_OE_USER_NOTIFICATION">
+          <Key>
+            <PropertyRef Name="NOTIFICATION_IDX" />
+          </Key>
+          <Property Name="NOTIFICATION_IDX" Type="Guid" Nullable="false" />
+          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
+          <Property Name="NOTIFY_DT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="NOTIFY_TYPE" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="NOTIFY_TITLE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NOTIFY_DESC" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="READ_IND" Type="Boolean" />
+          <Property Name="FROM_USER_IDX" Type="Int32" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="T_OE_USER_ROLES">
+          <Key>
+            <PropertyRef Name="USER_ROLE_IDX" />
+          </Key>
+          <Property Name="USER_ROLE_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
+          <Property Name="ROLE_IDX" Type="Int32" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ROLES" Relationship="EECIPModel.FK__T_OE_USER__ROLE___30C33EC3" FromRole="T_OE_USER_ROLES" ToRole="T_OE_ROLES" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__USER___31B762FC" FromRole="T_OE_USER_ROLES" ToRole="T_OE_USERS" />
+        </EntityType>
+        <EntityType Name="T_OE_USERS">
+          <Key>
+            <PropertyRef Name="USER_IDX" />
+          </Key>
+          <Property Name="USER_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="PWD_HASH" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PWD_SALT" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="LNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="EMAIL" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="INITAL_PWD_FLAG" Type="Boolean" Nullable="false" />
+          <Property Name="EFFECTIVE_DT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="LASTLOGIN_DT" Type="DateTime" Precision="0" />
+          <Property Name="PHONE" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="PHONE_EXT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="JOB_TITLE" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="NODE_ADMIN" Type="Boolean" Nullable="false" />
+          <Property Name="USER_AVATAR" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="LOG_ATMPT" Type="Int32" />
+          <Property Name="LOCKOUT_END_DATE_UTC" Type="DateTime" Precision="7" />
+          <Property Name="LOCKOUT_ENABLED" Type="Boolean" Nullable="false" />
+          <Property Name="ORG_IDX" Type="Guid" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
+          <Property Name="LINKEDIN" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ALLOW_GOVERNANCE" Type="Boolean" Nullable="false" />
+          <Property Name="EXCLUDE_POINTS_IND" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_USERS" ToRole="T_OE_ORGANIZATION" />
+          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28" FromRole="T_OE_USERS" ToRole="T_OE_PROJECT_VOTES" />
+          <NavigationProperty Name="T_OE_USER_EXPERTISE" Relationship="EECIPModel.FK__T_OE_USER__USER___1C873BEC" FromRole="T_OE_USERS" ToRole="T_OE_USER_EXPERTISE" />
+          <NavigationProperty Name="T_OE_USER_ROLES" Relationship="EECIPModel.FK__T_OE_USER__USER___31B762FC" FromRole="T_OE_USERS" ToRole="T_OE_USER_ROLES" />
+          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Membe__49E3F248" FromRole="T_OE_USERS" ToRole="Favourite" />
+          <NavigationProperty Name="MembershipUserPoints" Relationship="EECIPModel.FK__Membershi__Membe__14B10FFA" FromRole="T_OE_USERS" ToRole="MembershipUserPoint" />
+          <NavigationProperty Name="MembershipUser_Badge" Relationship="EECIPModel.FK__Membershi__Membe__6E565CE8" FromRole="T_OE_USERS" ToRole="MembershipUser_Badge" />
+          <NavigationProperty Name="Polls" Relationship="EECIPModel.FK__Poll__Membership__44952D46" FromRole="T_OE_USERS" ToRole="Poll" />
+          <NavigationProperty Name="PollVotes" Relationship="EECIPModel.FK__PollVote__Member__10E07F16" FromRole="T_OE_USERS" ToRole="PollVote" />
+          <NavigationProperty Name="Posts" Relationship="EECIPModel.FK__Post__Membership__67DE6983" FromRole="T_OE_USERS" ToRole="Post" />
+          <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Member__6497E884" FromRole="T_OE_USERS" ToRole="PostFile" />
+          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Membershi__6F7F8B4B" FromRole="T_OE_USERS" ToRole="Topic" />
+          <NavigationProperty Name="MembershipUserPoints1" Relationship="EECIPModel.FK_MembershipUserPoints" FromRole="T_OE_USERS" ToRole="MembershipUserPoint" />
+          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK_TopicNotification" FromRole="T_OE_USERS" ToRole="TopicNotification" />
+          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK_VoteMembership" FromRole="T_OE_USERS" ToRole="Vote" />
+          <NavigationProperty Name="Votes1" Relationship="EECIPModel.FK_VoteMembershipBy" FromRole="T_OE_USERS" ToRole="Vote" />
+        </EntityType>
+        <EntityType Name="Badge">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Image" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AwardsPoints" Type="Int32" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="SORT_SEQ" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MembershipUser_Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="Badge" ToRole="MembershipUser_Badge" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
+          <Property Name="ModerateTopics" Type="Boolean" Nullable="false" />
+          <Property Name="ModeratePosts" Type="Boolean" Nullable="false" />
+          <Property Name="SortOrder" Type="Int32" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="PageTitle" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
+          <Property Name="Path" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" />
+          <Property Name="MetaDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Colour" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Image" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Category_Id" Type="Guid" />
+          <NavigationProperty Name="Category1" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category" ToRole="Category1" />
+          <NavigationProperty Name="Category2" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category1" ToRole="Category" />
+          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Category___6E8B6712" FromRole="Category" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="Favourite">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MemberId" Type="Int32" Nullable="false" />
+          <Property Name="PostId" Type="Guid" Nullable="false" />
+          <Property Name="TopicId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Favourite__Membe__49E3F248" FromRole="Favourite" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Favourite" ToRole="Post" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Favourite" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="MembershipUser_Badge">
+          <Key>
+            <PropertyRef Name="MembershipUser_Id" />
+            <PropertyRef Name="Badge_Id" />
+          </Key>
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <Property Name="Badge_Id" Type="Guid" Nullable="false" />
+          <Property Name="DateEarned" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Membershi__Membe__6E565CE8" FromRole="MembershipUser_Badge" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="MembershipUser_Badge" ToRole="Badge" />
+        </EntityType>
+        <EntityType Name="MembershipUserPoint">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Points" Type="Int32" Nullable="false" />
+          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PointsFor" Type="Int32" Nullable="false" />
+          <Property Name="PointsForId" Type="Guid" />
+          <Property Name="Notes" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Membershi__Membe__14B10FFA" FromRole="MembershipUserPoint" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK_MembershipUserPoints" FromRole="MembershipUserPoint" ToRole="T_OE_USERS" />
+        </EntityType>
+        <EntityType Name="Poll">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClosePollAfterDays" Type="Int32" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Poll__Membership__44952D46" FromRole="Poll" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="PollAnswers" Relationship="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" FromRole="Poll" ToRole="PollAnswer" />
+          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Poll" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="PollAnswer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Answer" Type="String" Nullable="false" MaxLength="600" FixedLength="false" Unicode="true" />
+          <Property Name="Poll_Id" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" FromRole="PollAnswer" ToRole="Poll" />
+          <NavigationProperty Name="PollVotes" Relationship="EECIPModel.FK__PollVote__PollAn__11D4A34F" FromRole="PollAnswer" ToRole="PollVote" />
+        </EntityType>
+        <EntityType Name="PollVote">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="PollAnswer_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PollVote__Member__10E07F16" FromRole="PollVote" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="PollAnswer" Relationship="EECIPModel.FK__PollVote__PollAn__11D4A34F" FromRole="PollVote" ToRole="PollAnswer" />
+        </EntityType>
+        <EntityType Name="Post">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="PostContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="VoteCount" Type="Int32" Nullable="false" />
+          <Property Name="DateEdited" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsSolution" Type="Boolean" Nullable="false" />
+          <Property Name="IsTopicStarter" Type="Boolean" />
+          <Property Name="FlaggedAsSpam" Type="Boolean" />
+          <Property Name="IpAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pending" Type="Boolean" />
+          <Property Name="SearchField" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InReplyTo" Type="Guid" />
+          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Post__Membership__67DE6983" FromRole="Post" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Post" ToRole="Favourite" />
+          <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Post_I__63A3C44B" FromRole="Post" ToRole="PostFile" />
+          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Post" ToRole="Topic" />
+          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Post" ToRole="Vote" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.forum_Topic_Post_FK" FromRole="Post" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="PostFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Filename" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Post_Id" Type="Guid" />
+          <Property Name="FileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="FileDecription" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="FileContentType" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PostFile__Member__6497E884" FromRole="PostFile" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__PostFile__Post_I__63A3C44B" FromRole="PostFile" ToRole="Post" />
+        </EntityType>
+        <EntityType Name="Topic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Solved" Type="Boolean" Nullable="false" />
+          <Property Name="SolvedReminderSent" Type="Boolean" />
+          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="Views" Type="Int32" />
+          <Property Name="IsSticky" Type="Boolean" Nullable="false" />
+          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
+          <Property Name="Pending" Type="Boolean" />
+          <Property Name="Category_Id" Type="Guid" Nullable="false" />
+          <Property Name="Post_Id" Type="Guid" />
+          <Property Name="Poll_Id" Type="Guid" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Topic__Membershi__6F7F8B4B" FromRole="Topic" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Category" Relationship="EECIPModel.FK__Topic__Category___6E8B6712" FromRole="Topic" ToRole="Category" />
+          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Topic" ToRole="Favourite" />
+          <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Topic" ToRole="Poll" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Topic" ToRole="Post" />
+          <NavigationProperty Name="Posts" Relationship="EECIPModel.forum_Topic_Post_FK" FromRole="Topic" ToRole="Post" />
+          <NavigationProperty Name="Topic_Tags" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic" ToRole="Topic_Tags" />
+          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="Topic" ToRole="TopicNotification" />
+        </EntityType>
+        <EntityType Name="Topic_Tags">
+          <Key>
+            <PropertyRef Name="Topic_Id" />
+            <PropertyRef Name="TopicTagAttribute" />
+            <PropertyRef Name="TopicTag" />
+          </Key>
+          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
+          <Property Name="TopicTagAttribute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TopicTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic_Tags" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="TopicNotification">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK_TopicNotification" FromRole="TopicNotification" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="TopicNotification" ToRole="Topic" />
+        </EntityType>
+        <EntityType Name="Vote">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
+          <Property Name="DateVoted" Type="DateTime" Precision="3" />
+          <Property Name="Post_Id" Type="Guid" Nullable="false" />
+          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
+          <Property Name="VotedByMembershipUser_Id" Type="Int32" />
+          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK_VoteMembership" FromRole="Vote" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK_VoteMembershipBy" FromRole="Vote" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Vote" ToRole="Post" />
+        </EntityType>
+        <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
+          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_DOCUMENTS" Role="T_OE_DOCUMENTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_DOCUMENTS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_DOCU__PROJE__190BB0C3">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_DOCUMENTS" Role="T_OE_DOCUMENTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_DOCUMENTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__EPA_R__1DB06A4F">
+          <End Type="EECIPModel.T_OE_REF_REGION" Role="T_OE_REF_REGION" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_REGION">
+              <PropertyRef Name="EPA_REGION" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="EPA_REGION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__062DE679">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__1F63A897">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_TAGS" Role="T_OE_ORGANIZATION_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_TAGS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ORG_I__54CB950F">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Role="T_OE_ORGANIZATION_EMAIL_RULE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_EMAIL_RULE">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__STATE__1CBC4616">
+          <End Type="EECIPModel.T_OE_REF_STATE" Role="T_OE_REF_STATE" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_STATE">
+              <PropertyRef Name="STATE_CD" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="STATE_CD" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
           <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
           <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
@@ -1951,14 +2340,94 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__PROJE__73852659">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="1" />
+        <Association Name="FK__T_OE_USER__ORG_I__2CF2ADDF">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_USERS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_ORGA__ENT_P__07220AB2">
+          <End Type="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Role="T_OE_REF_ENTERPRISE_PLATFORM" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_ENTERPRISE_PLATFORM">
+              <PropertyRef Name="ENT_PLATFORM_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ENT_PLATFORM_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__ORG_E__2D47B39A">
+          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION_ENT_SVCS">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectTag_Project">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Type="EECIPModel.T_OE_PROJECT_TAGS" Role="T_OE_PROJECT_TAGS" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_PROJECTS">
               <PropertyRef Name="PROJECT_IDX" />
             </Principal>
             <Dependent Role="T_OE_PROJECT_TAGS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__795DFB40">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_PROJECT_URLS" Role="T_OE_PROJECT_URLS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_URLS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__VOTED__2B5F6B28">
+          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_USERS">
+              <PropertyRef Name="USER_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="VOTED_BY_USER_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectVote_Project">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
               <PropertyRef Name="PROJECT_IDX" />
             </Dependent>
           </ReferentialConstraint>
@@ -2011,670 +2480,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="T_OE_USER_EXPERTISE">
-          <Key>
-            <PropertyRef Name="USER_IDX" />
-            <PropertyRef Name="EXPERTISE_TAG" />
-          </Key>
-          <Property Name="USER_IDX" Type="Int32" Nullable="false" />
-          <Property Name="EXPERTISE_TAG" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__USER___1C873BEC" FromRole="T_OE_USER_EXPERTISE" ToRole="T_OE_USERS" />
-        </EntityType>
-        <EntityType Name="T_OE_ORGANIZATION_TAGS">
-          <Key>
-            <PropertyRef Name="ORG_IDX" />
-            <PropertyRef Name="ORG_ATTRIBUTE" />
-            <PropertyRef Name="ORG_TAG" />
-          </Key>
-          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
-          <Property Name="ORG_ATTRIBUTE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ORG_TAG" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" FromRole="T_OE_ORGANIZATION_TAGS" ToRole="T_OE_ORGANIZATION" />
-        </EntityType>
-        <Association Name="FK__T_OE_ORGA__ORG_I__1F63A897">
-          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
+        <Association Name="FK__T_OE_REF___TAG_C__6B24EA82">
+          <End Type="EECIPModel.T_OE_REF_TAG_CATEGORIES" Role="T_OE_REF_TAG_CATEGORIES" Multiplicity="1" />
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAG_CATEGORIES">
+              <PropertyRef Name="TAG_CAT_NAME" />
+            </Principal>
+            <Dependent Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_CAT_NAME" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_USER__ROLE___30C33EC3">
+          <End Type="EECIPModel.T_OE_ROLES" Role="T_OE_ROLES" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="EECIPModel.T_OE_ORGANIZATION_TAGS" Role="T_OE_ORGANIZATION_TAGS" Multiplicity="*" />
+          <End Type="EECIPModel.T_OE_USER_ROLES" Role="T_OE_USER_ROLES" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
+            <Principal Role="T_OE_ROLES">
+              <PropertyRef Name="ROLE_IDX" />
             </Principal>
-            <Dependent Role="T_OE_ORGANIZATION_TAGS">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_REF_SYNONYMS">
-          <Key>
-            <PropertyRef Name="SYNONYM_IDX" />
-          </Key>
-          <Property Name="SYNONYM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SYNONYM_TEXT" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <Property Name="MODIFY_USERIDX" Type="Int32" />
-          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-        </EntityType>
-        <EntityType Name="Category">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
-          <Property Name="ModerateTopics" Type="Boolean" Nullable="false" />
-          <Property Name="ModeratePosts" Type="Boolean" Nullable="false" />
-          <Property Name="SortOrder" Type="Int32" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
-          <Property Name="PageTitle" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
-          <Property Name="Path" Type="String" MaxLength="2500" FixedLength="false" Unicode="true" />
-          <Property Name="MetaDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Colour" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Image" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Category_Id" Type="Guid" />
-          <NavigationProperty Name="Category1" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category" ToRole="Category1" />
-          <NavigationProperty Name="Category2" Relationship="EECIPModel.FK__Category__Catego__41B8C09B" FromRole="Category1" ToRole="Category" />
-          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Category___6E8B6712" FromRole="Category" ToRole="Topic" />
-        </EntityType>
-        <Association Name="FK__Category__Catego__41B8C09B">
-          <End Type="EECIPModel.Category" Role="Category" Multiplicity="0..1" />
-          <End Type="EECIPModel.Category" Role="Category1" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Category1">
-              <PropertyRef Name="Category_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
-          <Key>
-            <PropertyRef Name="ORG_IDX" />
-            <PropertyRef Name="EMAIL_STRING" />
-          </Key>
-          <Property Name="ORG_IDX" Type="Guid" Nullable="false" />
-          <Property Name="EMAIL_STRING" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="MODIFY_USERIDX" Type="Int32" />
-          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" FromRole="T_OE_ORGANIZATION_EMAIL_RULE" ToRole="T_OE_ORGANIZATION" />
-        </EntityType>
-        <EntityType Name="Poll">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="IsClosed" Type="Boolean" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ClosePollAfterDays" Type="Int32" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Poll" ToRole="Topic" />
-          <NavigationProperty Name="PollAnswers" Relationship="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" FromRole="Poll" ToRole="PollAnswer" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Poll__Membership__44952D46" FromRole="Poll" ToRole="T_OE_USERS" />
-        </EntityType>
-        <Association Name="FK__T_OE_ORGA__ORG_I__54CB950F">
-          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE" Role="T_OE_ORGANIZATION_EMAIL_RULE" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_ORGANIZATION_EMAIL_RULE">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Post">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="PostContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="VoteCount" Type="Int32" Nullable="false" />
-          <Property Name="DateEdited" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsSolution" Type="Boolean" Nullable="false" />
-          <Property Name="IsTopicStarter" Type="Boolean" />
-          <Property Name="FlaggedAsSpam" Type="Boolean" />
-          <Property Name="IpAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Pending" Type="Boolean" />
-          <Property Name="SearchField" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="InReplyTo" Type="Guid" />
-          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Post" ToRole="Topic" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.Forum_Topic_Post_FK" FromRole="Post" ToRole="Topic" />
-          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Post" ToRole="Favourite" />
-          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Post" ToRole="Vote" />
-          <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Post_I__5FD33367" FromRole="Post" ToRole="PostFile" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Post__Membership__67DE6983" FromRole="Post" ToRole="T_OE_USERS" />
-        </EntityType>
-        <EntityType Name="Topic">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Solved" Type="Boolean" Nullable="false" />
-          <Property Name="SolvedReminderSent" Type="Boolean" />
-          <Property Name="Slug" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
-          <Property Name="Views" Type="Int32" />
-          <Property Name="IsSticky" Type="Boolean" Nullable="false" />
-          <Property Name="IsLocked" Type="Boolean" Nullable="false" />
-          <Property Name="Pending" Type="Boolean" />
-          <Property Name="Category_Id" Type="Guid" Nullable="false" />
-          <Property Name="Post_Id" Type="Guid" />
-          <Property Name="Poll_Id" Type="Guid" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Category" Relationship="EECIPModel.FK__Topic__Category___6E8B6712" FromRole="Topic" ToRole="Category" />
-          <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__Topic__Poll_Id__7073AF84" FromRole="Topic" ToRole="Poll" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Topic__Post_Id__7167D3BD" FromRole="Topic" ToRole="Post" />
-          <NavigationProperty Name="Posts" Relationship="EECIPModel.Forum_Topic_Post_FK" FromRole="Topic" ToRole="Post" />
-          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Topic" ToRole="Favourite" />
-          <NavigationProperty Name="Topic_Tags" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic" ToRole="Topic_Tags" />
-          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="Topic" ToRole="TopicNotification" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Topic__Membershi__6F7F8B4B" FromRole="Topic" ToRole="T_OE_USERS" />
-        </EntityType>
-        <Association Name="FK__Topic__Category___6E8B6712">
-          <End Type="EECIPModel.Category" Role="Category" Multiplicity="1" />
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Category">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Topic">
-              <PropertyRef Name="Category_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Topic__Poll_Id__7073AF84">
-          <End Type="EECIPModel.Poll" Role="Poll" Multiplicity="0..1" />
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Poll">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Topic">
-              <PropertyRef Name="Poll_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Topic__Post_Id__7167D3BD">
-          <End Type="EECIPModel.Post" Role="Post" Multiplicity="0..1" />
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Topic">
-              <PropertyRef Name="Post_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="Forum_Topic_Post_FK">
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1" />
-          <End Type="EECIPModel.Post" Role="Post" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Topic">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Post">
-              <PropertyRef Name="Topic_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="PollAnswer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Answer" Type="String" Nullable="false" MaxLength="600" FixedLength="false" Unicode="true" />
-          <Property Name="Poll_Id" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Poll" Relationship="EECIPModel.FK__PollAnswe__Poll___7AF13DF7" FromRole="PollAnswer" ToRole="Poll" />
-          <NavigationProperty Name="PollVotes" Relationship="EECIPModel.FK__PollVote__PollAn__11D4A34F" FromRole="PollAnswer" ToRole="PollVote" />
-        </EntityType>
-        <EntityType Name="PollVote">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="PollAnswer_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="PollAnswer" Relationship="EECIPModel.FK__PollVote__PollAn__11D4A34F" FromRole="PollVote" ToRole="PollAnswer" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PollVote__Member__10E07F16" FromRole="PollVote" ToRole="T_OE_USERS" />
-        </EntityType>
-        <Association Name="FK__PollAnswe__Poll___7AF13DF7">
-          <End Type="EECIPModel.Poll" Role="Poll" Multiplicity="1" />
-          <End Type="EECIPModel.PollAnswer" Role="PollAnswer" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Poll">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PollAnswer">
-              <PropertyRef Name="Poll_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__PollVote__PollAn__11D4A34F">
-          <End Type="EECIPModel.PollAnswer" Role="PollAnswer" Multiplicity="1" />
-          <End Type="EECIPModel.PollVote" Role="PollVote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PollAnswer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PollVote">
-              <PropertyRef Name="PollAnswer_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="MembershipUserPoint">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Points" Type="Int32" Nullable="false" />
-          <Property Name="DateAdded" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="PointsFor" Type="Int32" Nullable="false" />
-          <Property Name="PointsForId" Type="Guid" />
-          <Property Name="Notes" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Membershi__Membe__14B10FFA" FromRole="MembershipUserPoint" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK_MembershipUserPoints" FromRole="MembershipUserPoint" ToRole="T_OE_USERS" />
-        </EntityType>
-        <EntityType Name="Badge">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Image" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="AwardsPoints" Type="Int32" />
-          <NavigationProperty Name="MembershipUser_Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="Badge" ToRole="MembershipUser_Badge" />
-          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
-          <Property Name="SORT_SEQ" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="MembershipUser_Badge">
-          <Key>
-            <PropertyRef Name="MembershipUser_Id" />
-            <PropertyRef Name="Badge_Id" />
-          </Key>
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <Property Name="Badge_Id" Type="Guid" Nullable="false" />
-          <Property Name="DateEarned" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Badge" Relationship="EECIPModel.FK__Membershi__Badge__6D6238AF" FromRole="MembershipUser_Badge" ToRole="Badge" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Membershi__Membe__6E565CE8" FromRole="MembershipUser_Badge" ToRole="T_OE_USERS" />
-        </EntityType>
-        <Association Name="FK__Membershi__Badge__6D6238AF">
-          <End Type="EECIPModel.Badge" Role="Badge" Multiplicity="1" />
-          <End Type="EECIPModel.MembershipUser_Badge" Role="MembershipUser_Badge" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Badge">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MembershipUser_Badge">
-              <PropertyRef Name="Badge_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_PROJECT_VOTES">
-          <Key>
-            <PropertyRef Name="PROJECT_VOTE_IDX" />
-          </Key>
-          <Property Name="PROJECT_VOTE_IDX" Type="Guid" Nullable="false" />
-          <Property Name="VOTE_AMOUNT" Type="Int32" Nullable="false" />
-          <Property Name="DATE_VOTED" Type="DateTime" Precision="3" />
-          <Property Name="PROJECT_IDX" Type="Guid" />
-          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" />
-          <Property Name="VOTED_BY_USER_IDX" Type="Int32" />
-          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_E__2D47B39A" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
-          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__2C538F61" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_PROJECTS" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_USERS" />
-        </EntityType>
-        <Association Name="FK__T_OE_PROJ__ORG_E__2D47B39A">
-          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION_ENT_SVCS">
-              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_VOTES">
-              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_PROJ__PROJE__2C538F61">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_VOTES">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_REF_ORG_TYPE">
-          <Key>
-            <PropertyRef Name="ORG_TYPE" />
-          </Key>
-          <Property Name="ORG_TYPE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="Favourite">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="MemberId" Type="Int32" Nullable="false" />
-          <Property Name="PostId" Type="Guid" Nullable="false" />
-          <Property Name="TopicId" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Favourite__PostI__4AD81681" FromRole="Favourite" ToRole="Post" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Favourite__Topic__4BCC3ABA" FromRole="Favourite" ToRole="Topic" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__Favourite__Membe__49E3F248" FromRole="Favourite" ToRole="T_OE_USERS" />
-        </EntityType>
-        <EntityType Name="Topic_Tags">
-          <Key>
-            <PropertyRef Name="Topic_Id" />
-            <PropertyRef Name="TopicTagAttribute" />
-            <PropertyRef Name="TopicTag" />
-          </Key>
-          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
-          <Property Name="TopicTagAttribute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TopicTag" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__Topic_Tag__Topic__4242D080" FromRole="Topic_Tags" ToRole="Topic" />
-        </EntityType>
-        <EntityType Name="TopicNotification">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Topic_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Topic" Relationship="EECIPModel.FK__TopicNoti__Topic__3F6663D5" FromRole="TopicNotification" ToRole="Topic" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK_TopicNotification" FromRole="TopicNotification" ToRole="T_OE_USERS" />
-        </EntityType>
-        <EntityType Name="Vote">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Amount" Type="Int32" Nullable="false" />
-          <Property Name="DateVoted" Type="DateTime" Precision="3" />
-          <Property Name="Post_Id" Type="Guid" Nullable="false" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <Property Name="VotedByMembershipUser_Id" Type="Int32" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__Vote__Post_Id__4707859D" FromRole="Vote" ToRole="Post" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK_VoteMembership" FromRole="Vote" ToRole="T_OE_USERS" />
-          <NavigationProperty Name="T_OE_USERS1" Relationship="EECIPModel.FK_VoteMembershipBy" FromRole="Vote" ToRole="T_OE_USERS" />
-        </EntityType>
-        <Association Name="FK__Favourite__PostI__4AD81681">
-          <End Type="EECIPModel.Post" Role="Post" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Favourite">
-              <PropertyRef Name="PostId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Favourite__Topic__4BCC3ABA">
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Topic">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Favourite">
-              <PropertyRef Name="TopicId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Vote__Post_Id__4707859D">
-          <End Type="EECIPModel.Post" Role="Post" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.Vote" Role="Vote" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Vote">
-              <PropertyRef Name="Post_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Topic_Tag__Topic__4242D080">
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.Topic_Tags" Role="Topic_Tags" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Topic">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Topic_Tags">
-              <PropertyRef Name="Topic_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__TopicNoti__Topic__3F6663D5">
-          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.TopicNotification" Role="TopicNotification" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Topic">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="TopicNotification">
-              <PropertyRef Name="Topic_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="PostFile">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Filename" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Post_Id" Type="Guid" />
-          <Property Name="FileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="FileDecription" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="MembershipUser_Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Post" Relationship="EECIPModel.FK__PostFile__Post_I__5FD33367" FromRole="PostFile" ToRole="Post" />
-          <Property Name="FileContentType" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__PostFile__Member__6497E884" FromRole="PostFile" ToRole="T_OE_USERS" />
-        </EntityType>
-        <Association Name="FK__PostFile__Post_I__5FD33367">
-          <End Type="EECIPModel.Post" Role="Post" Multiplicity="0..1" />
-          <End Type="EECIPModel.PostFile" Role="PostFile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Post">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PostFile">
-              <PropertyRef Name="Post_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_DOCUMENTS">
-          <Key>
-            <PropertyRef Name="DOC_IDX" />
-          </Key>
-          <Property Name="DOC_IDX" Type="Guid" Nullable="false" />
-          <Property Name="DOC_CONTENT" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="DOC_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DOC_TYPE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DOC_FILE_TYPE" Type="String" MaxLength="75" FixedLength="false" Unicode="false" />
-          <Property Name="DOC_SIZE" Type="Int32" />
-          <Property Name="DOC_COMMENT" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DOC_AUTHOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PROJECT_IDX" Type="Guid" />
-          <Property Name="ORG_ENT_SVCS_IDX" Type="Int32" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <Property Name="MODIFY_USERIDX" Type="Int32" />
-          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="T_OE_ORGANIZATION_ENT_SVCS" Relationship="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" FromRole="T_OE_DOCUMENTS" ToRole="T_OE_ORGANIZATION_ENT_SVCS" />
-          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_DOCUMENTS" ToRole="T_OE_PROJECTS" />
-        </EntityType>
-        <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
-          <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_DOCUMENTS" Role="T_OE_DOCUMENTS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION_ENT_SVCS">
-              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_DOCUMENTS">
-              <PropertyRef Name="ORG_ENT_SVCS_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_DOCU__PROJE__190BB0C3">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_DOCUMENTS" Role="T_OE_DOCUMENTS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_DOCUMENTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_APP_SETTINGS_CUSTOM">
-          <Key>
-            <PropertyRef Name="SETTING_CUSTOM_IDX" />
-          </Key>
-          <Property Name="SETTING_CUSTOM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TERMS_AND_CONDITIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="ANNOUNCEMENTS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
-          <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
-          <Property Type="String" Name="ENT_PLATFORM_NAME" Nullable="true" MaxLength="80" />
-          <Property Type="String" Name="ENT_PLATFORM_DESC" Nullable="true" MaxLength="1000" />
-          <Property Type="String" Name="ENT_PLATFORM_EXAMPLE" Nullable="true" MaxLength="100" />
-          <Property Type="Int32" Name="CNT" Nullable="true" />
-        </ComplexType>
-        <EntityType Name="T_OE_PROJECT_URLS">
-          <Key>
-            <PropertyRef Name="PROJECT_URL_IDX" />
-          </Key>
-          <Property Name="PROJECT_URL_IDX" Type="Guid" Nullable="false" />
-          <Property Name="PROJECT_IDX" Type="Guid" />
-          <Property Name="PROJECT_URL" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="PROJ_URL_DESC" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__6BAEFA67" FromRole="T_OE_PROJECT_URLS" ToRole="T_OE_PROJECTS" />
-        </EntityType>
-        <Association Name="FK__T_OE_PROJ__PROJE__6BAEFA67">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECT_URLS" Role="T_OE_PROJECT_URLS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_URLS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="T_OE_USERS">
-          <Key>
-            <PropertyRef Name="USER_IDX" />
-          </Key>
-          <Property Name="USER_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="USER_ID" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="PWD_HASH" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PWD_SALT" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="LNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="EMAIL" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="INITAL_PWD_FLAG" Type="Boolean" Nullable="false" />
-          <Property Name="EFFECTIVE_DT" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="LASTLOGIN_DT" Type="DateTime" Precision="0" />
-          <Property Name="PHONE" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
-          <Property Name="PHONE_EXT" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="JOB_TITLE" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="NODE_ADMIN" Type="Boolean" Nullable="false" />
-          <Property Name="USER_AVATAR" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="LOG_ATMPT" Type="Int32" />
-          <Property Name="LOCKOUT_END_DATE_UTC" Type="DateTime" Precision="7" />
-          <Property Name="LOCKOUT_ENABLED" Type="Boolean" Nullable="false" />
-          <Property Name="ORG_IDX" Type="Guid" />
-          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <Property Name="MODIFY_USERIDX" Type="Int32" />
-          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
-          <Property Name="LINKEDIN" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ALLOW_GOVERNANCE" Type="Boolean" Nullable="false" />
-          <Property Name="EXCLUDE_POINTS_IND" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_USERS" ToRole="T_OE_ORGANIZATION" />
-          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28" FromRole="T_OE_USERS" ToRole="T_OE_PROJECT_VOTES" />
-          <NavigationProperty Name="T_OE_USER_EXPERTISE" Relationship="EECIPModel.FK__T_OE_USER__USER___1C873BEC" FromRole="T_OE_USERS" ToRole="T_OE_USER_EXPERTISE" />
-          <NavigationProperty Name="T_OE_USER_ROLES" Relationship="EECIPModel.FK__T_OE_USER__USER___31B762FC" FromRole="T_OE_USERS" ToRole="T_OE_USER_ROLES" />
-          <NavigationProperty Name="Favourites" Relationship="EECIPModel.FK__Favourite__Membe__49E3F248" FromRole="T_OE_USERS" ToRole="Favourite" />
-          <NavigationProperty Name="MembershipUserPoints" Relationship="EECIPModel.FK__Membershi__Membe__14B10FFA" FromRole="T_OE_USERS" ToRole="MembershipUserPoint" />
-          <NavigationProperty Name="MembershipUser_Badge" Relationship="EECIPModel.FK__Membershi__Membe__6E565CE8" FromRole="T_OE_USERS" ToRole="MembershipUser_Badge" />
-          <NavigationProperty Name="Polls" Relationship="EECIPModel.FK__Poll__Membership__44952D46" FromRole="T_OE_USERS" ToRole="Poll" />
-          <NavigationProperty Name="PollVotes" Relationship="EECIPModel.FK__PollVote__Member__10E07F16" FromRole="T_OE_USERS" ToRole="PollVote" />
-          <NavigationProperty Name="Posts" Relationship="EECIPModel.FK__Post__Membership__67DE6983" FromRole="T_OE_USERS" ToRole="Post" />
-          <NavigationProperty Name="PostFiles" Relationship="EECIPModel.FK__PostFile__Member__6497E884" FromRole="T_OE_USERS" ToRole="PostFile" />
-          <NavigationProperty Name="Topics" Relationship="EECIPModel.FK__Topic__Membershi__6F7F8B4B" FromRole="T_OE_USERS" ToRole="Topic" />
-          <NavigationProperty Name="MembershipUserPoints1" Relationship="EECIPModel.FK_MembershipUserPoints" FromRole="T_OE_USERS" ToRole="MembershipUserPoint" />
-          <NavigationProperty Name="TopicNotifications" Relationship="EECIPModel.FK_TopicNotification" FromRole="T_OE_USERS" ToRole="TopicNotification" />
-          <NavigationProperty Name="Votes" Relationship="EECIPModel.FK_VoteMembership" FromRole="T_OE_USERS" ToRole="Vote" />
-          <NavigationProperty Name="Votes1" Relationship="EECIPModel.FK_VoteMembershipBy" FromRole="T_OE_USERS" ToRole="Vote" />
-        </EntityType>
-        <Association Name="FK__T_OE_USER__ORG_I__2CF2ADDF">
-          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_USERS">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_PROJ__VOTED__2B5F6B28">
-          <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_VOTES">
-              <PropertyRef Name="VOTED_BY_USER_IDX" />
+            <Dependent Role="T_OE_USER_ROLES">
+              <PropertyRef Name="ROLE_IDX" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2856,61 +2684,201 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Membershi__Badge__6D6238AF">
+          <End Type="EECIPModel.Badge" Role="Badge" Multiplicity="1" />
+          <End Type="EECIPModel.MembershipUser_Badge" Role="MembershipUser_Badge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Badge">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MembershipUser_Badge">
+              <PropertyRef Name="Badge_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Category__Catego__41B8C09B">
+          <End Type="EECIPModel.Category" Role="Category" Multiplicity="0..1" />
+          <End Type="EECIPModel.Category" Role="Category1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Topic__Category___6E8B6712">
+          <End Type="EECIPModel.Category" Role="Category" Multiplicity="1" />
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Topic">
+              <PropertyRef Name="Category_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Favourite__PostI__4AD81681">
+          <End Type="EECIPModel.Post" Role="Post" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Favourite">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Favourite__Topic__4BCC3ABA">
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.Favourite" Role="Favourite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Favourite">
+              <PropertyRef Name="TopicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PollAnswe__Poll___7AF13DF7">
+          <End Type="EECIPModel.Poll" Role="Poll" Multiplicity="1" />
+          <End Type="EECIPModel.PollAnswer" Role="PollAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Poll">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PollAnswer">
+              <PropertyRef Name="Poll_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Topic__Poll_Id__7073AF84">
+          <End Type="EECIPModel.Poll" Role="Poll" Multiplicity="0..1" />
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Poll">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Topic">
+              <PropertyRef Name="Poll_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PollVote__PollAn__11D4A34F">
+          <End Type="EECIPModel.PollAnswer" Role="PollAnswer" Multiplicity="1" />
+          <End Type="EECIPModel.PollVote" Role="PollVote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PollAnswer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PollVote">
+              <PropertyRef Name="PollAnswer_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PostFile__Post_I__63A3C44B">
+          <End Type="EECIPModel.Post" Role="Post" Multiplicity="0..1" />
+          <End Type="EECIPModel.PostFile" Role="PostFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="PostFile">
+              <PropertyRef Name="Post_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Topic__Post_Id__7167D3BD">
+          <End Type="EECIPModel.Post" Role="Post" Multiplicity="0..1" />
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Topic">
+              <PropertyRef Name="Post_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vote__Post_Id__4707859D">
+          <End Type="EECIPModel.Post" Role="Post" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.Vote" Role="Vote" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Vote">
+              <PropertyRef Name="Post_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="forum_Topic_Post_FK">
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1" />
+          <End Type="EECIPModel.Post" Role="Post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Post">
+              <PropertyRef Name="Topic_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Topic_Tag__Topic__4242D080">
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.Topic_Tags" Role="Topic_Tags" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Topic_Tags">
+              <PropertyRef Name="Topic_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TopicNoti__Topic__3F6663D5">
+          <End Type="EECIPModel.Topic" Role="Topic" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.TopicNotification" Role="TopicNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Topic">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TopicNotification">
+              <PropertyRef Name="Topic_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="EECIPModelStoreContainer" CdmEntityContainer="EECIPEntities">
-          <EntitySetMapping Name="T_OE_ROLES">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_ROLES">
-              <MappingFragment StoreEntitySet="T_OE_ROLES">
-                <ScalarProperty Name="ROLE_IDX" ColumnName="ROLE_IDX" />
-                <ScalarProperty Name="ROLE_NAME" ColumnName="ROLE_NAME" />
-                <ScalarProperty Name="ROLE_DESC" ColumnName="ROLE_DESC" />
-                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
-                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
-                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_SYS_EMAIL_LOG">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_SYS_EMAIL_LOG">
-              <MappingFragment StoreEntitySet="T_OE_SYS_EMAIL_LOG">
-                <ScalarProperty Name="EMAIL_LOG_ID" ColumnName="EMAIL_LOG_ID" />
-                <ScalarProperty Name="LOG_DT" ColumnName="LOG_DT" />
-                <ScalarProperty Name="LOG_FROM" ColumnName="LOG_FROM" />
-                <ScalarProperty Name="LOG_TO" ColumnName="LOG_TO" />
-                <ScalarProperty Name="LOG_CC" ColumnName="LOG_CC" />
-                <ScalarProperty Name="LOG_SUBJ" ColumnName="LOG_SUBJ" />
-                <ScalarProperty Name="LOG_MSG" ColumnName="LOG_MSG" />
-                <ScalarProperty Name="EMAIL_TYPE" ColumnName="EMAIL_TYPE" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_SYS_LOG">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_SYS_LOG">
-              <MappingFragment StoreEntitySet="T_OE_SYS_LOG">
-                <ScalarProperty Name="SYS_LOG_ID" ColumnName="SYS_LOG_ID" />
-                <ScalarProperty Name="LOG_DT" ColumnName="LOG_DT" />
-                <ScalarProperty Name="LOG_USERIDX" ColumnName="LOG_USERIDX" />
-                <ScalarProperty Name="LOG_TYPE" ColumnName="LOG_TYPE" />
-                <ScalarProperty Name="LOG_MSG" ColumnName="LOG_MSG" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_USER_ROLES">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_ROLES">
-              <MappingFragment StoreEntitySet="T_OE_USER_ROLES">
-                <ScalarProperty Name="USER_ROLE_IDX" ColumnName="USER_ROLE_IDX" />
-                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
-                <ScalarProperty Name="ROLE_IDX" ColumnName="ROLE_IDX" />
-                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_ENT_SVC_COUNT_DISPLAY" FunctionName="EECIPModel.Store.SP_ENT_SVC_COUNT_DISPLAY">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EECIPModel.SP_ENT_SVC_COUNT_DISPLAY_Result">
+                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
+                <ScalarProperty Name="ENT_PLATFORM_NAME" ColumnName="ENT_PLATFORM_NAME" />
+                <ScalarProperty Name="ENT_PLATFORM_DESC" ColumnName="ENT_PLATFORM_DESC" />
+                <ScalarProperty Name="ENT_PLATFORM_EXAMPLE" ColumnName="ENT_PLATFORM_EXAMPLE" />
+                <ScalarProperty Name="CNT" ColumnName="CNT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <EntitySetMapping Name="T_OE_APP_SETTINGS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_APP_SETTINGS">
               <MappingFragment StoreEntitySet="T_OE_APP_SETTINGS">
@@ -2924,78 +2892,32 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_REF_ENTERPRISE_PLATFORM">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM">
-              <MappingFragment StoreEntitySet="T_OE_REF_ENTERPRISE_PLATFORM">
-                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
-                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
-                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
-                <ScalarProperty Name="SEQ_NO" ColumnName="SEQ_NO" />
-                <ScalarProperty Name="ENT_PLATFORM_EXAMPLE" ColumnName="ENT_PLATFORM_EXAMPLE" />
-                <ScalarProperty Name="ENT_PLATFORM_DESC" ColumnName="ENT_PLATFORM_DESC" />
-                <ScalarProperty Name="ENT_PLATFORM_NAME" ColumnName="ENT_PLATFORM_NAME" />
-                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
+          <EntitySetMapping Name="T_OE_APP_SETTINGS_CUSTOM">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_APP_SETTINGS_CUSTOM">
+              <MappingFragment StoreEntitySet="T_OE_APP_SETTINGS_CUSTOM">
+                <ScalarProperty Name="ANNOUNCEMENTS" ColumnName="ANNOUNCEMENTS" />
+                <ScalarProperty Name="TERMS_AND_CONDITIONS" ColumnName="TERMS_AND_CONDITIONS" />
+                <ScalarProperty Name="SETTING_CUSTOM_IDX" ColumnName="SETTING_CUSTOM_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_REF_REGION">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_REGION">
-              <MappingFragment StoreEntitySet="T_OE_REF_REGION">
-                <ScalarProperty Name="EPA_REGION_NAME" ColumnName="EPA_REGION_NAME" />
-                <ScalarProperty Name="EPA_REGION" ColumnName="EPA_REGION" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_REF_STATE">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_STATE">
-              <MappingFragment StoreEntitySet="T_OE_REF_STATE">
-                <ScalarProperty Name="POP_DENSITY" ColumnName="POP_DENSITY" />
-                <ScalarProperty Name="STATE_NAME" ColumnName="STATE_NAME" />
-                <ScalarProperty Name="STATE_CD" ColumnName="STATE_CD" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_REF_TAG_CATEGORIES">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_TAG_CATEGORIES">
-              <MappingFragment StoreEntitySet="T_OE_REF_TAG_CATEGORIES">
-                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
-                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="TAG_CAT_COLOR" ColumnName="TAG_CAT_COLOR" />
-                <ScalarProperty Name="TAG_CAT_DESCRIPTION" ColumnName="TAG_CAT_DESCRIPTION" />
-                <ScalarProperty Name="TAG_CAT_NAME" ColumnName="TAG_CAT_NAME" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_REF_TAGS">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_TAGS">
-              <MappingFragment StoreEntitySet="T_OE_REF_TAGS">
-                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
-                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="USER_CREATE_IND" ColumnName="USER_CREATE_IND" />
-                <ScalarProperty Name="TAG_CAT_NAME" ColumnName="TAG_CAT_NAME" />
-                <ScalarProperty Name="TAG_NAME" ColumnName="TAG_NAME" />
-                <ScalarProperty Name="TAG_IDX" ColumnName="TAG_IDX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_ORGANIZATION_ENT_SVCS">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS">
-              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_ENT_SVCS">
-                <ScalarProperty Name="ACTIVE_INTEREST_IND" ColumnName="ACTIVE_INTEREST_IND" />
-                <ScalarProperty Name="PROJECT_CONTACT" ColumnName="PROJECT_CONTACT" />
-                <ScalarProperty Name="RECORD_SOURCE" ColumnName="RECORD_SOURCE" />
-                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
+          <EntitySetMapping Name="T_OE_DOCUMENTS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_DOCUMENTS">
+              <MappingFragment StoreEntitySet="T_OE_DOCUMENTS">
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
                 <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
                 <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
                 <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="COMMENTS" ColumnName="COMMENTS" />
-                <ScalarProperty Name="IMPLEMENT_STATUS" ColumnName="IMPLEMENT_STATUS" />
-                <ScalarProperty Name="VENDOR" ColumnName="VENDOR" />
-                <ScalarProperty Name="PROJECT_NAME" ColumnName="PROJECT_NAME" />
-                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
-                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
                 <ScalarProperty Name="ORG_ENT_SVCS_IDX" ColumnName="ORG_ENT_SVCS_IDX" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+                <ScalarProperty Name="DOC_AUTHOR" ColumnName="DOC_AUTHOR" />
+                <ScalarProperty Name="DOC_COMMENT" ColumnName="DOC_COMMENT" />
+                <ScalarProperty Name="DOC_SIZE" ColumnName="DOC_SIZE" />
+                <ScalarProperty Name="DOC_FILE_TYPE" ColumnName="DOC_FILE_TYPE" />
+                <ScalarProperty Name="DOC_TYPE" ColumnName="DOC_TYPE" />
+                <ScalarProperty Name="DOC_NAME" ColumnName="DOC_NAME" />
+                <ScalarProperty Name="DOC_CONTENT" ColumnName="DOC_CONTENT" />
+                <ScalarProperty Name="DOC_IDX" ColumnName="DOC_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3020,21 +2942,45 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_USER_NOTIFICATION">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_NOTIFICATION">
-              <MappingFragment StoreEntitySet="T_OE_USER_NOTIFICATION">
+          <EntitySetMapping Name="T_OE_ORGANIZATION_EMAIL_RULE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE">
+              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_EMAIL_RULE">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="EMAIL_STRING" ColumnName="EMAIL_STRING" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_ORGANIZATION_ENT_SVCS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS">
+              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_ENT_SVCS">
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
                 <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
                 <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
                 <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="FROM_USER_IDX" ColumnName="FROM_USER_IDX" />
-                <ScalarProperty Name="READ_IND" ColumnName="READ_IND" />
-                <ScalarProperty Name="NOTIFY_DESC" ColumnName="NOTIFY_DESC" />
-                <ScalarProperty Name="NOTIFY_TITLE" ColumnName="NOTIFY_TITLE" />
-                <ScalarProperty Name="NOTIFY_TYPE" ColumnName="NOTIFY_TYPE" />
-                <ScalarProperty Name="NOTIFY_DT" ColumnName="NOTIFY_DT" />
-                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
-                <ScalarProperty Name="NOTIFICATION_IDX" ColumnName="NOTIFICATION_IDX" />
+                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
+                <ScalarProperty Name="RECORD_SOURCE" ColumnName="RECORD_SOURCE" />
+                <ScalarProperty Name="ACTIVE_INTEREST_IND" ColumnName="ACTIVE_INTEREST_IND" />
+                <ScalarProperty Name="PROJECT_CONTACT" ColumnName="PROJECT_CONTACT" />
+                <ScalarProperty Name="COMMENTS" ColumnName="COMMENTS" />
+                <ScalarProperty Name="IMPLEMENT_STATUS" ColumnName="IMPLEMENT_STATUS" />
+                <ScalarProperty Name="VENDOR" ColumnName="VENDOR" />
+                <ScalarProperty Name="PROJECT_NAME" ColumnName="PROJECT_NAME" />
+                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+                <ScalarProperty Name="ORG_ENT_SVCS_IDX" ColumnName="ORG_ENT_SVCS_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_ORGANIZATION_TAGS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_TAGS">
+              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_TAGS">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="ORG_TAG" ColumnName="ORG_TAG" />
+                <ScalarProperty Name="ORG_ATTRIBUTE" ColumnName="ORG_ATTRIBUTE" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3046,6 +2992,28 @@
                 <ScalarProperty Name="PROJECT_TAG_NAME" ColumnName="PROJECT_TAG_NAME" />
                 <ScalarProperty Name="PROJECT_ATTRIBUTE" ColumnName="PROJECT_ATTRIBUTE" />
                 <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_PROJECT_URLS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECT_URLS">
+              <MappingFragment StoreEntitySet="T_OE_PROJECT_URLS">
+                <ScalarProperty Name="PROJ_URL_DESC" ColumnName="PROJ_URL_DESC" />
+                <ScalarProperty Name="PROJECT_URL" ColumnName="PROJECT_URL" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+                <ScalarProperty Name="PROJECT_URL_IDX" ColumnName="PROJECT_URL_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_PROJECT_VOTES">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECT_VOTES">
+              <MappingFragment StoreEntitySet="T_OE_PROJECT_VOTES">
+                <ScalarProperty Name="VOTED_BY_USER_IDX" ColumnName="VOTED_BY_USER_IDX" />
+                <ScalarProperty Name="ORG_ENT_SVCS_IDX" ColumnName="ORG_ENT_SVCS_IDX" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+                <ScalarProperty Name="DATE_VOTED" ColumnName="DATE_VOTED" />
+                <ScalarProperty Name="VOTE_AMOUNT" ColumnName="VOTE_AMOUNT" />
+                <ScalarProperty Name="PROJECT_VOTE_IDX" ColumnName="PROJECT_VOTE_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3082,24 +3050,41 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_USER_EXPERTISE">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_EXPERTISE">
-              <MappingFragment StoreEntitySet="T_OE_USER_EXPERTISE">
-                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
-                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="EXPERTISE_TAG" ColumnName="EXPERTISE_TAG" />
-                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
+          <EntitySetMapping Name="T_OE_REF_ENTERPRISE_PLATFORM">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM">
+              <MappingFragment StoreEntitySet="T_OE_REF_ENTERPRISE_PLATFORM">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
+                <ScalarProperty Name="SEQ_NO" ColumnName="SEQ_NO" />
+                <ScalarProperty Name="ENT_PLATFORM_EXAMPLE" ColumnName="ENT_PLATFORM_EXAMPLE" />
+                <ScalarProperty Name="ENT_PLATFORM_DESC" ColumnName="ENT_PLATFORM_DESC" />
+                <ScalarProperty Name="ENT_PLATFORM_NAME" ColumnName="ENT_PLATFORM_NAME" />
+                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_ORGANIZATION_TAGS">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_TAGS">
-              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_TAGS">
-                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
-                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="ORG_TAG" ColumnName="ORG_TAG" />
-                <ScalarProperty Name="ORG_ATTRIBUTE" ColumnName="ORG_ATTRIBUTE" />
-                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+          <EntitySetMapping Name="T_OE_REF_ORG_TYPE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_ORG_TYPE">
+              <MappingFragment StoreEntitySet="T_OE_REF_ORG_TYPE">
+                <ScalarProperty Name="ORG_TYPE" ColumnName="ORG_TYPE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_REF_REGION">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_REGION">
+              <MappingFragment StoreEntitySet="T_OE_REF_REGION">
+                <ScalarProperty Name="EPA_REGION_NAME" ColumnName="EPA_REGION_NAME" />
+                <ScalarProperty Name="EPA_REGION" ColumnName="EPA_REGION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_REF_STATE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_STATE">
+              <MappingFragment StoreEntitySet="T_OE_REF_STATE">
+                <ScalarProperty Name="POP_DENSITY" ColumnName="POP_DENSITY" />
+                <ScalarProperty Name="STATE_NAME" ColumnName="STATE_NAME" />
+                <ScalarProperty Name="STATE_CD" ColumnName="STATE_CD" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3115,265 +3100,103 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Categories">
-            <EntityTypeMapping TypeName="EECIPModel.Category">
-              <MappingFragment StoreEntitySet="Category">
-                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
-                <ScalarProperty Name="Image" ColumnName="Image" />
-                <ScalarProperty Name="Colour" ColumnName="Colour" />
-                <ScalarProperty Name="MetaDescription" ColumnName="MetaDescription" />
-                <ScalarProperty Name="Path" ColumnName="Path" />
-                <ScalarProperty Name="PageTitle" ColumnName="PageTitle" />
-                <ScalarProperty Name="Slug" ColumnName="Slug" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
-                <ScalarProperty Name="ModeratePosts" ColumnName="ModeratePosts" />
-                <ScalarProperty Name="ModerateTopics" ColumnName="ModerateTopics" />
-                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
+          <EntitySetMapping Name="T_OE_REF_TAG_CATEGORIES">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_TAG_CATEGORIES">
+              <MappingFragment StoreEntitySet="T_OE_REF_TAG_CATEGORIES">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="TAG_CAT_COLOR" ColumnName="TAG_CAT_COLOR" />
+                <ScalarProperty Name="TAG_CAT_DESCRIPTION" ColumnName="TAG_CAT_DESCRIPTION" />
+                <ScalarProperty Name="TAG_CAT_NAME" ColumnName="TAG_CAT_NAME" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_ORGANIZATION_EMAIL_RULE">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_ORGANIZATION_EMAIL_RULE">
-              <MappingFragment StoreEntitySet="T_OE_ORGANIZATION_EMAIL_RULE">
-                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
-                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
-                <ScalarProperty Name="EMAIL_STRING" ColumnName="EMAIL_STRING" />
-                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+          <EntitySetMapping Name="T_OE_REF_TAGS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_TAGS">
+              <MappingFragment StoreEntitySet="T_OE_REF_TAGS">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="USER_CREATE_IND" ColumnName="USER_CREATE_IND" />
+                <ScalarProperty Name="TAG_CAT_NAME" ColumnName="TAG_CAT_NAME" />
+                <ScalarProperty Name="TAG_NAME" ColumnName="TAG_NAME" />
+                <ScalarProperty Name="TAG_IDX" ColumnName="TAG_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Polls">
-            <EntityTypeMapping TypeName="EECIPModel.Poll">
-              <MappingFragment StoreEntitySet="Poll">
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="ClosePollAfterDays" ColumnName="ClosePollAfterDays" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Posts">
-            <EntityTypeMapping TypeName="EECIPModel.Post">
-              <MappingFragment StoreEntitySet="Post">
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
-                <ScalarProperty Name="InReplyTo" ColumnName="InReplyTo" />
-                <ScalarProperty Name="SearchField" ColumnName="SearchField" />
-                <ScalarProperty Name="Pending" ColumnName="Pending" />
-                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
-                <ScalarProperty Name="FlaggedAsSpam" ColumnName="FlaggedAsSpam" />
-                <ScalarProperty Name="IsTopicStarter" ColumnName="IsTopicStarter" />
-                <ScalarProperty Name="IsSolution" ColumnName="IsSolution" />
-                <ScalarProperty Name="DateEdited" ColumnName="DateEdited" />
-                <ScalarProperty Name="VoteCount" ColumnName="VoteCount" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="PostContent" ColumnName="PostContent" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Topics">
-            <EntityTypeMapping TypeName="EECIPModel.Topic">
-              <MappingFragment StoreEntitySet="Topic">
-                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="Poll_Id" ColumnName="Poll_Id" />
-                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
-                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
-                <ScalarProperty Name="Pending" ColumnName="Pending" />
-                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
-                <ScalarProperty Name="IsSticky" ColumnName="IsSticky" />
-                <ScalarProperty Name="Views" ColumnName="Views" />
-                <ScalarProperty Name="Slug" ColumnName="Slug" />
-                <ScalarProperty Name="SolvedReminderSent" ColumnName="SolvedReminderSent" />
-                <ScalarProperty Name="Solved" ColumnName="Solved" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PollAnswers">
-            <EntityTypeMapping TypeName="EECIPModel.PollAnswer">
-              <MappingFragment StoreEntitySet="PollAnswer">
-                <ScalarProperty Name="Poll_Id" ColumnName="Poll_Id" />
-                <ScalarProperty Name="Answer" ColumnName="Answer" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PollVotes">
-            <EntityTypeMapping TypeName="EECIPModel.PollVote">
-              <MappingFragment StoreEntitySet="PollVote">
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="PollAnswer_Id" ColumnName="PollAnswer_Id" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MembershipUserPoints">
-            <EntityTypeMapping TypeName="EECIPModel.MembershipUserPoint">
-              <MappingFragment StoreEntitySet="MembershipUserPoints">
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="PointsForId" ColumnName="PointsForId" />
-                <ScalarProperty Name="PointsFor" ColumnName="PointsFor" />
-                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
-                <ScalarProperty Name="Points" ColumnName="Points" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Badges">
-            <EntityTypeMapping TypeName="EECIPModel.Badge">
-              <MappingFragment StoreEntitySet="Badge">
-                <ScalarProperty Name="SORT_SEQ" ColumnName="SORT_SEQ" />
-                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
-                <ScalarProperty Name="AwardsPoints" ColumnName="AwardsPoints" />
-                <ScalarProperty Name="Image" ColumnName="Image" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="MembershipUser_Badge">
-            <EntityTypeMapping TypeName="EECIPModel.MembershipUser_Badge">
-              <MappingFragment StoreEntitySet="MembershipUser_Badge">
-                <ScalarProperty Name="DateEarned" ColumnName="DateEarned" />
-                <ScalarProperty Name="Badge_Id" ColumnName="Badge_Id" />
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_PROJECT_VOTES">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECT_VOTES">
-              <MappingFragment StoreEntitySet="T_OE_PROJECT_VOTES">
-                <ScalarProperty Name="VOTED_BY_USER_IDX" ColumnName="VOTED_BY_USER_IDX" />
-                <ScalarProperty Name="ORG_ENT_SVCS_IDX" ColumnName="ORG_ENT_SVCS_IDX" />
-                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
-                <ScalarProperty Name="DATE_VOTED" ColumnName="DATE_VOTED" />
-                <ScalarProperty Name="VOTE_AMOUNT" ColumnName="VOTE_AMOUNT" />
-                <ScalarProperty Name="PROJECT_VOTE_IDX" ColumnName="PROJECT_VOTE_IDX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_REF_ORG_TYPE">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_ORG_TYPE">
-              <MappingFragment StoreEntitySet="T_OE_REF_ORG_TYPE">
-                <ScalarProperty Name="ORG_TYPE" ColumnName="ORG_TYPE" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Favourites">
-            <EntityTypeMapping TypeName="EECIPModel.Favourite">
-              <MappingFragment StoreEntitySet="Favourite">
-                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
-                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Topic_Tags">
-            <EntityTypeMapping TypeName="EECIPModel.Topic_Tags">
-              <MappingFragment StoreEntitySet="Topic_Tags">
-                <ScalarProperty Name="TopicTag" ColumnName="TopicTag" />
-                <ScalarProperty Name="TopicTagAttribute" ColumnName="TopicTagAttribute" />
-                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="TopicNotifications">
-            <EntityTypeMapping TypeName="EECIPModel.TopicNotification">
-              <MappingFragment StoreEntitySet="TopicNotification">
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Votes">
-            <EntityTypeMapping TypeName="EECIPModel.Vote">
-              <MappingFragment StoreEntitySet="Vote">
-                <ScalarProperty Name="VotedByMembershipUser_Id" ColumnName="VotedByMembershipUser_Id" />
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
-                <ScalarProperty Name="DateVoted" ColumnName="DateVoted" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PostFiles">
-            <EntityTypeMapping TypeName="EECIPModel.PostFile">
-              <MappingFragment StoreEntitySet="PostFile">
-                <ScalarProperty Name="FileContentType" ColumnName="FileContentType" />
-                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
-                <ScalarProperty Name="FileDecription" ColumnName="FileDecription" />
-                <ScalarProperty Name="FileContent" ColumnName="FileContent" />
-                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="Filename" ColumnName="Filename" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_DOCUMENTS">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_DOCUMENTS">
-              <MappingFragment StoreEntitySet="T_OE_DOCUMENTS">
+          <EntitySetMapping Name="T_OE_ROLES">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_ROLES">
+              <MappingFragment StoreEntitySet="T_OE_ROLES">
                 <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
                 <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
                 <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
                 <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="ORG_ENT_SVCS_IDX" ColumnName="ORG_ENT_SVCS_IDX" />
-                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
-                <ScalarProperty Name="DOC_AUTHOR" ColumnName="DOC_AUTHOR" />
-                <ScalarProperty Name="DOC_COMMENT" ColumnName="DOC_COMMENT" />
-                <ScalarProperty Name="DOC_SIZE" ColumnName="DOC_SIZE" />
-                <ScalarProperty Name="DOC_FILE_TYPE" ColumnName="DOC_FILE_TYPE" />
-                <ScalarProperty Name="DOC_TYPE" ColumnName="DOC_TYPE" />
-                <ScalarProperty Name="DOC_NAME" ColumnName="DOC_NAME" />
-                <ScalarProperty Name="DOC_CONTENT" ColumnName="DOC_CONTENT" />
-                <ScalarProperty Name="DOC_IDX" ColumnName="DOC_IDX" />
+                <ScalarProperty Name="ROLE_DESC" ColumnName="ROLE_DESC" />
+                <ScalarProperty Name="ROLE_NAME" ColumnName="ROLE_NAME" />
+                <ScalarProperty Name="ROLE_IDX" ColumnName="ROLE_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_APP_SETTINGS_CUSTOM">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_APP_SETTINGS_CUSTOM">
-              <MappingFragment StoreEntitySet="T_OE_APP_SETTINGS_CUSTOM">
-                <ScalarProperty Name="ANNOUNCEMENTS" ColumnName="ANNOUNCEMENTS" />
-                <ScalarProperty Name="TERMS_AND_CONDITIONS" ColumnName="TERMS_AND_CONDITIONS" />
-                <ScalarProperty Name="SETTING_CUSTOM_IDX" ColumnName="SETTING_CUSTOM_IDX" />
+          <EntitySetMapping Name="T_OE_SYS_EMAIL_LOG">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_SYS_EMAIL_LOG">
+              <MappingFragment StoreEntitySet="T_OE_SYS_EMAIL_LOG">
+                <ScalarProperty Name="EMAIL_TYPE" ColumnName="EMAIL_TYPE" />
+                <ScalarProperty Name="LOG_MSG" ColumnName="LOG_MSG" />
+                <ScalarProperty Name="LOG_SUBJ" ColumnName="LOG_SUBJ" />
+                <ScalarProperty Name="LOG_CC" ColumnName="LOG_CC" />
+                <ScalarProperty Name="LOG_TO" ColumnName="LOG_TO" />
+                <ScalarProperty Name="LOG_FROM" ColumnName="LOG_FROM" />
+                <ScalarProperty Name="LOG_DT" ColumnName="LOG_DT" />
+                <ScalarProperty Name="EMAIL_LOG_ID" ColumnName="EMAIL_LOG_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SP_ENT_SVC_COUNT_DISPLAY" FunctionName="EECIPModel.Store.SP_ENT_SVC_COUNT_DISPLAY">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="EECIPModel.SP_ENT_SVC_COUNT_DISPLAY_Result">
-                <ScalarProperty Name="ENT_PLATFORM_IDX" ColumnName="ENT_PLATFORM_IDX" />
-                <ScalarProperty Name="ENT_PLATFORM_NAME" ColumnName="ENT_PLATFORM_NAME" />
-                <ScalarProperty Name="ENT_PLATFORM_DESC" ColumnName="ENT_PLATFORM_DESC" />
-                <ScalarProperty Name="ENT_PLATFORM_EXAMPLE" ColumnName="ENT_PLATFORM_EXAMPLE" />
-                <ScalarProperty Name="CNT" ColumnName="CNT" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <EntitySetMapping Name="T_OE_PROJECT_URLS">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECT_URLS">
-              <MappingFragment StoreEntitySet="T_OE_PROJECT_URLS">
-                <ScalarProperty Name="PROJ_URL_DESC" ColumnName="PROJ_URL_DESC" />
-                <ScalarProperty Name="PROJECT_URL" ColumnName="PROJECT_URL" />
-                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
-                <ScalarProperty Name="PROJECT_URL_IDX" ColumnName="PROJECT_URL_IDX" />
+          <EntitySetMapping Name="T_OE_SYS_LOG">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_SYS_LOG">
+              <MappingFragment StoreEntitySet="T_OE_SYS_LOG">
+                <ScalarProperty Name="LOG_MSG" ColumnName="LOG_MSG" />
+                <ScalarProperty Name="LOG_TYPE" ColumnName="LOG_TYPE" />
+                <ScalarProperty Name="LOG_USERIDX" ColumnName="LOG_USERIDX" />
+                <ScalarProperty Name="LOG_DT" ColumnName="LOG_DT" />
+                <ScalarProperty Name="SYS_LOG_ID" ColumnName="SYS_LOG_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_USER_EXPERTISE">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_EXPERTISE">
+              <MappingFragment StoreEntitySet="T_OE_USER_EXPERTISE">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="EXPERTISE_TAG" ColumnName="EXPERTISE_TAG" />
+                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_USER_NOTIFICATION">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_NOTIFICATION">
+              <MappingFragment StoreEntitySet="T_OE_USER_NOTIFICATION">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="FROM_USER_IDX" ColumnName="FROM_USER_IDX" />
+                <ScalarProperty Name="READ_IND" ColumnName="READ_IND" />
+                <ScalarProperty Name="NOTIFY_DESC" ColumnName="NOTIFY_DESC" />
+                <ScalarProperty Name="NOTIFY_TITLE" ColumnName="NOTIFY_TITLE" />
+                <ScalarProperty Name="NOTIFY_TYPE" ColumnName="NOTIFY_TYPE" />
+                <ScalarProperty Name="NOTIFY_DT" ColumnName="NOTIFY_DT" />
+                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
+                <ScalarProperty Name="NOTIFICATION_IDX" ColumnName="NOTIFICATION_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_USER_ROLES">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_USER_ROLES">
+              <MappingFragment StoreEntitySet="T_OE_USER_ROLES">
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="ROLE_IDX" ColumnName="ROLE_IDX" />
+                <ScalarProperty Name="USER_IDX" ColumnName="USER_IDX" />
+                <ScalarProperty Name="USER_ROLE_IDX" ColumnName="USER_ROLE_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3411,7 +3234,190 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="Badges">
+            <EntityTypeMapping TypeName="EECIPModel.Badge">
+              <MappingFragment StoreEntitySet="Badge">
+                <ScalarProperty Name="SORT_SEQ" ColumnName="SORT_SEQ" />
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
+                <ScalarProperty Name="AwardsPoints" ColumnName="AwardsPoints" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="EECIPModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Colour" ColumnName="Colour" />
+                <ScalarProperty Name="MetaDescription" ColumnName="MetaDescription" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="PageTitle" ColumnName="PageTitle" />
+                <ScalarProperty Name="Slug" ColumnName="Slug" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="ModeratePosts" ColumnName="ModeratePosts" />
+                <ScalarProperty Name="ModerateTopics" ColumnName="ModerateTopics" />
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Favourites">
+            <EntityTypeMapping TypeName="EECIPModel.Favourite">
+              <MappingFragment StoreEntitySet="Favourite">
+                <ScalarProperty Name="TopicId" ColumnName="TopicId" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MembershipUser_Badge">
+            <EntityTypeMapping TypeName="EECIPModel.MembershipUser_Badge">
+              <MappingFragment StoreEntitySet="MembershipUser_Badge">
+                <ScalarProperty Name="DateEarned" ColumnName="DateEarned" />
+                <ScalarProperty Name="Badge_Id" ColumnName="Badge_Id" />
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MembershipUserPoints">
+            <EntityTypeMapping TypeName="EECIPModel.MembershipUserPoint">
+              <MappingFragment StoreEntitySet="MembershipUserPoints">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PointsForId" ColumnName="PointsForId" />
+                <ScalarProperty Name="PointsFor" ColumnName="PointsFor" />
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="Points" ColumnName="Points" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Polls">
+            <EntityTypeMapping TypeName="EECIPModel.Poll">
+              <MappingFragment StoreEntitySet="Poll">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="ClosePollAfterDays" ColumnName="ClosePollAfterDays" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="IsClosed" ColumnName="IsClosed" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PollAnswers">
+            <EntityTypeMapping TypeName="EECIPModel.PollAnswer">
+              <MappingFragment StoreEntitySet="PollAnswer">
+                <ScalarProperty Name="Poll_Id" ColumnName="Poll_Id" />
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PollVotes">
+            <EntityTypeMapping TypeName="EECIPModel.PollVote">
+              <MappingFragment StoreEntitySet="PollVote">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="PollAnswer_Id" ColumnName="PollAnswer_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Posts">
+            <EntityTypeMapping TypeName="EECIPModel.Post">
+              <MappingFragment StoreEntitySet="Post">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
+                <ScalarProperty Name="InReplyTo" ColumnName="InReplyTo" />
+                <ScalarProperty Name="SearchField" ColumnName="SearchField" />
+                <ScalarProperty Name="Pending" ColumnName="Pending" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="FlaggedAsSpam" ColumnName="FlaggedAsSpam" />
+                <ScalarProperty Name="IsTopicStarter" ColumnName="IsTopicStarter" />
+                <ScalarProperty Name="IsSolution" ColumnName="IsSolution" />
+                <ScalarProperty Name="DateEdited" ColumnName="DateEdited" />
+                <ScalarProperty Name="VoteCount" ColumnName="VoteCount" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="PostContent" ColumnName="PostContent" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PostFiles">
+            <EntityTypeMapping TypeName="EECIPModel.PostFile">
+              <MappingFragment StoreEntitySet="PostFile">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="FileContentType" ColumnName="FileContentType" />
+                <ScalarProperty Name="FileDecription" ColumnName="FileDecription" />
+                <ScalarProperty Name="FileContent" ColumnName="FileContent" />
+                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="Filename" ColumnName="Filename" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Topics">
+            <EntityTypeMapping TypeName="EECIPModel.Topic">
+              <MappingFragment StoreEntitySet="Topic">
+                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="Poll_Id" ColumnName="Poll_Id" />
+                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
+                <ScalarProperty Name="Category_Id" ColumnName="Category_Id" />
+                <ScalarProperty Name="Pending" ColumnName="Pending" />
+                <ScalarProperty Name="IsLocked" ColumnName="IsLocked" />
+                <ScalarProperty Name="IsSticky" ColumnName="IsSticky" />
+                <ScalarProperty Name="Views" ColumnName="Views" />
+                <ScalarProperty Name="Slug" ColumnName="Slug" />
+                <ScalarProperty Name="SolvedReminderSent" ColumnName="SolvedReminderSent" />
+                <ScalarProperty Name="Solved" ColumnName="Solved" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Topic_Tags">
+            <EntityTypeMapping TypeName="EECIPModel.Topic_Tags">
+              <MappingFragment StoreEntitySet="Topic_Tags">
+                <ScalarProperty Name="TopicTag" ColumnName="TopicTag" />
+                <ScalarProperty Name="TopicTagAttribute" ColumnName="TopicTagAttribute" />
+                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TopicNotifications">
+            <EntityTypeMapping TypeName="EECIPModel.TopicNotification">
+              <MappingFragment StoreEntitySet="TopicNotification">
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="Topic_Id" ColumnName="Topic_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Votes">
+            <EntityTypeMapping TypeName="EECIPModel.Vote">
+              <MappingFragment StoreEntitySet="Vote">
+                <ScalarProperty Name="VotedByMembershipUser_Id" ColumnName="VotedByMembershipUser_Id" />
+                <ScalarProperty Name="MembershipUser_Id" ColumnName="MembershipUser_Id" />
+                <ScalarProperty Name="Post_Id" ColumnName="Post_Id" />
+                <ScalarProperty Name="DateVoted" ColumnName="DateVoted" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

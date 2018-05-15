@@ -20,8 +20,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public System.Guid PostId { get; set; }
         public System.Guid TopicId { get; set; }
     
+        public virtual T_OE_USERS T_OE_USERS { get; set; }
         public virtual Post Post { get; set; }
         public virtual Topic Topic { get; set; }
-        public virtual T_OE_USERS T_OE_USERS { get; set; }
     }
 }
