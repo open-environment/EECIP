@@ -321,7 +321,7 @@ namespace EECIP.Controllers
                 model.orgName = _org.ORG_NAME;
                 model.orgType = _org.ORG_TYPE;
             }
-
+            model.sProjectUrlList = db_EECIP.GetT_OE_PROJECTS_URL_ByProjIDX(model.project.PROJECT_IDX);
             model.ddl_AgencyUsers = ddlHelpers.get_ddl_users_by_organization(model.project.ORG_IDX.ConvertOrDefault<Guid>());
             model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
             model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
@@ -355,6 +355,12 @@ namespace EECIP.Controllers
                         db_EECIP.InsertT_OE_PROJECT_TAGS(newProjID2, "Program Area", expertise);
 
 
+                    //update project url
+                    db_EECIP.DeleteT_OE_PROJECTS_URL(newProjID2);
+                    foreach (T_OE_PROJECT_URLS urls in model.sProjectUrlList?? new List<T_OE_PROJECT_URLS>())
+                        db_EECIP.InsertT_OE_PROJECTS_URL(newProjID2,urls.PROJECT_URL,urls.PROJ_URL_DESC);
+
+
                     //update feature tags
                     db_EECIP.DeleteT_OE_PROJECT_TAGS(newProjID2, "Project Feature");
                     foreach (string feature in model.SelectedFeatures ?? new List<string>())
@@ -380,7 +386,7 @@ namespace EECIP.Controllers
                                     fileBytes = memoryStream.ToArray();
 
                                     //insert to database
-                                    db_EECIP.InsertUpdateT_OE_DOCUMENTS(null, fileBytes, file.FileName, "project", file.ContentType, fileBytes.Length, null, null, newProjID2, null, UserIDX);
+                                    db_EECIP.InsertUpdateT_OE_DOCUMENTS(null, fileBytes, file.FileName, "project", file.ContentType, fileBytes.Length, model.FileDescription, null, newProjID2, null, UserIDX);
                                 }
 
 
@@ -415,29 +421,64 @@ namespace EECIP.Controllers
         }
 
         // POST: /Dashboard/ProjectsDelete
+        //[HttpPost]
+        //public JsonResult ProjectsDelete(Guid id, string Type)
+        //{
+        //    int UserIDX = db_Accounts.GetUserIDX();
+
+        //    //CHECK PERMISSIONS
+        //    T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
+        //    if (p != null)
+        //    {
+        //        if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), p.ORG_IDX.ConvertOrDefault<Guid>()))
+        //        {
+        //            int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
+        //            if (SuccID > 0)
+        //            {
+        //                //SUCCESS - now delete from Azure
+        //                AzureSearch.DeleteSearchIndexProject(id);
+        //                return Json("Success");
+        //            }
+        //        }
+        //    }
+
+        //    //if got this far, general error
+        //    return Json("Unable to delete project.");
+        //}
+
+        // POST: /Dashboard/ProjectsDelete
         [HttpPost]
-        public JsonResult ProjectsDelete(Guid id, string Type)
+        public JsonResult ProjectsDelete(IEnumerable<Guid> RecordDeletebyId)
         {
             int UserIDX = db_Accounts.GetUserIDX();
-
-            //CHECK PERMISSIONS
-            T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
-            if (p != null)
+            if (RecordDeletebyId == null)
             {
-                if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), p.ORG_IDX.ConvertOrDefault<Guid>()))
+                return Json("No record selected to delete");
+            }
+            else
+            {
+                foreach (var id in RecordDeletebyId)
                 {
-                    int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
-                    if (SuccID > 0)
+                    //CHECK PERMISSIONS
+                    T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
+                    if (p != null)
                     {
-                        //SUCCESS - now delete from Azure
-                        AzureSearch.DeleteSearchIndexProject(id);
-                        return Json("Success");
+                        if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), p.ORG_IDX.ConvertOrDefault<Guid>()))
+                        {
+                            int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
+                            if (SuccID > 0)
+                            {
+                                //SUCCESS - now delete from Azure
+                                AzureSearch.DeleteSearchIndexProject(id);
+                                return Json("Success");
+                            }
+                        }
                     }
                 }
-            }
 
-            //if got this far, general error
-            return Json("Unable to delete project.");
+                //if got this far, general error
+                return Json("Unable to delete project.");
+            }
         }
 
         // GET: /Dashboard/ProjectCard/1
@@ -458,6 +499,7 @@ namespace EECIP.Controllers
 
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
                     model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
+                    model.sProjectUrlList = db_EECIP.GetT_OE_PROJECTS_URL_ByProjIDX(model.project.PROJECT_IDX);
                     T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(model.project.MODIFY_USERIDX ?? model.project.CREATE_USERIDX ?? -1);
                     if (u != null)
                         model.LastUpdatedUser = u.FNAME + " " + u.LNAME;

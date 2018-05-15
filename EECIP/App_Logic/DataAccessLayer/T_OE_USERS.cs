@@ -17,20 +17,21 @@ namespace EECIP.App_Logic.DataAccessLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public T_OE_USERS()
         {
-            this.T_OE_USER_ROLES = new HashSet<T_OE_USER_ROLES>();
+            this.T_OE_PROJECT_VOTES = new HashSet<T_OE_PROJECT_VOTES>();
             this.T_OE_USER_EXPERTISE = new HashSet<T_OE_USER_EXPERTISE>();
-            this.Polls = new HashSet<Poll>();
-            this.Posts = new HashSet<Post>();
-            this.Topics = new HashSet<Topic>();
-            this.PollVotes = new HashSet<PollVote>();
+            this.T_OE_USER_ROLES = new HashSet<T_OE_USER_ROLES>();
+            this.Favourites = new HashSet<Favourite>();
             this.MembershipUserPoints = new HashSet<MembershipUserPoint>();
             this.MembershipUser_Badge = new HashSet<MembershipUser_Badge>();
-            this.T_OE_PROJECT_VOTES = new HashSet<T_OE_PROJECT_VOTES>();
-            this.Favourites = new HashSet<Favourite>();
+            this.Polls = new HashSet<Poll>();
+            this.PollVotes = new HashSet<PollVote>();
+            this.Posts = new HashSet<Post>();
+            this.PostFiles = new HashSet<PostFile>();
+            this.Topics = new HashSet<Topic>();
+            this.MembershipUserPoints1 = new HashSet<MembershipUserPoint>();
             this.TopicNotifications = new HashSet<TopicNotification>();
             this.Votes = new HashSet<Vote>();
             this.Votes1 = new HashSet<Vote>();
-            this.PostFiles = new HashSet<PostFile>();
         }
     
         public int USER_IDX { get; set; }
@@ -60,35 +61,38 @@ namespace EECIP.App_Logic.DataAccessLayer
         public bool SYNC_IND { get; set; }
         public string LINKEDIN { get; set; }
         public bool ALLOW_GOVERNANCE { get; set; }
+        public bool EXCLUDE_POINTS_IND { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_OE_USER_ROLES> T_OE_USER_ROLES { get; set; }
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_OE_PROJECT_VOTES> T_OE_PROJECT_VOTES { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_USER_EXPERTISE> T_OE_USER_EXPERTISE { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Poll> Polls { get; set; }
+        public virtual ICollection<T_OE_USER_ROLES> T_OE_USER_ROLES { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Post> Posts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Topic> Topics { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PollVote> PollVotes { get; set; }
+        public virtual ICollection<Favourite> Favourites { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembershipUserPoint> MembershipUserPoints { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MembershipUser_Badge> MembershipUser_Badge { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_OE_PROJECT_VOTES> T_OE_PROJECT_VOTES { get; set; }
+        public virtual ICollection<Poll> Polls { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Favourite> Favourites { get; set; }
+        public virtual ICollection<PollVote> PollVotes { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Post> Posts { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PostFile> PostFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Topic> Topics { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<MembershipUserPoint> MembershipUserPoints1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TopicNotification> TopicNotifications { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vote> Votes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vote> Votes1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PostFile> PostFiles { get; set; }
     }
 }

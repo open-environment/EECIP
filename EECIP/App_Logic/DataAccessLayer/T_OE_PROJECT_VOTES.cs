@@ -22,7 +22,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<int> VOTED_BY_USER_IDX { get; set; }
     
         public virtual T_OE_ORGANIZATION_ENT_SVCS T_OE_ORGANIZATION_ENT_SVCS { get; set; }
-        public virtual T_OE_PROJECTS T_OE_PROJECTS { get; set; }
         public virtual T_OE_USERS T_OE_USERS { get; set; }
+        public virtual T_OE_PROJECTS T_OE_PROJECTS { get; set; }
     }
 }

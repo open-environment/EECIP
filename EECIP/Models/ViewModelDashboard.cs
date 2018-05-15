@@ -108,6 +108,7 @@ namespace EECIP.Models
         public string orgName { get; set; }
         public string orgType { get; set; }
         public T_OE_PROJECTS project { get; set; }
+        public IEnumerable<T_OE_PROJECT_URLS> sProjectUrlList { get; set; }
         public IEnumerable<SelectListItem> ddl_Media { get; set; }
         public IEnumerable<SelectListItem> ddl_Status { get; set; }
         public IEnumerable<SelectListItem> ddl_UseAmount { get; set; }
@@ -124,6 +125,7 @@ namespace EECIP.Models
         public HttpPostedFileBase[] files { get; set; }
         public List<T_OE_DOCUMENTS> files_existing { get; set; }
         public string ReturnURL { get; set; }
+        public string FileDescription { get; set; }
 
         public vmDashboardProjectDetails()
         {
@@ -138,6 +140,7 @@ namespace EECIP.Models
     public class vmDashboardProjectCard
     {
         public T_OE_PROJECTS project { get; set; }
+        public IEnumerable<T_OE_PROJECT_URLS> sProjectUrlList { get; set; }
         public string OrgName { get; set; }
         public List<string> SelectedProgramAreas { get; set; }
         public List<string> SelectedFeatures { get; set; }

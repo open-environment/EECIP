@@ -47,8 +47,23 @@
                     <dt>
                         Project URL:
                     </dt>
-                    <dd id="projUrl">
-                        @Model.project.PROJECT_URL
+                    @*<dd id="projUrl">
+            @Model.project.PROJECT_URL
+        </dd>*@
+                    <dd>
+                        <table>
+
+                            @foreach (var pu in Model.sProjectUrlList)
+                            {
+                        <tr>
+                            <td>
+                                @* <div>@pu.PROJECT_URL</div>*@   
+                                <a href="@Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))" title="@Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))"> @Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))</a>
+                              
+                            </td>
+                        </tr>
+                            }
+                        </table>
                     </dd>
                     <dt>
                         Last Updated:
@@ -57,7 +72,6 @@
                         @Model.LastUpdatedUser
                         @(Model.project.MODIFY_DT ?? Model.project.CREATE_DT)
                     </dd>
-
                 </dl>
             </div>
         </section>
@@ -195,19 +209,20 @@
                         <ul>
                             @foreach (var file in Model.files_existing.OrderByDescending(o => o.CREATE_DT))
                             {
-                                <li>
-                                    <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
+                            <li>
+                                <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
                                     @if (Utils.FileIsImage(file.DOC_NAME))
-                                    {
-                                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-                                    }
-                                    else
-                                    {
-                                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                                    }
-                                    </a>
-                                    <div class="postedfilename">@file.DOC_NAME</div>
-                                </li>
+        {
+                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+}
+else
+{
+                            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+}
+                                </a>
+                                <div class="postedfilename">@file.DOC_NAME</div>
+                                <div >@file.DOC_COMMENT</div>
+                            </li>
                             }
                         </ul>
                     </div>

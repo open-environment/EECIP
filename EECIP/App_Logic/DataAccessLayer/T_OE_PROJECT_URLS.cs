@@ -12,17 +12,13 @@ namespace EECIP.App_Logic.DataAccessLayer
     using System;
     using System.Collections.Generic;
     
-    public partial class MembershipUserPoint
+    public partial class T_OE_PROJECT_URLS
     {
-        public System.Guid Id { get; set; }
-        public int Points { get; set; }
-        public System.DateTime DateAdded { get; set; }
-        public int PointsFor { get; set; }
-        public Nullable<System.Guid> PointsForId { get; set; }
-        public string Notes { get; set; }
-        public int MembershipUser_Id { get; set; }
+        public System.Guid PROJECT_URL_IDX { get; set; }
+        public Nullable<System.Guid> PROJECT_IDX { get; set; }
+        public string PROJECT_URL { get; set; }
+        public string PROJ_URL_DESC { get; set; }
     
-        public virtual T_OE_USERS T_OE_USERS { get; set; }
-        public virtual T_OE_USERS T_OE_USERS1 { get; set; }
+        public virtual T_OE_PROJECTS T_OE_PROJECTS { get; set; }
     }
 }
