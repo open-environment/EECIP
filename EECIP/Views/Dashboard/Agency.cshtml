@@ -204,9 +204,9 @@
                                         }
 
                                         @*@if (item.ACTIVE_INTEREST_IND != null && item.ACTIVE_INTEREST_IND == true)
-                                        {
-                                            <a><i class="glyphicon glyphicon-heart" style="font-size: 20px; color:forestgreen; float:right" title="Active Interest"></i></a>
-                                        }*@
+                                            {
+                                                <a><i class="glyphicon glyphicon-heart" style="font-size: 20px; color:forestgreen; float:right" title="Active Interest"></i></a>
+                                            }*@
 
                                         @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
                                         @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
@@ -338,21 +338,10 @@
 
 
 @section Scripts {
+    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
+    @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/confirmdelete")
     @Scripts.Render("~/bundles/select2")
-
-
-    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
-    <script  type="text/javascript">
-        Chaperone.init({
-            "api_key": "lBuTEvIH43bg5g",
-            //"trigger": {
-            //    "element": "#btnTour",
-            //    "event": "click",
-            //    "tutorial": 4073
-            //}
-        });
-    </script>
 
     <script type="text/javascript">
         $(document).ready(function () {

@@ -421,63 +421,38 @@ namespace EECIP.Controllers
         }
 
         // POST: /Dashboard/ProjectsDelete
-        //[HttpPost]
-        //public JsonResult ProjectsDelete(Guid id, string Type)
-        //{
-        //    int UserIDX = db_Accounts.GetUserIDX();
-
-        //    //CHECK PERMISSIONS
-        //    T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
-        //    if (p != null)
-        //    {
-        //        if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), p.ORG_IDX.ConvertOrDefault<Guid>()))
-        //        {
-        //            int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
-        //            if (SuccID > 0)
-        //            {
-        //                //SUCCESS - now delete from Azure
-        //                AzureSearch.DeleteSearchIndexProject(id);
-        //                return Json("Success");
-        //            }
-        //        }
-        //    }
-
-        //    //if got this far, general error
-        //    return Json("Unable to delete project.");
-        //}
-
-        // POST: /Dashboard/ProjectsDelete
         [HttpPost]
-        public JsonResult ProjectsDelete(IEnumerable<Guid> RecordDeletebyId)
+        public JsonResult ProjectsDelete(IEnumerable<Guid> id)
         {
             int UserIDX = db_Accounts.GetUserIDX();
-            if (RecordDeletebyId == null)
-            {
+            if (id == null)
                 return Json("No record selected to delete");
-            }
+            else if (id.Count() == 0)
+                return Json("No record selected to delete");
             else
             {
-                foreach (var id in RecordDeletebyId)
+                foreach (var id1 in id)
                 {
                     //CHECK PERMISSIONS
-                    T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
+                    T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(id1);
                     if (p != null)
                     {
                         if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), p.ORG_IDX.ConvertOrDefault<Guid>()))
                         {
-                            int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id);
+                            int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id1);
                             if (SuccID > 0)
                             {
                                 //SUCCESS - now delete from Azure
-                                AzureSearch.DeleteSearchIndexProject(id);
-                                return Json("Success");
+                                AzureSearch.DeleteSearchIndexProject(id1);
                             }
+                            else
+                                return Json("Unable to delete project.");
                         }
                     }
                 }
 
-                //if got this far, general error
-                return Json("Unable to delete project.");
+                //if got this far, success
+                return Json("Success");
             }
         }
 

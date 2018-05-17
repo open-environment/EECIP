@@ -261,19 +261,27 @@ namespace EECIP.Controllers
         [HttpPost]
         public JsonResult RefAgencyDelete(string id)
         {
-            Guid org = new Guid(id);
-            int SuccID = db_Ref.DeleteT_OE_ORGANIZATION(org);
+            string response = "";
 
-            //now delete from Azure
-            AzureSearch.DeleteSearchIndexAgency(id);
+            if (id != null)
+            {
+                Guid org = new Guid(id);
+                int SuccID = db_Ref.DeleteT_OE_ORGANIZATION(org);
 
-            string response = "Success";
-            if (SuccID == -1)
-                response = "Cannot delete agency because agency users exist.";
-            else if (SuccID == -2)
-                response = "Cannot delete agency because agency projects exist.";
-            else if (SuccID == -3)
-                response = "Cannot delete agency because agency enterprise services exist.";
+                //now delete from Azure
+                AzureSearch.DeleteSearchIndexAgency(id);
+
+                if (SuccID == -1)
+                    response = "Cannot delete agency because agency users exist.";
+                else if (SuccID == -2)
+                    response = "Cannot delete agency because agency projects exist.";
+                else if (SuccID == -3)
+                    response = "Cannot delete agency because agency enterprise services exist.";
+                else
+                    response = "Success";
+            }
+            else
+                response = "Unable to delete agency";
 
             return Json(response);
         }

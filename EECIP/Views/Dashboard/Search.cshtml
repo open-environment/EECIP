@@ -393,15 +393,11 @@
     </div>
 }
 @section Scripts {
+    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
+    @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/autocomplete")
     @Scripts.Render("~/bundles/pagination")
     @Scripts.Render("~/bundles/trunk8")
-    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
-    <script>
-        Chaperone.init({
-            "api_key": "lBuTEvIH43bg5g"
-        });
-    </script>
 
     <script type="text/javascript">
 

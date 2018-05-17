@@ -56,10 +56,6 @@
                             <tr>
                                 <td style="min-width: 68px;">
                                     <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX, orgIDX = Model.selAgency, returnURL = "Projects" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
-                                    @*<div class="delete-section" style="display:inline">
-                                            <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
-                                            <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
-                                        </div>*@
                                 </td>
                                 <td>
                                     <input type="checkbox" name="RecordDeletebyId" class="checkBox" value="@item.PROJECT_IDX" />
@@ -110,10 +106,9 @@
                             </tr>
                         }
                     </table>
-
-                    <div class="delete-section" style="display:inline">
-                        <a class="btn btn-danger" id="delete">Delete Selected Records</a>
-                       @* <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none"  data-delete-p="/Dashboard/ProjectsDeleteBlank" id="delete"><b>Confirm Delete</b></div>*@
+                    <div id="delete" class="delete-section" style="margin-top:10px; display:none" >
+                        <a id="del-button" class=" btn btn-rounded btn-xs btn-danger btn-sm delete-link" >Delete Selected Records</a>
+                        <div id="delete-confirm" class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="" data-delete-array="Y" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Projects"><b>Confirm Delete</b></div>
                     </div>
                 </div>
 
@@ -125,57 +120,31 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/confirmdelete")
+
     <script type="text/javascript">
         $(document).ready(function () {
 
+            //checkbox click handling
             $("#checkAll").click(function () {
-                $(".checkBox").prop('checked',
-                    $(this).prop('checked'));
+                $(".checkBox").prop('checked', $(this).prop('checked'));
+                $("#delete").toggle($(this).prop('checked'))
             });
-        });
 
-        $("#delete").click(function () {
-            
-            var selectedIDs = new Array();
-            $('input:checkbox.checkBox').each(function () {
-                if ($(this).prop('checked')) {
-                    selectedIDs.push($(this).val());
-                }
+            $(".checkBox").click(function () {
+                $("#delete").toggle($(this).prop('checked'))
             });
-            if (selectedIDs.length > 0) {
-                if (confirm("Confirm Delete")) {
-                    var options = {};
-                    options.url = "/Dashboard/ProjectsDelete";
-                    options.type = "POST";
-                    options.data = JSON.stringify(selectedIDs);
-                    options.contentType = "application/json";
-                    options.dataType = "json";
-                    options.success = function (msg)
-                    {
-                        location.reload(true);
-                        if (msg == "Success") {
-                            toastr.success(msg);
-                        }
 
-                        if (msg == "Unable to delete project.") {
-                            toastr.warning(msg);
-                        }
-                        if (msg == "No record selected to delete") {
-                            toastr.warning(msg);
-                        }
-                    };
-                    options.error = function () {
-                        // alert("Error while deleting the records!");
+            //deletion button click handling
+            $("#del-button").click(function () {
+                var selectedIDs = new Array();
+                $('input:checkbox.checkBox').each(function () {
+                    if ($(this).prop('checked')) {
+                        selectedIDs.push($(this).val());
+                    }
+                });
 
-                    };
-                    $.ajax(options);
-                }
-            }
-            else
-            {
-                alert("Please select a project to delete");
-            }
-
+                $('#delete-confirm').attr('data-delete-id', (selectedIDs));
+            });
         });
     </script>
 }

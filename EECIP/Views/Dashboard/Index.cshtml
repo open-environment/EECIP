@@ -10,10 +10,10 @@
 
 @if (!string.IsNullOrEmpty(Model.Announcement))
 {
-<div class="alert alert-block alert-info fade in">
-    <button data-dismiss="alert" class="close" type="button">×</button>
-    @Html.Raw(HttpUtility.HtmlDecode(Model.Announcement))
-</div>
+    <div class="alert alert-block alert-info fade in">
+        <button data-dismiss="alert" class="close" type="button">×</button>
+        @Html.Raw(HttpUtility.HtmlDecode(Model.Announcement))
+    </div>
 }
 
 <div class="row">
@@ -22,7 +22,7 @@
             <i class="clip-search"></i>
             Search the Inventory
             <div class="badge badge-new">
-                <div class="carousel slide carousel-fade inline auto aside text-left pull-left pull-none-xs" data-interval="3000"  data-ride="carousel">
+                <div class="carousel slide carousel-fade inline auto aside text-left pull-left pull-none-xs" data-interval="3000" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="item active">
                             @Model.ProjectCount Projects
@@ -253,18 +253,7 @@
 <!-- END MODAL FORM -->
 
 
-
-
 @section Scripts {
-    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
-    <script>
-        Chaperone.init({
-            "api_key": "lBuTEvIH43bg5g",
-            //"trigger": {
-            //    "element": "#btnTour",
-            //    "event": "click",
-            //    "tutorial": 4048
-            //}
-        });
-    </script>
+    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
+    @Scripts.Render("~/bundles/chaperone")
 }

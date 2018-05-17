@@ -199,18 +199,8 @@ else
 
 
 @section Scripts {
+    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
+    @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/confirmdelete")
-
-    <script src="https://cdn.getchaperone.com/embed/chaperone.js"></script>
-    <script type="text/javascript">
-        Chaperone.init({
-            "api_key": "lBuTEvIH43bg5g",
-            //"trigger": {
-            //    "element": "#btnTour",
-            //    "event": "click",
-            //    "tutorial": 4074
-            //}
-        });
-    </script>
 }
 

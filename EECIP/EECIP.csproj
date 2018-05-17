@@ -495,9 +495,6 @@
     <Content Include="Scripts\anchorme.min.js" />
     <Content Include="Scripts\auto-complete.js" />
     <Content Include="Scripts\auto-complete.min.js" />
-    <Content Include="Scripts\bootstrap-tour-dtl.js" />
-    <Content Include="Scripts\bootstrap-tour.js" />
-    <Content Include="Scripts\bootstrap-tour.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="fonts\clip-font.eot" />
@@ -510,6 +507,7 @@
     <Content Include="App_Docs\EntServicesImportTemplate.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
+    <Content Include="Scripts\chaperone_init.js" />
     <Content Include="Scripts\clip-main.js" />
     <Content Include="Scripts\confirm_delete.js" />
     <Content Include="Scripts\i18n\af.js" />
@@ -804,7 +802,6 @@
     <Content Include="Views\Home\TermsAndConditions.cshtml" />
     <Content Include="Views\Account\Notifications.cshtml" />
     <Content Include="Views\Dashboard\EnterpriseSvcOverview.cshtml" />
-    <Content Include="Views\Dashboard\EnterpriseSvc.cshtml" />
     <Content Include="Views\Dashboard\ProjectReview.cshtml" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.ttf" />

@@ -9,6 +9,7 @@ namespace EECIP
         {
             //****************** JAVASCRIPT ***********************************
             //****************** JAVASCRIPT ***********************************
+            
             //MSFT default
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include("~/Scripts/jquery.validate*"));
@@ -29,9 +30,7 @@ namespace EECIP
             bundles.Add(new ScriptBundle("~/bundles/anchorme").Include("~/Scripts/anchorme.js"));
             bundles.Add(new ScriptBundle("~/bundles/pagination").Include("~/Scripts/jquery.twbsPagination.js"));
             bundles.Add(new ScriptBundle("~/bundles/trunk8").Include("~/Scripts/trunk8.js"));
-            bundles.Add(new ScriptBundle("~/bundles/bootstraptour").Include(
-                "~/Scripts/bootstrap-tour.js",
-                "~/Scripts/bootstrap-tour-dtl.js"));
+            bundles.Add(new ScriptBundle("~/bundles/chaperone").Include("~/Scripts/chaperone_init.js"));
 
             //****************** CSS ***********************************
             //****************** CSS ***********************************
