@@ -108,7 +108,7 @@ namespace EECIP.Models
         public string orgName { get; set; }
         public string orgType { get; set; }
         public T_OE_PROJECTS project { get; set; }
-        public IEnumerable<T_OE_PROJECT_URLS> sProjectUrlList { get; set; }
+        public List<T_OE_PROJECT_URLS> sProjectUrlList { get; set; }
         public IEnumerable<SelectListItem> ddl_Media { get; set; }
         public IEnumerable<SelectListItem> ddl_Status { get; set; }
         public IEnumerable<SelectListItem> ddl_UseAmount { get; set; }
