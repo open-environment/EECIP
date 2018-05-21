@@ -54,6 +54,7 @@ namespace EECIP.Models
     public class vmAdminAgencies
     {
         public List<T_OE_ORGANIZATION> agencies { get; set; }
+        public string GovInd { get; set; }
     }
 
 
@@ -66,6 +67,7 @@ namespace EECIP.Models
 
         public List<T_OE_ORGANIZATION_EMAIL_RULE> agency_emails { get; set; }
         public string new_email { get; set; }
+        public string GovInd { get; set; }
 
         //initialize
         public vmAdminAgencyEdit()

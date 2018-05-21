@@ -1,7 +1,14 @@
 ﻿@model EECIP.Models.vmAdminAgencyEdit
 @{
-    ViewBag.Title = "Agency Details";
     ViewBag.SubTitle = "";
+    if (Model.GovInd == "Governance" || (Model.agency != null && Model.agency.ORG_TYPE == "Governance"))
+    {
+        ViewBag.Title = "Governance Group";
+    }
+    else
+    {
+        ViewBag.Title = "Agency Details";
+    }
 }
 
 <!-- render the main content -->
@@ -37,18 +44,21 @@
                                 @Html.TextBoxFor(model => model.agency.ORG_ABBR, new { @class = "form-control", @placeholder = "", @maxlength = "100" })
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>State</label>
-                                @Html.DropDownListFor(x => x.agency.STATE_CD, Model.ddl_States, "", new { @class = "form-control" })
+                        @if (Model.agency.ORG_TYPE != "Governance")
+                        {
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>State</label>
+                                    @Html.DropDownListFor(x => x.agency.STATE_CD, Model.ddl_States, "", new { @class = "form-control" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>EPA Region</label>
-                                @Html.DropDownListFor(x => x.agency.EPA_REGION, Model.ddl_Regions, "", new { @class = "form-control" })
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>EPA Region</label>
+                                    @Html.DropDownListFor(x => x.agency.EPA_REGION, Model.ddl_Regions, "", new { @class = "form-control" })
+                                </div>
                             </div>
-                        </div>
+                        }
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Type</label>
@@ -59,7 +69,14 @@
                     <div class="row">
                         <div class="col-md-12">
                             <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
-                            <a href="@Url.Action("RefAgencies", "Admin")" class="btn btn-default">Close</a>
+                            @if (Model.GovInd == "Governance" || (Model.agency != null && Model.agency.ORG_TYPE == "Governance"))
+                            {
+                                <a href="@Url.Action("RefAgencies", "Admin", new { typ="Governance" })" class="btn btn-default">Close</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("RefAgencies", "Admin")" class="btn btn-default">Close</a>
+                            }
                         </div>
                     </div>
                 </div>

@@ -1,7 +1,7 @@
 ﻿@model EECIP.Models.vmAdminAgencies
 @{
-    ViewBag.Title = "Agencies";
-    ViewBag.SubTitle = "Manage the agencies to which people can belong.";
+    ViewBag.Title = (Model.GovInd == "Governance" ? "Governance Groups" : "Agencies");
+    ViewBag.SubTitle = (Model.GovInd == "Governance" ? "Manage Governance Groups." : "Manage the agencies to which people can belong.");
 }
 
 <!-- render the main content -->
@@ -50,7 +50,14 @@
             </div>
         </section>
         <p>
-            <a href="@Url.Action("RefAgencyEdit", "Admin")" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+            @if (Model.GovInd == "Governance")
+            {
+                <a href="@Url.Action("RefAgencyEdit", "Admin", new { typ="Governance" })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+            }
+            else
+            {
+                <a href="@Url.Action("RefAgencyEdit", "Admin")" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+            }
         </p>
 
     </div>

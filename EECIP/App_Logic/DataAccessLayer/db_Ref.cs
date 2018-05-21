@@ -142,7 +142,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
         //***************** ORGANZIATIONS ******************************
-        public static List<T_OE_ORGANIZATION> GetT_OE_ORGANIZATION(bool actInd, bool ExcludeGovernanceInd, string orgType)
+        public static List<T_OE_ORGANIZATION> GetT_OE_ORGANIZATION(bool actInd, bool ExcludeGovernanceInd, string orgType)  
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -407,26 +407,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        //***************** ORGANZIATION GOVERNANCE ******************************
-        public static List<T_OE_ORGANIZATION> GetT_OE_GOVERNANCE_ORGANIZATION(bool actInd)
-        {
-            using (EECIPEntities ctx = new EECIPEntities())
-            {
-                try
-                {
-                    return (from a in ctx.T_OE_ORGANIZATION
-                            where (actInd == true ? a.ACT_IND == true : true)
-                            && a.ORG_TYPE == "Governance"
-                            orderby a.ORG_NAME
-                            select a).ToList();
-                }
-                catch (Exception ex)
-                {
-                    db_Ref.LogEFException(ex);
-                    return null;
-                }
-            }
-        }
+
 
         //***************** ORGANZIATION TAGS ******************************
         public static List<string> GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(Guid OrgIDX, string aTTRIBUTE)
@@ -994,10 +975,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
-
-
-
+        
 
         //*****************SYS_LOG**********************************
         public static int InsertT_OE_SYS_LOG(string logType, string logMsg)

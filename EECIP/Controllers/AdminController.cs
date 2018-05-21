@@ -211,13 +211,14 @@ namespace EECIP.Controllers
         public ActionResult RefAgencies(string typ) {
             var model = new vmAdminAgencies
             {
-                agencies = db_Ref.GetT_OE_ORGANIZATION(false, typ != "Governance", typ)
+                agencies = db_Ref.GetT_OE_ORGANIZATION(false, typ != "Governance", typ),
+                GovInd = typ
             };
             return View(model);
         }
 
         // GET: /Admin/RefAgencyEdit
-        public ActionResult RefAgencyEdit(Guid? id)
+        public ActionResult RefAgencyEdit(Guid? id, string typ)
         {
             var model = new vmAdminAgencyEdit();
             if (id != null)
@@ -229,10 +230,13 @@ namespace EECIP.Controllers
             {
                 model.agency = new T_OE_ORGANIZATION();
                 model.agency.ORG_IDX = Guid.NewGuid();
+                if (typ != null)
+                    model.agency.ORG_TYPE = typ;
                 model.agency.ACT_IND = true;
                 model.agency_emails = new List<T_OE_ORGANIZATION_EMAIL_RULE>();
             }
 
+            model.GovInd = typ;
             return View(model);
         }
 
@@ -252,9 +256,7 @@ namespace EECIP.Controllers
             else
                 TempData["Error"] = "Error updating data.";
 
-            //return View(model);
             return RedirectToAction("RefAgencyEdit", new { id = SuccID });
-
         }
 
         // POST: /Admin/RefAgencyDelete
@@ -314,108 +316,6 @@ namespace EECIP.Controllers
                 return Json("Success");
         }
 
-
-        //*************************************** AGENCIES GOVERNANCE GROUP **********************************************************
-        // GET: /Admin/RefGovernanceAgencies
-        public ActionResult RefGovernanceAgencies()
-        {
-            var model = new vmAdminAgencies
-            {                
-                agencies = db_Ref.GetT_OE_GOVERNANCE_ORGANIZATION(false)
-            };
-            return View(model);
-        }
-        
-        // GET: /Admin/RefGovernanceAgencyEdit
-        public ActionResult RefGovernanceAgencyEdit(Guid? id)
-        {
-            var model = new vmAdminAgencyEdit();
-            if (id != null)
-            {
-                model.agency = db_Ref.GetT_OE_ORGANIZATION_ByID(id.ConvertOrDefault<Guid>());
-                model.agency_emails = db_Ref.GetT_OE_ORGANIZATION_EMAIL_RULES_ByID(id.ConvertOrDefault<Guid>());
-            }
-            else //add new case
-            {
-                model.agency = new T_OE_ORGANIZATION();
-                model.agency.ORG_IDX = Guid.NewGuid();
-                model.agency.ACT_IND = true;
-                model.agency_emails = new List<T_OE_ORGANIZATION_EMAIL_RULE>();
-            }
-
-            return View(model);
-        }
-        
-        // POST: /Admin/RefAgencyEdit
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult RefGovernanceAgencyEdit(T_OE_ORGANIZATION agency)
-        {
-            int UserIDX = db_Accounts.GetUserIDX();
-
-            Guid? SuccID = db_Ref.InsertUpdatetT_OE_ORGANIZATION(agency.ORG_IDX, agency.ORG_ABBR, agency.ORG_NAME, agency.STATE_CD, agency.EPA_REGION, agency.ORG_TYPE, null, null, true, UserIDX);
-
-            if (SuccID != null)
-            {
-                AzureSearch.PopulateSearchIndexOrganization(SuccID);
-                TempData["Success"] = "Update successful.";
-            }
-            else
-                TempData["Error"] = "Error updating data.";
-
-            //return View(model);
-            return RedirectToAction("RefGovernanceAgencyEdit", new { id = SuccID });
-
-        }
-
-        // POST: /Admin/RefAgencyDelete
-        [HttpPost]
-        public JsonResult RefGovernanceAgencyDelete(string id)
-        {
-            Guid org = new Guid(id);
-            int SuccID = db_Ref.DeleteT_OE_ORGANIZATION(org);
-
-            //now delete from Azure
-            AzureSearch.DeleteSearchIndexAgency(id);
-
-            string response = "Success";
-            if (SuccID == -1)
-                response = "Cannot delete agency because agency users exist.";
-            else if (SuccID == -2)
-                response = "Cannot delete agency because agency projects exist.";
-            else if (SuccID == -3)
-                response = "Cannot delete agency because agency enterprise services exist.";
-
-            return Json(response);
-        }
-
-        // POST: /Admin/RefAgencyEditEmail
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult RefGovernanceAgencyEditEmail(vmAdminAgencyEdit model)
-        {
-            int UserIDX = db_Accounts.GetUserIDX();
-
-            int SuccID = db_Ref.InsertT_OE_ORGANIZATION_EMAIL_RULE(model.agency.ORG_IDX, model.new_email, UserIDX);
-
-            if (SuccID == 1)
-                TempData["Success"] = "Update successful.";
-            else
-                TempData["Error"] = "Error updating data.";
-
-            return RedirectToAction("RefGovernanceAgencyEdit", new { id = model.agency.ORG_IDX });
-        }
-
-        // POST: /Admin/RefAgencyEditEmailDelete
-        [HttpPost]
-        public JsonResult RefGovernanceAgencyEditEmailDelete(string id, string id2)
-        {
-            Guid org = new Guid(id);
-            int SuccID = db_Ref.DeleteT_OE_ORGANIZATION_EMAIL_RULE(org, id2);
-            if (SuccID == 0)
-                return Json("Unable to delete record.");
-            else
-                return Json("Success");
-        }
-        
 
         
         //*************************************** REF ENTPERISE SERVICES **********************************************************
