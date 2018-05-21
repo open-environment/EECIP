@@ -751,6 +751,7 @@ namespace EECIP.Controllers
             if (exportdata == null)
             {
                 TempData["Error"] = "You must select at least one option.";
+                return RedirectToAction("ExportData", "Admin");
             }
             //***end validation ***********
 
