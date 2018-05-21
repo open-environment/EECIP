@@ -36,7 +36,7 @@ namespace EECIP.Models
 
     public class vmAdminUsers
     {
-        public List<T_OE_USERS> users { get; set; }
+        public List<UserDisplayType> users { get; set; }
 
         [Required]
         [StringLength(40)]

@@ -292,6 +292,10 @@ namespace EECIP.Controllers
                         } catch { }
                     }
 
+                    //logic for properly blanking out OrgIDX
+                    if (model.OrgIDX == null)
+                        model.OrgIDX = Guid.Empty;
+
                     int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin, model.ExcludeBadges);
 
                     //update user expertise

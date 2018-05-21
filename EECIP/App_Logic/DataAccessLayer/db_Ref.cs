@@ -142,7 +142,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
         //***************** ORGANZIATIONS ******************************
-        public static List<T_OE_ORGANIZATION> GetT_OE_ORGANIZATION(bool actInd, bool ExcludeGovernanceInd)
+        public static List<T_OE_ORGANIZATION> GetT_OE_ORGANIZATION(bool actInd, bool ExcludeGovernanceInd, string orgType)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -151,6 +151,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     return (from a in ctx.T_OE_ORGANIZATION
                             where (actInd == true ? a.ACT_IND == true : true)
                             && (ExcludeGovernanceInd == true ? a.ORG_TYPE != "Governance" : true)
+                            && (orgType != null ? a.ORG_TYPE == orgType : true)
                             orderby a.ORG_NAME
                             select a).ToList();
                 }

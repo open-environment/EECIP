@@ -87,11 +87,11 @@
                         <ul class="sub-menu">
                             <li class="lvl3 @Html.ActivePage("Admin", "RefAgencies")">
                                 <a href="@Url.Action("RefAgencies","Admin")">
-                                    <span class="title">Agencies List </span>
+                                    <span class="title">Agencies</span>
                                 </a>
                             </li>
-                            <li class="lvl3 @Html.ActivePage("Admin", "RefGovernanceAgencies")">
-                                <a href="@Url.Action("RefGovernanceAgencies","Admin")">
+                            <li class="lvl3 @Html.ActivePage("Admin", "RefAgencies")">
+                                <a href="@Url.Action("RefAgencies","Admin", new { typ = "Governance" })">
                                     <span class="title">Governance Groups</span>
                                 </a>
                             </li>
@@ -119,11 +119,25 @@
                             <span class="title">Forum Admin </span>
                         </a>
                     </li>
-                    <li class="@Html.ActivePage("Admin", "ImportData")">
-                        <a href="@Url.Action("ImportData","Admin")">
+                    <li class="@Html.ActivePage("Admin", "Ref")">
+                        <a href="javascript:;">
                             <span class="title">Data Import/Export</span>
+                            <i class="icon-arrow"></i>
                         </a>
+                        <ul class="sub-menu">
+                            <li class="lvl3 @Html.ActivePage("Admin", "ImportData")">
+                                <a href="@Url.Action("ImportData","Admin")">
+                                    <span class="title">Import</span>
+                                </a>
+                            </li>
+                            <li class="lvl3 @Html.ActivePage("Admin", "ExportData")">
+                                <a href="@Url.Action("ExportData","Admin")">
+                                    <span class="title">Export</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
+
                     <li class="@Html.ActivePage("Admin", "Settings")">
                         <a href="@Url.Action("Settings","Admin")">
                             <span class="title">Global Settings </span>

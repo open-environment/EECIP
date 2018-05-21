@@ -40,6 +40,7 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+
         // GET: Dashboard/Search
         public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType)
         {
@@ -110,6 +111,7 @@ namespace EECIP.Controllers
 
         }
 
+
         // POST: /Dashboard/AgencyEdit
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult AgencyEdit(vmDashboardAgency model)
@@ -154,6 +156,7 @@ namespace EECIP.Controllers
             return RedirectToAction("Agency", new { selAgency = model.agency.ORG_IDX });
         }
 
+
         // POST: /Dashboard/AgencyEntServiceEdit
         [HttpPost]
         public ActionResult AgencyEntServiceEdit(vmDashboardAgency model)
@@ -176,6 +179,7 @@ namespace EECIP.Controllers
             return RedirectToAction("Agency", "Dashboard", new { selAgency = model.agency.ORG_IDX });
         }
         
+
         // POST: /Dashboard/AgencyEntServicesDelete
         [HttpPost]
         public JsonResult AgencyEntServiceDelete(int id)
@@ -191,6 +195,7 @@ namespace EECIP.Controllers
             }
         }
         
+
         // GET: /Dashboard/AgencyCard
         public ActionResult AgencyCard(string strid)
         {
@@ -252,6 +257,7 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+
         // GET: /Dashboard/ProjectReview
         public ActionResult ProjectReview()
         {
@@ -260,7 +266,6 @@ namespace EECIP.Controllers
             model.ProjectsNeedingReview = db_EECIP.GetT_OE_PROJECTS_NeedingReview(UserIDX);  //projects needing review
             return View(model);
         }
-
 
 
         // GET: /Dashboard/ProjectDetails/1
@@ -329,6 +334,7 @@ namespace EECIP.Controllers
             return View(model);
 
         }
+
 
         // POST: /Dashboard/ProjectEdit
         [HttpPost, ValidateAntiForgeryToken]
@@ -420,6 +426,7 @@ namespace EECIP.Controllers
             return RedirectToAction(model.ReturnURL ?? "Projects", new { selAgency = model.project.ORG_IDX } );
         }
 
+
         // POST: /Dashboard/ProjectsDelete
         [HttpPost]
         public JsonResult ProjectsDelete(IEnumerable<Guid> id)
@@ -455,6 +462,7 @@ namespace EECIP.Controllers
                 return Json("Success");
             }
         }
+
 
         // GET: /Dashboard/ProjectCard/1
         public ActionResult ProjectCard(string strid)
@@ -497,9 +505,8 @@ namespace EECIP.Controllers
             TempData["Error"] = "No project found";
             return RedirectToAction("Index", "Dashboard");
         }
-
-
-
+        
+        
         // POST: /Dashboard/ProjectVote
         [HttpPost]
         public JsonResult ProjectVote(Guid? id, string typ)
@@ -596,7 +603,6 @@ namespace EECIP.Controllers
         }
 
 
-
         public ActionResult ProjectFileDownload(Guid? id)
         {
             try
@@ -656,6 +662,7 @@ namespace EECIP.Controllers
 
         #endregion
 
+
         public ActionResult EnterpriseSvcOverview() {
             var model = new vmDashboardEntSvcOverview();
             model.EntSvcOverviewDisplay = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_Overview();
@@ -669,8 +676,7 @@ namespace EECIP.Controllers
             model.EntSvcOverviewDisplay = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_Overview();
             return View(model);
         }
-
-
+        
 
         public ActionResult EnterpriseSvcCard(string strid)
         {

@@ -15,6 +15,7 @@
                     <tr>
                         <th></th>
                         <th>Name</th>
+                        <th>Agency</th>
                         <th>Job Title</th>
                         <th>Email</th>
                         <th>Phone</th>
@@ -27,33 +28,36 @@
                     {
                     <tr>
                         <td>
-                            <a href="@Url.Action("UserProfile","Account", new { id=item.USER_IDX, a="a" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                            <a href="@Url.Action("UserProfile","Account", new { id=item.users.USER_IDX, a="a" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
                             <div class="delete-section" style="display:inline">
                                 <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
-                                <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.USER_IDX" data-delete-p="/Admin/UserDelete"><b>Confirm Delete</b></div>
+                                <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.users.USER_IDX" data-delete-p="/Admin/UserDelete"><b>Confirm Delete</b></div>
                             </div>
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.FNAME)
-                            @Html.DisplayFor(modelItem => item.LNAME)
+                            @Html.DisplayFor(modelItem => item.users.FNAME)
+                            @Html.DisplayFor(modelItem => item.users.LNAME)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.JOB_TITLE)
+                            @Html.DisplayFor(modelItem => item.ORG_NAME)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.EMAIL)
+                            @Html.DisplayFor(modelItem => item.users.JOB_TITLE)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.PHONE)
+                            @Html.DisplayFor(modelItem => item.users.EMAIL)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CREATE_DT)
+                            @Html.DisplayFor(modelItem => item.users.PHONE)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.LASTLOGIN_DT)
+                            @Html.DisplayFor(modelItem => item.users.CREATE_DT)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.ACT_IND)
+                            @Html.DisplayFor(modelItem => item.users.LASTLOGIN_DT)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.users.ACT_IND)
                         </td>
                     </tr>
                     }

@@ -187,6 +187,16 @@
                         </div>
                     </div>
                 }
+                else if (string.IsNullOrEmpty(Model.project.PROJECT_CONTACT))
+                {
+                    <div class="alert alert-block alert-info">
+                        <button data-dismiss="alert" class="close" type="button">×</button>
+                        <h4 class="alert-heading"><i class="fa fa-times-circle"></i> No project contact found</h4>
+                        <p>
+                            No contact information has been entered for this project. However, you can contact support@eecip.net to get assistance in finding an appropriate contact.
+                        </p>
+                    </div>
+                }
             </div>
         </section>
     </section>

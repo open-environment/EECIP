@@ -144,6 +144,7 @@ namespace EECIP.Controllers
         }
 
 
+
         //************************************* SETTINGS ************************************************************
         //GET: /Admin/Settings
         public ActionResult Settings()
@@ -207,11 +208,10 @@ namespace EECIP.Controllers
 
         //*************************************** AGENCIES **********************************************************
         // GET: /Admin/Agencies
-        public ActionResult RefAgencies() {
+        public ActionResult RefAgencies(string typ) {
             var model = new vmAdminAgencies
             {
-               // agencies = db_Ref.GetT_OE_ORGANIZATION(false, false)
-                agencies = db_Ref.GetT_OE_ORGANIZATION(false, true)
+                agencies = db_Ref.GetT_OE_ORGANIZATION(false, typ != "Governance", typ)
             };
             return View(model);
         }
@@ -286,7 +286,6 @@ namespace EECIP.Controllers
             return Json(response);
         }
 
-
         // POST: /Admin/RefAgencyEditEmail
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult RefAgencyEditEmail(vmAdminAgencyEdit model)
@@ -315,6 +314,7 @@ namespace EECIP.Controllers
                 return Json("Success");
         }
 
+
         //*************************************** AGENCIES GOVERNANCE GROUP **********************************************************
         // GET: /Admin/RefGovernanceAgencies
         public ActionResult RefGovernanceAgencies()
@@ -325,6 +325,7 @@ namespace EECIP.Controllers
             };
             return View(model);
         }
+        
         // GET: /Admin/RefGovernanceAgencyEdit
         public ActionResult RefGovernanceAgencyEdit(Guid? id)
         {
@@ -344,6 +345,7 @@ namespace EECIP.Controllers
 
             return View(model);
         }
+        
         // POST: /Admin/RefAgencyEdit
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult RefGovernanceAgencyEdit(T_OE_ORGANIZATION agency)
@@ -386,7 +388,6 @@ namespace EECIP.Controllers
             return Json(response);
         }
 
-
         // POST: /Admin/RefAgencyEditEmail
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult RefGovernanceAgencyEditEmail(vmAdminAgencyEdit model)
@@ -414,6 +415,9 @@ namespace EECIP.Controllers
             else
                 return Json("Success");
         }
+        
+
+        
         //*************************************** REF ENTPERISE SERVICES **********************************************************
         // GET: /Admin/RefEntServices
         public ActionResult RefEntServices()
@@ -835,32 +839,25 @@ namespace EECIP.Controllers
         }
 
         //*************************************** EXPORT DATA **********************************************************
-        [HttpPost, ValidateAntiForgeryToken]
-        public ActionResult ExportData(string[] exportdata)
+        public ActionResult ExportData()
         {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult ExportData2(string[] exportdata)
+        {
+            //****validation **************
+            if (exportdata == null)
+            {
+                TempData["Error"] = "You must select at least one option.";
+            }
+            //***end validation ***********
+
             DataTable dtProject = new DataTable("Project");
             DataTable dtServices = new DataTable("Service");
-            Guid? selAgency = null;
-            int UserIDX = db_Accounts.GetUserIDX();
 
-            // get agency for which the logged in user is associated
-            T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
-            if (u != null && u.ORG_IDX != null)
-                selAgency = u.ORG_IDX.ConvertOrDefault<Guid>();
-
-            //if still no agency (and not an Admin, then return error)
-            if (!User.IsInRole("Admins") && (selAgency == null || selAgency == Guid.Empty || !db_Accounts.UserCanEditOrgIDX(UserIDX, selAgency.ConvertOrDefault<Guid>())))
-            {
-                TempData["Error"] = "You are not associated with an agency.";
-                return RedirectToAction("AccessDenied", "Home");
-            }
-            T_OE_ORGANIZATION o = db_Ref.GetT_OE_ORGANIZATION_ByID(selAgency.ConvertOrDefault<Guid>());
-
-            List<T_OE_ORGANIZATION> oOrgList = new List<T_OE_ORGANIZATION>();
-            if (User.IsInRole("Admins"))
-            {
-                oOrgList = db_Ref.GetT_OE_ORGANIZATION(true, true);
-            }
+            List<T_OE_ORGANIZATION> oOrgList = db_Ref.GetT_OE_ORGANIZATION(true, false, null);
             if (exportdata.Contains("Projects"))
             {
                 dtProject.Columns.AddRange(new DataColumn[24] {
@@ -889,6 +886,8 @@ namespace EECIP.Controllers
                                             new DataColumn("Delete Ind"),
                                             new DataColumn("External Source ID")
                                            });
+
+
                 foreach (var oOneOrgName in oOrgList)
                 {
                     List<T_OE_PROJECTS> oProject = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(oOneOrgName.ORG_IDX.ConvertOrDefault<Guid>());
@@ -1020,6 +1019,7 @@ namespace EECIP.Controllers
                     }
                 }
             }
+
             DataSet dsExport = new DataSet();
             if (dtProject.Rows.Count > 0)
             {

@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Export Data";
+    ViewBag.SubTitle = "Export project data or enterprise services to Excel.";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("ExportData2", "Admin", FormMethod.Post, new { @class = "", enctype = "multipart/form-data", @id = "" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <section class="panel panel-default ">
+                <div class="panel-heading">
+                    Export Data
+                    <div class="panel-tools">
+                        <a class="btn btn-xs btn-link panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <table>
+                                    <tr>
+                                        <td style="padding:5px;">Projects</td>
+                                        <td style="padding:5px;">
+                                            <input type="checkbox" name="exportdata" value="Projects" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:5px;">Services</td>
+                                        <td style="padding:5px;">
+                                            <input type="checkbox" name="exportdata" value="Services" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Export Data</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                </div>
+            </section>
+        }
+    </div>
+</div>

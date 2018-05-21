@@ -4,7 +4,6 @@
     ViewBag.SubTitle = "Import project data or enterprise services.";
 }
 
-
 <div class="row">
     <div class="col-md-12">
 @using (Html.BeginForm("ImportData", "Admin", FormMethod.Post, new { @class = "", enctype = "multipart/form-data", @id = "norepostform" }))
@@ -44,43 +43,6 @@
 }
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        @using (Html.BeginForm("ExportData", "Admin", FormMethod.Post, new { @class = "", enctype = "multipart/form-data", @id = "norepostform" }))
-        {
-            @Html.AntiForgeryToken()
-
-            <section class="panel panel-default ">               
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-12">                           
-                                    <div class="form-group">
-                                        <table>                                           
-                                            <tr>                                              
-                                                <td style="padding:5px;">Projects</td>
-                                                <td style="padding:5px;">
-                                                    <input type="checkbox" name="exportdata" value="Projects" />
-                                                </td>                                               
-                                            </tr>                                           
-                                            <tr>                                                
-                                                <td style="padding:5px;">Services</td>
-                                                <td style="padding:5px;">
-                                                    <input type="checkbox" name="exportdata" value="Services" />
-                                                </td>                                               
-                                            </tr>
-                                            </table>
-                                    </div>                                
-                            <button type="submit" class="btn btn-primary">Export Data</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                    </div>
-                </div>
-            </section>
-        }
-    </div>
-</div>
-
 
 @if (Model.projects != null)
 {

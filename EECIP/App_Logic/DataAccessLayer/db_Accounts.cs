@@ -6,6 +6,13 @@ using EECIP.App_Logic.BusinessLogicLayer;
 
 namespace EECIP.App_Logic.DataAccessLayer
 {
+    public class UserDisplayType
+    {
+        public T_OE_USERS users { get; set; }
+        public string ORG_NAME { get; set; }
+    }
+
+
     public class db_Accounts
     {
         //*****************USERS **********************************
@@ -44,13 +51,19 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<T_OE_USERS> GetT_OE_USERS()
+        public static List<UserDisplayType> GetT_OE_USERS()
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
-                    return ctx.T_OE_USERS.ToList();
+                    return (from a in ctx.T_OE_USERS
+                            join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1 from x1 in sr1.DefaultIfEmpty() //left join
+                            select new UserDisplayType
+                            {
+                                users = a,
+                                ORG_NAME = x1.ORG_NAME
+                            }).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -165,6 +178,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (mODIFY_USR != null) row.MODIFY_USERIDX = mODIFY_USR;
                     if (LogAtmpt != null) row.LOG_ATMPT = LogAtmpt;
                     if (oRG_IDX != null) row.ORG_IDX = oRG_IDX;
+                    if (oRG_IDX == Guid.Empty) row.ORG_IDX = null; //handling blanking out of OrgIDX
                     if (jOB_TITLE != null) row.JOB_TITLE = jOB_TITLE;
                     if (lINKED_IN != null) row.LINKEDIN = lINKED_IN;
                     if (NodeAdmin != null) row.NODE_ADMIN = NodeAdmin ?? false;
