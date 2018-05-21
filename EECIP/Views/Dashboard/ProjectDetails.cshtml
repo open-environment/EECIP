@@ -12,282 +12,252 @@
     @Html.HiddenFor(model => model.project.PROJECT_IDX)
     @Html.HiddenFor(model => model.ReturnURL)
 
-<div class="row ">
-    <div class="col-sm-6 ">
-        <section class="panel panel-default">
-            <div class="panel-heading">
-                Project Overview
-                <div class="panel-tools">
-                    <a class="btn btn-xs panel-collapse collapses" href="#">
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Project Name</label>
-                            @Html.TextBoxFor(model => model.project.PROJ_NAME, new { @class = "form-control", @maxlength = "150" })
-                        </div>
+    <div class="row ">
+        <div class="col-sm-6 ">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    Project Overview
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Project Description</label>
-                            @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "7" })
-                            @Html.ValidationMessageFor(model => model.project.PROJ_DESC)
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Media</label>
-                            @Html.DropDownListFor(model => model.project.MEDIA_TAG, Model.ddl_Media, "", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.project.MEDIA_TAG)
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Program Area(s)</label>
-                            @Html.ListBoxFor(model => model.SelectedProgramAreas, Model.AllProgramAreas, new { multiple = "multiple", @class = "form-control search-select" })
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Start Year</label>
-                            @Html.TextBoxFor(model => model.project.START_YEAR, new { @class = "form-control", @maxlength = "4" })
-                            @Html.ValidationMessageFor(model => model.project.START_YEAR)
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>Year Most Recently Active</label>
-                            @Html.TextBoxFor(model => model.project.DATE_LAST_UPDATE, new { @class = "form-control", @maxlength = "4" })
-                            @Html.ValidationMessageFor(model => model.project.DATE_LAST_UPDATE)
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Current Implementation Status</label>
-                            @Html.DropDownListFor(model => model.project.PROJ_STATUS, Model.ddl_Status, "", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.project.PROJ_STATUS)
-                        </div>
-                    </div>
-                </div>
-                <span class="help-inline col-sm-12"> <i class="clip-info"></i> Record source:  @Model.project.RECORD_SOURCE</span>
-                <span class="help-inline col-sm-12"> <i class="clip-info"></i> Data last updated: @(Model.project.MODIFY_DT ?? @Model.project.CREATE_DT)</span>
-            </div>
-        </section>
-    </div>
-    <div class="col-sm-6 ">
-        <section class="panel panel-default">
-            <div class="panel-heading">
-                Project Attributes
-                <div class="panel-tools">
-                    <a class="btn btn-xs panel-collapse collapses" href="#">
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Tags (what aspects of this project would be of most interest to your peers in other agencies)</label>
-                            @Html.ListBoxFor(model => model.SelectedFeatures, Model.AllFeatures, new { multiple = "multiple", @class = "form-control search-select", @style = "display: block;" })
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Commercial Off the Shelf (COTS)/In-House?</label>
-                            @Html.DropDownListFor(model => model.project.COTS, Model.ddl_COTS, "", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.project.COTS)
-                        </div>
-                    </div>
-                    <div id="cotsdesc" class="col-md-6" style="display: none;">
-                        <div class="form-group">
-                            <label>Vendor</label>
-                            @Html.TextBoxFor(model => model.project.VENDOR, new { @class = "form-control", @maxlength = "100" })
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Was business process modernization a part of this project?</label>
-                            @Html.DropDownListFor(model => model.project.BP_MODERN_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.project.BP_MODERN_IND)
-                        </div>
-                    </div>
-                    <div id="bpdesc" class="col-md-6" style="display: none;">
-                        <div class="form-group">
-                            <label>Describe</label>
-                            @Html.TextBoxFor(model => model.project.BP_MODERN_DESC, new { @class = "form-control", @maxlength = "100" })
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Is there a mobile component?</label>
-                            @Html.DropDownListFor(model => model.project.MOBILE_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.project.MOBILE_IND)
-                        </div>
-                    </div>
-                    <div id="mobiledesc" class="col-md-6" style="display: none;">
-                        <div class="form-group">
-                            <label>Describe</label>
-                            @Html.TextBoxFor(model => model.project.MOBILE_DESC, new { @class = "form-control", @maxlength = "100" })
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Does this involve advanced monitoring?</label>
-                            @Html.DropDownListFor(model => model.project.ADV_MON_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.project.ADV_MON_IND)
-                        </div>
-                    </div>
-                    <div id="advmondesc" class="col-md-6" style="display: none;">
-                        <div class="form-group">
-                            <label>Describe</label>
-                            @Html.TextBoxFor(model => model.project.ADV_MON_DESC, new { @class = "form-control", @maxlength = "100" })
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <div id="divurl">
-                                <input id="btnAdd" type="button" value="Add Project URL(s)" class="btn btn-sm" onclick="AddProjectURL();" />
-                                <i class="clip-question-2 input-tooltip popovers" data-content="Provide a link to the project's website or documentation" data-placement="left" data-trigger="hover" data-rel="popover" data-original-title=""></i>
-                                <br /><br />
-                                <!--Textboxes will be added here -->
-                                @for (var i = 0; i < Model.sProjectUrlList.Count(); i++) 
-                                {   
-                                    <div class="row urlrow">
-                                        <div class="col-md-5">
-                                            <label>Project URL</label>
-                                            @Html.TextBoxFor(modelItem => Model.sProjectUrlList[i].PROJECT_URL, new { @class = "form-control projurl", @maxlength = "200" })
-                                        </div>
-                                        <div class="col-md-5">
-                                            <label>Description</label>
-                                            @Html.TextBoxFor(modelItem => Model.sProjectUrlList[i].PROJ_URL_DESC, new { @class = "form-control projurldesc" })
-                                        </div>
-                                        <div class="col-md-2" style="padding-top: 25px;">
-                                            <a href="#" onclick="RemoveTextBox(this)">Remove</a>
-                                        </div>
-                                    </div>
-                                }
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Project Name</label>
+                                @Html.TextBoxFor(model => model.project.PROJ_NAME, new { @class = "form-control", @maxlength = "150" })
                             </div>
-
-
                         </div>
                     </div>
-                </div>               
-            </div>
-        </section>
-    </div>
-</div>
-
-<div class="row aligned-row">
-    <section class="col-md-6 ">
-        <section class="panel panel-default @(Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && Model.orgType != "Governance" ? "danger" : "") ">
-            <div class="panel-heading">
-                Project Contact
-                <div class="panel-tools">
-                    <a class="btn btn-xs panel-collapse collapses" href="#">
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                @if(Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT))  && Model.orgType != "Governance")
-                {
-                    <div class="alert alert-block alert-danger fade in">
-                        <button data-dismiss="alert" class="close" type="button">×</button>
-                        <h4 class="alert-heading"><i class="fa fa-times-circle"></i> Claim this Project!</h4>
-                        <p>
-                            Help other agencies get in touch with you by selecting a project contact from the list below.
-                        </p>
-                    </div>
-                }
-
-                @if(Model.orgType != "Governance")
-                {
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label>Select user below:</label>
-                            @Html.DropDownListFor(model => model.project.PROJECT_CONTACT_IDX, Model.ddl_AgencyUsers, "", new { @class = "form-control" })
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Project Description</label>
+                                @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "7" })
+                                @Html.ValidationMessageFor(model => model.project.PROJ_DESC)
+                            </div>
                         </div>
                     </div>
-                </div>
-                }
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            @if (Model.orgType != "Governance") {
-                            <label>Or if user doesn't have an EECIP account, enter contact info here:</label>
-                            } else {
-                            <label>Governance group contact:</label>
-                            }
-                            @Html.TextBoxFor(model => model.project.PROJECT_CONTACT, new { @class = "form-control", @maxlength = "100" })
-                            @Html.ValidationMessageFor(model => model.project.PROJECT_CONTACT)
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Media</label>
+                                @Html.DropDownListFor(model => model.project.MEDIA_TAG, Model.ddl_Media, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.project.MEDIA_TAG)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Program Area(s)</label>
+                                @Html.ListBoxFor(model => model.SelectedProgramAreas, Model.AllProgramAreas, new { multiple = "multiple", @class = "form-control search-select" })
+                            </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Start Year</label>
+                                @Html.TextBoxFor(model => model.project.START_YEAR, new { @class = "form-control", @maxlength = "4" })
+                                @Html.ValidationMessageFor(model => model.project.START_YEAR)
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Year Most Recently Active</label>
+                                @Html.TextBoxFor(model => model.project.DATE_LAST_UPDATE, new { @class = "form-control", @maxlength = "4" })
+                                @Html.ValidationMessageFor(model => model.project.DATE_LAST_UPDATE)
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Current Implementation Status</label>
+                                @Html.DropDownListFor(model => model.project.PROJ_STATUS, Model.ddl_Status, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.project.PROJ_STATUS)
+                            </div>
+                        </div>
+                    </div>
+                    <span class="help-inline col-sm-12"> <i class="clip-info"></i> Record source:  @Model.project.RECORD_SOURCE</span>
+                    <span class="help-inline col-sm-12"> <i class="clip-info"></i> Data last updated: @(Model.project.MODIFY_DT ?? @Model.project.CREATE_DT)</span>
                 </div>
-            </div>
-        </section>
-    </section>
-    <section class="col-md-6 aligned-row">
-        <section class="panel panel-default">
-            <div class="panel-heading">
-                Project Files
-                <div class="panel-tools">
-                    <a class="btn btn-xs panel-collapse collapses" href="#">
-                    </a>
+            </section>
+        </div>
+        <div class="col-sm-6 ">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    Project Attributes
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-body">
-                @if (Model.files_existing != null && Model.files_existing.Count > 0)
-                {
-                    <div class="postuploadedfilesholder clearfix">
-                        <p>Attached Files</p>
-                        <ul>
-                            @foreach (var file in Model.files_existing.OrderByDescending(o => o.CREATE_DT))
-                            {
-                            <li>
-                                <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
-                                    @if (Utils.FileIsImage(file.DOC_NAME))
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Tags (what aspects of this project would be of most interest to your peers in other agencies)</label>
+                                @Html.ListBoxFor(model => model.SelectedFeatures, Model.AllFeatures, new { multiple = "multiple", @class = "form-control search-select", @style = "display: block;" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Commercial Off the Shelf (COTS)/In-House?</label>
+                                @Html.DropDownListFor(model => model.project.COTS, Model.ddl_COTS, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.project.COTS)
+                            </div>
+                        </div>
+                        <div id="cotsdesc" class="col-md-6" style="display: none;">
+                            <div class="form-group">
+                                <label>Vendor</label>
+                                @Html.TextBoxFor(model => model.project.VENDOR, new { @class = "form-control", @maxlength = "100" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Was business process modernization a part of this project?</label>
+                                @Html.DropDownListFor(model => model.project.BP_MODERN_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.project.BP_MODERN_IND)
+                            </div>
+                        </div>
+                        <div id="bpdesc" class="col-md-6" style="display: none;">
+                            <div class="form-group">
+                                <label>Describe</label>
+                                @Html.TextBoxFor(model => model.project.BP_MODERN_DESC, new { @class = "form-control", @maxlength = "100" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Is there a mobile component?</label>
+                                @Html.DropDownListFor(model => model.project.MOBILE_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.project.MOBILE_IND)
+                            </div>
+                        </div>
+                        <div id="mobiledesc" class="col-md-6" style="display: none;">
+                            <div class="form-group">
+                                <label>Describe</label>
+                                @Html.TextBoxFor(model => model.project.MOBILE_DESC, new { @class = "form-control", @maxlength = "100" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Does this involve advanced monitoring?</label>
+                                @Html.DropDownListFor(model => model.project.ADV_MON_IND, Model.ddl_UseAmount, "", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.project.ADV_MON_IND)
+                            </div>
+                        </div>
+                        <div id="advmondesc" class="col-md-6" style="display: none;">
+                            <div class="form-group">
+                                <label>Describe</label>
+                                @Html.TextBoxFor(model => model.project.ADV_MON_DESC, new { @class = "form-control", @maxlength = "100" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div id="divurl">
+                                    <input id="btnAdd" type="button" value="Add Project URL(s)" class="btn btn-sm" onclick="AddProjectURL();" />
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="Provide a link to the project's website or documentation" data-placement="left" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                    <br /><br />
+                                    <!--Textboxes will be added here -->
+                                    @for (var i = 0; i < Model.sProjectUrlList.Count(); i++)
                                     {
-                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                                        <div class="row urlrow">
+                                            <div class="col-md-5">
+                                                <label>Project URL</label>
+                                                @Html.TextBoxFor(modelItem => Model.sProjectUrlList[i].PROJECT_URL, new { @class = "form-control projurl", @maxlength = "200" })
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label>Description</label>
+                                                @Html.TextBoxFor(modelItem => Model.sProjectUrlList[i].PROJ_URL_DESC, new { @class = "form-control projurldesc" })
+                                            </div>
+                                            <div class="col-md-2" style="padding-top: 25px;">
+                                                <a href="#" onclick="RemoveTextBox(this)">Remove</a>
+                                            </div>
+                                        </div>
                                     }
-                                    else
-                                    {
-                            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                                    }
-                                </a>
-                                <a href="@Url.Action("ProjectFileDelete", "Dashboard", new { id = file.DOC_IDX })" class="deleteupload" title="Delete">
-                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                </a>
-
-                                <div class="postedfilename">@file.DOC_NAME</div>
-                                <div>
-                                    @file.DOC_COMMENT
                                 </div>
-                            </li>
-                                
-                            }
-                        </ul>
-                    </div>
-                }
 
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="row aligned-row">
+        <section class="col-md-6 ">
+            <section class="panel panel-default @(Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && Model.orgType != "Governance" ? "danger" : "") ">
+                <div class="panel-heading">
+                    Project Contact
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @if (Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && Model.orgType != "Governance")
+                    {
+                        <div class="alert alert-block alert-danger fade in">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <h4 class="alert-heading"><i class="fa fa-times-circle"></i> Claim this Project!</h4>
+                            <p>
+                                Help other agencies get in touch with you by selecting a project contact from the list below.
+                            </p>
+                        </div>
+                    }
+
+                    @if (Model.orgType != "Governance")
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Select user below:</label>
+                                    @Html.DropDownListFor(model => model.project.PROJECT_CONTACT_IDX, Model.ddl_AgencyUsers, "", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @if (Model.orgType != "Governance")
+                                {
+                                    <label>Or if user doesn't have an EECIP account, enter contact info here:</label>
+                                }
+                                else
+                                {
+                                    <label>Governance group contact:</label>
+                                }
+                                @Html.TextBoxFor(model => model.project.PROJECT_CONTACT, new { @class = "form-control", @maxlength = "100" })
+                                @Html.ValidationMessageFor(model => model.project.PROJECT_CONTACT)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        <section class="col-md-6 aligned-row">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    Project Files
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
                     <div class="col-md-10 col-md-offset-1 topiccategory">
                         <div class="form-group createuploadfiles">
                             @Html.LabelFor(x => x.files)
@@ -307,25 +277,75 @@
                         </div>
                     </div>
 
-            </div>
+                    @if (Model.files_existing != null && Model.files_existing.Count > 0)
+                    {
+                        <div class="postuploadedfilesholder clearfix">
+                            <p>Attached Files</p>
+                            @{
+                                int i = 0;
+                            }
+
+                            @foreach (var file in Model.files_existing.OrderByDescending(o => o.CREATE_DT))
+                            {
+                                <ul>
+                                    <li>
+                                        @Html.HiddenFor(modelItem => Model.files_existing[i].DOC_IDX)
+
+                                        <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = Model.files_existing[i].DOC_IDX })">
+                                            @if (Utils.FileIsImage(Model.files_existing[i].DOC_NAME))
+                                            {
+                                                <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                                            }
+                                        </a>
+                                        <a href="@Url.Action("ProjectFileDelete", "Dashboard", new { id = Model.files_existing[i].DOC_IDX })" class="deleteupload" title="Delete">
+                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        </a>
+
+                                        <a href="#" class="btn btn-rounded btn-xs descinfo" title="Edit">
+                                            <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                                        </a>
+                                        <div class="postedfilename">                                          
+                                            @Html.DisplayFor(modelItem => Model.files_existing[i].DOC_NAME)
+
+                                        </div>
+                                        <div id="divHideOnEdit">                                          
+                                            @Html.DisplayFor(modelItem => Model.files_existing[i].DOC_COMMENT)
+                                        </div>
+                                        <div id="divShowOnEdit" style="display:none;">
+                                            @Html.EditorFor(modelItem => Model.files_existing[i].DOC_COMMENT, new { @class = "form-control", @maxlength = "200" })
+                                        </div>
+
+                                    </li>
+                                </ul>
+                                i++;
+                            }
+
+                        </div>
+                    }
+                </div>
+            </section>
         </section>
-    </section>
 
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
-        <a href="@Url.Action(Model.ReturnURL, "Dashboard")" class="btn btn-default">Close</a>
-        @if (Model.project.PROJ_NAME != null) {
-        <div class="delete-section" style="display:inline">
-            <a class=" btn btn-danger delete-link">Delete Project</a>
-            <div class="btn btn-warning delete-confirm" style="display:none" data-delete-id="@Model.project.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Index"><b>Confirm Delete</b></div>
-        </div>
-        }
     </div>
-</div>
-<p></p>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+            <a href="@Url.Action(Model.ReturnURL, "Dashboard")" class="btn btn-default">Close</a>
+            @if (Model.project.PROJ_NAME != null)
+            {
+                <div class="delete-section" style="display:inline">
+                    <a class=" btn btn-danger delete-link">Delete Project</a>
+                    <div class="btn btn-warning delete-confirm" style="display:none" data-delete-id="@Model.project.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Index"><b>Confirm Delete</b></div>
+                </div>
+            }
+        </div>
+    </div>
+    <p></p>
 }
 
 @section Scripts {
@@ -333,6 +353,13 @@
     @Scripts.Render("~/bundles/select2")
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $('a.descinfo').click(function () {
+                var dad = $(this).parent().parent();
+                dad.find("#divHideOnEdit").hide();
+                dad.find("#divShowOnEdit").show().focus();
+                return false;
+            });
 
             //function to initiate Select2
             $(".search-select").select2({
@@ -429,7 +456,7 @@
                 j++;
             });
         }
-       
+
         function AddProjectURL() {
             var m = $('#divurl input:last').attr('name');
             var index = 0;

@@ -372,6 +372,10 @@ namespace EECIP.Controllers
                     foreach (string feature in model.SelectedFeatures ?? new List<string>())
                         db_EECIP.InsertT_OE_PROJECT_TAGS(newProjID2, "Project Feature", feature);
 
+                    foreach (T_OE_DOCUMENTS docs in model.files_existing ?? new List<T_OE_DOCUMENTS>())
+                    {
+                        db_EECIP.UpdateT_OE_DOCUMENTS(docs.DOC_IDX, UserIDX, docs.DOC_COMMENT);
+                    }
                     //update files
                     if (model.files != null)
                     {
