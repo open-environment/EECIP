@@ -1496,36 +1496,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                     db_Ref.LogEFException(ex);
                     return 0;
                 }
-            }
-        }
-
-        public static int UpdateT_OE_DOCUMENTS(Guid DocIDX, int? UserIDX, string dOC_COMMENT)
-        {
-            using (EECIPEntities ctx = new EECIPEntities())
-            {
-                try
-                {
-                    T_OE_DOCUMENTS e = (from a in ctx.T_OE_DOCUMENTS
-                                        where a.DOC_IDX == DocIDX
-                                        select a).FirstOrDefault();
-
-                    if (e != null)
-                    {
-                        e.MODIFY_DT = System.DateTime.UtcNow;
-                        e.MODIFY_USERIDX = UserIDX ?? 0;
-                        e.DOC_COMMENT = dOC_COMMENT;
-                    }
-                    ctx.SaveChanges();
-
-                    return 1;
-                }
-                catch (Exception ex)
-                {
-                    db_Ref.LogEFException(ex);
-                    return 0;
-                }
-            }
-        }
+           }
+        }       
 
         //******************************* NOTIFICATIONS ***************************************
         public static List<T_OE_USER_NOTIFICATION> GetT_OE_USER_NOTIFICATION_byUserIDX(int? UserIDX, bool OnlyUnread)
