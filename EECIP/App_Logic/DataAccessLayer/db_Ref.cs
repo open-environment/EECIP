@@ -975,7 +975,23 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        
+        public static string GetT_OE_REF_TAGS_ByID(int? tAG_IDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_TAGS
+                            where a.TAG_IDX == tAG_IDX
+                            select a).FirstOrDefault().TAG_NAME;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return "";
+                }
+            }
+        }
 
         //*****************SYS_LOG**********************************
         public static int InsertT_OE_SYS_LOG(string logType, string logMsg)

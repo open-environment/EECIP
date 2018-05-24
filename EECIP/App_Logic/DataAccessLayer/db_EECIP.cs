@@ -1496,10 +1496,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                     db_Ref.LogEFException(ex);
                     return 0;
                 }
-            }
-        }
-
-
+           }
+        }       
 
         //******************************* NOTIFICATIONS ***************************************
         public static List<T_OE_USER_NOTIFICATION> GetT_OE_USER_NOTIFICATION_byUserIDX(int? UserIDX, bool OnlyUnread)
