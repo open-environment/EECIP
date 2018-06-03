@@ -1,8 +1,8 @@
 # EECIP
 The E-Enterprise Community Inventory Platform is an online community and living project inventory for E-Enterprise State and Tribal participant members across the US.
 
+
 ## Change Log
----------------
 **Version 1.1a (5/21/2018)**
 - Project Document Descriptions: Allow people to provide a description for each project document that is associated with a project.
 - Bulk Project Deletion: New feature allows a person to do bulk deletion of projects, in particular helpful in cleaning up old imported data.
