@@ -42,7 +42,7 @@ namespace EECIP.Controllers
                 {
                     int UserIDX = (int)Membership.GetUser(model.newUserEmail).ProviderUserKey;
                     //update first name and last name
-                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null,false);
+                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
                     TempData["Success"] = "User created and verification email sent to user.";
                 }
                 else
@@ -825,10 +825,27 @@ namespace EECIP.Controllers
                         }
 
                         int? MobileInd = oOneProject.MOBILE_IND;
+                        string MobileTagName = "";
+                        if (MobileInd != null)
+                        {
+                            MobileTagName = db_Ref.GetT_OE_REF_TAGS_ByID(MobileInd);
+                        }
                         string MobileDescription = oOneProject.MOBILE_DESC;
+
                         int? AdvMonInd = oOneProject.ADV_MON_IND;
+                        string AdvMonTagName = "";
+                        if (AdvMonInd != null)
+                        {
+                            AdvMonTagName = db_Ref.GetT_OE_REF_TAGS_ByID(AdvMonInd);
+                        }
                         string AdvMonDescription = oOneProject.ADV_MON_DESC;
+
                         int? BPImprovementInd = oOneProject.BP_MODERN_IND;
+                        string BPImprovementTagName = "";
+                        if (BPImprovementInd != null)
+                        {
+                            BPImprovementTagName = db_Ref.GetT_OE_REF_TAGS_ByID(BPImprovementInd);
+                        }
                         string BPImprovementDesc = oOneProject.BP_MODERN_DESC;
                         string COTS = oOneProject.COTS;
                         string Vendor = oOneProject.VENDOR;
@@ -866,8 +883,8 @@ namespace EECIP.Controllers
                             }
                         }
 
-                        dtProject.Rows.Add(AgencyName, RecordSource, ProjectName, ProjectDescription, Media, StartYear, ProjectStatus, YearLastUpdated, ProjectURL, MobileInd,
-                             MobileDescription, AdvMonInd, AdvMonDescription, BPImprovementInd, BPImprovementDesc, COTS, Vendor, ProjectContact, EECIPProjectID, ImportID,
+                        dtProject.Rows.Add(AgencyName, RecordSource, ProjectName, ProjectDescription, Media, StartYear, ProjectStatus, YearLastUpdated, ProjectURL, MobileTagName,
+                             MobileDescription, AdvMonTagName, AdvMonDescription, BPImprovementTagName, BPImprovementDesc, COTS, Vendor, ProjectContact, EECIPProjectID, ImportID,
                              ProgramAreas, ProjectFeature, "", "");
 
                     }

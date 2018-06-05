@@ -211,7 +211,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 catch (Exception ex)
                 {
                     //set to inactive if cannot delete
-                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null,false);
+                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null);
                     db_Ref.LogEFException(ex);
                     return 0;
                 }
