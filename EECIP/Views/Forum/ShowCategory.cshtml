@@ -1,5 +1,8 @@
 ﻿@model EECIP.Models.vmForumCategoryView
-
+@{
+    ViewBag.Title = "Discussion Category: " + Model.CategoryWithSub.Category.Name;
+    ViewBag.SubTitle = @Html.Raw(Model.CategoryWithSub.Category.Description);
+}
 <div class="row">
     <div class="col-md-9">
 
@@ -17,22 +20,20 @@
                     {
                         <img src="@AppHelpers.CategoryImage(Model.Category.Image, Model.Category.Id,110)" alt="@Model.Category" class="categoryimage" />
                     }*@
-                <h1>@Html.Raw(Model.CategoryWithSub.Category.Name)</h1>
-                <p>@Html.Raw(Model.CategoryWithSub.Category.Description)</p>
             </div>
 
-            @if (Model.CategoryWithSub.SubCategories != null)
+            @if (Model.CategoryWithSub.SubCategories != null && Model.CategoryWithSub.SubCategories.Count > 0)
             {
                 <div class="subcategoryholder">
                     <ul class="clearfix">
-                    @foreach (var category in Model.CategoryWithSub.SubCategories)
-                    {
-                        <li><a style="border-color: @(string.IsNullOrEmpty(category.Colour) ? "#ced1d1" : category.Colour)" href="@Url.Action("ShowCategory", "Forum", new { slug = category.Slug })">@Html.Raw(@category.Name)</a></li>
-                    }
+                        @foreach (var category in Model.CategoryWithSub.SubCategories)
+                        {
+                            <li><a style="border-color: @(string.IsNullOrEmpty(category.Colour) ? "#ced1d1" : category.Colour)" href="@Url.Action("ShowCategory", "Forum", new { slug = category.Slug })">@Html.Raw(@category.Name)</a></li>
+                        }
                     </ul>
                 </div>
 
-               
+
                 //Html.RenderPartial("_SubCategories", new SubCategoryViewModel
                 //{
                 //    ParentCategory = Model.Category

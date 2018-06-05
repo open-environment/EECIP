@@ -35,6 +35,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public int upVoteCount { get; set; }
         public int downVoteCount { get; set; }
         public List<Topic_Tags> topicTags { get; set; }
+        public string CategoryName { get; set; }
+        public string CategorySlug { get; set; }
 
     }
 
@@ -937,6 +939,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         return (from a in ctx.Topics.AsNoTracking()
                                 join b in ctx.Posts on a.Id equals b.Topic_Id
                                 join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
+                                join d in ctx.Categories on a.Category_Id equals d.Id
                                 where b.IsTopicStarter == true
                                 && (cat_id != null ? a.Category_Id == cat_id : true)
                                 orderby b.DateCreated descending
@@ -949,13 +952,16 @@ namespace EECIP.App_Logic.DataAccessLayer
                                     postCount = (from v1 in ctx.Posts where v1.Topic_Id == a.Id select v1).Count(),
                                     upVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount > 0 select v1).Count(),
                                     downVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount < 0 select v1).Count(),
-                                    topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList()
+                                    topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList(),
+                                    CategoryName = d.Name,
+                                    CategorySlug = d.Slug
                                 }).Take(20).ToList();
                     else
                         return (from a in ctx.Topics.AsNoTracking()
                                 join b in ctx.Posts on a.Id equals b.Topic_Id
                                 join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
                                 join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
+                                join e in ctx.Categories on a.Category_Id equals e.Id
                                 where b.IsTopicStarter == true
                                 && (cat_id != null ? a.Category_Id == cat_id : true)
                                 && d.TopicTag == tag
@@ -969,7 +975,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                                     postCount = (from v1 in ctx.Posts where v1.Topic_Id == a.Id select v1).Count(),
                                     upVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount > 0 select v1).Count(),
                                     downVoteCount = (from v1 in ctx.Votes where v1.Post_Id == b.Id && v1.Amount < 0 select v1).Count(),
-                                    topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList()
+                                    topicTags = (from v1 in ctx.Topic_Tags where v1.Topic_Id == a.Id select v1).ToList(),
+                                    CategoryName = e.Name,
+                                    CategorySlug = e.Slug
                                 }).Take(20).ToList();
 
                 }

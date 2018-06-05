@@ -42,7 +42,7 @@ namespace EECIP.Controllers
                 {
                     int UserIDX = (int)Membership.GetUser(model.newUserEmail).ProviderUserKey;
                     //update first name and last name
-                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null,false);
+                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
                     TempData["Success"] = "User created and verification email sent to user.";
                 }
                 else

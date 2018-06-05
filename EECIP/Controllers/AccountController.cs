@@ -59,7 +59,7 @@ namespace EECIP.Controllers
                     else
                     {
                         //set last login time and reset failed login attempts
-                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null,false);
+                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null, null);
                         return RedirectToAction("Index", "Dashboard");
                     }
 
@@ -182,7 +182,7 @@ namespace EECIP.Controllers
                             }
 
                             //update first name, last name, and agency
-                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null,false);
+                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null, false);
 
                             //redirect user to registration success view
                             return RedirectToAction("RegisterSuccess", "Account");

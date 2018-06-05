@@ -258,28 +258,30 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="col-md-10 col-md-offset-1 topiccategory">
-                        <div class="form-group createuploadfiles">
-                            @Html.LabelFor(x => x.files)
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-btn">
-                                    <span class="btn btn-default btn-file">
-                                        Browse <input type="file" name="files" id="files" value="">
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1 topiccategory">
+                            <div class="form-group createuploadfiles">
+                                @Html.LabelFor(x => x.files)
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-default btn-file">
+                                            Browse <input type="file" name="files" id="files" value="">
+                                        </span>
                                     </span>
-                                </span>
-                                <input id="filename1" type="text" class="form-control" readonly="">
+                                    <input id="filename1" type="text" class="form-control" readonly="">
+                                </div>
+                                @Html.ValidationMessageFor(x => x.files)
                             </div>
-                            @Html.ValidationMessageFor(x => x.files)
-                        </div>
-                        <div class="form-group">
-                            <label>Description</label>
-                            @Html.TextBoxFor(model => model.FileDescription, new { @class = "form-control", @maxlength = "200" })
+                            <div class="form-group">
+                                <label>Description</label>
+                                @Html.TextBoxFor(model => model.FileDescription, new { @class = "form-control", @maxlength = "200" })
+                            </div>
                         </div>
                     </div>
 
                     @if (Model.files_existing != null && Model.files_existing.Count > 0)
                     {
-                        <div class="postuploadedfilesholder clearfix">
+                        <div class="postuploadedfilesholder clearfix col-md-12">
                             <p>Attached Files</p>
                             @{
                                 int i = 0;
