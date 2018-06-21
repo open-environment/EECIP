@@ -717,6 +717,54 @@ ul.main-navigation-menu > li.active > a {
 /*************************************************************************************************************************************************/
 /***********************FORUM STYLING ************************************************************************************************************/
 /*************************************************************************************************************************************************/
+
+/***************8 SUB NAVIGATION HEADER***********************/
+.sub-nav-container {
+}
+
+section.content-strip {
+    margin-top: -20px;
+    margin-bottom: 20px;
+    background: #ecf0f1;
+    background-image: initial;
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: rgb(236, 240, 241);
+    color: #636267;
+}
+
+    section.content-strip ul {
+        margin: 0;
+        padding: 0;
+        text-align: left;
+    }
+
+        section.content-strip ul li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+    section.content-strip ul li a, section.content-strip ul li a:visited {
+        display: block;
+        color: #3b3b3b;
+        font-size: 16px;
+        padding: 7px 18px 9px 18px;
+        border-top: 5px transparent solid;
+    }
+
+        section.content-strip ul li a:hover, section.content-strip ul li a:focus, section.content-strip ul li a.active, section.content-strip ul li a:visited:hover, section.content-strip ul li a:visited:focus, section.content-strip ul li a:visited.active {
+            background-color: #fff;
+            border-color: #c9d4d7;
+        }
+
+
 .btn-mvc, .btn-mvc:visited {
     display: inline-block;
     padding: 7px 20px;
@@ -1090,6 +1138,7 @@ span.tag a, span.tag a:visited {
 .rowdetails {
     margin-left: 70px;
 }
+
 
 .topicrow {
     padding: 15px 0 0 15px;

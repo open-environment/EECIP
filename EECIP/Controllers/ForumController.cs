@@ -30,11 +30,51 @@ namespace EECIP.Controllers
         }
 
 
-        // GET: Forum
-        public ActionResult Index()
+        public ActionResult Index(int? p, string tag)
         {
-            return View();
-        }    
+            var viewModel = new vmForumLatestTopicsView
+            {
+                _topics = db_Forum.GetTopicsByCategory(null, tag, p ?? 1),
+                currentPage = p ?? 1,
+                numRecs = db_Forum.GetTopicCount(tag)
+            };
+
+            return View(viewModel);
+        }
+
+        [Authorize]
+        public ActionResult PostedIn(int? p, string tag)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            List<Guid> PostedIn = db_Forum.GetTopicIDs_InWhichUserPosted(UserIDX);
+
+            var viewModel = new vmForumLatestTopicsView
+            {
+                _topics = db_Forum.GetTopicsByCategoryPostedIn(null, tag, p ?? 1, PostedIn),
+                currentPage = p ?? 1,
+                numRecs = db_Forum.GetTopicCountPostedIn(tag, PostedIn)
+            };
+
+            return View(viewModel);
+        }
+
+        [Authorize]
+        public ActionResult Following(int? p, string tag)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            var viewModel = new vmForumLatestTopicsView
+            {
+                _topics = db_Forum.GetTopicsByCategoryFollowing(null, tag, p ?? 1, UserIDX),
+                currentPage = p ?? 1,
+                numRecs = db_Forum.GetTopicCountFollowing(tag, UserIDX)
+            };
+
+            return View(viewModel);
+        }
+
+
 
         [Authorize]
         public ActionResult Create(Guid? id)
@@ -52,6 +92,7 @@ namespace EECIP.Controllers
 
             return View(viewModel);
         }
+
 
         [HttpPost]
         [Authorize]
@@ -93,7 +134,6 @@ namespace EECIP.Controllers
                     FormsAuthentication.SignOut();
                     return RedirectToAction("Index", "Home");
                 }
-
 
                 // Check Permissions for topic opions
                 if (!topicViewModel.OptionalPermissions.CanLockTopic)
@@ -190,6 +230,7 @@ namespace EECIP.Controllers
             return View(topicViewModel);
         }
 
+
         [Authorize]
         public ActionResult EditPost(Guid? id)
         {
@@ -226,6 +267,7 @@ namespace EECIP.Controllers
             }
         }
 
+
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
@@ -251,6 +293,7 @@ namespace EECIP.Controllers
 
             return RedirectToAction("ShowTopic", "Forum", new { slug = _topic.Slug });
         }
+        
 
         public ActionResult ShowTopic(string slug, int? p, string order, Guid? id)
         {
@@ -305,6 +348,7 @@ namespace EECIP.Controllers
             return PartialView(model);
         }
 
+
         [ChildActionOnly]
         public PartialViewResult ListMainCategories()
         {
@@ -317,19 +361,6 @@ namespace EECIP.Controllers
         }
 
 
-        [ChildActionOnly]
-        public ActionResult LatestTopics(int? p, string tag)
-        {
-            var viewModel = new vmForumLatestTopicsView
-            {
-                _topics = db_Forum.GetTopicsByCategory(null, tag),
-                currentPage = p ?? 1,
-                numRecs = db_Forum.GetTopicCount()
-            };
-
-            return PartialView(viewModel);
-        }
-
         public ActionResult ShowCategory(string slug, int? p)
         {
             // Get the category
@@ -337,7 +368,7 @@ namespace EECIP.Controllers
             if (category != null)
             {
                 //get topics for the category
-                var topics = db_Forum.GetTopicsByCategory(category.Category.Id, null);
+                var topics = db_Forum.GetTopicsByCategory(category.Category.Id, null, p ?? 1);
 
                 // Create the main view model for the category
                 var viewModel = new vmForumCategoryView
@@ -352,6 +383,7 @@ namespace EECIP.Controllers
                 return RedirectToAction("Index");
         }
 
+
         [ChildActionOnly]
         public PartialViewResult PopularTags()
         {
@@ -360,7 +392,9 @@ namespace EECIP.Controllers
             return PartialView(viewModel);
         }
 
+
         [HttpPost]
+        [Authorize]
         public ActionResult CreatePost(vmForumTopicView model)
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -453,7 +487,6 @@ namespace EECIP.Controllers
         }
 
 
-        // POST: /Forum/PostVote
         [HttpPost]
         public JsonResult PostVote(Guid? id, string typ)
         {
@@ -499,7 +532,6 @@ namespace EECIP.Controllers
         }
 
 
-        // POST: /Forum/PostAnswer
         [HttpPost]
         public JsonResult PostAnswer(Guid? id, string typ)
         {
@@ -524,6 +556,44 @@ namespace EECIP.Controllers
                 return Json(new { msg = "Success", val = Answered });
             else
                 return Json(new { msg = "Unable to record vote." });
+
+        }
+
+
+        [HttpPost]
+        public JsonResult SubscribeTopic(Guid? topic_id)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            Guid? SuccId = db_Forum.InsertUpdateTopicNotification(null, topic_id.ConvertOrDefault<Guid>(), UserIDX);
+
+            //return response
+            if (SuccId != null)
+            {
+                return Json(new { msg = "Success" });
+            }
+            else
+            {
+                return Json(new { msg = "Unable to subscribe." });
+            }
+
+        }
+
+        public JsonResult UnsubscribeTopic(Guid? topic_id)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            int SuccId = db_Forum.DeleteTopicNotification(topic_id.ConvertOrDefault<Guid>(), UserIDX);
+
+            //return response
+            if (SuccId == 1)
+            {
+                return Json(new { msg = "Success" });
+            }
+            else
+            {
+                return Json(new { msg = "Unable to unsubscribe." });
+            }
 
         }
 
@@ -586,6 +656,7 @@ namespace EECIP.Controllers
 
         }
 
+
         private static void UPloadPostFiles(HttpPostedFileBase[] files, int UserIDX, Guid postID)
         {
             // Loop through each file and get the file info and save to the users folder and Db
@@ -612,6 +683,7 @@ namespace EECIP.Controllers
             }
         }
 
+
         public ActionResult PostFileDownload(Guid? id)
         {
             try
@@ -635,6 +707,7 @@ namespace EECIP.Controllers
             TempData["Error"] = "Unable to download document.";
             return RedirectToAction("Index", "Forum");
         }
+
 
         public ActionResult PostFileDelete(Guid? id)
         {

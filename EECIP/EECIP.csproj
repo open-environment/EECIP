@@ -571,6 +571,8 @@
     <Content Include="Scripts\jquery-3.2.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.2.1.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.stickytableheaders.js" />
+    <Content Include="Scripts\jquery.stickytableheaders.min.js" />
     <Content Include="Scripts\jquery.twbsPagination.js" />
     <Content Include="Scripts\jquery.twbsPagination.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -795,7 +797,6 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Admin\RefBadge.cshtml" />
     <Content Include="Views\Dashboard\EnterpriseSvcCard.cshtml" />
-    <Content Include="Views\Forum\LatestTopics.cshtml" />
     <Content Include="Views\Forum\PopularTags.cshtml" />
     <Content Include="Views\Forum\EditPost.cshtml" />
     <Content Include="Views\Dashboard\Governance.cshtml" />
@@ -812,6 +813,9 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\Admin\ExportData.cshtml" />
+    <Content Include="Views\Shared\_SubNavigation.cshtml" />
+    <Content Include="Views\Forum\PostedIn.cshtml" />
+    <Content Include="Views\Forum\Following.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

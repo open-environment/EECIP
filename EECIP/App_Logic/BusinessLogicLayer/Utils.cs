@@ -72,8 +72,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         /// </summary>
         public static T ConvertOrDefault<T>(this object value)
         {
-            T result = default(T);
-            TryConvert<T>(value, out result);
+            TryConvert<T>(value, out T result);
             return result;
         }
 
@@ -164,8 +163,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
         public static string FormatDateTime(string date, string format)
         {
-            DateTime time;
-            if (DateTime.TryParse(date, out time) && !string.IsNullOrEmpty(format))
+            if (DateTime.TryParse(date, out DateTime time) && !string.IsNullOrEmpty(format))
             {
                 format = Regex.Replace(format, @"(?<!\\)((\\\\)*)(S)", "$1" + GetDayNumberSuffix(time));
                 return time.ToString(format);
@@ -181,8 +179,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         /// <returns>28 Days Ago</returns>
         public static string GetPrettyDate(string date)
         {
-            DateTime time;
-            if (DateTime.TryParse(date, out time))
+            if (DateTime.TryParse(date, out DateTime time))
             {
                 var span = DateTime.UtcNow.Subtract(time);
                 var totalDays = (int)span.TotalDays;
@@ -803,8 +800,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
         public static V GetValueOrDefault<K, V>(this Dictionary<K, V> dict, K key)
         {
-            V ret;
-            dict.TryGetValue(key, out ret);
+            dict.TryGetValue(key, out V ret);
             return ret;
         }
 

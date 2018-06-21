@@ -16,7 +16,7 @@
 
         <ul class="breadcrumb">
             <li>
-                <a itemprop="url" href="/forum/"><span>Forum Home</span></a>
+                <a itemprop="url" href="/Forum/"><span>Forum Home</span></a>
             </li>
             <li itemprop="child" class="active">
                 <span itemprop="title">@Html.Raw(Model.Topic.Name)</span>
@@ -27,18 +27,19 @@
         <div class="topicshow">
             <div class="topicheading">
                 <div class="widgetright">
-                    @*@if (Model.IsSubscribed)
+                    @if (Model.IsSubscribed)
                     {
-                        <a href="#" class="emailunsubscription" data-id="@Model.Topic.Id" data-type="topic">
+                        <span style="font-size:8pt;">You are subscribed to this topic</span><br/>
+                        <a href="#" class="emailunsubscription" data-id="@Model.Topic.Id">
                             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>Unsubscribe
                         </a>
                     }
                     else
                     {
-                        <a href="#" class="emailsubscription" data-id="@Model.Topic.Id" data-type="topic">
+                        <a href="#" class="emailsubscription" data-id="@Model.Topic.Id">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>Subscribe
                         </a>
-                    }*@
+                    }
                 </div>
                 <h1 style="margin-top:0px">@Html.Raw(Model.Topic.Name)</h1>
                 <ul class="topicinfo">
@@ -267,6 +268,56 @@
                 });
 
         });
+
+
+
+        //subscribe event handling
+        $(".emailsubscription").on('click', function (e) {
+            e.preventDefault();
+            var _id = $(this).attr('data-id');
+            var linker = $(this);
+
+            $.post('@Url.Action("SubscribeTopic", "Forum")',
+                AddAntiForgeryToken({ topic_id: _id }))
+
+                .done(function (response) {
+                    if (response.msg == "Success") {
+                        linker.parent().fadeOut("fast");
+                        toastr.success("Subscribed");
+                    }
+                    else {
+                        toastr.warning(response.msg);
+                    }
+                }).fail(function (data) {
+                    toastr.warning("Unable to subscribe.");
+                });
+
+        });
+
+
+        //unsubscribe event handling
+        $(".emailunsubscription").on('click', function (e) {
+            e.preventDefault();
+            var _id = $(this).attr('data-id');
+            var linker = $(this);
+
+            $.post('@Url.Action("UnsubscribeTopic", "Forum")',
+                AddAntiForgeryToken({ topic_id: _id }))
+
+                .done(function (response) {
+                    if (response.msg == "Success") {
+                        linker.parent().fadeOut("fast");
+                        toastr.success("Unsubscribed");
+                    }
+                    else {
+                        toastr.warning(response.msg);
+                    }
+                }).fail(function (data) {
+                    toastr.warning("Unable to unsubscribe.");
+                });
+
+        });
+
 
     });
 

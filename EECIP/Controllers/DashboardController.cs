@@ -28,7 +28,7 @@ namespace EECIP.Controllers
             model.LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX); //latest topics matching interest
             model.ProjectCount = db_EECIP.GetT_OE_PROJECTS_CountNonGovernance();
             model.GovernanceCount = db_EECIP.GetT_OE_PROJECTS_CountGovernance();
-            model.DiscussionCount = db_Forum.GetTopicCount();
+            model.DiscussionCount = db_Forum.GetTopicCount(null);
             model.AgencyCount = db_Ref.GetT_OE_ORGANIZATION_Count();
             model.UserBadgeEarnedCount = db_Forum.GetBadgesForUserCount(UserIDX);
             model.Announcement = db_Ref.GetT_OE_APP_SETTING_CUSTOM().ANNOUNCEMENTS;
@@ -42,7 +42,7 @@ namespace EECIP.Controllers
 
 
         // GET: Dashboard/Search
-        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType)
+        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType, string sortDir)
         {
             var model = new vmDashboardSearch();
             model.q = q;
@@ -58,8 +58,9 @@ namespace EECIP.Controllers
             model.activeTab = activeTab ?? "1";
             model.currentPage = currentPage.ConvertOrDefault<int?>() ?? 1;
             model.sortType = sortType;
+            model.sortDir = sortDir;
 
-            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.facetPopDensity, model.facetRegion, model.facetStatus, model.currentPage, model.sortType);
+            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.facetPopDensity, model.facetRegion, model.facetStatus, model.currentPage, model.sortType, model.sortDir);
             return View(model);
         }
 

@@ -69,8 +69,7 @@ namespace EECIP.HtmlHelpers
                               HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes),
                               metadataProvider);
         }
-
-
+        
         internal static MvcLabel BeginLabel(this HtmlHelper html, string expression, string labelText, IDictionary<string, object> htmlAttributes, ModelMetadataProvider metadataProvider)
         {
             return LabelHelper(html,

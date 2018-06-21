@@ -9,8 +9,7 @@
 
 @using (Html.BeginForm("Search", "Dashboard", FormMethod.Get, new { @id = "norepostform" }))
 {
-
-    <!-- start: PAGE TITLE  -->
+    <!-- start: PAGE TITLE AND SEARCH BAR -->
     <div class="row">
         <div class="col-sm-12">
             <div class="page-header">
@@ -31,7 +30,7 @@
             </div>
         </div>
     </div>
-    <!-- end: PAGE TITLE -->
+    <!-- end: PAGE TITLE AND SEARCH BAR -->
 
 
     @Html.HiddenFor(model => model.facetDataType)
@@ -46,6 +45,7 @@
     @Html.HiddenFor(model => model.activeTab)
     @Html.HiddenFor(model => model.currentPage)
     @Html.HiddenFor(model => model.sortType)
+    @Html.HiddenFor(model => model.sortDir)
 
 
     <div class="row">
@@ -217,100 +217,173 @@
 
                     <div class="table-responsive">
                         <table class="table table-striped m-b-none" data-ride="datatables">
-                            <tr>
-                                <th>Type</th>
-                                <th>Agency</th>
-                                @if (Model.activeTab != "5")
-                                {
-                                    <th>Name</th>
-                                }
-                                <th>Description</th>
-                                @if (Model.activeTab != "5" && Model.activeTab != "7")
-                                {
-                                    <th>Record Source</th>
-                                    <th>Media</th>
-                                    <th>Status</th>
-                                }
-                                <th>Tags</th>
-                            </tr>
-
-                            @foreach (var item in Model.searchResults.Results)
-                            {
+                            <thead style="background-color:#fff">
                                 <tr>
-                                    <td>
-                                        @if (item.Document.DataType == "Project")
-                                        {
-                                            <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-success btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;"><i class="clip-info"></i> Project</a>
-                                        }
-                                        @if (item.Document.DataType == "Agency")
-                                        {
-                                            <a href="@Url.Action("AgencyCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-primary btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;"><i class="clip-users-3"></i> Agency</a>
-                                        }
-                                        @if (item.Document.DataType == "Enterprise Service")
-                                        {
-                                            <a href="@Url.Action("EnterpriseSvcCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-danger" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Enterprise <br />Service</a>
-                                        }
-                                        @if (item.Document.DataType == "User")
-                                        {
-                                            <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-yellow" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;"><i class="clip-user"></i> Person</a>
-                                        }
-                                        @if (item.Document.DataType == "Discussion")
-                                        {
-                                            <a href="@Url.Action("ShowTopic", "Forum", new { id = item.Document.KeyID })" class="label label-purple" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Discussion</a>
-                                        }
-                                        @if (item.Document.DataType == "Governance")
-                                        {
-                                            <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br />Project</a>
-                                        }
-                                        @if (User.IsInRole("Admins"))
-                                        {
-                                            <span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>
-                                            <span style="font-weight: bold; font-size: 11px;display:block;">Updated: @Html.DisplayFor(modelItem => item.Document.LastUpdated).ToString()</span>
-                                        }
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Document.Agency)
-                                    </td>
+                                    <th>Type</th>
+                                    <th>Agency</th>
                                     @if (Model.activeTab != "5")
                                     {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Document.Name)
-                                        </td>
+                                        <th>
+                                            <a href="#" class="col-header" data-id="Name">
+                                                Name @if (Model.sortType == "Name")
+                                                {
+                                                    if (Model.sortDir == "1")
+                                                    {
+                                                        <i class="clip-arrow-up"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="clip-arrow-down"></i>
+                                                    }
+                                                }
+                                            </a>
+                                        </th>
                                     }
-                                    <td>
-                                        @if (item.Document.DataType != "Discussion")
-                                        {
-                                            <span class="resDesc">
-                                                @Html.DisplayFor(modelItem => item.Document.Description)
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="resDesc">
-                                                @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item.Document.Description), 50)
-                                            </span>
-                                        }
-                                    </td>
+                                    <th>
+                                        <a href="#" class="col-header" data-id="Description">
+                                            Description @if (Model.sortType == "Description")
+                                            {
+                                                if (Model.sortDir == "1")
+                                                {
+                                                    <i class="clip-arrow-up"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="clip-arrow-down"></i>
+                                                }
+                                            }
+                                        </a>
+                                    </th>
                                     @if (Model.activeTab != "5" && Model.activeTab != "7")
                                     {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Document.Record_Source)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Document.Media)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Document.Status)
-                                        </td>
+                                        <th>
+                                            <a href="#" class="col-header" data-id="Record_Source">
+                                                Record Source @if (Model.sortType == "Record_Source")
+                                                {
+                                                    if (Model.sortDir == "1")
+                                                    {
+                                                        <i class="clip-arrow-up"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="clip-arrow-down"></i>
+                                                    }
+                                                }
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="#" class="col-header" data-id="Media">
+                                                Media @if (Model.sortType == "Media")
+                                                {
+                                                    if (Model.sortDir == "1")
+                                                    {
+                                                        <i class="clip-arrow-up"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="clip-arrow-down"></i>
+                                                    }
+                                                }
+                                            </a>
+                                        </th>
+                                        <th>
+                                            <a href="#" class="col-header" data-id="Status">
+                                                Status @if (Model.sortType == "Status")
+                                                {
+                                                    if (Model.sortDir == "1")
+                                                    {
+                                                        <i class="clip-arrow-up"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="clip-arrow-down"></i>
+                                                    }
+                                                }
+                                            </a>
+                                        </th>
                                     }
-                                    <td>
-                                        @foreach (string tag in item.Document.Tags)
-                                        {
-                                            <span class="select2-selection__choice">@Html.DisplayFor(modelItem => tag)</span>
-                                        }
-                                    </td>
+                                    <th>Tags</th>
                                 </tr>
-                            }
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.searchResults.Results)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (item.Document.DataType == "Project")
+                                            {
+                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-success btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;"><i class="clip-info"></i> Project</a>
+                                            }
+                                            @if (item.Document.DataType == "Agency")
+                                            {
+                                                <a href="@Url.Action("AgencyCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-primary btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;"><i class="clip-users-3"></i> Agency</a>
+                                            }
+                                            @if (item.Document.DataType == "Enterprise Service")
+                                            {
+                                                <a href="@Url.Action("EnterpriseSvcCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-danger" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Enterprise <br />Service</a>
+                                            }
+                                            @if (item.Document.DataType == "User")
+                                            {
+                                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-yellow" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;"><i class="clip-user"></i> Person</a>
+                                            }
+                                            @if (item.Document.DataType == "Discussion")
+                                            {
+                                                <a href="@Url.Action("ShowTopic", "Forum", new { id = item.Document.KeyID })" class="label label-purple" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Discussion</a>
+                                            }
+                                            @if (item.Document.DataType == "Governance")
+                                            {
+                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br />Project</a>
+                                            }
+                                            @if (User.IsInRole("Admins"))
+                                            {
+                                                <span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>
+                                                <span style="font-weight: bold; font-size: 11px;display:block;">Updated: @Html.DisplayFor(modelItem => item.Document.LastUpdated).ToString()</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Document.Agency)
+                                        </td>
+                                        @if (Model.activeTab != "5")
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Document.Name)
+                                            </td>
+                                        }
+                                        <td>
+                                            @if (item.Document.DataType != "Discussion")
+                                            {
+                                                <span class="resDesc">
+                                                    @Html.DisplayFor(modelItem => item.Document.Description)
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="resDesc">
+                                                    @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item.Document.Description), 50)
+                                                </span>
+                                            }
+                                        </td>
+                                        @if (Model.activeTab != "5" && Model.activeTab != "7")
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Document.Record_Source)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Document.Media)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Document.Status)
+                                            </td>
+                                        }
+                                        <td>
+                                            @foreach (string tag in item.Document.Tags)
+                                            {
+                                                <span class="select2-selection__choice">@Html.DisplayFor(modelItem => tag)</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
                         </table>
 
                         @if (Model.searchResults.Count > 50)
@@ -328,7 +401,12 @@
                             <tr>
                                 <th></th>
                                 <th>Contact</th>
-                                <th>Name</th>
+                                <th>
+                                    <a href="#" class="col-header" data-id="Name">
+                                        Name @if (Model.sortType == "Name")
+                                        {<i class="clip-arrow-down"></i>}
+                                    </a>
+                                </th>
                                 <th>Agency</th>
                                 <th>Title</th>
                                 <th>Expertise/Interest</th>
@@ -397,6 +475,7 @@
     @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/autocomplete")
     @Scripts.Render("~/bundles/pagination")
+    @Scripts.Render("~/bundles/stickytableheaders")
     @Scripts.Render("~/bundles/trunk8")
 
     <script type="text/javascript">
@@ -417,16 +496,9 @@
             return false;
         });
 
-        //pagination
-        $(function () {
-            var _totalRec = @(Model.searchResults != null ? Model.searchResults.Count : 1);
-            var _totalPages = Math.round(_totalRec / 50) + 1;
-            var obj = $('#pagination').twbsPagination({
-                totalPages: _totalPages,
-                visiblePages: 10,
-                startPage: @Model.currentPage});
-        });
 
+
+        
         $(document).ready(function () {
             //focus on search bar
             $('#txtSearch').focus();
@@ -444,9 +516,30 @@
                 },
                 onSelect: function (e, term, item) {
                     $("#txtSearch").val('"' + term + '"');
-                    console.log('f');
-                }
+               }
             });
+
+
+            //pagination
+            $(function () {
+                var _totalRec = @(Model.searchResults != null ? Model.searchResults.Count : 1);
+                var _totalPages = Math.floor(_totalRec / 50) + 1;
+                var obj = $('#pagination').twbsPagination({
+                    totalPages: _totalPages,
+                    initiateStartPageClick: false,
+                    visiblePages: 10,
+                    startPage: @Model.currentPage,
+                    onPageClick: function (event, page) {
+                        $('#currentPage').val(page);
+                        $('#norepostform').submit();
+                        return false;
+                    }
+                });
+            });
+
+
+            //sticky header on table
+            $('.table').stickyTableHeaders({ fixedOffset: $('.navbar-inverse') });
 
 
             //tab handling
@@ -462,6 +555,7 @@
                 $('#facetState').val('');
                 $('#activeTab').val('1');
                 $('#currentPage').val(1);
+                $('#sortType').val('');
                 $('#norepostform').submit();
             });
 
@@ -470,6 +564,7 @@
                 $('#facetState').val('');
                 $('#activeTab').val('2');
                 $('#currentPage').val(1);
+                $('#sortType').val('');
                 $('#norepostform').submit();
             });
 
@@ -478,6 +573,7 @@
                 $('#facetState').val('');
                 $('#activeTab').val('3');
                 $('#currentPage').val(1);
+                $('#sortType').val('');
                 $('#norepostform').submit();
             });
 
@@ -486,7 +582,7 @@
                 $('#facetState').val('');
                 $('#activeTab').val('4');
                 $('#currentPage').val(1);
-                $('#sortType').val('alpha');
+                $('#sortType').val('Name');
                 $('#norepostform').submit();
             });
 
@@ -495,7 +591,7 @@
                 $('#facetState').val('');
                 $('#activeTab').val('5');
                 $('#currentPage').val(1);
-                $('#sortType').val('alpha');
+                $('#sortType').val('Name');
                 $('#norepostform').submit();
             });
 
@@ -536,6 +632,7 @@
                 if (_facTyp == "Status")
                     $('#facetStatus').val(_id);
 
+                $('#sortType').val('');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
             });
@@ -560,55 +657,24 @@
                 if (_facTyp == "Status")
                     $('#facetStatus').val('');
 
+                $('#sortType').val('');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
             });
 
 
-            //pagination handling
-            $('.page-item a').click(function (e) {
-                var txt = $(e.target).text();
-                var _totalRec = @(Model.searchResults != null ? Model.searchResults.Count : 1);
-                var _totalPages = Math.round(_totalRec / 50) + 1;
-                if (txt == 'Next') {
-                    if (parseInt($('#currentPage').val()) == _totalPages) {
-                        return false;
-                    }
-                    else {
-                        $('#currentPage').val(parseInt($('#currentPage').val()) + 1);
-                    }
-                }
-                else if (txt == 'Previous')
-                {
-                    if (parseInt($('#currentPage').val()) == 1) {
-                        return false;
-                    }
-                    else {
-                        $('#currentPage').val($('#currentPage').val() - 1);
-                    }
-                }
-                else if (txt == 'First')
-                {
-                    if (parseInt($('#currentPage').val()) == 1) {
-                        return false;
-                    }
-                    else {
-                        $('#currentPage').val(1);
-                    }
-                }
-                else if (txt == 'Last')
-                {
-                    if (parseInt($('#currentPage').val()) == _totalPages) {
-                        return false;
-                    }
-                    else {
-                        $('#currentPage').val(_totalPages);
-                    }
-                }
+            //column header sorting click
+            $('.col-header').click(function (e) {
+                e.preventDefault();
+                var _sortTyp = $(this).attr('data-id');
+                var _prevSortType = $('#sortType').val();
+                $('#sortType').val(_sortTyp);
+                if (_sortTyp == _prevSortType && $('#sortDir').val() != '1')
+                    $('#sortDir').val('1');
                 else
-                    $('#currentPage').val(txt);
+                    $('#sortDir').val('0');
+                $('#currentPage').val(1);
                 $('#norepostform').submit();
-                return false;
             });
 
         });

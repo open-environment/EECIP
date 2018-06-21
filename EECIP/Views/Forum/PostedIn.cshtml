@@ -29,23 +29,22 @@
 </div>
 
 @section Scripts {
-    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
-    @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/pagination")
 
     <script type="text/javascript">
         $(function () {
             var _totalRec = @Model.numRecs;
-            var _totalPages = Math.floor(_totalRec / 10) + 1;
+            var _totalPages = Math.round(_totalRec / 10) + 1;
             var obj = $('#pagination').twbsPagination({
                 initiateStartPageClick: false,
                 totalPages: _totalPages,
                 visiblePages: 10,
                 startPage: @Model.currentPage,
                 onPageClick: function (event, page) {
-                    window.location.href = '@Url.Action("Index", "Forum")?p=' + page;
+                    window.location.href = '@Url.Action("PostedIn", "Forum")?p=' + page;
                 }
             });
         });
     </script>
 }
+

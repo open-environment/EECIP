@@ -42,6 +42,7 @@ namespace EECIP.Models
         public string activeTab { get; set; }
         public int? currentPage { get; set; }
         public string sortType { get; set; }
+        public string sortDir { get; set; }
 
         public List<T_OE_ORGANIZATION> active_agencies { get; set; }
         public List<T_OE_PROJECTS> active_projects { get; set; }

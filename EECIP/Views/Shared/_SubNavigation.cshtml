@@ -1,0 +1,15 @@
+﻿@using EECIP.HtmlHelpers
+
+<section class="content-strip">
+    <div class="container sub-nav-container">
+        <div class="row">
+            <div class="col-sm-12">
+                <ul>
+                    <li><a href="@Url.Action("Index", "Forum")" class="@Html.ActivePage("Forum", "Index")">Latest</a></li>
+                    <li><a href="@Url.Action("Following", "Forum")" class="@Html.ActivePage("Forum", "Following")">Following</a></li>
+                    <li><a href="@Url.Action("PostedIn", "Forum")" class="@Html.ActivePage("Forum", "PostedIn")">Posted In</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

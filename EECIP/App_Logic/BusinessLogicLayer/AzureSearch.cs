@@ -23,10 +23,10 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         [IsFilterable, IsFacetable]
         public string DataType { get; set; }
 
-        [IsFilterable, IsFacetable]
+        [IsFilterable, IsFacetable, IsSortable]
         public string Record_Source { get; set; }
 
-        [IsSearchable, IsFilterable]
+        [IsSearchable, IsFilterable, IsSortable]
         public string Agency { get; set; }
 
         [IsSearchable, IsFilterable]
@@ -39,11 +39,11 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         [Analyzer(AnalyzerName.AsString.EnLucene)]
         public string Name { get; set; }
 
-        [IsSearchable, IsFilterable]
+        [IsSearchable, IsFilterable, IsSortable]
         [Analyzer(AnalyzerName.AsString.EnLucene)]
         public string Description { get; set; }
 
-        [IsFilterable, IsSortable, IsFacetable]
+        [IsFilterable, IsFacetable, IsSortable]
         public string Media { get; set; }
 
         [IsSearchable, IsFacetable, IsFilterable]
@@ -62,7 +62,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         [IsFilterable, IsFacetable]
         public string EPA_Region { get; set; }
 
-        [IsFilterable, IsFacetable]
+        [IsFilterable, IsFacetable, IsSortable]
         public string Status { get; set; }
 
         [IsFilterable]
@@ -647,7 +647,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         //******************************** METHODS FOR QUERYING INDEX ******************************************
         public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr, string dataTypeFacet = "", string mediaFacet = "", 
             string recordSourceFacet = "", string agencyFacet = "", string stateFacet = "", string tagsFacet = "", string popDensityFacet = "", 
-            string regionFacet = "", string statusFacet = "", int? currentPage = 1, string sortType = "")
+            string regionFacet = "", string statusFacet = "", int? currentPage = 1, string sortType = "", string sortDir = "0")
         {
             try
             {
@@ -686,9 +686,10 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Status eq '" + statusFacet + "' ";
 
                 //sort handling
-                if (sortType == "alpha")
-                    parameters.OrderBy = new List<string>() { "Name" };
-
+                if (!string.IsNullOrEmpty(sortType))
+                {
+                    parameters.OrderBy = new List<string>() { sortType + (sortDir == "1" ? " desc" : " asc") };
+                }
                 try
                 {
                     DocumentSearchResult<EECIP_Index> results = indexClient.Documents.Search<EECIP_Index>(searchStr, parameters);

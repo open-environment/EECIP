@@ -83,6 +83,7 @@ GO
 insert into T_OE_REF_ORG_TYPE (ORG_TYPE) values ('State');
 insert into T_OE_REF_ORG_TYPE (ORG_TYPE) values ('Tribal');
 insert into T_OE_REF_ORG_TYPE (ORG_TYPE) values ('Governance');
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE) values ('Association');
 
 
 
