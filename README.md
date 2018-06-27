@@ -3,6 +3,15 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
+**Version 1.1b (6/21/2018)**
+- Forum Enhancements
+   - added ability to subscribe/unsubscribe to a forum topic
+   - added 3 ways to view discussions:  (1) Latest posts (2) Posts the user is subscribed to, and (3) Posts the user has posted in
+   - added paging of forum topic results
+   - added display of forum category in discussion topic listing
+- Search page: added ability to sort and added sticky column headers
+
+
 **Version 1.1a (5/21/2018)**
 - Project Document Descriptions: Allow people to provide a description for each project document that is associated with a project.
 - Bulk Project Deletion: New feature allows a person to do bulk deletion of projects, in particular helpful in cleaning up old imported data.
