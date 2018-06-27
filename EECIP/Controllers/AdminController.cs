@@ -714,7 +714,7 @@ namespace EECIP.Controllers
                     if (ps.FEATURES != null)
                     {
                         foreach (string f in ps.FEATURES.Split('|'))
-                            if (f.Length > 0)
+                            if (f.Trim().Length > 0)
                                 db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Project Feature", f, UserIDX);
                     }
 
@@ -722,7 +722,7 @@ namespace EECIP.Controllers
                     if (ps.PROGRAM_AREAS != null)
                     {
                         foreach (string f in ps.PROGRAM_AREAS.Split('|'))
-                            if (f.Length > 0)
+                            if (f.Trim().Length > 0)
                                 db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Program Area", f, UserIDX);
                     }
                 }

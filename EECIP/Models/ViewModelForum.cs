@@ -106,15 +106,15 @@ namespace EECIP.Models
         public Guid Category { get; set; }
 
         public List<string> SelectedTags { get; set; }
-        public IEnumerable<SelectListItem> AllTags { get; set; }
 
+        public IEnumerable<SelectListItem> AllTags { get; set; }
 
         [DisplayName("Close Poll After Specified Amount Of Days?")]
         public int PollCloseAfterDays { get; set; }
 
         public IEnumerable<SelectListItem> Categories { get; set; }
 
-        public List<string> PollAnswers { get; set; }
+        public List<PollAnswer> PollAnswers { get; set; }
 
         [DisplayName("Subscribe to Topic")]
         public bool SubscribeToTopic { get; set; }
@@ -144,7 +144,7 @@ namespace EECIP.Models
         public string LastPostDatePretty { get; set; }
 
         // Poll
-        //public vmForumPoll Poll { get; set; }
+        public vmForumPoll Poll { get; set; }
 
         // Post Stuff
         public  vmForumPost StarterPost { get; set; }
@@ -188,6 +188,7 @@ namespace EECIP.Models
         public bool UserHasAlreadyVoted { get; set; }
         public int TotalVotesInPoll { get; set; }
         public bool UserAllowedToVote { get; set; }
+        public List<PollAnswerWithVotesDisplay> PollAnswers { get; set; }
     }
 
     public class vmForumEditPost

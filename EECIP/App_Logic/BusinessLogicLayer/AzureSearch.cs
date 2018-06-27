@@ -133,11 +133,6 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     ScoringProfiles = new List<ScoringProfile>() { sp }
                 };
 
-
-
-
-
-
                 serviceClient.Indexes.Create(definition);
             }
             catch (Exception ex)
@@ -660,7 +655,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 {
                     Top = 50,
                     Skip = ((currentPage ?? 1) - 1) * 50,
-                    Facets = new List<string> { "DataType", "State_or_Tribal,count:40", "Tags", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
+                    Facets = new List<string> { "DataType", "State_or_Tribal,count:100,sort:value", "Tags,count:30", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
                     Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State_or_Tribal", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn", "LastUpdated" },
                     IncludeTotalResultCount = true
                 };

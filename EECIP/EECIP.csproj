@@ -816,6 +816,7 @@
     <Content Include="Views\Shared\_SubNavigation.cshtml" />
     <Content Include="Views\Forum\PostedIn.cshtml" />
     <Content Include="Views\Forum\Following.cshtml" />
+    <Content Include="Views\Forum\_Poll.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

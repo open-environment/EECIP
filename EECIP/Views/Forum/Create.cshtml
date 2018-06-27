@@ -1,16 +1,14 @@
 ﻿@model EECIP.Models.vmForumTopicCreate
 @{
-    ViewBag.Title = "Create Discussion";
+    ViewBag.Title = "Create Discussion Topic";
 }
 
 <div class="row">
-
     <div class="col-md-8 col-md-offset-2">
         <div class="createtopicholder">
 
             @using (Html.BeginForm("Create", "Forum", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-                @Html.ValidationSummary(false)
                 @Html.AntiForgeryToken()
                 @Html.Partial("CreateEdit_TopicPost", Model)
             }
@@ -19,10 +17,14 @@
     </div>
 </div>
 
+
 @section Scripts {
     @Scripts.Render("~/bundles/select2")
+
     <script type="text/javascript">
         $(document).ready(function () {
+
+            var counter = @(Model.PollAnswers != null ? Model.PollAnswers.Count : 0);
 
             //function to initiate Select2
             $(".search-select").select2({
@@ -45,7 +47,58 @@
                     $("#filename1").val($this.val().split('\\').pop());
                 }
             });
+
+
+            // Remove the polls
+            $(".removepollbutton").click(function (e) {
+                e.preventDefault();
+                //Hide the Poll Section
+                $('.pollanswerholder').hide();
+                $('.pollanswerlist').html("");
+                // Hide this button now
+                $(this).hide();
+                // Show the add poll button
+                $(".createpollbutton").show();
+                counter = 0;
+            });
+
+            // Create Polls
+            $(".createpollbutton").click(function (e) {
+                e.preventDefault();
+                //Firstly Show the Poll Section
+                $('.pollanswerholder').show();
+                // Now add in the first row
+                AddNewPollAnswer(counter);
+                counter++;
+                // Hide this button now
+                $(this).hide();
+                // Show the remove poll button
+                $(".removepollbutton").show();
+            });
+
+            // Add a new answer
+            $(".addanswer").click(function (e) {
+                e.preventDefault();
+                AddNewPollAnswer(counter);
+                counter++;
+            });
+
+            // Remove a poll answer
+            $(".removeanswer").click(function (e) {
+                e.preventDefault();
+                if (counter > 0) {
+                    counter--;
+                    $("#answer" + counter).remove();
+                }
+            });
         });
+
+        function AddNewPollAnswer(counter) {
+            var placeHolder = $('#pollanswerplaceholder').val();
+            var liHolder = $(document.createElement('li')).attr("id", 'answer' + counter);
+            liHolder.html('<input type="text" name="PollAnswers[' + counter + '].Answer" id="PollAnswers_' + counter + '_Answer" class="form-control" value="" placeholder="' + placeHolder + '" />');
+            liHolder.appendTo(".pollanswerlist");
+        }
 
     </script>
 }

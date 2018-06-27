@@ -42,6 +42,7 @@ namespace EECIP.Controllers
             return View(viewModel);
         }
 
+
         [Authorize]
         public ActionResult PostedIn(int? p, string tag)
         {
@@ -59,6 +60,7 @@ namespace EECIP.Controllers
             return View(viewModel);
         }
 
+
         [Authorize]
         public ActionResult Following(int? p, string tag)
         {
@@ -73,7 +75,6 @@ namespace EECIP.Controllers
 
             return View(viewModel);
         }
-
 
 
         [Authorize]
@@ -105,7 +106,7 @@ namespace EECIP.Controllers
             topicViewModel.OptionalPermissions = GetOptionalPermissions();
             topicViewModel.Categories = ddlForumHelpers.get_ddl_categories();
             topicViewModel.IsTopicStarter = true;
-            //topicViewModel.PollAnswers = topicViewModel.PollAnswers ?? new List<string>();
+            topicViewModel.PollAnswers = topicViewModel.PollAnswers ?? new List<PollAnswer>();
             topicViewModel.SelectedTags = topicViewModel.SelectedTags ?? new List<string>();
             topicViewModel.AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
             /*---- End Re-populate ViewModel ----*/
@@ -116,15 +117,22 @@ namespace EECIP.Controllers
                 // See if the user has actually added some content to the topic
                 if (string.IsNullOrEmpty(topicViewModel.Content))
                 {
-                    TempData["Error"] = "You must supply content for the post.";
-                    RedirectToAction("Create");
+                    if (topicViewModel.PollAnswers.Count > 0)
+                    {
+                        topicViewModel.Content = topicViewModel.Name;
+                    }
+                    else
+                    { 
+                        TempData["Error"] = "You must supply content for the post.";
+                        return RedirectToAction("Create");
+                    }
                 }
 
                 // Check posting flood control
                 if (!db_Forum.PassedTopicFloodTest(topicViewModel.Name, UserIDX))
                 {
                     TempData["Error"] = "Can only post once per minute";
-                    RedirectToAction("Create");
+                    return RedirectToAction("Create");
                 }
 
                 // Log user out if they are LockedOut but still authenticated 
@@ -158,36 +166,23 @@ namespace EECIP.Controllers
 
 
                         // 5. Poll handling
-                        //if (topicViewModel.PollAnswers.Count(x => x != null) > 1)
-                        //{
+                        if (topicViewModel.PollAnswers.Count(x => x != null) > 1)
+                        {
                             // Create a new Poll
-                            //        var newPoll = new Poll
-                            //        {
-                            //            User = loggedOnUser,
-                            //            ClosePollAfterDays = topicViewModel.PollCloseAfterDays
-                            //        };
+                            Guid? PollID = db_Forum.InsertUpdatePoll(null, false, System.DateTime.Now, topicViewModel.PollCloseAfterDays, UserIDX);
 
-                            //        // Create the poll
-                            //        _pollService.Add(newPoll);
+                            // Now sort the answers
+                            foreach (PollAnswer answer in topicViewModel.PollAnswers)
+                            {
+                                if (answer.Answer != null)
+                                {
+                                    db_Forum.InsertUpdatePollAnswer(null, answer.Answer, PollID);
+                                }
+                            }
 
-                            //        // Now sort the answers
-                            //        var newPollAnswers = new List<PollAnswer>();
-                            //        foreach (var pollAnswer in topicViewModel.PollAnswers)
-                            //        {
-                            //            if (pollAnswer.Answer != null)
-                            //            {
-                            //                // Attach newly created poll to each answer
-                            //                pollAnswer.Poll = newPoll;
-                            //                _pollAnswerService.Add(pollAnswer);
-                            //                newPollAnswers.Add(pollAnswer);
-                            //            }
-                            //        }
-                            //        // Attach answers to poll
-                            //        newPoll.PollAnswers = newPollAnswers;
-
-                            //        // Add the poll to the topic
-                            //        topic.Poll = newPoll;
-                        //}
+                            // Add the poll to the topic
+                            db_Forum.SetTopicPollID(_Topic.Id, PollID.ConvertOrDefault<Guid>());
+                        }
 
 
                         // 6. File handling
@@ -253,10 +248,22 @@ namespace EECIP.Controllers
                     Categories = ddlForumHelpers.get_ddl_categories(),
                     OptionalPermissions = GetOptionalPermissions(),
                     IsTopicStarter = _post.IsTopicStarter ?? false,
-                    PollAnswers = new List<string>(),
+                    PollAnswers = new List<PollAnswer>(),
                     PollCloseAfterDays = 0,
                     AllTags = db_Forum.GetTopicTags_ByAttributeAll(_topic.Id, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
                 };
+
+                //add polling information
+                if (_topic.Poll_Id != null)
+                {
+                    Poll _poll = db_Forum.GetPoll_ByID(_topic.Poll_Id.ConvertOrDefault<Guid>());
+                    if (_poll != null)
+                    {
+                        viewModel.PollAnswers = db_Forum.GetPollAnswers_ByPollID(_topic.Poll_Id.ConvertOrDefault<Guid>());
+                        viewModel.PollCloseAfterDays = _poll.ClosePollAfterDays ?? 0;
+                    }
+                }
+
 
                 return View(viewModel);
             }
@@ -277,10 +284,30 @@ namespace EECIP.Controllers
             Topic _topic = db_Forum.GetTopic_ByID(model.TopicId);
             if (_topic != null)
             {
+                int UserIDX = db_Accounts.GetUserIDX();
+
                 // Update the Topic
-                db_Forum.InsertUpdateTopic(model, 0);
+                db_Forum.InsertUpdateTopic(model, UserIDX);
 
                 Guid? newPostID = db_Forum.InsertUpdatePost(model.Id, model.Content, null, null, null, null, null, null, null, null, null, true);
+
+                // 5. Poll handling
+                if (_topic.Poll_Id != null) {
+                    if (model.PollAnswers.Count(x => x != null) > 1)
+                    {
+                        // Update Poll
+                        Guid? PollID = db_Forum.InsertUpdatePoll(_topic.Poll_Id, false, System.DateTime.Now, model.PollCloseAfterDays, UserIDX);
+
+                        // Update poll answers
+                        foreach (PollAnswer answer in model.PollAnswers)
+                        {
+                            if (answer.Answer != null)
+                            {
+                                db_Forum.InsertUpdatePollAnswer(answer.Id, answer.Answer, PollID);
+                            }
+                        }
+                    }
+                }
 
                 // 7. Tag handling
                 db_Forum.DeleteTopicTags(model.TopicId, "Topic Tag");
@@ -327,6 +354,17 @@ namespace EECIP.Controllers
                 model.LastPostDatePretty = db_Forum.GetTopic_LastPostPrettyDate(_topic.Id);
                 //model.DisablePosting = false;
                 model.NewPostContent = "";
+
+                //poll handling
+                if (_topic.Poll_Id != null) {
+                    Guid p1 = _topic.Poll_Id.ConvertOrDefault<Guid>();
+                    model.Poll = new vmForumPoll {
+                        Poll = db_Forum.GetPoll_ByID(p1),
+                        TotalVotesInPoll = db_Forum.GetPollVotes_ByPollID(p1),
+                        UserHasAlreadyVoted = db_Forum.HasUserVotedInPoll(p1, UserIDX),
+                        PollAnswers = db_Forum.GetPollAnswersWithVotes_ByPollID(p1)
+                    };
+                }
 
                 return View(model);
             }
@@ -579,6 +617,7 @@ namespace EECIP.Controllers
 
         }
 
+
         public JsonResult UnsubscribeTopic(Guid? topic_id)
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -595,6 +634,26 @@ namespace EECIP.Controllers
                 return Json(new { msg = "Unable to unsubscribe." });
             }
 
+        }
+
+
+        [HttpPost]
+        public JsonResult PollVote(Guid? poll_id, Guid? answer_id, Guid? topic_id)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            Guid? SuccID = db_Forum.InsertUpdatePollVote(null, answer_id.ConvertOrDefault<Guid>(), UserIDX);
+
+            //return response
+            if (SuccID != null)
+            {
+                return Json(new {
+                    msg = "Success",
+                    redirectUrl = Url.Action("ShowTopic", "Forum", new { id = topic_id})
+                });
+            }
+            else
+                return Json(new { msg = "Unable to record vote." });
         }
 
 
@@ -617,6 +676,7 @@ namespace EECIP.Controllers
             }
 
         }
+
 
 
         /****************POST FILES **********************/

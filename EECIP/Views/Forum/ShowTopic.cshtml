@@ -6,14 +6,13 @@
 
     string orderBy = "newest";
     if (HttpContext.Current.Request.QueryString["order"] != null)
-    {   
+    {
         orderBy = HttpContext.Current.Request.QueryString["order"].ToString();
     }
 }
-
+@Html.HiddenFor(x => x.Topic.Id)
 <div class="row">
     <div class="col-md-9">
-
         <ul class="breadcrumb">
             <li>
                 <a itemprop="url" href="/Forum/"><span>Forum Home</span></a>
@@ -23,13 +22,12 @@
             </li>
         </ul>
 
-
         <div class="topicshow">
             <div class="topicheading">
                 <div class="widgetright">
                     @if (Model.IsSubscribed)
                     {
-                        <span style="font-size:8pt;">You are subscribed to this topic</span><br/>
+                        <span style="font-size:8pt;">You are subscribed to this topic</span><br />
                         <a href="#" class="emailunsubscription" data-id="@Model.Topic.Id">
                             <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>Unsubscribe
                         </a>
@@ -52,11 +50,11 @@
                         <li><span class="glyphicon glyphicon-lock" aria-hidden="true"></span> Topic Is Locked</li>
                     }
 
-                    @if (Model.Topic.Poll != null)
+                    @if (Model.Poll != null && Model.Poll.Poll != null)
                     {
                         <li>
                             <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span> Poll
-                            @if (Model.Topic.Poll.IsClosed)
+                            @if (Model.Poll.Poll.IsClosed)
                             {
                                 <text>Closed</text>
                             }
@@ -73,6 +71,12 @@
                 </ul>
 
             </div>
+
+            @if (Model.Poll != null)
+            {
+                // Show the poll if there is one
+                Html.RenderPartial("_Poll", Model.Poll);
+            }
 
             <div class="topicstarterpost">
                 @if (Model.StarterPost != null)
@@ -103,7 +107,8 @@
                 </div>
             </div>
 
-            @if (Model.Posts != null) {
+            @if (Model.Posts != null)
+            {
                 foreach (var post in Model.Posts)
                 {
                     Html.RenderPartial("_Post", post);
@@ -149,7 +154,7 @@
 
 
 @section Scripts {
-<script type="text/javascript">
+    <script type="text/javascript">
     $(document).ready(function () {
 
 
@@ -171,7 +176,7 @@
         }
 
         //file upload display filename
-        $("input[id='files']").change(function (e) {                       
+        $("input[id='files']").change(function (e) {
             var $this = $(this);
             var FileSize = this.files[0].size / 1024 / 1024;
             if (FileSize > 20) {
@@ -229,8 +234,8 @@
         });
 
 
-            
-        //answer event handling
+
+        //answer a question event handling
         $(".solutionlink").on('click', function (e) {
             e.preventDefault();
             //determine if answering or removing answer
@@ -291,7 +296,6 @@
                 }).fail(function (data) {
                     toastr.warning("Unable to subscribe.");
                 });
-
         });
 
 
@@ -301,9 +305,7 @@
             var _id = $(this).attr('data-id');
             var linker = $(this);
 
-            $.post('@Url.Action("UnsubscribeTopic", "Forum")',
-                AddAntiForgeryToken({ topic_id: _id }))
-
+            $.post('@Url.Action("UnsubscribeTopic", "Forum")', AddAntiForgeryToken({ topic_id: _id }))
                 .done(function (response) {
                     if (response.msg == "Success") {
                         linker.parent().fadeOut("fast");
@@ -315,8 +317,39 @@
                 }).fail(function (data) {
                     toastr.warning("Unable to unsubscribe.");
                 });
-
         });
+
+
+        // select a poll choice
+        $(".pollanswerselect").on('click', function (e) {
+            //Show the submit poll button
+            $(".pollvotebuttonholder").show();
+            //Set the value of the hidden input to the answer value
+            var answerId = $(this).data("answerid");
+            $(".selectedpollanswer").val(answerId);
+        });
+
+
+        //vote in poll
+        $(".pollvotebutton").on('click', function (e) {
+            e.preventDefault();
+            var _pollId = $("#Poll_Id").val();
+            var _answerId = $(".selectedpollanswer").val();
+            var _topicId = $("#Topic_Id").val();
+
+            $.post('@Url.Action("PollVote", "Forum")', AddAntiForgeryToken({ poll_id: _pollId, answer_id: _answerId, topic_id: _topicId }))
+                .done(function (response) {
+                    if (response.msg == "Success") {
+                        window.location.href = response.redirectUrl;
+                    }
+                    else {
+                        toastr.warning(response.msg);
+                    }
+                }).fail(function (data) {
+                    toastr.warning("Unable to record vote.");
+                });
+        });
+
 
 
     });
@@ -325,5 +358,5 @@
         data.__RequestVerificationToken = $('input[name=__RequestVerificationToken]').val();
         return data;
     };
-</script>
+    </script>
 }

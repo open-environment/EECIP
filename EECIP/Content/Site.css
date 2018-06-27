@@ -1179,6 +1179,33 @@ span.tag a, span.tag a:visited {
 
 
 
+/****poll*/
+.pollcontainer {
+    padding: 0 0 8px 0;
+}
+
+.pollradiobuttonholder {
+    float: left;
+    margin: 0 7px 0 0;
+}
+
+.pollvotebuttonholder {
+    padding: 0 0 8px 0;
+}
+
+.pollanswerlist {
+    margin: 0;
+    padding: 0;
+}
+
+    .pollanswerlist li {
+        list-style: none;
+        padding-bottom: 8px;
+    }
+
+
+
+
 
 /***badges*/
 .publicbadgeline {

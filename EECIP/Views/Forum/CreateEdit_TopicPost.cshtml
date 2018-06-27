@@ -1,19 +1,11 @@
 ﻿@model EECIP.Models.vmForumTopicCreate
-
+@{
+    var count = 0;
+}
 @Html.HiddenFor(x => x.TopicId)
 
 @if (Model.IsTopicStarter)
 {
-    <div class="row paddedrow">
-        @*@if (Html.Settings().EnablePolls == true)
-            {
-                <div class="col-md-4 pollcreatebuttonholder" @Html.Raw(Model.OptionalPermissions.CanCreatePolls ? "" : displayNone)>
-                    <a href="#" class="btn-mvc btn-mvc-fullwidth createpollbutton">@Html.LanguageString("Poll.Button.Create")</a>
-                    <a href="#" style="display: none;" class="btn-mvc btn-mvc-fullwidth removepollbutton">@Html.LanguageString("Poll.Button.Remove")</a>
-                </div>
-            }*@
-    </div>
-
     <div class="paddedrow topicname">
         <div class="form-group">
             @Html.LabelFor(model => model.Name)
@@ -22,47 +14,56 @@
         </div>
     </div>
 
-
-    @*if (Html.Settings().EnablePolls == true)
-        {
-            <div class="pollanswerholder" @Html.Raw(Model.PollAnswers != null && Model.PollAnswers.Any() ? "" : displayNone)>
-                <div class="row paddedrow">
-                    <div class="col-md-9">
-
-                        <ul class="pollanswerlist">
-                            @if (Model.PollAnswers != null && Model.PollAnswers.Any())
-                            {
-                                foreach (var pollAnswer in Model.PollAnswers.OrderBy(x => x.Answer))
-                                {
-                                    <li id="answer@(count)">
-                                        <input type="text" name="PollAnswers[@(count)].Answer" id="PollAnswers_@(count)_Answer" value="@pollAnswer.Answer" class="form-control" placeholder="@Html.LanguageString("Poll.Placeholder.TypeAnswerHere")" @Html.Raw(pollAnswer.PollVotes.Any() ? "disabled" : "") />
-                                        <input type="hidden" value="@pollAnswer.Id" name="PollAnswers[@(count)].Id" id="PollAnswers_@(count)Id" />
-                                    </li>
-
-                                    count++;
-                                }
-                            }
-                        </ul>
-                        <input type="hidden" id="pollanswerplaceholder" value="@Html.LanguageString("Poll.Placeholder.TypeAnswerHere")" />
-                    </div>
-                    <div class="col-md-3 polladdremovenewanswers">
-                        <a href="#" class="btn-mvc addanswer">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        </a>
-                        <a href="#" class="btn-mvc removeanswer">
-                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-                        </a>
-                    </div>
-                </div>
-                <div class="paddedrow pollcloseafterdays">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.PollCloseAfterDays)
-                        @Html.TextBoxFor(model => model.PollCloseAfterDays, new { @class = "form-control", type = "number" })
-                        @Html.ValidationMessageFor(model => model.PollCloseAfterDays)
-                    </div>
-                </div>
+    <!-- *********POLL START************ -->
+    if (Model.Id == Guid.Empty)
+    {
+        <div class="row paddedrow" style="padding-bottom: 10px;">
+            <div class="col-md-4 pollcreatebuttonholder pull-right">
+                <a href="#" class="btn-mvc btn-mvc-fullwidth createpollbutton">Add Poll To This Topic</a>
+                <a href="#" style="display: none;" class="btn-mvc btn-mvc-fullwidth removepollbutton">Remove Poll From Topic</a>
             </div>
-        }*@
+        </div>
+    }
+    <div class="pollanswerholder" style="background-color: #eee;
+    padding: 10px; @Html.Raw(Model.PollAnswers != null && Model.PollAnswers.Any() ? "" : "display: none;")">
+        <h4>Poll Choices</h4>
+        <div class="row paddedrow">
+            <div class="col-md-9">
+                <ul class="pollanswerlist">
+                    @if (Model.PollAnswers != null && Model.PollAnswers.Any())
+                    {
+                        foreach (var pollAnswer in Model.PollAnswers.OrderBy(x => x.Answer))
+                        {
+                            <li id="answer@(count)">
+                                <input type="text" name="PollAnswers[@(count)].Answer" id="PollAnswers_@(count)_Answer" value="@pollAnswer.Answer" class="form-control" placeholder="Type Answer Here" />
+                                <input type="hidden" value="@pollAnswer.Id" name="PollAnswers[@(count)].Id" id="PollAnswers_@(count)Id" />
+                            </li>
+
+                            count++;
+                        }
+                    }
+                </ul>
+                <input type="hidden" id="pollanswerplaceholder" value="Type a Poll Answer Here" />
+            </div>
+            <div class="col-md-3 polladdremovenewanswers">
+                <a href="#" class="btn-mvc addanswer">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </a>
+                <a href="#" class="btn-mvc removeanswer">
+                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                </a>
+            </div>
+        </div>
+        <div class="paddedrow pollcloseafterdays">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PollCloseAfterDays)
+                    @Html.TextBoxFor(model => model.PollCloseAfterDays, new { @class = "form-control", type = "number" })
+                    @Html.ValidationMessageFor(model => model.PollCloseAfterDays)
+                </div>
+        </div>
+    </div>
+    <!-- *********POLL END ************ -->
+
 
     <div class="form-group">
         @Html.LabelFor(model => model.Category)
@@ -72,9 +73,7 @@
     <div class="form-group">
         <label>Add Tag</label>
         <div class="topictagholder">
-            @*@Html.TextAreaFor(model => model.Tags, new { @class = "tagstextarea tags", title = "Tag this topic" })*@
             @Html.ListBoxFor(model => model.SelectedTags, Model.AllTags, new { multiple = "multiple", @class = "form-control search-select", @style = "display: block;" })
-
         </div>
     </div>
 }
@@ -158,4 +157,3 @@ else
     }
 
 </div>
-

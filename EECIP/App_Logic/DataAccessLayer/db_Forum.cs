@@ -53,6 +53,14 @@ namespace EECIP.App_Logic.DataAccessLayer
         public int UserPoints { get; set; }
     }
 
+
+    public class PollAnswerWithVotesDisplay
+    {
+        public Guid PollAnswerID { get; set; }
+        public string PollAnswer { get; set; }
+        public int PollAnswerVoteCount { get; set; }
+    }
+
     public class db_Forum
     {
 
@@ -232,6 +240,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
 
 
         //****************************** MEMBERSHIP USER BADGE **********************************************
@@ -561,6 +570,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+
         //********************************** TOPICS *************************************************
         public static Topic InsertUpdateTopic(vmForumTopicCreate model, int UserIDX)
         {
@@ -642,6 +652,28 @@ namespace EECIP.App_Logic.DataAccessLayer
                                select c).FirstOrDefault();
       
                     e.Solved = Answered;
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static Guid? SetTopicPollID(Guid Id, Guid Poll_ID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Topic e = (from c in ctx.Topics
+                               where c.Id == Id
+                               select c).FirstOrDefault();
+
+                    e.Poll_Id = Poll_ID;
                     ctx.SaveChanges();
                     return e.Id;
                 }
@@ -1005,7 +1037,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 join d in ctx.Categories on a.Category_Id equals d.Id
                                 where b.IsTopicStarter == true
                                 && (cat_id != null ? a.Category_Id == cat_id : true)
-                                orderby b.DateCreated descending
+                                orderby a.IsSticky descending, b.DateCreated descending
                                 select new TopicOverviewDisplay
                                 {
                                     _topic = a,
@@ -1029,7 +1061,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 where b.IsTopicStarter == true
                                 && (cat_id != null ? a.Category_Id == cat_id : true)
                                 && d.TopicTag == tag
-                                orderby b.DateCreated descending
+                                orderby a.IsSticky descending, b.DateCreated descending
                                 select new TopicOverviewDisplay
                                 {
                                     _topic = a,
@@ -1119,7 +1151,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
         public static List<TopicOverviewDisplay> GetTopicsByCategoryFollowing(Guid? cat_id, string tag, int pageIndex, int UserIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1186,7 +1217,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
 
         public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterest(int UserIDX)
         {
@@ -1344,6 +1374,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+
         //********************************** TOPIC TAGS*************************************************
         public static List<string> GetTopicTags_ByAttributeSelected(Guid TopicID, string aTTRIBUTE)
         {
@@ -1462,6 +1493,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
 
 
         //************************************TOPIC NOTIFICATION **************************************************
@@ -1888,6 +1920,262 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
+        //*************************************POLL *********************************
+        public static Guid? InsertUpdatePoll(Guid? id, bool? isClosed, DateTime? dateCreated, int? closePollAfterDays, int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    bool InsInd = false;
+
+                    //get from ID
+                    Poll e = (from c in ctx.Polls
+                                           where c.Id == id
+                                           select c).FirstOrDefault();
+
+                    //insert case
+                    if (e == null)
+                    {
+                        InsInd = true;
+                        e = new Poll();
+                        e.Id = Guid.NewGuid();
+                    }
+
+                    if (isClosed != null) e.IsClosed = isClosed.ConvertOrDefault<bool>();
+                    if (dateCreated != null) e.DateCreated = dateCreated.ConvertOrDefault<DateTime>();
+                    if (closePollAfterDays != null) e.ClosePollAfterDays = closePollAfterDays;
+                    e.MembershipUser_Id = UserIDX;
+
+                    if (InsInd)
+                        ctx.Polls.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static Poll GetPoll_ByID(Guid Id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Polls.AsNoTracking()
+                            where a.Id == Id
+                            select a).FirstOrDefault();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+
+        //*************************************POLL ANSWER*********************************
+        public static Guid? InsertUpdatePollAnswer(Guid? id, string answer, Guid? poll_ID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    bool InsInd = false;
+
+                    //get from ID
+                    PollAnswer e = (from c in ctx.PollAnswers
+                                    where c.Id == id
+                                    select c).FirstOrDefault();
+
+                    //insert case
+                    if (e == null)
+                    {
+                        InsInd = true;
+                        e = new PollAnswer();
+                        e.Id = Guid.NewGuid();
+                    }
+
+                    if (answer != null) e.Answer = answer;
+                    if (poll_ID != null) e.Poll_Id = poll_ID.ConvertOrDefault<Guid>();
+
+                    if (InsInd)
+                        ctx.PollAnswers.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<PollAnswer> GetPollAnswers_ByPollID(Guid PollId)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.PollAnswers.AsNoTracking()
+                            where a.Poll_Id == PollId
+                            select a).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<PollAnswerWithVotesDisplay> GetPollAnswersWithVotes_ByPollID(Guid PollId)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.PollAnswers.AsNoTracking()
+                            where a.Poll_Id == PollId
+                            select new PollAnswerWithVotesDisplay {
+                                PollAnswerID = a.Id,
+                                PollAnswer = a.Answer,
+                                PollAnswerVoteCount = (from v1 in ctx.PollVotes where v1.PollAnswer_Id == a.Id select v1).Count()
+                            }).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+
+        //*************************************POLL VOTES*********************************
+        public static int GetPollVotes_ByPolAnswerID(Guid PollAnswerId)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.PollVotes.AsNoTracking()
+                            where a.PollAnswer_Id == PollAnswerId
+                            select a).Count();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int GetPollVotes_ByPollID(Guid PollId)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.PollVotes.AsNoTracking()
+                            join b in ctx.PollAnswers.AsNoTracking() on a.PollAnswer_Id equals b.Id
+                            where b.Poll_Id == PollId
+                            select a).Count();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static bool HasUserVotedInPoll(Guid PollId, int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    int xxx = (from a in ctx.PollVotes.AsNoTracking()
+                            join b in ctx.PollAnswers.AsNoTracking() on a.PollAnswer_Id equals b.Id
+                            where b.Poll_Id == PollId
+                            && a.MembershipUser_Id == UserIDX
+                            select a).Count();
+
+                    return xxx > 0;
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
+
+        public static Guid? InsertUpdatePollVote(Guid? id, Guid poll_answer_ID, int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    bool InsInd = false;
+
+                    //get from ID
+                    PollVote e = (from c in ctx.PollVotes
+                                    where c.Id == id
+                                    select c).FirstOrDefault();
+
+                    //otherwise get from answer_id and userIDX
+                    if (e == null)
+                    {
+                        e = (from c in ctx.PollVotes
+                             where c.PollAnswer_Id == poll_answer_ID
+                             && c.MembershipUser_Id == UserIDX
+                             select c).FirstOrDefault();
+                    }
+
+                    //insert case
+                    if (e == null)
+                    {
+                        InsInd = true;
+                        e = new PollVote();
+                        e.Id = Guid.NewGuid();
+                    }
+
+                    e.PollAnswer_Id = poll_answer_ID;
+                    e.MembershipUser_Id = UserIDX;
+
+                    if (InsInd)
+                        ctx.PollVotes.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
 
 

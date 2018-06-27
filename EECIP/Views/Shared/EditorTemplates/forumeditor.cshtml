@@ -5,12 +5,12 @@
         selector: "textarea.rte",
         browser_spellcheck: true,
         branding: false,
-        plugins: [ "link lists hr code wordcount emoticons"],
+        plugins: [ "link lists hr code wordcount emoticons "],
         //plugins: [
-        //    "autosave link image lists hr anchor forumimageinsert",
-        //    "wordcount visualblocks visualchars code fullscreen media nonbreaking"
+        //    "autosave image anchor forumimageinsert",
+        //    "visualblocks visualchars code fullscreen media nonbreaking"
         //],
-        toolbar1: "emoticons bold italic underline strikethrough bullist hr | link unlink @(ViewBag.ImageUploadType ?? "image") code blockquote | formatselect",
+        toolbar1: "emoticons bold italic underline strikethrough bullist hr | link unlink code blockquote | formatselect",
         remove_linebreaks: false,
         relative_urls: false,
         menubar: false,
@@ -20,15 +20,6 @@
         nonbreaking_force_tab: true
     });
 
-    // Language strings
-    var buttonTitle = 'Insert Image';
-    var buttonOk = 'Ok';
-    var buttonClose = 'Close';
-    var enterValidUrl = 'Enter valid URL';
-    var selectFile = 'Please select a file';
-    var maxImageFileSize = 'Max image is 2mb';
-    var onlyImages = 'Only JPEG, PNG and GIF images can be uploaded';
-    var generalError = 'Sorry an error occured';
 </script>
 
 <div class="tinymceholder">
