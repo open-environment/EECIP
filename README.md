@@ -3,6 +3,11 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
+**Version 1.1c (6/27/2018)**
+- Added polls to discussion forum
+- Search page state facet sorted alphabetically 
+- Bug fixes
+
 **Version 1.1b (6/21/2018)**
 - Forum Enhancements
    - added ability to subscribe/unsubscribe to a forum topic
