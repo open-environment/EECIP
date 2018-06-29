@@ -345,15 +345,17 @@ namespace EECIP.Controllers
                     _topic.Views = _topic.Views + 1;
                 }
 
-                var model = new vmForumTopicView();
-                model.Topic = _topic;
-                model.TopicTags = db_Forum.GetTopicTags_ByAttributeSelected(_topic.Id, "Topic Tag");
-                model.StarterPost = db_Forum.GetPost_StarterForTopic(_topic.Id, UserIDX);
-                model.Posts = db_Forum.GetPost_NonStarterForTopic(_topic.Id, UserIDX, order);
-                model.IsSubscribed = db_Forum.NotificationIsUserSubscribed(_topic.Id, UserIDX);
-                model.LastPostDatePretty = db_Forum.GetTopic_LastPostPrettyDate(_topic.Id);
-                //model.DisablePosting = false;
-                model.NewPostContent = "";
+                var model = new vmForumTopicView
+                {
+                    Topic = _topic,
+                    TopicTags = db_Forum.GetTopicTags_ByAttributeSelected(_topic.Id, "Topic Tag"),
+                    StarterPost = db_Forum.GetPost_StarterForTopic(_topic.Id, UserIDX),
+                    Posts = db_Forum.GetPost_NonStarterForTopic(_topic.Id, UserIDX, order),
+                    IsSubscribed = db_Forum.NotificationIsUserSubscribed(_topic.Id, UserIDX),
+                    LastPostDatePretty = db_Forum.GetTopic_LastPostPrettyDate(_topic.Id),
+                    //model.DisablePosting = false;
+                    NewPostContent = ""
+                };
 
                 //poll handling
                 if (_topic.Poll_Id != null) {
@@ -425,8 +427,10 @@ namespace EECIP.Controllers
         [ChildActionOnly]
         public PartialViewResult PopularTags()
         {
-            var viewModel = new vmForumPopularTags();
-            viewModel.popularTags = db_Forum.GetPopularTags();
+            var viewModel = new vmForumPopularTags
+            {
+                popularTags = db_Forum.GetPopularTags()
+            };
             return PartialView(viewModel);
         }
 
@@ -708,7 +712,7 @@ namespace EECIP.Controllers
 
                 return RedirectToAction("ShowTopic", "Forum", new { id = post.Topic_Id });
             }
-            catch (Exception ex)
+            catch
             {
                 TempData["Error"] = "Invalid post";
                 return RedirectToAction("Index", "Forum");

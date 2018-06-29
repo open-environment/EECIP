@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using EECIP.App_Logic.DataAccessLayer;
-using Newtonsoft.Json;
 using Microsoft.Rest.Azure;
 
 namespace EECIP.App_Logic.BusinessLogicLayer

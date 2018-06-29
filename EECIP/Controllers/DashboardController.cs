@@ -20,18 +20,21 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
-            var model = new vmDashboardIndex();
-            model.UserBadges = db_Forum.GetBadgesForUser(UserIDX);  //badge progress
-            model.ProjectsNeedingReviewCount = db_EECIP.GetT_OE_PROJECTS_NeedingReviewCount(UserIDX);  //projects needing review
-            model.UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(6);  //user point leaders
-            model.LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX);  //latest projects
-            model.LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX); //latest topics matching interest
-            model.ProjectCount = db_EECIP.GetT_OE_PROJECTS_CountNonGovernance();
-            model.GovernanceCount = db_EECIP.GetT_OE_PROJECTS_CountGovernance();
-            model.DiscussionCount = db_Forum.GetTopicCount(null);
-            model.AgencyCount = db_Ref.GetT_OE_ORGANIZATION_Count();
-            model.UserBadgeEarnedCount = db_Forum.GetBadgesForUserCount(UserIDX);
-            model.Announcement = db_Ref.GetT_OE_APP_SETTING_CUSTOM().ANNOUNCEMENTS;
+            var model = new vmDashboardIndex
+            {
+                UserBadges = db_Forum.GetBadgesForUser(UserIDX),  //badge progress
+                ProjectsNeedingReviewCount = db_EECIP.GetT_OE_PROJECTS_NeedingReviewCount(UserIDX),  //projects needing review
+                UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(6),  //user point leaders
+                LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX),  //latest projects matching interest
+                LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX), //latest topics matching interest
+                ProjectCount = db_EECIP.GetT_OE_PROJECTS_CountNonGovernance(),
+                GovernanceCount = db_EECIP.GetT_OE_PROJECTS_CountGovernance(),
+                DiscussionCount = db_Forum.GetTopicCount(null),
+                AgencyCount = db_Ref.GetT_OE_ORGANIZATION_Count(),
+                UserBadgeEarnedCount = db_Forum.GetBadgesForUserCount(UserIDX),
+                Announcement = db_Ref.GetT_OE_APP_SETTING_CUSTOM().ANNOUNCEMENTS
+            };
+
             T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
             if (u != null)
             {
@@ -44,23 +47,25 @@ namespace EECIP.Controllers
         // GET: Dashboard/Search
         public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType, string sortDir)
         {
-            var model = new vmDashboardSearch();
-            model.q = q;
-            model.facetDataType = facetDataType;
-            model.facetMedia = facetMedia;
-            model.facetRecordSource = facetRecordSource;
-            model.facetAgency = facetAgency;
-            model.facetState = facetState;
-            model.facetTags = facetTags;
-            model.facetPopDensity = facetPopDensity;
-            model.facetRegion = facetRegion;
-            model.facetStatus = facetStatus;
-            model.activeTab = activeTab ?? "1";
-            model.currentPage = currentPage.ConvertOrDefault<int?>() ?? 1;
-            model.sortType = sortType;
-            model.sortDir = sortDir;
+            var model = new vmDashboardSearch
+            {
+                q = q,
+                facetDataType = facetDataType,
+                facetMedia = facetMedia,
+                facetRecordSource = facetRecordSource,
+                facetAgency = facetAgency,
+                facetState = facetState,
+                facetTags = facetTags,
+                facetPopDensity = facetPopDensity,
+                facetRegion = facetRegion,
+                facetStatus = facetStatus,
+                activeTab = activeTab ?? "1",
+                currentPage = currentPage.ConvertOrDefault<int?>() ?? 1,
+                sortType = sortType,
+                sortDir = sortDir,
+                searchResults = AzureSearch.QuerySearchIndex(q, facetDataType, facetMedia, facetRecordSource, facetAgency, facetState, facetTags, facetPopDensity, facetRegion, facetStatus, currentPage.ConvertOrDefault<int?>() ?? 1, sortType, sortDir)
+            };
 
-            model.searchResults = AzureSearch.QuerySearchIndex(model.q, model.facetDataType, model.facetMedia, model.facetRecordSource, model.facetAgency, model.facetState, model.facetTags, model.facetPopDensity, model.facetRegion, model.facetStatus, model.currentPage, model.sortType, model.sortDir);
             return View(model);
         }
 
@@ -95,21 +100,23 @@ namespace EECIP.Controllers
                 return RedirectToAction("AccessDenied", "Home");
             }
 
+            Guid agency = selAgency.ConvertOrDefault<Guid>();
 
-            var model = new vmDashboardAgency();
-            model.agency = db_Ref.GetT_OE_ORGANIZATION_ByID(selAgency.ConvertOrDefault<Guid>());
-            model.users = db_Accounts.GetT_OE_USERSByAgency(selAgency.ConvertOrDefault<Guid>());
-            //database
-            model.SelectedDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(selAgency.ConvertOrDefault<Guid>(), "Database");
-            model.AllDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByAttributeAll(selAgency.ConvertOrDefault<Guid>(), "Database").Select(x => new SelectListItem { Value = x, Text = x });
-            //app framework
-            model.SelectedAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(selAgency.ConvertOrDefault<Guid>(), "App Framework");
-            model.AllAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByAttributeAll(selAgency.ConvertOrDefault<Guid>(), "App Framework").Select(x => new SelectListItem { Value = x, Text = x });
-            //ent services
-            model.org_ent_services = db_EECIP.GetT_OE_ORGANIZATION_ENTERPRISE_PLATFORM(selAgency.ConvertOrDefault<Guid>());
+            var model = new vmDashboardAgency
+            {
+                agency = db_Ref.GetT_OE_ORGANIZATION_ByID(agency),
+                users = db_Accounts.GetT_OE_USERSByAgency(agency),
+                //database
+                SelectedDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(agency, "Database"),
+                AllDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByAttributeAll(agency, "Database").Select(x => new SelectListItem { Value = x, Text = x }),
+                //app framework
+                SelectedAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(agency, "App Framework"),
+                AllAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByAttributeAll(agency, "App Framework").Select(x => new SelectListItem { Value = x, Text = x }),
+                //ent services
+                org_ent_services = db_EECIP.GetT_OE_ORGANIZATION_ENTERPRISE_PLATFORM(agency)
+            };
 
             return View(model);
-
         }
 
 
@@ -200,16 +207,17 @@ namespace EECIP.Controllers
         // GET: /Dashboard/AgencyCard
         public ActionResult AgencyCard(string strid)
         {
-            Guid id;
-            if (Guid.TryParse(strid, out id))
+            if (Guid.TryParse(strid, out Guid id))
             {
-                var model = new vmDashboardAgencyCard();
-                model.agency = db_Ref.GetT_OE_ORGANIZATION_ByID(id);
-                model.org_ent_services = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_NoLeftJoin(id);
-                model.users = db_Accounts.GetT_OE_USERSByAgency(id);
-                model.SelectedDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(id, "Database");
-                model.SelectedAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(id, "App Framework");
-                model.projects = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(id);
+                var model = new vmDashboardAgencyCard
+                {
+                    agency = db_Ref.GetT_OE_ORGANIZATION_ByID(id),
+                    org_ent_services = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_NoLeftJoin(id),
+                    users = db_Accounts.GetT_OE_USERSByAgency(id),
+                    SelectedDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(id, "Database"),
+                    SelectedAppFramework = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(id, "App Framework"),
+                    projects = db_EECIP.GetT_OE_PROJECTS_ByOrgIDX(id)
+                };
 
                 if (model.agency != null)
                     return View(model);
@@ -263,8 +271,10 @@ namespace EECIP.Controllers
         public ActionResult ProjectReview()
         {
             int UserIDX = db_Accounts.GetUserIDX();
-            var model = new vmDashboardProjectReview();
-            model.ProjectsNeedingReview = db_EECIP.GetT_OE_PROJECTS_NeedingReview(UserIDX);  //projects needing review
+            var model = new vmDashboardProjectReview
+            {
+                ProjectsNeedingReview = db_EECIP.GetT_OE_PROJECTS_NeedingReview(UserIDX)  //projects needing review
+            };
             return View(model);
         }
 
@@ -474,11 +484,13 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
-            Guid id;
-            if (Guid.TryParse(strid, out id))
+            if (Guid.TryParse(strid, out Guid id))
             {
-                var model = new vmDashboardProjectCard();
-                model.project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
+                var model = new vmDashboardProjectCard
+                {
+                    project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id)
+                };
+
                 if (model.project != null)
                 {
                     T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.project.ORG_IDX.ConvertOrDefault<Guid>());
@@ -497,7 +509,7 @@ namespace EECIP.Controllers
                     //project contact
                     if (model.project.PROJECT_CONTACT_IDX != null)
                     {
-                        model.ProjectContact = db_Accounts.GetT_OE_USERSByIDX(model.project.PROJECT_CONTACT_IDX??-1);
+                        model.ProjectContact = db_Accounts.GetT_OE_USERSByIDX(model.project.PROJECT_CONTACT_IDX ?? -1);
                     }
                     model.files_existing = db_EECIP.GetT_OE_DOCUMENTS_ByProjectID(model.project.PROJECT_IDX);
 
@@ -572,7 +584,7 @@ namespace EECIP.Controllers
 
                 return RedirectToAction("ShowTopic", "Forum", new { id = project.PROJECT_IDX });
             }
-            catch (Exception ex)
+            catch
             {
                 TempData["Error"] = "Invalid post";
                 return RedirectToAction("Index", "Forum");
@@ -669,19 +681,14 @@ namespace EECIP.Controllers
 
 
         public ActionResult EnterpriseSvcOverview() {
-            var model = new vmDashboardEntSvcOverview();
-            model.EntSvcOverviewDisplay = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_Overview();
+            var model = new vmDashboardEntSvcOverview
+            {
+                EntSvcOverviewDisplay = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_Overview()
+            };
             return View(model);
         }
 
 
-        public ActionResult EnterpriseSvc(int id)
-        {
-            var model = new vmDashboardEntSvcOverview();
-            model.EntSvcOverviewDisplay = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_Overview();
-            return View(model);
-        }
-        
 
         public ActionResult EnterpriseSvcCard(string strid)
         {
@@ -690,8 +697,10 @@ namespace EECIP.Controllers
             if (id > 100000)
                 id = id - 100000;
 
-            var model = new vmDashboardEntSvcCard();
-            model.entsvc = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_ByID(id);
+            var model = new vmDashboardEntSvcCard
+            {
+                entsvc = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_ByID(id)
+            };
             if (model.entsvc != null)
             {
                 T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.entsvc.ORG_IDX.ConvertOrDefault<Guid>());
@@ -702,13 +711,8 @@ namespace EECIP.Controllers
                 if (u != null)
                     model.LastUpdatedUser = u.FNAME + " " + u.LNAME;
             }
-            //model.User = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
-            //model.UserOrg = db_Ref.GetT_OE_ORGANIZATION_ByID(model.User.ORG_IDX.ConvertOrDefault<Guid>());
 
-            //            if (model.User != null)
             return View(model);
-
-            //return RedirectToAction("Index", "Dashboard");
         }
 
 
@@ -716,11 +720,13 @@ namespace EECIP.Controllers
         {
             int UserIDX = strid.ConvertOrDefault<int>();
 
-            var model = new vmDashboardUserCard();
-            model.User = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+            var model = new vmDashboardUserCard
+            {
+                User = db_Accounts.GetT_OE_USERSByIDX(UserIDX),
+                SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX),
+                UserBadges = db_Forum.GetBadgesForUserNoLeftJoin(UserIDX)
+            };
             model.UserOrg = db_Ref.GetT_OE_ORGANIZATION_ByID(model.User.ORG_IDX.ConvertOrDefault<Guid>());
-            model.SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
-            model.UserBadges = db_Forum.GetBadgesForUserNoLeftJoin(UserIDX);
 
             if (model.User != null && model.User.USER_IDX>0)
                 return View(model);
