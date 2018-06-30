@@ -150,6 +150,7 @@
                                 }
                                 else
                                 {
+                                    @Html.HiddenFor(model => model.OrgIDX)
                                     @Html.TextBoxFor(model => model.OrgName, new { @class = "form-control", @readonly = true })
                                 }
                             </div>

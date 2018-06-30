@@ -69,14 +69,37 @@
                     <i class="icon-arrow"></i>
                 </a>
                 <ul class="sub-menu">
-                    <li class="@Html.ActivePage("Admin", "Users")">
-                        <a href="@Url.Action("Users","Admin")">
-                            <span class="title">Users </span>
+                    <li class="@Html.ActivePage("Admin", "Settings")">
+                        <a href="@Url.Action("Settings","Admin")">
+                            <span class="title">Global Config </span>
                         </a>
                     </li>
-                    <li class="@Html.ActivePage("Admin", "Roles")">
-                        <a href="@Url.Action("Roles","Admin")">
-                            <span class="title">Roles </span>
+                    <li class="@Html.ActivePage("Admin", "Ref")">
+                        <a href="javascript:;">
+                            <span class="title">Security Config</span>
+                            <i class="icon-arrow"></i>
+                        </a>
+                        <ul class="sub-menu">
+                            <li class="lvl3 @Html.ActivePage("Admin", "Users")">
+                                <a href="@Url.Action("Users","Admin")">
+                                    <span class="title">Users </span>
+                                </a>
+                            </li>
+                            <li class="lvl3 @Html.ActivePage("Admin", "Roles")">
+                                <a href="@Url.Action("Roles","Admin")">
+                                    <span class="title">Roles </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="@Html.ActivePage("ForumAdmin", "Category")">
+                        <a href="@Url.Action("Category","ForumAdmin")">
+                            <span class="title">Discussion Config</span>
+                        </a>
+                    </li>
+                    <li class="lvl3 @Html.ActivePage("Admin", "SearchAdmin")">
+                        <a href="@Url.Action("SearchAdmin", "Admin")">
+                            <span class="title">Search Config </span>
                         </a>
                     </li>
                     <li class="@Html.ActivePage("Admin", "Ref")">
@@ -95,7 +118,7 @@
                                     <span class="title">Governance Groups</span>
                                 </a>
                             </li>
-                            
+
                             <li class="lvl3 @Html.ActivePage("Admin", "RefEntServices")">
                                 <a href="@Url.Action("RefEntServices","Admin")">
                                     <span class="title">Enterprise Services </span>
@@ -114,11 +137,7 @@
                         </ul>
                     </li>
 
-                    <li class="@Html.ActivePage("ForumAdmin", "Category")">
-                        <a href="@Url.Action("Category","ForumAdmin")">
-                            <span class="title">Forum Admin </span>
-                        </a>
-                    </li>
+
                     <li class="@Html.ActivePage("Admin", "Ref")">
                         <a href="javascript:;">
                             <span class="title">Data Import/Export</span>
@@ -138,16 +157,8 @@
                         </ul>
                     </li>
 
-                    <li class="@Html.ActivePage("Admin", "Settings")">
-                        <a href="@Url.Action("Settings","Admin")">
-                            <span class="title">Global Settings </span>
-                        </a>
-                    </li>
-                    <li class="lvl3 @Html.ActivePage("Admin", "SearchAdmin")">
-                        <a href="@Url.Action("SearchAdmin", "Admin")">
-                            <span class="title">Search Config </span>
-                        </a>
-                    </li>
+
+
                     <li class="@Html.ActivePage("Admin", "Analytics")">
                         <a href="https://analytics.google.com" target="_blank">
                             <span class="title">Analytics </span>

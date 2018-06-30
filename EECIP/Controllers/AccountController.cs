@@ -292,8 +292,8 @@ namespace EECIP.Controllers
                         } catch { }
                     }
 
-                    //logic for properly blanking out OrgIDX
-                    if (model.OrgIDX == null)
+                    //logic for properly blanking out OrgIDX (only when accessed via Admin screen)
+                    if (model.OrgIDX == null && model.uListInd == "a")
                         model.OrgIDX = Guid.Empty;
 
                     int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin, model.ExcludeBadges);

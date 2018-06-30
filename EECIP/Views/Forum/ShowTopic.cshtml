@@ -1,8 +1,7 @@
-﻿@using EECIP.App_Logic.BusinessLogicLayer
-@model EECIP.Models.vmForumTopicView
+﻿@model EECIP.Models.vmForumTopicView
 @{
-    ViewBag.Title = "Discussion Topic";
-    ViewBag.ShowBack = true;
+    //ViewBag.Title = "Discussion Topic";
+    //ViewBag.ShowBack = true;
 
     string orderBy = "newest";
     if (HttpContext.Current.Request.QueryString["order"] != null)
@@ -53,11 +52,12 @@
                     @if (Model.Poll != null && Model.Poll.Poll != null)
                     {
                         <li>
-                            <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span> Poll
+                            <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span> <span style="@(Model.Poll.Poll.IsClosed ? "color:#D9534F; font-weight:bold" : "")">Poll
                             @if (Model.Poll.Poll.IsClosed)
                             {
-                                <text>Closed</text>
+                                <text> Is Closed</text>
                             }
+                            </span>
                         </li>
                     }
                     <li><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> @Model.Views Views</li>

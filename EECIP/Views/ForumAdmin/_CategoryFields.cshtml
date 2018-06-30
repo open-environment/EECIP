@@ -58,15 +58,12 @@
             @Html.ValidationMessageFor(m => m.ModerateTopics)
         </div>
     *@
-    <div class="checkbox">
-        @*@using (Html.BeginLabelFor(m => m.ModeratePosts, new { @class = "checkbox" }))
-            {*@
-        <label>Moderate Posts:</label> 
 
+    @*<div class="checkbox">
+        <label>Moderate Posts:</label> 
         @Html.CheckBoxFor(m => m.ModeratePosts)
-        @*}*@
         @Html.ValidationMessageFor(m => m.ModeratePosts)
-    </div>
+    </div>*@
 
     <div class="form-group">
         @Html.LabelFor(model => model.SortOrder)
@@ -82,11 +79,11 @@
 
     <hr />
 
-    <div class="form-group">
+    @*<div class="form-group">
         @Html.LabelFor(model => model.PageTitle)
         @Html.TextBoxFor(model => model.PageTitle, new { @class = "form-control" })
         @Html.ValidationMessageFor(model => model.PageTitle)
-    </div>
+    </div>*@
 
     @*<div class="form-group">
         @Html.LabelFor(model => model.MetaDesc)

@@ -24,8 +24,7 @@
             </div>
         </div>
     }
-    <div class="pollanswerholder" style="background-color: #eee;
-    padding: 10px; @Html.Raw(Model.PollAnswers != null && Model.PollAnswers.Any() ? "" : "display: none;")">
+    <div class="pollanswerholder" style="background-color: #eee; padding: 10px; @Html.Raw(Model.PollAnswers != null && Model.PollAnswers.Any() ? "" : "display: none;")">
         <h4>Poll Choices</h4>
         <div class="row paddedrow">
             <div class="col-md-9">
@@ -54,13 +53,23 @@
                 </a>
             </div>
         </div>
-        <div class="paddedrow pollcloseafterdays">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.PollCloseAfterDays)
-                    @Html.TextBoxFor(model => model.PollCloseAfterDays, new { @class = "form-control", type = "number" })
-                    @Html.ValidationMessageFor(model => model.PollCloseAfterDays)
-                </div>
+        @*<div class="paddedrow pollcloseafterdays">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PollCloseAfterDays)
+                @Html.TextBoxFor(model => model.PollCloseAfterDays, new { @class = "form-control", type = "number" })
+                @Html.ValidationMessageFor(model => model.PollCloseAfterDays)
+            </div>
+        </div>*@
+        @if (Model.Id != Guid.Empty)
+        {
+        <div class="checkbox">
+            <label>
+                @Html.CheckBoxFor(m => m.IsPollClosed)
+                Close Poll
+            </label>
+            @Html.ValidationMessageFor(m => m.IsPollClosed)
         </div>
+        }
     </div>
     <!-- *********POLL END ************ -->
 

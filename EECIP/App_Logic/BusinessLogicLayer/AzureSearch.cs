@@ -63,7 +63,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         [IsFilterable, IsFacetable, IsSortable]
         public string Status { get; set; }
 
-        [IsFilterable]
+        [IsFilterable, IsSortable]
         public DateTime? LastUpdated { get; set; }
     }
 

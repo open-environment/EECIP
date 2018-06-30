@@ -303,6 +303,21 @@
                                         </th>
                                     }
                                     <th>Tags</th>
+                                    <th>
+                                        <a href="#" class="col-header" data-id="LastUpdated">
+                                            Last Updated @if (Model.sortType == "LastUpdated")
+                                            {
+                                                if (Model.sortDir == "1")
+                                                {
+                                                    <i class="clip-arrow-up"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="clip-arrow-down"></i>
+                                                }
+                                            }
+                                        </a>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -337,7 +352,6 @@
                                             @if (User.IsInRole("Admins"))
                                             {
                                                 <span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>
-                                                <span style="font-weight: bold; font-size: 11px;display:block;">Updated: @Html.DisplayFor(modelItem => item.Document.LastUpdated).ToString()</span>
                                             }
                                         </td>
                                         <td>
@@ -381,7 +395,12 @@
                                                 <span class="select2-selection__choice">@Html.DisplayFor(modelItem => tag)</span>
                                             }
                                         </td>
+                                        <td>
+                                            <span style="font-size: 11px;display:block;">@Html.DisplayFor(modelItem => item.Document.LastUpdated).ToString()</span>
+                                        </td>
+
                                     </tr>
+
                                 }
                             </tbody>
                         </table>

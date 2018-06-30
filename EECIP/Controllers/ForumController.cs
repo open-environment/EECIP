@@ -261,6 +261,7 @@ namespace EECIP.Controllers
                     {
                         viewModel.PollAnswers = db_Forum.GetPollAnswers_ByPollID(_topic.Poll_Id.ConvertOrDefault<Guid>());
                         viewModel.PollCloseAfterDays = _poll.ClosePollAfterDays ?? 0;
+                        viewModel.IsPollClosed = _poll.IsClosed;
                     }
                 }
 
@@ -296,7 +297,7 @@ namespace EECIP.Controllers
                     if (model.PollAnswers.Count(x => x != null) > 1)
                     {
                         // Update Poll
-                        Guid? PollID = db_Forum.InsertUpdatePoll(_topic.Poll_Id, false, System.DateTime.Now, model.PollCloseAfterDays, UserIDX);
+                        Guid? PollID = db_Forum.InsertUpdatePoll(_topic.Poll_Id, model.IsPollClosed, System.DateTime.Now, model.PollCloseAfterDays, UserIDX);
 
                         // Update poll answers
                         foreach (PollAnswer answer in model.PollAnswers)

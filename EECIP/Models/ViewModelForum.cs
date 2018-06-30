@@ -112,6 +112,9 @@ namespace EECIP.Models
         [DisplayName("Close Poll After Specified Amount Of Days?")]
         public int PollCloseAfterDays { get; set; }
 
+        [DisplayName("Close Poll")]
+        public bool IsPollClosed { get; set; }
+
         public IEnumerable<SelectListItem> Categories { get; set; }
 
         public List<PollAnswer> PollAnswers { get; set; }

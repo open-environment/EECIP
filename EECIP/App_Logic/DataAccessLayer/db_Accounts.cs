@@ -59,6 +59,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     return (from a in ctx.T_OE_USERS
                             join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1 from x1 in sr1.DefaultIfEmpty() //left join
+                            orderby x1.ORG_NAME, a.FNAME
                             select new UserDisplayType
                             {
                                 users = a,
