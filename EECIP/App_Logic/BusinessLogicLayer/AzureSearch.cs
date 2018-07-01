@@ -380,7 +380,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //connect to Azure Search
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
-                //get all projects needing to sync
+                //get all users needing to sync
                 List<EECIP_Index> _ps = db_Accounts.GetT_OE_USERS_ReadyToSync(UserIDX);
                 if (_ps != null && _ps.Count > 0)
                 {
@@ -573,7 +573,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //connect to Azure Search
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
-                //get ent service needing to delete sync
+                //get user needing to delete sync
                 IEnumerable<string> ss = new List<string>() { UserIDX.ToString() };
                 var batch = IndexBatch.Delete("KeyID", ss);
 

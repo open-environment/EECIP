@@ -62,7 +62,7 @@ namespace EECIP.Controllers
 
         }
 
-        // POST: /Dashboard/ProjectsDelete
+        // POST: /Dashboard/UserDelete
         [HttpPost]
         public JsonResult UserDelete(int id)
         {

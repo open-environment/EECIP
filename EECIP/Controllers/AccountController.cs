@@ -347,7 +347,10 @@ namespace EECIP.Controllers
                     }
 
                     //update azure search
-                    AzureSearch.PopulateSearchIndexUsers(model.UserIDX);
+                    if (model.ActInd)
+                        AzureSearch.PopulateSearchIndexUsers(model.UserIDX);
+                    else
+                        AzureSearch.DeleteSearchIndexUsers(model.UserIDX);
 
                     if (SuccID > 0)
                         TempData["Success"] = "Update successful.";
