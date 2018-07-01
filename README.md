@@ -3,9 +3,11 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
-**Version 1.1c (6/27/2018)**
+**Version 1.1c/d (6/27/2018-6/30/2018)**
 - Added polls to discussion forum
+- Added ability to sort data by last updated date on Seach page
 - Search page state facet sorted alphabetically 
+- Admin user list: add sorted by agency
 - Bug fixes
 
 **Version 1.1b (6/21/2018)**
