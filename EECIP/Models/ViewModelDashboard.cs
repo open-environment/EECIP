@@ -35,6 +35,7 @@ namespace EECIP.Models
         public string facetRecordSource { get; set; }
         public string facetAgency { get; set; }
         public string facetState { get; set; }
+        public string facetOrgType { get; set; }
         public string facetTags { get; set; }
         public string facetPopDensity { get; set; }
         public string facetRegion { get; set; }

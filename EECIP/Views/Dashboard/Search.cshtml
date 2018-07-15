@@ -38,6 +38,7 @@
     @Html.HiddenFor(model => model.facetRecordSource)
     @Html.HiddenFor(model => model.facetAgency)
     @Html.HiddenFor(model => model.facetState)
+    @Html.HiddenFor(model => model.facetOrgType)
     @Html.HiddenFor(model => model.facetTags)
     @Html.HiddenFor(model => model.facetPopDensity)
     @Html.HiddenFor(model => model.facetRegion)
@@ -74,9 +75,13 @@
                                             {
                                                 if (!string.IsNullOrEmpty(subitem.Value.ToString().Trim()))
                                                 {
-                                                    if (!string.IsNullOrEmpty(@Model.facetState) && (item.Key == "State_or_Tribal"))
+                                                    if (!string.IsNullOrEmpty(@Model.facetState) && (item.Key == "State"))
                                                     {
-                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="State_or_Tribal" class="removeFacet">X Remove Filter</a></span>
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="State" class="removeFacet">X Remove Filter</a></span>
+                                                    }
+                                                    else if (!string.IsNullOrEmpty(Model.facetOrgType) && (item.Key == "OrgType"))
+                                                    {
+                                                        @Html.DisplayFor(modelItem => subitem.Value) <span class="tag" style="margin-left:15px"><a href="javascript:void(0)" data-id2="OrgType" class="removeFacet">X Remove Filter</a></span>
                                                     }
                                                     else if (!string.IsNullOrEmpty(Model.facetAgency) && (item.Key == "Agency"))
                                                     {
@@ -517,7 +522,7 @@
 
 
 
-        
+
         $(document).ready(function () {
             //focus on search bar
             $('#txtSearch').focus();
@@ -640,8 +645,10 @@
                     $('#facetRecordSource').val(_id);
                 if (_facTyp == "Agency")
                     $('#facetAgency').val(_id);
-                if (_facTyp == "State_or_Tribal")
+                if (_facTyp == "State")
                     $('#facetState').val(_id);
+                if (_facTyp == "OrgType")
+                    $('#facetOrgType').val(_id);
                 if (_facTyp == "Tags")
                     $('#facetTags').val(_id);
                 if (_facTyp == "Population_Density")
@@ -665,8 +672,10 @@
                     $('#facetRecordSource').val('');
                 if (_facTyp == "Agency")
                     $('#facetAgency').val('');
-                if (_facTyp == "State_or_Tribal")
+                if (_facTyp == "State")
                     $('#facetState').val('');
+                if (_facTyp == "OrgType")
+                    $('#facetOrgType').val('');
                 if (_facTyp == "Tags")
                     $('#facetTags').val('');
                 if (_facTyp == "Population_Density")

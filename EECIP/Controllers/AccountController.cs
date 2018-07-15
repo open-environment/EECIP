@@ -133,11 +133,13 @@ namespace EECIP.Controllers
                                 }
                                 else
                                 {
-                                    if (model.suggestAgency == null)
+                                    if (model.suggestAgency == null || model.suggestOrgType == null)
                                     {
                                         TempData["Error"] = "No government agency is found matching that email. Please provide an agency name below.";
                                         ModelState.AddModelError("suggestAgency", "Enter your agency name");
+                                        ModelState.AddModelError("suggestOrgType", "Specify an organization type");
                                         model.suggestAgencyInd = true;
+                                        model.ddl_OrgTypes = ddlHelpers.get_ddl_orgtypes(true);
                                         return View(model);
                                     }
                                 }
@@ -172,7 +174,7 @@ namespace EECIP.Controllers
                             if (model.intSelOrgIDX == null)
                             {
                                 //create the agency & email rule
-                                NewOrgIDX = db_Ref.InsertUpdatetT_OE_ORGANIZATION(null, null, model.suggestAgency, null, null, "Tribal", null, null, true, UserIDX);
+                                NewOrgIDX = db_Ref.InsertUpdatetT_OE_ORGANIZATION(null, null, model.suggestAgency, null, null, model.suggestOrgType, null, null, true, UserIDX);
                                 db_Ref.InsertT_OE_ORGANIZATION_EMAIL_RULE(NewOrgIDX.ConvertOrDefault<Guid>(), Regex.Match(model.UserName, "@(.*)").Groups[1].Value);
 
                                 //notify Site Admins via email

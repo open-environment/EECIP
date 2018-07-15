@@ -75,16 +75,22 @@ GO
 
 CREATE TABLE [dbo].[T_OE_REF_ORG_TYPE](
 	[ORG_TYPE] [varchar](20) NOT NULL,
+	[ORG_TYPE_DESC] [varchar](200) NULL,
+	[SORT_SEQ] [int] NULL,
  CONSTRAINT [PK_T_OE_REF_ORG_TYPE] PRIMARY KEY CLUSTERED  ([ORG_TYPE] ASC)
 ) ON [PRIMARY]
 
 GO
 
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE) values ('State');
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE) values ('Tribal');
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE) values ('Governance');
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE) values ('Association');
+--ALTER TABLE [T_OE_REF_ORG_TYPE]  add [ORG_TYPE_DESC] [varchar](200) NULL;
+--ALTER TABLE [T_OE_REF_ORG_TYPE]  add [SORT_SEQ] [int] NULL;
 
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('State','State government agencies', 1);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Local','County, city, or municipal agencies', 2);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Tribal','Tribal agencies (or associations that predominantly serve tribal agencies)', 3);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Federal','Federal agencies', 4);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Other','Any agency or group not covered by other categories',5);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Governance','E-Enterprise or Exchange Network Governance Groups');
 
 
 CREATE TABLE [dbo].[T_OE_REF_SYNONYMS](

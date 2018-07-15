@@ -350,10 +350,12 @@ namespace EECIP.App_Logic.DataAccessLayer
                                {
                                    Agency = a.ORG_NAME,
                                    AgencyAbbreviation = a.ORG_ABBR,
-                                   State_or_Tribal = (a.ORG_TYPE == "State" ? x1.STATE_NAME : a.ORG_TYPE),
+                                   OrgType = a.ORG_TYPE,
+                                   State = (a.ORG_TYPE == "State" ? x1.STATE_NAME : null),
+                                   //State_or_Tribal = (a.ORG_TYPE == "State" ? x1.STATE_NAME : a.ORG_TYPE),
                                    KeyID = a.ORG_IDX.ToString(),
                                    DataType = "Agency",
-                                   Record_Source = "EECIP Supplied",
+                                   Record_Source = "EECIP Administrator Supplied",
                                    Name = a.ORG_NAME,
                                    Description = a.ORG_ABBR,
                                    Population_Density = x1.POP_DENSITY,
@@ -811,14 +813,15 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
         //*******************REF_ORG_TYPES ********************************
-        public static List<T_OE_REF_ORG_TYPE> GetT_OE_REF_ORG_TYPE()
+        public static List<T_OE_REF_ORG_TYPE> GetT_OE_REF_ORG_TYPE(bool excludeGovernanceInd)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
                     return (from a in ctx.T_OE_REF_ORG_TYPE
-                            orderby a.ORG_TYPE
+                            where (excludeGovernanceInd ? a.ORG_TYPE != "Governance" : true)
+                            orderby a.SORT_SEQ
                             select a).ToList();
                 }
                 catch (Exception ex)

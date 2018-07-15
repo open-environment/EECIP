@@ -30,8 +30,14 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         [IsSearchable, IsFilterable]
         public string AgencyAbbreviation { get; set; }
 
+        //[IsSearchable, IsFilterable, IsFacetable]
+        //public string State_or_Tribal { get; set; }
+
         [IsSearchable, IsFilterable, IsFacetable]
-        public string State_or_Tribal { get; set; }
+        public string OrgType { get; set; }
+
+        [IsSearchable, IsFilterable, IsFacetable]
+        public string State { get; set; }
 
         [IsSearchable, IsSortable]
         [Analyzer(AnalyzerName.AsString.EnLucene)]
@@ -267,7 +273,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                         {
                             // Sometimes when your Search service is under load, indexing will fail for some of the documents in
                             // the batch. Depending on your application, you can take compensating actions like delaying and
-                            // retrying. For this simple demo, we just log the failed document keys and continue.
+                            // retrying. Here we just log the failed document keys and continue.
                             Console.WriteLine(
                                 "Failed to index some of the documents: {0}",
                                 String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
@@ -600,7 +606,6 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
-
         public static void DeleteForumTopic(Guid? TopicID)
         {
             try
@@ -639,7 +644,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
         //******************************** METHODS FOR QUERYING INDEX ******************************************
         public static DocumentSearchResult<EECIP_Index> QuerySearchIndex(string searchStr, string dataTypeFacet = "", string mediaFacet = "", 
-            string recordSourceFacet = "", string agencyFacet = "", string stateFacet = "", string tagsFacet = "", string popDensityFacet = "", 
+            string recordSourceFacet = "", string agencyFacet = "", string stateFacet = "", string orgTypeFacet = "", string tagsFacet = "", string popDensityFacet = "", 
             string regionFacet = "", string statusFacet = "", int? currentPage = 1, string sortType = "", string sortDir = "0")
         {
             try
@@ -648,13 +653,13 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
                 ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
 
-                //Search the entire index 
+                //Search the index 
                 SearchParameters parameters = new SearchParameters()
                 {
                     Top = 50,
                     Skip = ((currentPage ?? 1) - 1) * 50,
-                    Facets = new List<string> { "DataType", "State_or_Tribal,count:100,sort:value", "Tags,count:30", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
-                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State_or_Tribal", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn", "LastUpdated" },
+                    Facets = new List<string> { "DataType", "State,count:100,sort:value", "OrgType", "Tags,count:30", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State", "OrgType", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn", "LastUpdated" },
                     IncludeTotalResultCount = true
                 };
 
@@ -668,7 +673,9 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 if ((agencyFacet ?? "").Length > 0)
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Agency eq '" + agencyFacet + "' ";
                 if ((stateFacet ?? "").Length > 0)
-                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "State_or_Tribal eq '" + stateFacet + "' ";
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "State eq '" + stateFacet + "' ";
+                if ((orgTypeFacet ?? "").Length > 0)
+                    parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "OrgType eq '" + orgTypeFacet + "' ";
                 if ((tagsFacet ?? "").Length > 0)
                     parameters.Filter = (parameters.Filter ?? "") + (parameters.Filter != null ? " and " : "") + "Tags/any(t: t eq '" + tagsFacet + "') ";
                 if ((popDensityFacet ?? "").Length > 0)

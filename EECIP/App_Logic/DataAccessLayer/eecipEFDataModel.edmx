@@ -188,6 +188,8 @@
             <PropertyRef Name="ORG_TYPE" />
           </Key>
           <Property Name="ORG_TYPE" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ORG_TYPE_DESC" Type="varchar" MaxLength="200" />
+          <Property Name="SORT_SEQ" Type="int" />
         </EntityType>
         <EntityType Name="T_OE_REF_REGION">
           <Key>
@@ -1841,6 +1843,8 @@
             <PropertyRef Name="ORG_TYPE" />
           </Key>
           <Property Name="ORG_TYPE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ORG_TYPE_DESC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SORT_SEQ" Type="Int32" />
         </EntityType>
         <EntityType Name="T_OE_REF_REGION">
           <Key>
@@ -3067,6 +3071,8 @@
           <EntitySetMapping Name="T_OE_REF_ORG_TYPE">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_ORG_TYPE">
               <MappingFragment StoreEntitySet="T_OE_REF_ORG_TYPE">
+                <ScalarProperty Name="SORT_SEQ" ColumnName="SORT_SEQ" />
+                <ScalarProperty Name="ORG_TYPE_DESC" ColumnName="ORG_TYPE_DESC" />
                 <ScalarProperty Name="ORG_TYPE" ColumnName="ORG_TYPE" />
               </MappingFragment>
             </EntityTypeMapping>

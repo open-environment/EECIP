@@ -505,6 +505,7 @@
     <Content Include="Content\toastr.less" />
     <Content Include="App_Docs\ProjectImportTemplate.xlsx" />
     <Content Include="App_Docs\EntServicesImportTemplate.xlsx" />
+    <Content Include="App_Docs\DataDictionary.xlsx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\chaperone_init.js" />

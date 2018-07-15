@@ -423,7 +423,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                                {
                                    Agency = o.ORG_NAME,
                                    AgencyAbbreviation = o.ORG_ABBR,
-                                   State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
+                                   OrgType = o.ORG_TYPE,
+                                   State = (o.ORG_TYPE == "State" ? x1.STATE_NAME : null),
+                                   //State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
                                    KeyID = (a.ORG_ENT_SVCS_IDX + 100000).ToString(),
                                    DataType = "Enterprise Service",
                                    Record_Source = a.RECORD_SOURCE,
@@ -603,8 +605,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
-
         public static List<T_OE_PROJECTS> GetT_OE_PROJECTS_NeedingReview(int UserIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -660,7 +660,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
 
         public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(int UserIDX)
         {
@@ -734,7 +733,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                             select new EECIP_Index {
                                 Agency = o.ORG_NAME,
                                 AgencyAbbreviation = o.ORG_ABBR,
-                                State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
+                                OrgType = o.ORG_TYPE,
+                                State = (o.ORG_TYPE == "State" ? x1.STATE_NAME : null),
+                                //State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
                                 KeyID = a.PROJECT_IDX.ToString(),
                                 DataType = (o.ORG_TYPE == "Governance" ? "Governance" : "Project"),
                                 Record_Source = a.RECORD_SOURCE,
@@ -944,6 +945,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
 
         //***************************project local (temp when importing)****************************************
         /// <summary>
@@ -1498,6 +1500,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
            }
         }       
+
 
         //******************************* NOTIFICATIONS ***************************************
         public static List<T_OE_USER_NOTIFICATION> GetT_OE_USER_NOTIFICATION_byUserIDX(int? UserIDX, bool OnlyUnread)

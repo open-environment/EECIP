@@ -435,6 +435,68 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        /// <summary>
+        /// Method returns the forum categories ordered with indentation for display in a dropdown to simulate a tree-like display structure
+        /// </summary>
+        /// <returns></returns>
+        public static List<Category> GetCategory2()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    //new empty container for categories
+                    var orderedCategories = new List<Category>();
+
+                    //getting all categories from db once
+                    var allCats = ctx.Categories
+                        .AsNoTracking()
+                        .OrderBy(x => x.SortOrder)
+                        .ToList();
+
+                    foreach (var parentCategory in allCats.Where(x => x.Category_Id == null).OrderBy(x => x.SortOrder))
+                    {
+                        // Add the main category
+                        orderedCategories.Add(new Category {
+                            Id = parentCategory.Id,
+                            Name = parentCategory.Name,
+                            SortOrder = parentCategory.SortOrder
+                        });
+
+                        // Add subcategories under this
+                        orderedCategories.AddRange(GetSubCategories(parentCategory.Id, allCats));
+                    }
+
+                    return orderedCategories;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<Category> GetSubCategories(Guid parent_cat_id, List<Category> allCategories, int level = 1)
+        {
+            string lvl = new String('-', level);
+
+            var catsToReturn = new List<Category>();
+
+            var cats = allCategories.Where(x => x.Category_Id == parent_cat_id).OrderBy(x => x.SortOrder);
+            foreach (var cat in cats)
+            {
+                catsToReturn.Add(new Category {
+                    Id = cat.Id,
+                    Name = lvl + cat.Name,
+                    SortOrder = cat.SortOrder
+                });
+                catsToReturn.AddRange(GetSubCategories(cat.Id, allCategories, level + 1));
+            }
+
+            return catsToReturn;
+        }
+
         public static List<CategoryDisplay> GetCategoriesMain()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1294,7 +1356,9 @@ namespace EECIP.App_Logic.DataAccessLayer
                                {
                                    Agency = o.ORG_NAME,
                                    AgencyAbbreviation = o.ORG_ABBR,
-                                   State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
+                                   OrgType = o.ORG_TYPE,
+                                   State = (o.ORG_TYPE == "State" ? x1.STATE_NAME : null),
+                                   //State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
                                    KeyID = a.Id.ToString(),
                                    DataType = "Discussion",
                                    Record_Source = "User supplied",

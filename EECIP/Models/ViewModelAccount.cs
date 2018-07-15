@@ -50,6 +50,9 @@ namespace EECIP.Models
        
         public string suggestAgency { get; set; }
         public string termsConditions { get; set; }
+
+        public IEnumerable<SelectListItem> ddl_OrgTypes { get; set; }
+        public string suggestOrgType { get; set; }
     }
 
 

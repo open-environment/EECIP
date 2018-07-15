@@ -45,7 +45,7 @@ namespace EECIP.Controllers
 
 
         // GET: Dashboard/Search
-        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType, string sortDir)
+        public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetOrgType, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType, string sortDir)
         {
             var model = new vmDashboardSearch
             {
@@ -55,6 +55,7 @@ namespace EECIP.Controllers
                 facetRecordSource = facetRecordSource,
                 facetAgency = facetAgency,
                 facetState = facetState,
+                facetOrgType = facetOrgType,
                 facetTags = facetTags,
                 facetPopDensity = facetPopDensity,
                 facetRegion = facetRegion,
@@ -63,7 +64,7 @@ namespace EECIP.Controllers
                 currentPage = currentPage.ConvertOrDefault<int?>() ?? 1,
                 sortType = sortType,
                 sortDir = sortDir,
-                searchResults = AzureSearch.QuerySearchIndex(q, facetDataType, facetMedia, facetRecordSource, facetAgency, facetState, facetTags, facetPopDensity, facetRegion, facetStatus, currentPage.ConvertOrDefault<int?>() ?? 1, sortType, sortDir)
+                searchResults = AzureSearch.QuerySearchIndex(q, facetDataType, facetMedia, facetRecordSource, facetAgency, facetState, facetOrgType, facetTags, facetPopDensity, facetRegion, facetStatus, currentPage.ConvertOrDefault<int?>() ?? 1, sortType, sortDir)
             };
 
             return View(model);
@@ -79,26 +80,21 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
+            // if no agency passed, get agency for which the logged-in user is associated
             if (selAgency == null || selAgency == Guid.Empty)
             {
-                // get agency for which the logged in user is associated
                 T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
                 if (u != null && u.ORG_IDX != null)
                     selAgency = u.ORG_IDX.ConvertOrDefault<Guid>();
             }
 
-            //if still no agency
-            if (selAgency == null || selAgency == Guid.Empty)
+            //if still no agency (and not an Admin, then return error), or if user cannot edit agency
+            if (!User.IsInRole("Admins") &&  (selAgency == null || selAgency == Guid.Empty || !db_Accounts.UserCanEditOrgIDX(UserIDX, selAgency.ConvertOrDefault<Guid>())))
             {
                 TempData["Error"] = "You are not associated with an agency.";
                 return RedirectToAction("AccessDenied", "Home");
             }
 
-            if (!User.IsInRole("Admins") && !db_Accounts.UserCanEditOrgIDX(UserIDX, selAgency.ConvertOrDefault<Guid>()))
-            {
-                TempData["Error"] = "You cannot edit this agency.";
-                return RedirectToAction("AccessDenied", "Home");
-            }
 
             Guid agency = selAgency.ConvertOrDefault<Guid>();
 
@@ -236,9 +232,9 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
+            // if no agency passed, get agency for which the logged-in user is associated
             if (selAgency == null || selAgency == Guid.Empty)
             {
-                // get agency for which the logged in user is associated
                 T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
                 if (u != null && u.ORG_IDX != null)
                     selAgency = u.ORG_IDX.ConvertOrDefault<Guid>();                    
@@ -387,6 +383,7 @@ namespace EECIP.Controllers
                     {                        
                         db_EECIP.InsertUpdateT_OE_DOCUMENTS(docs.DOC_IDX, null, null, "project", null, null, docs.DOC_COMMENT, null, newProjID2, null, UserIDX);
                     }
+
                     //update files
                     if (model.files != null)
                     {
@@ -687,7 +684,6 @@ namespace EECIP.Controllers
             };
             return View(model);
         }
-
 
 
         public ActionResult EnterpriseSvcCard(string strid)

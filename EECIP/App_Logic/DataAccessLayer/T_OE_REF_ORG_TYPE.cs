@@ -15,5 +15,7 @@ namespace EECIP.App_Logic.DataAccessLayer
     public partial class T_OE_REF_ORG_TYPE
     {
         public string ORG_TYPE { get; set; }
+        public string ORG_TYPE_DESC { get; set; }
+        public Nullable<int> SORT_SEQ { get; set; }
     }
 }

@@ -10,10 +10,19 @@ using System.Linq;
 namespace EECIP.Models
 {
     public static class ddlForumHelpers
-    {
-        public static IEnumerable<SelectListItem> get_ddl_categories()
+    {   
+        //public static IEnumerable<SelectListItem> get_ddl_categories()
+        //{
+        //    return db_Forum.GetCategory().Select(x => new SelectListItem
+        //    {
+        //        Value = x.Id.ToString(),
+        //        Text = x.Name
+        //    });
+        //}
+
+        public static IEnumerable<SelectListItem> get_ddl_categories_tree()
         {
-            return db_Forum.GetCategory().Select(x => new SelectListItem
+            return db_Forum.GetCategory2().Select(x => new SelectListItem
             {
                 Value = x.Id.ToString(),
                 Text = x.Name
@@ -42,7 +51,7 @@ namespace EECIP.Models
         [UIHint("forumeditor"), AllowHtml]
         public string Description { get; set; }
 
-        [DisplayName("Category Colour")]
+        [DisplayName("Category Color")]
         [UIHint("colourpicker"), AllowHtml]
         public string CategoryColour { get; set; }
 
@@ -79,7 +88,7 @@ namespace EECIP.Models
 
         //initialize
         public vmForumAdminCategory(){
-            AllCategories = ddlForumHelpers.get_ddl_categories();
+            AllCategories = ddlForumHelpers.get_ddl_categories_tree();
         }
     }
 

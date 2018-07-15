@@ -81,13 +81,13 @@ namespace EECIP.Models
             });
         }
 
-        public static IEnumerable<SelectListItem> get_ddl_orgtypes()
+        public static IEnumerable<SelectListItem> get_ddl_orgtypes(bool excludeGovernance)
         {
 
-            return db_Ref.GetT_OE_REF_ORG_TYPE().Select(x => new SelectListItem
+            return db_Ref.GetT_OE_REF_ORG_TYPE(excludeGovernance).Select(x => new SelectListItem
             {
                 Value = x.ORG_TYPE,
-                Text = x.ORG_TYPE
+                Text = x.ORG_TYPE + " (" + x.ORG_TYPE_DESC + ")"
             });
         }
 

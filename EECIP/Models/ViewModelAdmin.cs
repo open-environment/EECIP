@@ -74,7 +74,7 @@ namespace EECIP.Models
         {
             ddl_States = ddlHelpers.get_ddl_states();
             ddl_Regions = ddlHelpers.get_ddl_regions();
-            ddl_OrgTypes = ddlHelpers.get_ddl_orgtypes();
+            ddl_OrgTypes = ddlHelpers.get_ddl_orgtypes(false);
 
         }
     }

@@ -1,14 +1,13 @@
-﻿using System;
+﻿using EECIP.App_Logic.BusinessLogicLayer;
+using EECIP.App_Logic.DataAccessLayer;
+using EECIP.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
-using System.Web.Hosting;
 using System.Web.Mvc;
-using EECIP.Models;
-using EECIP.App_Logic.DataAccessLayer;
 using System.Web.Security;
-using EECIP.App_Logic.BusinessLogicLayer;
-using System.IO;
 
 namespace EECIP.Controllers
 {
@@ -83,7 +82,7 @@ namespace EECIP.Controllers
             var viewModel = new vmForumTopicCreate
             {
                 SubscribeToTopic = true,
-                Categories = ddlForumHelpers.get_ddl_categories(),
+                Categories = ddlForumHelpers.get_ddl_categories_tree(),
                 Category = id.ConvertOrDefault<Guid>(),
                 OptionalPermissions = GetOptionalPermissions(),
                 IsTopicStarter = true,
@@ -104,7 +103,7 @@ namespace EECIP.Controllers
 
             // If viewModel is returned back to the view, repopulate view model fist
             topicViewModel.OptionalPermissions = GetOptionalPermissions();
-            topicViewModel.Categories = ddlForumHelpers.get_ddl_categories();
+            topicViewModel.Categories = ddlForumHelpers.get_ddl_categories_tree();
             topicViewModel.IsTopicStarter = true;
             topicViewModel.PollAnswers = topicViewModel.PollAnswers ?? new List<PollAnswer>();
             topicViewModel.SelectedTags = topicViewModel.SelectedTags ?? new List<string>();
@@ -245,7 +244,7 @@ namespace EECIP.Controllers
                     SelectedTags = db_Forum.GetTopicTags_ByAttributeSelected(_topic.Id, "Topic Tag"),
                     Id = _post.Id,
                     TopicId = _topic.Id,
-                    Categories = ddlForumHelpers.get_ddl_categories(),
+                    Categories = ddlForumHelpers.get_ddl_categories_tree(),
                     OptionalPermissions = GetOptionalPermissions(),
                     IsTopicStarter = _post.IsTopicStarter ?? false,
                     PollAnswers = new List<PollAnswer>(),
