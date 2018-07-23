@@ -3,6 +3,15 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
+**Version 1.2 7/23/2018)**
+- Added full points leaderboard
+- Organization Type enhancements: supporting Local agencies, filter based on organization type, allow user to specify when registering new organization
+- New Read Only access available
+- Admin feature enhancements; 
+   - Ability to delete discussion categories
+   - Allow admin to edit agency profiles
+ 
+
 **Version 1.1c/d (6/27/2018-6/30/2018)**
 - Added polls to discussion forum
 - Added ability to sort data by last updated date on Seach page
