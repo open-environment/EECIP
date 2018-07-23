@@ -1,6 +1,7 @@
 ﻿@using EECIP.App_Logic.BusinessLogicLayer;
 @model EECIP.Models.vmDashboardSearch
 @{
+    ViewBag.LeftMenuExpand = "navigation-small";
     ViewBag.HideTitle = true;
     ViewBag.Title = "Browse or Search Content";
     ViewBag.SubTitle = @"Find projects, agencies, people, or discussions that match your interests  (You can use "" and -  and + to refine your search)";
@@ -16,9 +17,10 @@
                 <h1 style="float: left; margin-right: 20px;">@ViewBag.Title</h1>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <a id="clearSearch" href="#" class="btn btn-danger" style="display:none">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
+                        @if (Model.q != null)
+                        {
+                            <a id="clearSearch" href="#" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></a>
+                        }
                     </span>
                     @Html.TextBoxFor(model => model.q, new { @class = "form-control", @id = "txtSearch", @name = "txtSearch", @placeholder = @ViewBag.SubTitle })
                     <span class="input-group-btn">
@@ -58,7 +60,6 @@
                 <div>
                     <h3 style="margin-top:0px;">Data Filters</h3>
                     @{
-
                         foreach (var item in Model.searchResults.Facets)
                         {
                             if (item.Key != "DataType")
@@ -66,11 +67,11 @@
                                 if (item.Value.Count > 0)
                                 {
                                     <div class="collapse-chevron">
-                                        <div class="facetHead" data-toggle="collapse" data-target="#facetItemContainer@(counter)">
+                                        <div id="facetHeader@(item.Key)" class="facetHead" data-toggle="collapse" data-target="#facetItemContainer@(counter)">
                                             <span class="glyphicon glyphicon-chevron-down"></span>
-                                            @Html.DisplayFor(modelItem => item.Key).ToString().Replace("_", " ")
+                                            @Html.DisplayFor(modelItem => item.Key).ToString().Replace("_", " ").Replace("State", "Details")
                                         </div>
-                                        <div id="facetItemContainer@(counter)" class="facContainter collaspe in facetItemContainer@(counter)">
+                                        <div id="facetItemContainer@(counter)" class="facContainter collapse @((item.Key == "State" && string.IsNullOrEmpty(@Model.facetState)) ? "" : "in")">
                                             @foreach (var subitem in item.Value)
                                             {
                                                 if (!string.IsNullOrEmpty(subitem.Value.ToString().Trim()))
@@ -494,9 +495,10 @@
         </div>
     </div>
 }
+
 @section Scripts {
-    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
-    @Scripts.Render("~/bundles/chaperone")
+    @*<script src="https://app.getchaperone.com/embed/chaperone.js"></script>
+        @Scripts.Render("~/bundles/chaperone")*@
     @Scripts.Render("~/bundles/autocomplete")
     @Scripts.Render("~/bundles/pagination")
     @Scripts.Render("~/bundles/stickytableheaders")
@@ -527,11 +529,6 @@
             //focus on search bar
             $('#txtSearch').focus();
 
-            //make left small
-            //if ($("#txtSearch").val().length > 0) {
-                $('body').addClass("navigation-small");
-            //}
-
             //autocomplete
             new autoComplete({
                 selector: 'input[name="q"]',
@@ -543,6 +540,10 @@
                }
             });
 
+
+            //move state facet
+            $("#facetItemContainer2").insertAfter("#State");
+            $("#facetHeaderState").insertAfter("#State");
 
             //pagination
             $(function () {
@@ -572,7 +573,8 @@
                 window.location = EntUrl;
             });
 
-            $('.nav-tabs a[href="#tab' + $('#activeTab').val() + '"]').tab('show');             //do proper tab display from postback
+            //do proper tab display from postback
+            $('.nav-tabs a[href="#tab' + $('#activeTab').val() + '"]').tab('show');
 
             $('a[href="#tab1"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('');
@@ -690,6 +692,12 @@
                 $('#norepostform').submit();
             });
 
+            //clear top search
+            $('#clearSearch').click(function (e) {
+                e.preventDefault();
+                $('#txtSearch').val('');
+                $('#norepostform').submit();
+            });
 
             //column header sorting click
             $('.col-header').click(function (e) {

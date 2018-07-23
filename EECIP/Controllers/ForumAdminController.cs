@@ -49,7 +49,6 @@ namespace EECIP.Controllers
             {
                 try
                 {
-
                     //if (categoryViewModel.ParentCategory != null)
                     //{
                     //    var parentCategory = _categoryService.Get(categoryViewModel.ParentCategory.Value);
@@ -82,6 +81,7 @@ namespace EECIP.Controllers
             var vmForumAdminCategory = CreateEditCategoryViewModel(category);
             return View(vmForumAdminCategory);
         }
+
 
         [HttpPost]
         public ActionResult EditCategory(vmForumAdminCategory model)
@@ -133,6 +133,7 @@ namespace EECIP.Controllers
             return RedirectToAction("EditCategory");
         }
 
+
         private vmForumAdminCategory CreateEditCategoryViewModel(Category category)
         {
             var vmForumAdminCategory = new vmForumAdminCategory
@@ -154,5 +155,39 @@ namespace EECIP.Controllers
             return vmForumAdminCategory;
         }
 
+
+        public ActionResult DeleteCategoryConfirmation(Guid id)
+        {
+            var viewModel = new vmForumAdminDeleteCategory
+            {
+                Id = id,
+                CategoryTopics = db_Forum.GetTopicList_ByCategory(id),
+                SubCategories = db_Forum.GetSubCategories_Simple(id)
+            };
+
+            return View(viewModel);
+        }
+
+
+        [HttpPost]
+        public ActionResult DeleteCategory(Guid id)
+        {
+            Guid _id = id;
+            if (!db_Forum.GetTopicList_ByCategory(_id).Any() && !db_Forum.GetSubCategories_Simple(_id).Any())
+            {
+                int SuccID = db_Forum.DeleteCategory(id);
+
+                if (SuccID > 0)
+                {
+                    TempData["Success"] = "Category Deleted.";
+                    return RedirectToAction("Index");
+                }
+            }
+
+            //error if got this far
+            TempData["Error"] = "Unable to delete category.";
+            return RedirectToAction("DeleteCategoryConfirmation", "ForumAdmin", new { id = _id });
+
+        }
     }
 }

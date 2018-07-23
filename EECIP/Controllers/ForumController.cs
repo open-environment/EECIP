@@ -87,7 +87,7 @@ namespace EECIP.Controllers
                 OptionalPermissions = GetOptionalPermissions(),
                 IsTopicStarter = true,
                 SelectedTags = new List<string>(),
-                AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
+                AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Tags").Select(x => new SelectListItem { Value = x, Text = x })
             };
 
             return View(viewModel);
@@ -107,7 +107,7 @@ namespace EECIP.Controllers
             topicViewModel.IsTopicStarter = true;
             topicViewModel.PollAnswers = topicViewModel.PollAnswers ?? new List<PollAnswer>();
             topicViewModel.SelectedTags = topicViewModel.SelectedTags ?? new List<string>();
-            topicViewModel.AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
+            topicViewModel.AllTags = db_Forum.GetTopicTags_ByAttributeAll(Guid.NewGuid(), "Tags").Select(x => new SelectListItem { Value = x, Text = x });
             /*---- End Re-populate ViewModel ----*/
 
             if (ModelState.IsValid)
@@ -249,7 +249,7 @@ namespace EECIP.Controllers
                     IsTopicStarter = _post.IsTopicStarter ?? false,
                     PollAnswers = new List<PollAnswer>(),
                     PollCloseAfterDays = 0,
-                    AllTags = db_Forum.GetTopicTags_ByAttributeAll(_topic.Id, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x })
+                    AllTags = db_Forum.GetTopicTags_ByAttributeAll(_topic.Id, "Tags").Select(x => new SelectListItem { Value = x, Text = x })
                 };
 
                 //add polling information

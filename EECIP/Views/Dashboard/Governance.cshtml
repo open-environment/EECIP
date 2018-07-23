@@ -37,11 +37,14 @@ else
                     <div class="col-sm-9">
                         <div class="input-group">
                             @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Governance?selAgency=' + this.options[this.selectedIndex].value;" })
-                            <span class="input-group-btn">
-                                <a href="#modal-form" data-toggle="modal" class="btn btn-info">
-                                    <i class="glyphicon glyphicon-plus"></i> Add New Group
-                                </a>
-                            </span>
+                            @if (!User.IsInRole("ReadOnly"))
+                            {
+                                <span class="input-group-btn">
+                                    <a href="#modal-form" data-toggle="modal" class="btn btn-info">
+                                        <i class="glyphicon glyphicon-plus"></i> Add New Group
+                                    </a>
+                                </span>
+                            }
                         </div>
                     </div>
                 </div>
@@ -75,7 +78,7 @@ else
                                     <th>Status</th>
                                     <th>Record Source</th>
                                     <th>Program Area</th>
-                                    <th>Features</th>
+                                    <th>Tags</th>
                                     <th>More Info</th>
                                 </tr>
 
@@ -85,10 +88,13 @@ else
                                     <tr>
                                         <td style="min-width: 68px;">
                                             <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency, returnURL="Governance" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
-                                            <div class="delete-section" style="display:inline">
-                                                <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
-                                                <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
-                                            </div>
+                                            @if (!User.IsInRole("ReadOnly"))
+                                            {
+                                                <div class="delete-section" style="display:inline">
+                                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
+                                                </div>
+                                            }
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.PROJ_NAME)
@@ -120,7 +126,7 @@ else
                                         <td>
                                             @foreach (var subitem in item.T_OE_PROJECT_TAGS)
                                             {
-                                                if (subitem.PROJECT_ATTRIBUTE == "Project Feature")
+                                                if (subitem.PROJECT_ATTRIBUTE == "Tags")
                                                 {
                                                     <span class="select2-selection__choice">@Html.DisplayFor(modelItem => subitem.PROJECT_TAG_NAME)</span>
                                                 }
@@ -142,7 +148,7 @@ else
         </div>
     }
 
-    if (Model.selAgency != null)
+    if (Model.selAgency != null && !User.IsInRole("ReadOnly"))
     {
         <div class="col-md-1">
             <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency, returnURL="Governance" })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New Project</a>

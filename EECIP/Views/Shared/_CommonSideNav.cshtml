@@ -1,6 +1,6 @@
 ﻿<div class="col-md-3 sidelayoutsection">
     <div class="main-side-box clearfix">
-        @if (User.Identity.IsAuthenticated)
+        @if (!User.IsInRole("ReadOnly"))
         {
             <div class="createtopicbutton">
                 @if (Model != null)
@@ -29,8 +29,6 @@
                 }
             </div>
         }
-
-        @*@Html.Action("Index", "Language")*@
         @Html.Action("ListCategorySideMenu", "Forum")
         @Html.Action("PopularTags", "Forum")
         @*@Html.Action("SideSearch", "Search")

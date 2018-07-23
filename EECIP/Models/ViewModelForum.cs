@@ -92,6 +92,14 @@ namespace EECIP.Models
         }
     }
 
+    public class vmForumAdminDeleteCategory
+    {
+        [HiddenInput]
+        public Guid Id { get; set; }
+        public List<Topic> CategoryTopics { get; set; }
+        public List<Category> SubCategories { get; set; }
+    }
+
 
     public class vmForumTopicCreate
     {

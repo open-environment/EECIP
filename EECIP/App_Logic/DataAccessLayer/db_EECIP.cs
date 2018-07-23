@@ -112,7 +112,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     var xx2 = (from a in ctx.T_OE_REF_TAGS
                                //where a.TAG_CAT_NAME == "Expertise"
-                               where a.TAG_CAT_NAME == "Project Feature"
+                               where a.TAG_CAT_NAME == "Tags"
                                select a.TAG_NAME);
 
                     return xx1.Union(xx2).ToList();
@@ -749,7 +749,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                             }).Take(50).ToList();
 
                     foreach (EECIP_Index e in xxx)
-                        e.Tags = GetT_OE_PROJECT_TAGS_ByTwoAttributeSelected(new Guid(e.KeyID), "Project Feature", "Program Area").ToArray();
+                        e.Tags = GetT_OE_PROJECT_TAGS_ByTwoAttributeSelected(new Guid(e.KeyID), "Tags", "Program Area").ToArray();
 
                     return xxx;
                 }

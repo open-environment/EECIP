@@ -1,6 +1,9 @@
 ﻿@model EECIP.Models.vmDashboardAgency
 @{
-    ViewBag.Title = Model.agency.ORG_NAME;
+    if (Model.agency != null)
+    {
+        ViewBag.Title = Model.agency.ORG_NAME;
+    }
     ViewBag.SubTitle = "";
     ViewBag.ShowTour = false;
 }
@@ -88,7 +91,10 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+                        @if (!User.IsInRole("ReadOnly"))
+                        {
+                            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+                        }
                         <a href="@Url.Action("RefAgencies", "Admin")" class="btn btn-default">Close</a>
                     </div>
                 </div>
@@ -326,7 +332,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    @if (!User.IsInRole("ReadOnly"))
+                    {
+                        <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    }
                     <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>

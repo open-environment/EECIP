@@ -90,8 +90,10 @@ namespace EECIP.Models
         public List<T_OE_REF_TAGS> tags { get; set; }
         public IEnumerable<SelectListItem> ddl_tag_cats { get; set; }
         public string sel_tag_cat { get; set; }
+        public string sel_tag_cat_desc { get; set; }
         public int? edit_tag_idx { get; set; }
         public string edit_tag { get; set; }
+        public bool edit_promote_ind { get; set; }
 
 
         //INITIALIZE

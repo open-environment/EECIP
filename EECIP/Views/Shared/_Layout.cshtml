@@ -19,7 +19,7 @@
         @RenderSection("HeaderJS");
     }
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108934202-1"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -29,7 +29,7 @@
     </script>
 
 </head>
-<body class=" @ViewBag.LeftMenuExpand">
+<body class="@ViewBag.LeftMenuExpand">
     <!-- start: HEADER -->
     <div class="navbar navbar-inverse navbar-fixed-top">
         <!-- start: TOP NAVIGATION CONTAINER -->
@@ -55,13 +55,13 @@
                     {
                         @Html.Action("_PartialHeadNotification", "Shared")
                         <li>
-                            <a  title="Invite others to join the EECIP and make it a better community!" href="mailto:?subject=Join the E-Enterprise Community Information Platform&body=@User.Identity.Name has invited you to the E-Enterprise Community Information Platform at http://13.82.106.55/">
+                            <a title="Invite others to join the EECIP and make it a better community!" href="mailto:?subject=Join the E-Enterprise Community Information Platform&body=@User.Identity.Name has invited you to the E-Enterprise Community Information Platform at http://13.82.106.55/">
                                 <i class="clip-user-plus"></i>
                             </a>
                         </li>
                         <!-- start: USER DROPDOWN -->
                         <li class="dropdown current-user" style="float:left;">
-                            <a data-toggle="dropdown" @*data-hover="dropdown"*@ class="dropdown-toggle" data-close-others="true" href="#">
+                            <a data-toggle="dropdown" class="dropdown-toggle" data-close-others="true" href="#">
                                 <i class="clip-user-3"></i>
                                 <span class="username hidden-xs"> @User.Identity.Name </span>
                                 <i class="clip-chevron-down"></i>
@@ -126,7 +126,7 @@
                             }
                             @if (ViewBag.ShowBadge == true)
                             {
-                                <div href="#modal-form"  class="badge-alert pull-right  modal-it" data-toggle="modal">
+                                <div href="#modal-form" class="badge-alert pull-right  modal-it" data-toggle="modal">
                                     <img src="/Content/Images/badges/recognised-post.png" alt="Badges" style="width:45px; margin-left:20px" />
                                     <p class="publicbadgenamedesc" style="font-size:10px;">@ViewBag.BadgeCount Badges Earned</p>
                                 </div>
@@ -159,7 +159,7 @@
             <span class="go-top" style="margin-left:20px;"><i class="clip-chevron-up"></i></span>
         </div>
         <div class=" footer-items footer-right">
-            <a href="@Url.Action("TermsAndConditions","Home")" >Terms & Conditions </a>
+            <a href="@Url.Action("TermsAndConditions","Home")">Terms & Conditions </a>
         </div>
         <div class=" footer-items footer-right">
             <a href="https://e-enterprisefortheenvironment.net/our-projects/inventory/" target="_blank">Contact </a> |
@@ -178,7 +178,7 @@
     <script>
         jQuery(document).ready(function () {
             Main.init();
-            $('[data-toggle="tooltip"]').tooltip();  
+            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
     @Html.Partial("_Alerts")

@@ -49,6 +49,17 @@ namespace EECIP.Models
         public List<T_OE_PROJECTS> active_projects { get; set; }
     }
 
+    public class vmDashboardLeaderboard
+    {
+        public List<UserMostPointsDisplay> UserPointLeaders { get; set; }
+    }
+
+    public class vmDashboardLeaderboardDtl
+    {
+        public string UserName { get; set; }
+        public List<MembershipUserPointsDisplay> UserPointDetails { get; set; }
+    }
+
     public class vmDashboardAgency
     {
         public T_OE_ORGANIZATION agency { get; set; }

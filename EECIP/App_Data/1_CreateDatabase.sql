@@ -85,13 +85,6 @@ GO
 --ALTER TABLE [T_OE_REF_ORG_TYPE]  add [ORG_TYPE_DESC] [varchar](200) NULL;
 --ALTER TABLE [T_OE_REF_ORG_TYPE]  add [SORT_SEQ] [int] NULL;
 
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('State','State government agencies', 1);
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Local','County, city, or municipal agencies', 2);
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Tribal','Tribal agencies (or associations that predominantly serve tribal agencies)', 3);
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Federal','Federal agencies', 4);
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Other','Any agency or group not covered by other categories',5);
-insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Governance','E-Enterprise or Exchange Network Governance Groups');
-
 
 CREATE TABLE [dbo].[T_OE_REF_SYNONYMS](
 	[SYNONYM_IDX] [int] IDENTITY(1,1) NOT NULL,
@@ -112,17 +105,19 @@ CREATE TABLE [dbo].[T_OE_REF_TAG_CATEGORIES](
 	[TAG_CAT_COLOR] [varchar](6) NULL,
 	[CREATE_USERIDX] [int] NULL,
 	[CREATE_DT] [datetime2](0) NULL,
+	[ACT_IND] bit NOT NULL DEFAULT 1,
  CONSTRAINT [PK_T_OE_REF_TG_CATEGORIES] PRIMARY KEY CLUSTERED  ([TAG_CAT_NAME] ASC)
 ) ON [PRIMARY]
 
 GO
-
+--ALTER TABLE [T_OE_REF_TAG_CATEGORIES]  add [ACT_IND] bit NOT NULL DEFAULT 1;
 
 CREATE TABLE [dbo].[T_OE_REF_TAGS](
 	[TAG_IDX] [int] IDENTITY(1,1) NOT NULL,
 	[TAG_NAME] [varchar](100) NOT NULL,
 	[TAG_CAT_NAME] [varchar](50) NOT NULL,
 	[USER_CREATE_IND] [bit] NOT NULL DEFAULT 0,
+	[PROMOTE_IND] [bit] NOT NULL DEFAULT 0,
 	[CREATE_USERIDX] [int] NULL,
 	[CREATE_DT] [datetime2](0) NULL,
  CONSTRAINT [PK_T_OE_REF_TAGS] PRIMARY KEY CLUSTERED  ([TAG_IDX] ASC),
@@ -130,6 +125,9 @@ CREATE TABLE [dbo].[T_OE_REF_TAGS](
 ) ON [PRIMARY]
 
 GO
+--ALTER TABLE [T_OE_REF_TAGS]  add [PROMOTE_IND] [bit] NOT NULL DEFAULT 0;
+--GO
+
  
  CREATE TABLE [dbo].[T_OE_REF_ENTERPRISE_PLATFORM](
 	[ENT_PLATFORM_IDX] [int] IDENTITY(1,1) NOT NULL,
@@ -171,7 +169,6 @@ CREATE TABLE [dbo].[T_OE_ORGANIZATION](
 GO	 
 
 --ALTER TABLE [T_OE_ORGANIZATION]  add [ORG_TYPE] [varchar](20) NULL;
---update T_OE_ORGANIZATION set ORG_TYPE = 'State';
 
 
 CREATE TABLE [dbo].[T_OE_ORGANIZATION_TAGS](
@@ -212,7 +209,6 @@ GO
 
 --  alter table T_OE_ORGANIZATION_ENT_SVCS add SYNC_IND [bit] NOT NULL DEFAULT 0;
 --  alter table T_OE_ORGANIZATION_ENT_SVCS add RECORD_SOURCE varchar(50) NULL;
-
 --  alter table T_OE_ORGANIZATION_ENT_SVCS add PROJECT_CONTACT [varchar](100) NULL;
 --  alter table T_OE_ORGANIZATION_ENT_SVCS add ACTIVE_INTEREST_IND [bit] NULL;
 

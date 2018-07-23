@@ -5,9 +5,12 @@
     ViewBag.SubTitle = "View and edit the projects for " + Model.selAgencyName;
 }
 <div class="row">
-    <div class="col-md-1">
-        <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency, returnURL="Projects"  })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
-    </div>
+    @if (!User.IsInRole("ReadOnly"))
+    {
+        <div class="col-md-1">
+            <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency, returnURL = "Projects" })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New</a>
+        </div>
+    }
     @if (User.IsInRole("Admins"))
     {
         <div class="col-sm-11">
@@ -39,7 +42,10 @@
                     <table class="table table-striped m-b-none" data-ride="datatables">
                         <tr>
                             <th></th>
-                            <th>Delete<input type="checkbox" id="checkAll" /></th>
+                            @if (!User.IsInRole("ReadOnly"))
+                            {
+                                <th>Delete<input type="checkbox" id="checkAll" /></th>
+                            }
                             <th>Project Name</th>
                             <th>Description</th>
                             <th>Media</th>
@@ -57,9 +63,12 @@
                                 <td style="min-width: 68px;">
                                     <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX, orgIDX = Model.selAgency, returnURL = "Projects" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
                                 </td>
-                                <td>
-                                    <input type="checkbox" name="RecordDeletebyId" class="checkBox" value="@item.PROJECT_IDX" />
-                                </td>
+                                @if (!User.IsInRole("ReadOnly"))
+                                {
+                                    <td>
+                                        <input type="checkbox" name="RecordDeletebyId" class="checkBox" value="@item.PROJECT_IDX" />
+                                    </td>
+                                }
                                 <td>
                                     @Html.DisplayFor(modelItem => item.PROJ_NAME)
                                 </td>
@@ -90,7 +99,7 @@
                                 <td>
                                     @foreach (var subitem in item.T_OE_PROJECT_TAGS)
                                     {
-                                        if (subitem.PROJECT_ATTRIBUTE == "Project Feature")
+                                        if (subitem.PROJECT_ATTRIBUTE == "Tags")
                                         {
                                             <span class="select2-selection__choice">@Html.DisplayFor(modelItem => subitem.PROJECT_TAG_NAME)</span>
                                         }
@@ -106,10 +115,13 @@
                             </tr>
                         }
                     </table>
+                    @if (!User.IsInRole("ReadOnly"))
+                    {
                     <div id="delete" class="delete-section" style="margin-top:10px; display:none" >
                         <a id="del-button" class=" btn btn-rounded btn-xs btn-danger btn-sm delete-link" >Delete Selected Records</a>
                         <div id="delete-confirm" class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="" data-delete-array="Y" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Projects"><b>Confirm Delete</b></div>
                     </div>
+                    }
                 </div>
 
 

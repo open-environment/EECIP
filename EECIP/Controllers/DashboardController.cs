@@ -70,6 +70,35 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+
+        public ActionResult Leaderboard()
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            var model = new vmDashboardLeaderboard
+            {
+                UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(100)
+            };
+
+            return View(model);
+        }
+
+        public ActionResult LeaderboardDtl(int? id)
+        {
+            var model = new vmDashboardLeaderboardDtl
+            {
+                UserPointDetails = db_Forum.GetMembershipUserPoints_ByUserID(id ?? 0)
+            };
+
+            T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(id ??0);
+            if (u != null)
+                model.UserName = u.FNAME + " " + u.LNAME;
+
+
+            return View(model);
+        }
+
+
         #endregion
 
 
@@ -320,7 +349,7 @@ namespace EECIP.Controllers
 
                     //existing case, no failure
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
-                    model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
+                    model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Tags");
                     model.files_existing = db_EECIP.GetT_OE_DOCUMENTS_ByProjectID(model.project.PROJECT_IDX);
                 }
             }
@@ -336,7 +365,7 @@ namespace EECIP.Controllers
             model.sProjectUrlList = db_EECIP.GetT_OE_PROJECTS_URL_ByProjIDX(model.project.PROJECT_IDX);
             model.ddl_AgencyUsers = ddlHelpers.get_ddl_users_by_organization(model.project.ORG_IDX.ConvertOrDefault<Guid>());
             model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
-            model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Project Feature").Select(x => new SelectListItem { Value = x, Text = x });
+            model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Tags").Select(x => new SelectListItem { Value = x, Text = x });
             model.ReturnURL = returnURL ?? "Projects";
             return View(model);
 
@@ -375,9 +404,9 @@ namespace EECIP.Controllers
 
 
                     //update feature tags
-                    db_EECIP.DeleteT_OE_PROJECT_TAGS(newProjID2, "Project Feature");
+                    db_EECIP.DeleteT_OE_PROJECT_TAGS(newProjID2, "Tags");
                     foreach (string feature in model.SelectedFeatures ?? new List<string>())
-                        db_EECIP.InsertT_OE_PROJECT_TAGS(newProjID2, "Project Feature", feature);
+                        db_EECIP.InsertT_OE_PROJECT_TAGS(newProjID2, "Tags", feature);
 
                     foreach (T_OE_DOCUMENTS docs in model.files_existing ?? new List<T_OE_DOCUMENTS>())
                     {                        
@@ -495,7 +524,7 @@ namespace EECIP.Controllers
                         model.OrgName = _org.ORG_NAME;
 
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
-                    model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Project Feature");
+                    model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Tags");
                     model.sProjectUrlList = db_EECIP.GetT_OE_PROJECTS_URL_ByProjIDX(model.project.PROJECT_IDX);
                     T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(model.project.MODIFY_USERIDX ?? model.project.CREATE_USERIDX ?? -1);
                     if (u != null)

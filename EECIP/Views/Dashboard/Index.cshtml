@@ -17,7 +17,7 @@
 }
 
 <div class="row">
-    <div class="col-sm-3">
+    <div class="col-sm-3 col-xs-6">
         <button onclick="location.href='@Url.Action("Search", "Dashboard")';return false;" class="btn btn-icon btn-block" id="btnSearch">
             <i class="clip-search"></i>
             Search the Inventory
@@ -43,20 +43,20 @@
     </div>
     @if (Model.ProjectsNeedingReviewCount > 0)
     {
-        <div class="col-sm-3">
+        <div class="col-sm-3 col-xs-6">
             <button onclick="location.href='@Url.Action("ProjectReview", "Dashboard")';return false;" class="btn btn-icon btn-block" style="background-color:#e07a84" id="btnReview">
                 <i class="clip-warning"></i>
                 Projects Needing Review<span class="badge badge-danger"> @Model.ProjectsNeedingReviewCount </span>
             </button>
         </div>
     }
-    <div class="col-sm-3">
+    <div class="col-sm-3 col-xs-6">
         <button onclick="location.href='@Url.Action("Projects", "Dashboard")';return false;" class="btn btn-icon btn-block">
             <i class="clip-file-3"></i>
             Add a New Project
         </button>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-3 col-xs-6">
         <button onclick="location.href='@Url.Action("Index", "Forum")';return false;" class="btn btn-icon btn-block">
             <i class="clip-question"></i>
             Ask a Question
@@ -172,8 +172,7 @@
             <div class="panel-heading">
                 Most Active Users
                 <div class="panel-tools">
-                    <a class="btn btn-xs panel-collapse collapses" href="#">
-                    </a>
+                    <a href="@Url.Action("Leaderboard", "Dashboard")" class="btn  btn-xs btn-info" style="background-color:rgb(25, 156, 152)"><i class="glyphicon glyphicon-star-empty"></i> Full Leaderboard</a>
                 </div>
             </div>
             <div class="panel-body">

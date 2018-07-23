@@ -13,15 +13,12 @@ namespace EECIP
             //MSFT default
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include("~/Scripts/jquery.validate*"));
-
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*"));
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js",
-                      "~/Content/Scripts/bootstrap-hover-dropdown.js"));
+                "~/Scripts/bootstrap.js",
+                "~/Scripts/respond.js"));
 
+            //EECIP custom
             bundles.Add(new ScriptBundle("~/bundles/clip-main").Include("~/Scripts/clip-main.js"));
             bundles.Add(new ScriptBundle("~/bundles/confirmdelete").Include("~/Scripts/confirm_delete.js"));
             bundles.Add(new ScriptBundle("~/bundles/select2").Include("~/Scripts/select2.js"));
@@ -32,6 +29,7 @@ namespace EECIP
             bundles.Add(new ScriptBundle("~/bundles/stickytableheaders").Include("~/Scripts/jquery.stickytableheaders.js"));
             bundles.Add(new ScriptBundle("~/bundles/trunk8").Include("~/Scripts/trunk8.js"));
             bundles.Add(new ScriptBundle("~/bundles/chaperone").Include("~/Scripts/chaperone_init.js"));
+
 
             //****************** CSS ***********************************
             //****************** CSS ***********************************

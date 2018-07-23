@@ -1,0 +1,62 @@
+﻿
+@model EECIP.Models.vmDashboardLeaderboard
+@{
+    ViewBag.Title = "Points Leaderboard";
+    ViewBag.SubSubTitle = "EECIP users earn points by adding or updating project information, contributing to discussion, and keeping their agency profiles up-to-date.";
+    ViewBag.ShowBack = true;
+    var iCount = 1;
+}
+
+<!--  **************  MOST ACTIVE USERS **************************************-->
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel panel-default ">
+            @*<div class="panel-heading">
+                Most Active Users
+            </div>*@
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th style="width:20px;">Rank</th>
+                        <th style="width:120px;">Name</th>
+                        <th></th>
+                        <th>Points</th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model.UserPointLeaders)
+                    {
+                    <tr>
+                        <td>@iCount</td>
+                        <td>
+                            <a href="@Url.Action("UserCard","Dashboard", new { strid=item._User.USER_IDX })" style="height:82px;display:block;">
+                                <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(item._User.USER_IDX).png)">
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <span style="font-size:16px; font-weight:bold;">
+                                @Html.DisplayFor(modelItem => item._User.FNAME)
+                                @Html.DisplayFor(modelItem => item._User.LNAME)
+                            </span>
+                            <br />
+                            @Html.DisplayFor(modelItem => item.OrgName)
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserPoints) points
+                        </td>
+                        <td>
+                            <a href="@Url.Action("LeaderboardDtl","Dashboard", new { id=item._User.USER_IDX })" class="btn btn-rounded btn-xs btn-info">Details</a>
+                        </td>
+                    </tr>
+                        iCount = iCount + 1;
+                    }
+                </table>
+            </div>
+
+
+
+        </section>
+    </div>
+</div>

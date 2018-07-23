@@ -165,10 +165,12 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <div id="divurl">
-                                    <input id="btnAdd" type="button" value="Add Project URL(s)" class="btn btn-sm" onclick="AddProjectURL();" />
-                                    <i class="clip-question-2 input-tooltip popovers" data-content="Provide a link to the project's website or documentation" data-placement="left" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                    @if (!User.IsInRole("ReadOnly"))
+                                    {
+                                        <input id="btnAdd" type="button" value="Add Project URL(s)" class="btn btn-sm" onclick="AddProjectURL();" />
+                                        <i class="clip-question-2 input-tooltip popovers" data-content="Provide a link to the project's website or documentation" data-placement="left" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                    }
                                     <br /><br />
-                                    <!--Textboxes will be added here -->
                                     @for (var i = 0; i < Model.sProjectUrlList.Count(); i++)
                                     {
                                         <div class="row urlrow">
@@ -186,7 +188,6 @@
                                         </div>
                                     }
                                 </div>
-
 
                             </div>
                         </div>
@@ -211,7 +212,7 @@
                     {
                         <div class="alert alert-block alert-danger fade in">
                             <button data-dismiss="alert" class="close" type="button">×</button>
-                            <h4 class="alert-heading"><i class="fa fa-times-circle"></i> Claim this Project!</h4>
+                            <h4 class="alert-heading">Claim this Project!</h4>
                             <p>
                                 Help other agencies get in touch with you by selecting a project contact from the list below.
                             </p>
@@ -258,27 +259,29 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-10 col-md-offset-1 topiccategory">
-                            <div class="form-group createuploadfiles">
-                                @Html.LabelFor(x => x.files)
-                                <div class="input-group input-group-sm">
-                                    <span class="input-group-btn">
-                                        <span class="btn btn-default btn-file">
-                                            Browse <input type="file" name="files" id="files" value="">
+                    @if (!User.IsInRole("ReadOnly"))
+                    {
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1 topiccategory">
+                                <div class="form-group createuploadfiles">
+                                    @Html.LabelFor(x => x.files)
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-btn">
+                                            <span class="btn btn-default btn-file">
+                                                Browse <input type="file" name="files" id="files" value="">
+                                            </span>
                                         </span>
-                                    </span>
-                                    <input id="filename1" type="text" class="form-control" readonly="">
+                                        <input id="filename1" type="text" class="form-control" readonly="">
+                                    </div>
+                                    @Html.ValidationMessageFor(x => x.files)
                                 </div>
-                                @Html.ValidationMessageFor(x => x.files)
-                            </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                @Html.TextBoxFor(model => model.FileDescription, new { @class = "form-control", @maxlength = "200" })
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    @Html.TextBoxFor(model => model.FileDescription, new { @class = "form-control", @maxlength = "200" })
+                                </div>
                             </div>
                         </div>
-                    </div>
-
+                    }
                     @if (Model.files_existing != null && Model.files_existing.Count > 0)
                     {
                         <div class="postuploadedfilesholder clearfix col-md-12">
@@ -336,14 +339,21 @@
 
     <div class="row">
         <div class="col-md-12">
-            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
-            <a href="@Url.Action(Model.ReturnURL, "Dashboard")" class="btn btn-default">Close</a>
-            @if (Model.project.PROJ_NAME != null)
+            @if (!User.IsInRole("ReadOnly"))
             {
-                <div class="delete-section" style="display:inline">
-                    <a class=" btn btn-danger delete-link">Delete Project</a>
-                    <div class="btn btn-warning delete-confirm" style="display:none" data-delete-id="@Model.project.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Index"><b>Confirm Delete</b></div>
-                </div>
+            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+            }
+            <a href="@Url.Action(Model.ReturnURL, "Dashboard")" class="btn btn-default">Close</a>
+
+            @if (!User.IsInRole("ReadOnly"))
+            {
+                if (Model.project.PROJ_NAME != null)
+                {
+                    <div class="delete-section" style="display:inline">
+                        <a class=" btn btn-danger delete-link">Delete Project</a>
+                        <div class="btn btn-warning delete-confirm" style="display:none" data-delete-id="@Model.project.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Index"><b>Confirm Delete</b></div>
+                    </div>
+                }
             }
         </div>
     </div>

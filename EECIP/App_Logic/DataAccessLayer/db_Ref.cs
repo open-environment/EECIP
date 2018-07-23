@@ -919,6 +919,24 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static T_OE_REF_TAG_CATEGORIES GetT_OE_REF_TAG_CATEGORIES_ByName(string TagCatName)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_TAG_CATEGORIES
+                            where a.TAG_CAT_NAME == TagCatName
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static int DeleteT_OE_REF_TAGS(int id)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -939,7 +957,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static int InsertUpdatetT_OE_REF_TAGS(int? tAG_IDX, string tAG_NAME, string tAG_CAT_NAME, int? cREATE_USER = 0)
+        public static int InsertUpdatetT_OE_REF_TAGS(int? tAG_IDX, string tAG_NAME, string tAG_CAT_NAME, bool? pROMOTE_IND, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -962,7 +980,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     if (tAG_NAME != null) e.TAG_NAME = tAG_NAME;
                     if (tAG_CAT_NAME != null) e.TAG_CAT_NAME = tAG_CAT_NAME;
-
+                    if (pROMOTE_IND != null) e.PROMOTE_IND = pROMOTE_IND ?? false;
 
                     if (insInd)
                         ctx.T_OE_REF_TAGS.Add(e);

@@ -366,8 +366,12 @@ namespace EECIP.Controllers
             {
                 tags = db_Ref.GetT_OE_REF_TAGS_ByCategory(selTag),
             };
+
             if (!string.IsNullOrEmpty(selTag))
+            {
                 model.sel_tag_cat = selTag;
+                model.sel_tag_cat_desc = db_Ref.GetT_OE_REF_TAG_CATEGORIES_ByName(selTag).TAG_CAT_DESCRIPTION;
+            }
 
             return View(model);
         }
@@ -379,7 +383,7 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
-            int SuccID = db_Ref.InsertUpdatetT_OE_REF_TAGS(model.edit_tag_idx, model.edit_tag, model.sel_tag_cat, UserIDX);
+            int SuccID = db_Ref.InsertUpdatetT_OE_REF_TAGS(model.edit_tag_idx, model.edit_tag, model.sel_tag_cat, model.edit_promote_ind, UserIDX);
 
             if (SuccID > 0)
                 TempData["Success"] = "Update successful.";
@@ -715,7 +719,7 @@ namespace EECIP.Controllers
                     {
                         foreach (string f in ps.FEATURES.Split('|'))
                             if (f.Trim().Length > 0)
-                                db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Project Feature", f, UserIDX);
+                                db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Tags", f, UserIDX);
                     }
 
                     //import program areas
@@ -870,7 +874,7 @@ namespace EECIP.Controllers
                         string ProjectFeature = "";
                         foreach (var subfeature in oOneProject.T_OE_PROJECT_TAGS)
                         {
-                            if (subfeature.PROJECT_ATTRIBUTE == "Project Feature")
+                            if (subfeature.PROJECT_ATTRIBUTE == "Tags")
                             {
                                 if (ProjectFeature == "")
                                 {

@@ -10,7 +10,7 @@
             </div>
         </a>
     </div>
-    <div class="rowdetails clearfix"   style="margin-left:90px;">
+    <div class="rowdetails clearfix" style="margin-left:90px;">
 
         <!-- POST ACTIONS RIGHT BAR -->
         <div class="postadmin">
@@ -153,7 +153,7 @@
                     </div>
                 }
 
-                @if (Model.UserIDX == Model.Post.MembershipUser_Id)
+                @if ((Model.UserIDX == Model.Post.MembershipUser_Id) && (!User.IsInRole("ReadOnly")))
                 {
                 <div class="postuploadholder" style="display:none;">
                     @using (Html.BeginForm("PostFileUpload", "Forum", FormMethod.Post, new { enctype = "multipart/form-data" }))

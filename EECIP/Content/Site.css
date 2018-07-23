@@ -64,7 +64,6 @@ html {
     background-color: #4F4F4F;
 }
 
-
 .wrapper {
     clear: both;
     min-height: 100px;
@@ -90,7 +89,6 @@ html {
     font-size: 20px !important;
 }
 
-
 .help-button2 {
     background-color: #65BCDA;
     -moz-border-radius: 100%;
@@ -105,7 +103,6 @@ html {
     }
 
 .help-icon {
-
 }
     .help-icon:hover {
         cursor:pointer;
@@ -136,11 +133,37 @@ html {
 
 /***************     TOP AND LEFT MENU STYLING     ******************/
 .navbar-inverse {
-background-color: #393939;
+    background-color: #393939;
 }
+
 .navbar-inverse .navbar-brand i, .navbar-inverse .navbar-brand:hover i {
        color: #A9D2A2;
     }
+
+.navbar > .container {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+    .navbar > .container .navbar-brand, .logo {
+        font-size: 22px;
+        min-width: 150px; 
+    }
+
+.navbar-tools > ul > li.dropdown {
+    margin-left: 0; 
+    margin-right: 0;
+}
+
+.container > .navbar-header, .container-fluid > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-collapse {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+
+.navbar-brand {
+    height:46px;
+}
 
 .nav > li.dropdown .dropdown-toggle .badge-green {
     background-color: #097e00;
@@ -175,6 +198,13 @@ ul.main-navigation-menu > li.active > a {
     letter-spacing: 0;
 }
 
+@media (max-width: 480px) {
+    .nav {
+        clear: none !important;
+    }
+}
+
+
 /***************     FACET STYLING     ******************/
 .facetHead {
     background-color: #ccc;
@@ -183,13 +213,17 @@ ul.main-navigation-menu > li.active > a {
     margin-bottom: 10px;
     font-size: 14px;
     line-height: 1.75em;
-    border: solid #ccc;
-    border-width: 0 0 1px;
     color: #2C5987;
     text-transform: uppercase;
     cursor: pointer;
-    border-radius: 0px;
-    -webkit-border-radius: 0px;
+}
+
+#facetHeaderState {
+    margin: 0 24px 0 24px;
+    line-height: 1em;
+    font-size: 11px;
+    padding: 0 0 0 2px;
+    background-color: #f1f1f1;
 }
 
 .collapse-chevron .glyphicon {
@@ -201,10 +235,15 @@ ul.main-navigation-menu > li.active > a {
 }
 
 .facContainter {
-    max-height: 150px;
+    max-height: 175px;
     overflow-x: hidden;
     overflow-y: auto;
 }
+
+#facetItemContainer2 > a {
+    margin-left: 32px !important;
+}
+
 .facetItem {
     display: block;
     margin-left: 6px;
@@ -215,6 +254,7 @@ ul.main-navigation-menu > li.active > a {
         text-decoration: none;
         background-color: #f2f2f2;
     }
+
 
 
 /***************     BREADCRUMB STYLING     ******************/

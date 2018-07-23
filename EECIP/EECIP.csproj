@@ -339,7 +339,6 @@
     <Content Include="App_Data\1_CreateDatabase.sql" />
     <Content Include="App_Data\2_PopulateData.sql" />
     <Content Include="App_Data\20180509_MigrateProjectURL.sql" />
-    <Content Include="App_Data\20180508_ProjectUrl.sql" />
     <Content Include="App_Docs\ImportColumnsConfig.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -465,8 +464,6 @@
     <Content Include="Content\Images\Users\dummy.txt" />
     <Content Include="Content\main-responsive.css" />
     <Content Include="Content\main.css" />
-    <Content Include="Content\Scripts\bootstrap-hover-dropdown.js" />
-    <Content Include="Content\Scripts\bootstrap-hover-dropdown.min.js" />
     <Content Include="Content\theme_dark.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
@@ -818,6 +815,9 @@
     <Content Include="Views\Forum\PostedIn.cshtml" />
     <Content Include="Views\Forum\Following.cshtml" />
     <Content Include="Views\Forum\_Poll.cshtml" />
+    <Content Include="Views\Dashboard\Leaderboard.cshtml" />
+    <Content Include="Views\Dashboard\LeaderboardDtl.cshtml" />
+    <Content Include="Views\Dashboard\Subscriptions.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

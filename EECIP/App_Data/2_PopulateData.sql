@@ -24,6 +24,7 @@ INSERT INTO T_OE_APP_SETTINGS_CUSTOM ([TERMS_AND_CONDITIONS],[ANNOUNCEMENTS]) va
 
 --****************APP ROLES *****************************************************************************************
 insert into T_OE_ROLES (ROLE_NAME, ROLE_DESC, CREATE_USERIDX, CREATE_DT) values ('Admins', 'Application Administrator can access administrative functions', 0, GetDate());
+insert into T_OE_ROLES (ROLE_NAME, ROLE_DESC, CREATE_USERIDX, CREATE_DT) values ('ReadOnly', 'Users granted ReadOnly access will not be able to edit data.', 0, GetDate());
 
 
 --****************APP USERS*****************************************************************************************
@@ -36,6 +37,15 @@ values ('superadmin@change.me', 'pwd','', 'First','Last','superadmin@change.me',
 
 --****************APP USER ROLES *****************************************************************************************
 insert into T_OE_USER_ROLES (USER_IDX, ROLE_IDX) values (1,1);
+
+
+--****************REF_ORG_TYPE  *****************************************************************************************
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('State','State government agencies', 1);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Local','County, city, or municipal agencies', 2);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Tribal','Tribal agencies (or associations that predominantly serve tribal agencies)', 3);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Federal','Federal agencies', 4);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Other','Any agency or group not covered by other categories',5);
+insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('Governance','E-Enterprise or Exchange Network Governance Groups');
 
 
 --****************REF_STATE  *****************************************************************************************
@@ -187,15 +197,15 @@ INSERT INTO [T_OE_REF_ENTERPRISE_PLATFORM] values
 
 
 --****************REF_TAG_CATEGORIES  *****************************************************************************************
-INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Expertise', 'User expertise', 'c91010', 0, GetDate());
+--INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Expertise', 'User expertise', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Database', 'What is the primary database application in use in your agency?', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('App Framework', 'What is the primary application development platform in use in your agency?', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Cloud', 'Are you using/considering cloud applications?', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('API', 'Do you have Internal/External APIs and/or an Agency Strategy for APIs?', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Project Media', 'Media for Project', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Project Status', 'Current Status for Project', 'c91010', 0, GetDate());
-INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Project Feature', 'Feature of a project', 'c91010', 0, GetDate());
-INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Program Area', 'Feature of a project', 'c91010', 0, GetDate());
+INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Tags', 'General tags used to describe project attributes, user expertise or interests, or discussion forum tags.', 'c91010', 0, GetDate());
+INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Program Area', 'Program area', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Use Amount', 'Amount a feature is used on a project', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('COTS', 'Indicate if a project is developed inhouse or not', 'c91010', 0, GetDate());
 
@@ -209,36 +219,36 @@ INSERT into [T_OE_REF_SYNONYMS] (SYNONYM_TEXT, [CREATE_USERIDX], [CREATE_DT]) va
 
 
 --****************REF_TAGS  *****************************************************************************************
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Database Development','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - API Strategy','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Big Data','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Cloud-based Systems','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Collaborative Tools','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - CROMERR','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Distributed Software','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Document Management','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Exchange Network Node','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Federated Identity Management','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - GIS and Mapping','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - LEAN','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Mobile Development','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Web Development','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Agile Methodology','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - REST Services','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Software Design','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water - Drinking Water Program','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water - Water Quality Monitoring','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water - NPDES','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water - Compliance and Enforcement','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air - Monitoring','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air - Permitting','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air - Compliance and Enforcement','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Land','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Land - RCRA Program','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Land - Solid Waste','Expertise',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Model based design','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Database Development','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - API Strategy','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Big Data','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Cloud-based Systems','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Collaborative Tools','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - CROMERR','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Distributed Software','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Document Management','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Exchange Network Node','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Federated Identity Management','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - GIS and Mapping','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - LEAN','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Mobile Development','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Web Development','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Agile Methodology','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - REST Services','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('IT - Software Design','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water - Drinking Water Program','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water - Water Quality Monitoring','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water - NPDES','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Water - Compliance and Enforcement','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air - Monitoring','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air - Permitting','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air - Compliance and Enforcement','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Land','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Land - RCRA Program','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Land - Solid Waste','Expertise',0,GetDate());
+--INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Model based design','Expertise',0,GetDate());
 
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('SQL Server','Database',0,GetDate());
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Oracle','Database',0,GetDate());
@@ -271,22 +281,22 @@ INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREA
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('In development','Project Status',0,GetDate());
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('In production','Project Status',0,GetDate());
 
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Billing','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Cloud','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Compliance','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('CROMERR','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Data Collection','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Enforcement','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Free','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Individual Certification','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Inspections','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Open Source','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Permitting','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Public Access','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Reporting','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Rules Engine','Project Feature',0,GetDate());
-INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('User Friendly','Project Feature',0,GetDate());
-	INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Governance','Project Feature',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Billing','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Cloud','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Compliance','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('CROMERR','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Data Collection','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Enforcement','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Free','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Individual Certification','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Inspections','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Open Source','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Permitting','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Public Access','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Reporting','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Rules Engine','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('User Friendly','Tags',0,GetDate());
+INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Governance','Tags',0,GetDate());
 
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Air Emissions Inventory','Program Area',0,GetDate());
 INSERT into [T_OE_REF_TAGS] ([TAG_NAME], [TAG_CAT_NAME], [CREATE_USERIDX], [CREATE_DT]) values ('Beaches','Program Area',0,GetDate());

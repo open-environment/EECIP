@@ -226,6 +226,7 @@
           <Property Name="TAG_CAT_COLOR" Type="varchar" MaxLength="6" />
           <Property Name="CREATE_USERIDX" Type="int" />
           <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="ACT_IND" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="T_OE_REF_TAGS">
           <Key>
@@ -237,6 +238,7 @@
           <Property Name="USER_CREATE_IND" Type="bit" Nullable="false" />
           <Property Name="CREATE_USERIDX" Type="int" />
           <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="PROMOTE_IND" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="T_OE_ROLES">
           <Key>
@@ -1884,6 +1886,7 @@
           <Property Name="CREATE_USERIDX" Type="Int32" />
           <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
           <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAG_CATEGORIES" ToRole="T_OE_REF_TAGS" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="T_OE_REF_TAGS">
           <Key>
@@ -1900,6 +1903,7 @@
           <NavigationProperty Name="T_OE_PROJECTS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_PROJECTS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_REF_TAG_CATEGORIES" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAGS" ToRole="T_OE_REF_TAG_CATEGORIES" />
+          <Property Name="PROMOTE_IND" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="T_OE_ROLES">
           <Key>
@@ -3109,6 +3113,7 @@
           <EntitySetMapping Name="T_OE_REF_TAG_CATEGORIES">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_TAG_CATEGORIES">
               <MappingFragment StoreEntitySet="T_OE_REF_TAG_CATEGORIES">
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
                 <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
                 <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
                 <ScalarProperty Name="TAG_CAT_COLOR" ColumnName="TAG_CAT_COLOR" />
@@ -3120,6 +3125,7 @@
           <EntitySetMapping Name="T_OE_REF_TAGS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_REF_TAGS">
               <MappingFragment StoreEntitySet="T_OE_REF_TAGS">
+                <ScalarProperty Name="PROMOTE_IND" ColumnName="PROMOTE_IND" />
                 <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
                 <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
                 <ScalarProperty Name="USER_CREATE_IND" ColumnName="USER_CREATE_IND" />

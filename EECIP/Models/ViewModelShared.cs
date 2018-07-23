@@ -74,7 +74,7 @@ namespace EECIP.Models
         public static IEnumerable<SelectListItem> get_ddl_tag_cats()
         {
 
-            return db_Ref.GetT_OE_REF_TAG_CATEGORIES().Select(x => new SelectListItem
+            return db_Ref.GetT_OE_REF_TAG_CATEGORIES().Where(x => x.ACT_IND == true).Select(x => new SelectListItem
             {
                 Value = x.TAG_CAT_NAME,
                 Text = x.TAG_CAT_NAME

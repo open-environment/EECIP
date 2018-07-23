@@ -12,7 +12,7 @@
     {
         <div class="alert alert-danger">
             <button type="button" class="close" data-dismiss="alert">×</button>
-            <h4><i class="fa fa-info-circle"></i>Validation Error</h4>
+            <h4><i class="clip-info"></i>Validation Error</h4>
             <br />
             @Html.ValidationSummary()
         </div>
@@ -23,7 +23,6 @@
 
     <div class="form-group">
         @Html.LabelFor(m => m.UserName, new { @class = "" })
-        <i class=" m-l-xs fa fa-question-circle" data-toggle="tooltip" data-placement="top" data-original-title="Only one account allowed per email address."></i>
         @Html.TextBoxFor(m => m.UserName, new { @class = "form-control input-lg focus", @placeholder = "test@example.com", @type = "email" })
         @Html.ValidationMessageFor(m => m.UserName)
         <span class="help-block"><i class="clip-info"></i> Registration is only available for government employees. Please register using a government-issued email.</span>
@@ -54,8 +53,7 @@
     {
         <div class="form-group">
             <label class="control-label">Which Agency</label>
-            <i class=" m-l-xs fa fa-question-circle" data-toggle="tooltip" data-placement="top" data-original-title="If your agency is not listed, you can still register, however your account approval may be delayed as it is manually processed."></i>
-
+            <i class=" m-l-xs clip-question-2" data-toggle="tooltip" data-placement="top" data-original-title="If your agency is not listed, you can still register, however your account approval may be delayed as it is manually processed."></i>
             @Html.DropDownListFor(model => model.intSelOrgIDX, Model.ddl_Agencies, "-Please Select-", new { @class = "form-control input-lg m-b" })
             @Html.ValidationMessageFor(m => m.intSelOrgIDX)
         </div>

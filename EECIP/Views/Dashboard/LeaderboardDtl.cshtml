@@ -1,0 +1,46 @@
+﻿
+@model EECIP.Models.vmDashboardLeaderboardDtl
+@{
+    ViewBag.Title = Model.UserName + " Points Earned";
+    ViewBag.SubSubTitle = "EECIP users earn points by adding or updating project information, contributing to discussion, and keeping their agency profiles up-to-date.";
+    ViewBag.ShowBack = true;
+}
+
+<!--  **************  MOST ACTIVE USERS **************************************-->
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel panel-default ">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th>Date Earned</th>
+                        <th>Points For</th>
+                        <th>Details</th>
+                        <th>Points</th>
+                    </tr>
+                    @foreach (var item in Model.UserPointDetails)
+                    {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateAdded)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PointsFor)
+                        </td>
+                        <td>
+                            @if (item.Image != null)
+                            {
+                                <img src="/Content/Images/badges/@item.Image" alt="@item.PointsFor">
+                            }
+                            @Html.DisplayFor(modelItem => item.PointsForDetail)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Points) points
+                        </td>
+                    </tr>
+                    }
+                </table>
+            </div>
+        </section>
+    </div>
+</div>

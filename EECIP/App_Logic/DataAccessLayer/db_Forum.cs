@@ -50,6 +50,7 @@ namespace EECIP.App_Logic.DataAccessLayer
     {
         public T_OE_USERS _User { get; set; }
         public int UserPoints { get; set; }
+        public string OrgName { get; set; }
     }
 
 
@@ -58,6 +59,18 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Guid PollAnswerID { get; set; }
         public string PollAnswer { get; set; }
         public int PollAnswerVoteCount { get; set; }
+    }
+
+    public class MembershipUserPointsDisplay
+    {
+        public Guid Id { get; set; }
+        public int Points { get; set; }
+        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
+        public DateTime DateAdded { get; set; }
+        public string PointsFor { get; set; }
+        public string PointsForDetail { get; set; }
+        public int UserIDX { get; set; }
+        public string Image { get; set; }
     }
 
     public class db_Forum
@@ -497,6 +510,24 @@ namespace EECIP.App_Logic.DataAccessLayer
             return catsToReturn;
         }
 
+        public static List<Category> GetSubCategories_Simple(Guid parent_cat_id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Categories.AsNoTracking()
+                            where a.Category_Id == parent_cat_id
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static List<CategoryDisplay> GetCategoriesMain()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -630,6 +661,29 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int DeleteCategory(Guid CategoryID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    //then delete the Post
+                    Category rec = (from a in ctx.Categories
+                                where a.Id == CategoryID
+                                select a).FirstOrDefault();
+
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
 
         //********************************** TOPICS *************************************************
@@ -940,6 +994,25 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     db_Ref.LogEFException(ex);
                     return "";
+                }
+            }
+        }
+
+        public static List<Topic> GetTopicList_ByCategory(Guid cat_id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Topics.AsNoTracking()
+                            where a.Category_Id == cat_id
+                            select a).ToList();
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
                 }
             }
         }
@@ -2431,11 +2504,13 @@ namespace EECIP.App_Logic.DataAccessLayer
                         .Select(g => new { g.Key, Sum = g.Sum(_ => _.Points) });
 
                     var yyy = (from a in ctx.T_OE_USERS
+                               join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX into sr1 from x1 in sr1.DefaultIfEmpty() //left join
                                join b in tags on a.USER_IDX equals b.Key
                                where a.EXCLUDE_POINTS_IND == false
                                orderby b.Sum descending
                                select new UserMostPointsDisplay {
                                    _User = a,
+                                   OrgName = x1.ORG_NAME,
                                    UserPoints = b.Sum
                                }).Take(recCount).ToList();
 
@@ -2449,7 +2524,57 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<MembershipUserPointsDisplay> GetMembershipUserPoints_ByUserID(int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
 
+                    var badge = (from a in ctx.MembershipUserPoints
+                                join b in ctx.Badges on a.PointsForId equals b.Id
+                                join u in ctx.T_OE_USERS on a.MembershipUser_Id equals u.USER_IDX
+                                where a.PointsFor == 3
+                                && u.EXCLUDE_POINTS_IND == false
+                                && a.MembershipUser_Id == UserIDX
+                                select new MembershipUserPointsDisplay
+                                {
+                                    Id = a.Id,
+                                    Points = a.Points,
+                                    DateAdded = a.DateAdded,
+                                    PointsFor = "Badge Earned",
+                                    PointsForDetail = b.DisplayName,
+                                    UserIDX = a.MembershipUser_Id,
+                                    Image = b.Image
+                                }).ToList();
+
+                    var post = (from a in ctx.MembershipUserPoints
+                                 join b in ctx.Posts on a.PointsForId equals b.Id
+                                 join c in ctx.Topics on b.Topic_Id equals c.Id
+                                join u in ctx.T_OE_USERS on a.MembershipUser_Id equals u.USER_IDX
+                                where a.PointsFor == 0
+                                && u.EXCLUDE_POINTS_IND == false
+                                && a.MembershipUser_Id == UserIDX
+                                 select new MembershipUserPointsDisplay
+                                 {
+                                     Id = a.Id,
+                                     Points = a.Points,
+                                     DateAdded = a.DateAdded,
+                                     PointsFor = "Post Made",
+                                     PointsForDetail = c.Name,
+                                     UserIDX = a.MembershipUser_Id,
+                                     Image = null
+                                 }).ToList();
+
+                    return badge.Union(post).OrderByDescending(m => m.DateAdded).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
         //****************************************VOTES **************************************************
         public static Guid? InsertVote(Guid post_id, int vOTED_BY_USER_IDX, int vOTE_AMOUNT)
