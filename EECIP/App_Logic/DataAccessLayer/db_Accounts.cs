@@ -156,7 +156,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
         public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, 
             DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE, 
-            string lINKED_IN, bool? NodeAdmin, bool? ExcludeBadges)
+            string lINKED_IN, bool? NodeAdmin, bool? ExcludeBadges, bool? nOTIFY_DISCUSSION_IND, bool? nOTIFY_BADGE_IND)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -184,9 +184,32 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (lINKED_IN != null) row.LINKEDIN = lINKED_IN;
                     if (NodeAdmin != null) row.NODE_ADMIN = NodeAdmin ?? false;
                     if (ExcludeBadges != null) row.EXCLUDE_POINTS_IND = (bool)ExcludeBadges;
+                    if (nOTIFY_DISCUSSION_IND != null) row.NOTIFY_DISCUSSION_IND = (bool)nOTIFY_DISCUSSION_IND;
+                    if (nOTIFY_BADGE_IND != null) row.NOTIFY_BADGE_IND = (bool)nOTIFY_BADGE_IND;
+
 
                     row.MODIFY_DT = System.DateTime.Now;
 
+                    ctx.SaveChanges();
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static int UpdateT_OE_USERS_SyncInd(int idx, bool sYNC_IND)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_USERS row = new T_OE_USERS();
+                    row = (from c in ctx.T_OE_USERS where c.USER_IDX == idx select c).First();
+                    row.SYNC_IND = sYNC_IND;
                     ctx.SaveChanges();
                     return 1;
                 }
@@ -212,7 +235,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 catch (Exception ex)
                 {
                     //set to inactive if cannot delete
-                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null);
+                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
                     db_Ref.LogEFException(ex);
                     return 0;
                 }

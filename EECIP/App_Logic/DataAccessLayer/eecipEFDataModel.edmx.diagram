@@ -18,16 +18,16 @@
         <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECTS" Width="1.5" PointX="8.25" PointY="25.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" Width="1.5" PointX="3" PointY="23.375" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_ORG_TYPE" Width="1.5" PointX="2.75" PointY="3.75" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_REGION" Width="1.5" PointX="0.75" PointY="28.875" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_STATE" Width="1.5" PointX="0.75" PointY="25.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_REGION" Width="1.5" PointX="0.75" PointY="25.875" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_STATE" Width="1.5" PointX="0.75" PointY="28.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_SYNONYMS" Width="1.5" PointX="4.75" PointY="0.75" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAG_CATEGORIES" Width="1.5" PointX="3.75" PointY="19.625" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAGS" Width="1.5" PointX="6" PointY="19.125" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAG_CATEGORIES" Width="1.5" PointX="3.75" PointY="19.5" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_REF_TAGS" Width="1.5" PointX="6" PointY="19" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_ROLES" Width="1.5" PointX="8.25" PointY="35.625" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_EMAIL_LOG" Width="1.5" PointX="4.75" PointY="3.75" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_LOG" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_LOG" Width="1.5" PointX="6.75" PointY="0.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_USER_EXPERTISE" Width="1.5" PointX="7.5" PointY="39.5" />
-        <EntityTypeShape EntityType="EECIPModel.T_OE_USER_NOTIFICATION" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_USER_NOTIFICATION" Width="1.5" PointX="0.75" PointY="6.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_USER_ROLES" Width="1.5" PointX="10.5" PointY="42.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_USERS" Width="1.5" PointX="5.25" PointY="39.125" />
         <AssociationConnector Association="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC" />
@@ -61,12 +61,12 @@
         <EntityTypeShape EntityType="EECIPModel.Poll" Width="1.5" PointX="7.5" PointY="51.375" />
         <EntityTypeShape EntityType="EECIPModel.PollAnswer" Width="1.5" PointX="9.75" PointY="57.875" />
         <EntityTypeShape EntityType="EECIPModel.PollVote" Width="1.5" PointX="12" PointY="48.5" />
-        <EntityTypeShape EntityType="EECIPModel.Post" Width="1.5" PointX="16" PointY="42.75" />
+        <EntityTypeShape EntityType="EECIPModel.Post" Width="1.5" PointX="13" PointY="42.75" />
         <EntityTypeShape EntityType="EECIPModel.PostFile" Width="1.5" PointX="18.25" PointY="42.5" />
         <EntityTypeShape EntityType="EECIPModel.Topic" Width="1.5" PointX="9.75" PointY="45.875" />
         <EntityTypeShape EntityType="EECIPModel.Topic_Tags" Width="1.5" PointX="12" PointY="56" />
-        <EntityTypeShape EntityType="EECIPModel.TopicNotification" Width="1.5" PointX="13" PointY="44.25" />
-        <EntityTypeShape EntityType="EECIPModel.Vote" Width="1.5" PointX="21.25" PointY="42.5" />
+        <EntityTypeShape EntityType="EECIPModel.TopicNotification" Width="1.5" PointX="16" PointY="44.25" />
+        <EntityTypeShape EntityType="EECIPModel.Vote" Width="1.5" PointX="15.25" PointY="40.5" />
         <AssociationConnector Association="EECIPModel.FK__Favourite__Membe__49E3F248" />
         <AssociationConnector Association="EECIPModel.FK__Membershi__Membe__14B10FFA" />
         <AssociationConnector Association="EECIPModel.FK__Membershi__Membe__6E565CE8" />

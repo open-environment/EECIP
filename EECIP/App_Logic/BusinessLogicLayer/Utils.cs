@@ -1,18 +1,18 @@
-﻿using System;
-using EECIP.App_Logic.DataAccessLayer;
-using System.ComponentModel;
-using System.IO;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using System.Web;
-using System.Linq;
-using System.Drawing.Imaging;
+using System.ComponentModel;
 using System.Drawing;
-using HtmlAgilityPack;
-using System.Text.RegularExpressions;
-using System.Text;
+using System.Drawing.Imaging;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
+using System.Xml.Linq;
+using EECIP.App_Logic.DataAccessLayer;
+
 
 namespace EECIP.App_Logic.BusinessLogicLayer
 {

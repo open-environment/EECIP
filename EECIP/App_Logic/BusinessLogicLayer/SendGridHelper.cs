@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using System.Net;
-using System.Web;
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
 using EECIP.App_Logic.DataAccessLayer;
-using System.Threading.Tasks;
-using System.Linq;
 
 namespace EECIP.App_Logic.BusinessLogicLayer
 {

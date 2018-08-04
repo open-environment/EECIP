@@ -93,6 +93,7 @@ namespace EECIP.Models
         public string sel_tag_cat_desc { get; set; }
         public int? edit_tag_idx { get; set; }
         public string edit_tag { get; set; }
+        public string edit_tag_desc { get; set; }
         public bool edit_promote_ind { get; set; }
 
 

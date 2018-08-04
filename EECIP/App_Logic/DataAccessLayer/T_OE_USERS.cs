@@ -62,6 +62,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string LINKEDIN { get; set; }
         public bool ALLOW_GOVERNANCE { get; set; }
         public bool EXCLUDE_POINTS_IND { get; set; }
+        public bool NOTIFY_DISCUSSION_IND { get; set; }
+        public bool NOTIFY_BADGE_IND { get; set; }
     
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

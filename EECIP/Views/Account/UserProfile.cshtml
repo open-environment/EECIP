@@ -214,7 +214,6 @@
 }
 
 
-
 @section Scripts {
     <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
     @Scripts.Render("~/bundles/chaperone")
@@ -225,7 +224,7 @@
 
             //function to initiate Select2
             $(".search-select").select2({
-                placeholder: "Select expertise",
+                placeholder: "Select expertise (or type in your own)",
                 allowClear: true,
                 tags: true
             });

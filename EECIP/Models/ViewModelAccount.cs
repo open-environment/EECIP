@@ -138,4 +138,13 @@ namespace EECIP.Models
     {
         public List<T_OE_USER_NOTIFICATION> notifications { get; set; }
     }
+
+    public class vmAccountSubscriptions
+    {
+        public IEnumerable<SelectListItem> AllExpertise { get; set; }
+        public List<string> SelectedExpertise { get; set; }
+        public List<CommunityOfInterestDisplayType> CommunitiesOfInterest { get; set; }
+        public bool NOTIFY_DISCUSSION_IND { get; set; }
+        public bool NOTIFY_BADGE_IND { get; set; }
+    }
 }

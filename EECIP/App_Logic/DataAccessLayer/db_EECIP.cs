@@ -78,6 +78,15 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
     }
 
+    public class CommunityOfInterestDisplayType
+    {
+        public string TAG_NAME { get; set; }
+        public string TAG_DESC { get; set; }
+        public bool Subscribe_ind { get; set; }
+        public int? projCount { get; set; }
+        public int? discCount { get; set; }
+    }
+
     public class db_EECIP
     {
 
@@ -117,6 +126,32 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     return xx1.Union(xx2).ToList();
 
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<CommunityOfInterestDisplayType> GetCommunityOfInterest_AndSubscription_ByUserIDX(int id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_TAGS
+                            join b in ctx.T_OE_USER_EXPERTISE.Where(o => o.USER_IDX == id) on a.TAG_NAME equals b.EXPERTISE_TAG
+                            into sr from x in sr.DefaultIfEmpty()  //left join
+                            where a.PROMOTE_IND == true
+                            select new CommunityOfInterestDisplayType {
+                                TAG_NAME = a.TAG_NAME, 
+                                TAG_DESC = a.TAG_DESC,
+                                Subscribe_ind = (x != null),
+                                projCount = (from v1 in ctx.T_OE_PROJECT_TAGS where v1.PROJECT_TAG_NAME == a.TAG_NAME select v1).Count(),
+                                discCount = (from v2 in ctx.Topic_Tags where v2.TopicTag == a.TAG_NAME select v2).Count()
+                            }).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -169,6 +204,29 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int DeleteT_OE_USER_EXPERTISE(int UserIDX, string tag)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_USER_EXPERTISE rec = (from a in ctx.T_OE_USER_EXPERTISE
+                                              where a.USER_IDX == UserIDX
+                                              && a.EXPERTISE_TAG == tag
+                                              select a).FirstOrDefault();
+
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
 
         //************************** ORGANIZTION_ENTERPRISE_PLATFORM *************************************************
@@ -182,7 +240,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                                join b in ctx.T_OE_ORGANIZATION_ENT_SVCS.Where(o => o.ORG_IDX == OrgID) on a.ENT_PLATFORM_IDX equals b.ENT_PLATFORM_IDX
                                    into sr
                                from x in sr.DefaultIfEmpty()  //left join
-                               //where (b == null ? true : x.ORG_IDX == OrgID)
                                select new OrganizationEntServicesDisplayType
                                {
                                    ORG_ENT_SVCS_IDX = x.ORG_ENT_SVCS_IDX,
@@ -478,11 +535,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     var xxx = (from a in ctx.T_OE_PROJECTS
                                .Include(x => x.T_OE_REF_TAGS2) //media
-                               .Include(x => x.T_OE_PROJECT_TAGS)//.Select(b => b.T_OE_REF_TAGS))
-//                               .Include(x => x.T_OE_PROJECT_TAGS)
-//                               .Where(a => a.T_OE_PROJECT_TAGS != null)
- //                           join b in ctx.T_OE_REF_TAGS on a.MEDIA_TAG equals b.TAG_IDX
- //                           into sr from x in sr.DefaultIfEmpty()  //left join
+                               .Include(x => x.T_OE_PROJECT_TAGS)
                             where a.ORG_IDX == OrgID
                             orderby a.CREATE_DT
                             select a).ToList();

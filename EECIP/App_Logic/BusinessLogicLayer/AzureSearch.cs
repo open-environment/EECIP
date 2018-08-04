@@ -394,8 +394,12 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
                     try
                     {
+                        //send to Azure
                         ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
                         indexClient.Documents.Index(batch);
+
+                        //update local rec sync ind
+                        db_Accounts.UpdateT_OE_USERS_SyncInd(UserIDX??0, true);
                     }
                     catch (IndexBatchException e)
                     {
@@ -416,7 +420,58 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
-        public static void PopulateSearchIndexForumTopic(Guid? TopicIDX)
+        //public static void PopulateSearchIndexForumTopic(Guid? TopicIDX)
+        //{
+        //    try
+        //    {
+        //        //connect to Azure Search
+        //        SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+        //        bool PendingRecs = true;
+
+        //        while (PendingRecs)
+        //        {
+        //            //get all topics needing to sync
+        //            List<EECIP_Index> _ps = db_Forum.GetTopic_ReadyToSync(TopicIDX);
+        //            if (_ps != null && _ps.Count > 0)
+        //            {
+        //                var batch = IndexBatch.Upload(_ps);
+
+        //                try
+        //                {
+        //                    //send to azure
+        //                    ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+        //                    indexClient.Documents.Index(batch);
+
+        //                    //update local rec sync ind
+        //                    foreach (EECIP_Index p in _ps)
+        //                    {
+        //                        Guid topic_idx = Guid.Parse(p.KeyID);
+        //                        db_Forum.UpdateTopic_SetSynced(topic_idx);
+        //                    }
+        //                }
+        //                catch (IndexBatchException e)
+        //                {
+        //                    // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+        //                    // the batch. Depending on your application, you can take compensating actions like delaying and
+        //                    // retrying. For this simple demo, we just log the failed document keys and continue.
+        //                    Console.WriteLine(
+        //                        "Failed to index some of the documents: {0}",
+        //                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+        //                    PendingRecs = false;
+        //                }
+        //            }
+        //            else
+        //                PendingRecs = false;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
+        public static void PopulateSearchIndexForumPost(Guid? PostIDX)
         {
             try
             {
@@ -427,8 +482,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
                 while (PendingRecs)
                 {
-                    //get all projects needing to sync
-                    List<EECIP_Index> _ps = db_Forum.GetTopic_ReadyToSync(TopicIDX);
+                    //get all post needing to sync
+                    List<EECIP_Index> _ps = db_Forum.GetPost_ReadyToSync(PostIDX);
                     if (_ps != null && _ps.Count > 0)
                     {
                         var batch = IndexBatch.Upload(_ps);
@@ -442,8 +497,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                             //update local rec sync ind
                             foreach (EECIP_Index p in _ps)
                             {
-                                Guid topic_idx = Guid.Parse(p.KeyID);
-                                db_Forum.UpdateTopic_SetSynced(topic_idx);
+                                Guid post_idx = Guid.Parse(p.KeyID);
+                                db_Forum.UpdatePost_SetSynced(post_idx);
                             }
                         }
                         catch (IndexBatchException e)
@@ -470,40 +525,6 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
 
         //******************************** METHODS FOR DELETE ROW FROM INDEX ******************************************
-        public static void DeleteSearchIndexProject(Guid? ProjectIDX)
-        {
-            try
-            {
-                //connect to Azure Search
-                SearchServiceClient serviceClient = CreateSearchServiceClient();
-
-                //get project needing to delete sync
-                IEnumerable<string> ss = new List<string>() { ProjectIDX.ToString() };
-                var batch = IndexBatch.Delete("KeyID", ss);
-
-                try
-                {
-                    ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
-                    indexClient.Documents.Index(batch);
-                }
-                catch (IndexBatchException e)
-                {
-                    // Sometimes when your Search service is under load, indexing will fail for some of the documents in
-                    // the batch. Depending on your application, you can take compensating actions like delaying and
-                    // retrying. For this simple demo, we just log the failed document keys and continue.
-                    Console.WriteLine(
-                        "Failed to index some of the documents: {0}",
-                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public static void DeleteSearchIndexAgency(string OrgIDX)
         {
             try
@@ -606,15 +627,15 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
-        public static void DeleteForumTopic(Guid? TopicID)
+        public static void DeleteAzureGuid(Guid? GuidID)
         {
             try
             {
                 //connect to Azure Search
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
-                //get ent service needing to delete sync
-                IEnumerable<string> ss = new List<string>() { TopicID.ToString() };
+                //get Forum Post needing to delete sync
+                IEnumerable<string> ss = new List<string>() { GuidID.ToString() };
                 var batch = IndexBatch.Delete("KeyID", ss);
 
                 try

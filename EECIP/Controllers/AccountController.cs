@@ -14,16 +14,18 @@ using System.Web.Security;
 
 namespace EECIP.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     public class AccountController : Controller
     {
         // GET: Account
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return RedirectToAction("Login");
         }
 
         // GET: Account/Login
+        [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             //auto pass forward to dashboard if logged in
@@ -43,6 +45,7 @@ namespace EECIP.Controllers
         // POST: /Account/Login
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public ActionResult Login(vmAccountLogin model, string returnUrl)
         {
             Session.Clear();
@@ -59,7 +62,7 @@ namespace EECIP.Controllers
                     else
                     {
                         //set last login time and reset failed login attempts
-                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null, null);
+                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null, null, null, null);
                         return RedirectToAction("Index", "Dashboard");
                     }
 
@@ -97,6 +100,7 @@ namespace EECIP.Controllers
 
 
         // GET: /Account/Register
+        [AllowAnonymous]
         public ActionResult Register()
         {
             T_OE_APP_SETTINGS_CUSTOM cust = db_Ref.GetT_OE_APP_SETTING_CUSTOM();
@@ -109,6 +113,7 @@ namespace EECIP.Controllers
         // POST: /Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AllowAnonymous]
         public ActionResult Register(vmAccountRegister model)
         {
             if (ModelState.IsValid)
@@ -184,7 +189,7 @@ namespace EECIP.Controllers
                             }
 
                             //update first name, last name, and agency
-                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null, false);
+                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null, false, true, true);
 
                             //redirect user to registration success view
                             return RedirectToAction("RegisterSuccess", "Account");
@@ -213,6 +218,7 @@ namespace EECIP.Controllers
 
 
         // GET: /Account/RegisterSuccess
+        [AllowAnonymous]
         public ActionResult RegisterSuccess()
         {
             //TODO lookup user name
@@ -220,7 +226,6 @@ namespace EECIP.Controllers
         }
 
 
-        [Authorize]
         // GET: /Account/UserProfile/2
         public ActionResult UserProfile(int? id, string a)
         {
@@ -273,7 +278,6 @@ namespace EECIP.Controllers
 
 
         // POST: /Account/UserProfile
-        [Authorize]
         [HttpPost]
         public ActionResult UserProfile(vmAccountUserProfile model)
         {
@@ -298,7 +302,7 @@ namespace EECIP.Controllers
                     if (model.OrgIDX == null && model.uListInd == "a")
                         model.OrgIDX = Guid.Empty;
 
-                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin, model.ExcludeBadges);
+                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin, model.ExcludeBadges, null, null);
 
                     //update user expertise
                     db_EECIP.DeleteT_OE_USER_EXPERTISE(model.UserIDX);
@@ -366,6 +370,7 @@ namespace EECIP.Controllers
         }
 
 
+        [AllowAnonymous]
         public ActionResult ResetPassword()
         {
             return View();
@@ -373,6 +378,7 @@ namespace EECIP.Controllers
 
 
         //POST: /Account/ResetPassword
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult ResetPassword(vmAccountLostPassword model)
         {
@@ -395,14 +401,12 @@ namespace EECIP.Controllers
         }
 
 
-        [Authorize]
         public ActionResult SetPermPassword()
         {
             var model = new vmAccountChangePassword();
             return View(model);
         }
 
-        [Authorize]
         [HttpPost]
         public ActionResult SetPermPassword(vmAccountChangePassword model)
         {
@@ -435,6 +439,7 @@ namespace EECIP.Controllers
 
 
         // GET: /Account/Verify     USED TO SET PERMANENT PASSWORD
+        [AllowAnonymous]
         public ActionResult Verify(string oauthcrd)
         {
             if (ModelState.IsValid)
@@ -468,6 +473,7 @@ namespace EECIP.Controllers
 
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Verify(vmAccountVerify model)
         {
             if (ModelState.IsValid)
@@ -502,7 +508,7 @@ namespace EECIP.Controllers
             return View(model);
         }
 
-        [Authorize]
+
         public ActionResult Notifications()
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -512,7 +518,6 @@ namespace EECIP.Controllers
         }
 
 
-        [Authorize]
         public ActionResult NotificationDelete2(Guid? id)
         {
 
@@ -534,10 +539,9 @@ namespace EECIP.Controllers
 
             return RedirectToAction("Notifications", "Account");
         }
-
+        
 
         // POST: /Forum/PostAnswer
-        [Authorize]
         [HttpPost]
         public JsonResult NotificationRead(Guid? id)
         {
@@ -560,7 +564,73 @@ namespace EECIP.Controllers
 
         }
 
-        
+
+        public ActionResult Subscriptions()
+        {
+            // notifications
+            // Upvote posts you are following
+            // Posts made to topic you are following (email too)
+            // new badge earned (email too)
+
+
+            int id = db_Accounts.GetUserIDX();
+            T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(id);
+            var model = new vmAccountSubscriptions
+            {
+                SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(id),
+                AllExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX_All(id).Select(x => new SelectListItem { Value = x, Text = x }),
+                CommunitiesOfInterest = db_EECIP.GetCommunityOfInterest_AndSubscription_ByUserIDX(id),
+                NOTIFY_DISCUSSION_IND = u.NOTIFY_DISCUSSION_IND,
+                NOTIFY_BADGE_IND = u.NOTIFY_BADGE_IND
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Subscriptions(vmAccountSubscriptions model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            //update profile
+            int SuccID = db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, model.NOTIFY_DISCUSSION_IND, model.NOTIFY_BADGE_IND);
+
+            //update user expertise
+            db_EECIP.DeleteT_OE_USER_EXPERTISE(UserIDX);
+            foreach (string expertise in model.SelectedExpertise ?? new List<string>())
+            {
+                db_EECIP.InsertT_OE_USER_EXPERTISE(UserIDX, expertise);
+            }
+
+            if (SuccID == 1)
+                TempData["Success"] = "Update successful.";
+            else
+                TempData["Error"] = "Error updating data.";
+
+
+            //return 
+            return RedirectToAction("Subscriptions");
+        }
+
+        public ActionResult Subscribe(string tag, string sub)
+        {
+            int id = db_Accounts.GetUserIDX();
+            int SuccID = 0;
+            if (sub == "u")
+                SuccID = db_EECIP.DeleteT_OE_USER_EXPERTISE(id, tag);
+            else
+                SuccID = db_EECIP.InsertT_OE_USER_EXPERTISE(id, tag, id);
+
+            if (SuccID > 0)
+                TempData["Success"] = "Subscribed.";
+            else
+                TempData["Error"] = "Error updating data.";
+
+            return RedirectToAction("Subscriptions", "Account");
+        }
+
+
+
         #region Helpers
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {

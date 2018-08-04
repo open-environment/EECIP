@@ -42,7 +42,7 @@ namespace EECIP.Controllers
                 {
                     int UserIDX = (int)Membership.GetUser(model.newUserEmail).ProviderUserKey;
                     //update first name and last name
-                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false);
+                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false, true, true);
                     TempData["Success"] = "User created and verification email sent to user.";
                 }
                 else
@@ -383,7 +383,7 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
-            int SuccID = db_Ref.InsertUpdatetT_OE_REF_TAGS(model.edit_tag_idx, model.edit_tag, model.sel_tag_cat, model.edit_promote_ind, UserIDX);
+            int SuccID = db_Ref.InsertUpdatetT_OE_REF_TAGS(model.edit_tag_idx, model.edit_tag, model.edit_tag_desc, model.sel_tag_cat, model.edit_promote_ind, UserIDX);
 
             if (SuccID > 0)
                 TempData["Success"] = "Update successful.";
@@ -523,10 +523,11 @@ namespace EECIP.Controllers
 
 
                 //***********FORUM TOPICS  **************************
-                db_Forum.UpdateTopic_SetAllUnsynced();
+                db_Forum.UpdatePost_SetAllUnsynced();
 
                 //then send all unsynced agencies to Azure
-                AzureSearch.PopulateSearchIndexForumTopic(null);
+                AzureSearch.PopulateSearchIndexForumPost(null);
+
 
 
                 TempData["Success"] = "Search index populated.";

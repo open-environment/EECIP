@@ -31,34 +31,39 @@
                         <tr>
                             <th style="min-width: 70px;">Edit</th>
                             <th>Tag Name</th>
+                            <th>Description</th>
                             <th>Tag Category</th>
                         </tr>
                         @foreach (var item in Model.tags)
                         {
-                            <tr>
-                                <td>
-                                    <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
-                                    <div class="delete-section" style="display:inline">
-                                        <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
-                                        <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.TAG_IDX" data-delete-p="/Admin/RefTagsDelete"><b>Confirm Delete</b></div>
-                                    </div>
+                        <tr>
+                            <td>
+                                <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <div class="delete-section" style="display:inline">
+                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.TAG_IDX" data-delete-p="/Admin/RefTagsDelete"><b>Confirm Delete</b></div>
+                                </div>
 
-                                    @Html.HiddenFor(modelItem => item.TAG_IDX)
-                                    @Html.HiddenFor(modelItem => item.TAG_NAME)
-                                    @Html.HiddenFor(modelItem => item.TAG_CAT_NAME)
-                                    @Html.HiddenFor(modelItem => item.PROMOTE_IND)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TAG_NAME)
-                                    @if (item.PROMOTE_IND)
-                                    {
-                                        <span class="label label-success">promoted</span>
-                                    }
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.TAG_CAT_NAME)
-                                </td>
-                            </tr>
+                                @Html.HiddenFor(modelItem => item.TAG_IDX)
+                                @Html.HiddenFor(modelItem => item.TAG_NAME)
+                                @Html.HiddenFor(modelItem => item.TAG_DESC)
+                                @Html.HiddenFor(modelItem => item.TAG_CAT_NAME)
+                                @Html.HiddenFor(modelItem => item.PROMOTE_IND)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TAG_NAME)
+                                @if (item.PROMOTE_IND)
+                                {
+                                    <span class="label label-success">promoted</span>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TAG_DESC)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TAG_CAT_NAME)
+                            </td>
+                        </tr>
                         }
                     </table>
                 </div>
@@ -101,6 +106,15 @@
                                         <div class="form-group">
                                             <label>Tag Category</label>
                                             @Html.TextBoxFor(model => model.sel_tag_cat, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Tag Description</label>
+                                            @Html.TextBoxFor(model => model.edit_tag_desc, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.edit_tag_desc)
                                         </div>
                                     </div>
                                 </div>

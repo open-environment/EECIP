@@ -349,7 +349,7 @@
                                             }
                                             @if (item.Document.DataType == "Discussion")
                                             {
-                                                <a href="@Url.Action("ShowTopic", "Forum", new { id = item.Document.KeyID })" class="label label-purple" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Discussion</a>
+                                                <a href="@Url.Action("ShowTopic", "Forum", new { p_id = item.Document.KeyID })" class="label label-purple" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Discussion</a>
                                             }
                                             @if (item.Document.DataType == "Governance")
                                             {

@@ -756,6 +756,25 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static Topic GetTopic_ByPostID(Guid PostId)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Topics.AsNoTracking()
+                            join b in ctx.Posts.AsNoTracking() on a.Id equals b.Topic_Id
+                            where b.Id == PostId
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static Guid? SetTopicAnswer(Guid Id, bool Answered)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1420,17 +1439,17 @@ namespace EECIP.App_Logic.DataAccessLayer
                     var xxx = (from a in ctx.Topics
                                join b in ctx.Posts on a.Id equals b.Topic_Id
                                join u in ctx.T_OE_USERS on a.MembershipUser_Id equals u.USER_IDX
-                               join o in ctx.T_OE_ORGANIZATION on u.ORG_IDX equals o.ORG_IDX
-                               join s in ctx.T_OE_REF_STATE on o.STATE_CD equals s.STATE_CD into sr1 from x1 in sr1.DefaultIfEmpty() //left join
+                               join o in ctx.T_OE_ORGANIZATION on u.ORG_IDX equals o.ORG_IDX into sr2 from x2 in sr2.DefaultIfEmpty() //left join
+                               join s in ctx.T_OE_REF_STATE on x2.STATE_CD equals s.STATE_CD into sr1 from x1 in sr1.DefaultIfEmpty() //left join
                                where a.SYNC_IND == false
                                && b.IsTopicStarter == true
                                && (TopicID == null ? true : a.Id == TopicID)
                                select new EECIP_Index
                                {
-                                   Agency = o.ORG_NAME,
-                                   AgencyAbbreviation = o.ORG_ABBR,
-                                   OrgType = o.ORG_TYPE,
-                                   State = (o.ORG_TYPE == "State" ? x1.STATE_NAME : null),
+                                   Agency = x2.ORG_NAME,
+                                   AgencyAbbreviation = x2.ORG_ABBR,
+                                   OrgType = x2.ORG_TYPE,
+                                   State = (x2.ORG_TYPE == "State" ? x1.STATE_NAME : null),
                                    //State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
                                    KeyID = a.Id.ToString(),
                                    DataType = "Discussion",
@@ -1438,6 +1457,48 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Name = a.Name,
                                    Description = b.PostContent,
                                    LastUpdated = b.DateEdited 
+                               }).Take(250).ToList();
+
+                    foreach (EECIP_Index e in xxx)
+                        e.Tags = db_Forum.GetTopicTags_ByAttributeSelected(new Guid(e.KeyID), "Topic Tag").ToArray();
+
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<EECIP_Index> GetPost_ReadyToSync(Guid? PostID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.Topics
+                               join b in ctx.Posts on a.Id equals b.Topic_Id
+                               join u in ctx.T_OE_USERS on b.MembershipUser_Id equals u.USER_IDX
+                               join o in ctx.T_OE_ORGANIZATION on u.ORG_IDX equals o.ORG_IDX into sr2 from oleft in sr2.DefaultIfEmpty() //left join
+                               join s in ctx.T_OE_REF_STATE on oleft.STATE_CD equals s.STATE_CD into sr1 from sleft in sr1.DefaultIfEmpty() //left join
+                               where b.SYNC_IND == false
+                               && (PostID == null ? true : b.Id == PostID)
+                               select new EECIP_Index
+                               {
+                                   Agency = oleft.ORG_NAME ?? "None",
+                                   AgencyAbbreviation = oleft.ORG_ABBR,
+                                   OrgType = oleft.ORG_TYPE,
+                                   State = (oleft.ORG_TYPE == "State" ? sleft.STATE_NAME : null),
+                                   //State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
+                                   KeyID = b.Id.ToString(),
+                                   DataType = "Discussion",
+                                   Record_Source = "User supplied",
+                                   Name = a.Name,
+                                   Description = b.PostContent,
+                                   LastUpdated = b.DateEdited
                                }).Take(250).ToList();
 
                     foreach (EECIP_Index e in xxx)
@@ -1791,8 +1852,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                         e.MembershipUser_Id = UserIDX ?? 0;
                     }
                     else if (editPost == true)
+                    {
                         e.DateEdited = System.DateTime.UtcNow;
-
+                        e.SYNC_IND = false;
+                    }
 
                     if (postContent != null) e.PostContent = Utils.GetSafeHtml(postContent);   //sanitize
                     if (voteCount != null) e.VoteCount = voteCount ?? 0;
@@ -1813,6 +1876,52 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     db_Ref.LogEFException(ex);
                     return null;
+                }
+            }
+        }
+
+        public static Guid? UpdatePost_SetSynced(Guid postID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Post e = (from c in ctx.Posts
+                               where c.Id == postID
+                               select c).FirstOrDefault();
+
+                    e.SYNC_IND = true;
+
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static bool UpdatePost_SetAllUnsynced()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.Posts
+                               where a.SYNC_IND == true
+                               select a).ToList();
+
+                    xxx.ForEach(a => a.SYNC_IND = false);
+                    ctx.SaveChanges();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
                 }
             }
         }

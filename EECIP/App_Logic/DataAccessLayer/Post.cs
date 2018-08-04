@@ -37,6 +37,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<System.Guid> InReplyTo { get; set; }
         public System.Guid Topic_Id { get; set; }
         public int MembershipUser_Id { get; set; }
+        public bool SYNC_IND { get; set; }
     
         public virtual T_OE_USERS T_OE_USERS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

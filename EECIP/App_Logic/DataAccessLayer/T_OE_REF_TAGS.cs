@@ -30,6 +30,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public Nullable<int> CREATE_USERIDX { get; set; }
         public Nullable<System.DateTime> CREATE_DT { get; set; }
         public bool PROMOTE_IND { get; set; }
+        public string TAG_DESC { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_PROJECTS> T_OE_PROJECTS { get; set; }

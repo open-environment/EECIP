@@ -42,7 +42,6 @@ namespace EECIP.Controllers
         }
 
 
-        [Authorize]
         public ActionResult PostedIn(int? p, string tag)
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -60,7 +59,6 @@ namespace EECIP.Controllers
         }
 
 
-        [Authorize]
         public ActionResult Following(int? p, string tag)
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -76,7 +74,6 @@ namespace EECIP.Controllers
         }
 
 
-        [Authorize]
         public ActionResult Create(Guid? id)
         {
             var viewModel = new vmForumTopicCreate
@@ -95,7 +92,6 @@ namespace EECIP.Controllers
 
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult Create(vmForumTopicCreate topicViewModel)
         {
@@ -209,7 +205,7 @@ namespace EECIP.Controllers
                         db_Forum.EarnBadgePostTopicEvent(UserIDX);
 
                         // 11. Update Azure search
-                        AzureSearch.PopulateSearchIndexForumTopic(_Topic.Id);
+                        AzureSearch.PopulateSearchIndexForumPost(_postID);
 
                         // Redirect to the newly created topic
                         return RedirectToAction("ShowTopic", "Forum", new { slug = _Topic.Slug });
@@ -225,7 +221,6 @@ namespace EECIP.Controllers
         }
 
 
-        [Authorize]
         public ActionResult EditPost(Guid? id)
         {
             Post _post = db_Forum.GetPost_ByID(id.ConvertOrDefault<Guid>());
@@ -264,7 +259,6 @@ namespace EECIP.Controllers
                     }
                 }
 
-
                 return View(viewModel);
             }
             else
@@ -276,7 +270,6 @@ namespace EECIP.Controllers
 
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult EditPost(vmForumTopicCreate model) {
 
@@ -315,14 +308,14 @@ namespace EECIP.Controllers
                     db_Forum.InsertUpdateTopicTags(model.TopicId, "Topic Tag", feature);
 
                 // 11. Update Azure search
-                AzureSearch.PopulateSearchIndexForumTopic(model.TopicId);
+                AzureSearch.PopulateSearchIndexForumPost(newPostID);
             }
 
             return RedirectToAction("ShowTopic", "Forum", new { slug = _topic.Slug });
         }
         
 
-        public ActionResult ShowTopic(string slug, int? p, string order, Guid? id)
+        public ActionResult ShowTopic(string slug, int? p, string order, Guid? id, Guid? p_id)
         {
             // Set initial stuff
             //var pageIndex = p ?? 1;
@@ -334,6 +327,8 @@ namespace EECIP.Controllers
                 _topic = db_Forum.GetTopic_fromSlug(slug);
             else if (id != null)
                 _topic = db_Forum.GetTopic_ByID(id.ConvertOrDefault<Guid>());
+            else if (p_id != null)
+                _topic = db_Forum.GetTopic_ByPostID(p_id.ConvertOrDefault<Guid>());
 
 
             if (_topic != null)
@@ -436,7 +431,6 @@ namespace EECIP.Controllers
 
 
         [HttpPost]
-        [Authorize]
         public ActionResult CreatePost(vmForumTopicView model)
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -471,6 +465,9 @@ namespace EECIP.Controllers
             {
                 // Success send any notifications
                 NotifyTopics(model.Topic.Id, UserIDX, "Post");
+
+                // Update Azure search
+                AzureSearch.PopulateSearchIndexForumPost(_postID);
             }
 
 
@@ -493,6 +490,10 @@ namespace EECIP.Controllers
                     if (post.IsTopicStarter == false)
                     {
                         db_Forum.DeletePost(id);
+
+                        //now sync with Azure
+                        AzureSearch.DeleteAzureGuid(id);
+
                         TempData["Success"] = "Post deleted";
                         return RedirectToAction("ShowTopic", "Forum", new { id = post.Topic_Id });
                     }
@@ -506,6 +507,9 @@ namespace EECIP.Controllers
                         foreach (Post p in _postList)
                         {
                             db_Forum.DeletePost(p.Id);
+
+                            //now sync with Azure
+                            AzureSearch.DeleteAzureGuid(p.Id);
                         }
 
                         //then delete the topic
@@ -514,7 +518,7 @@ namespace EECIP.Controllers
                         if (SuccID > 0)
                         {
                             //now sync with Azure
-                            AzureSearch.DeleteForumTopic(post.Topic_Id);
+                            //AzureSearch.DeleteAzureGuid(id);
 
                             TempData["Success"] = "Topic deleted";
                         }

@@ -1,16 +1,14 @@
-﻿/****************MSFT ASP DEFAULT CSS *****************************/
-body {
-    height: 100%;
-    margin: 0;
-}
-
-/****************SITE CUSTOM CSS *****************************/
+﻿/****************SITE CUSTOM CSS *****************************/
 /* EENTERPRISE STYLING KEY
     #82B9DE  blue
     #199C98 blue-green
     #A9D2A2 green
     #383838 dark grey header
 */
+body {
+    height: 100%;
+    margin: 0;
+}
 
 html {
     height: 100%;
@@ -22,11 +20,15 @@ html {
     font-weight:600;
 }
 
+.display-inline {
+    display: inline;
+}
+
 .light-grey {
     color: #9d9d9d;
 }
 
-.label-eecip-bluegreen, .badge-eecip-bluegreen {
+.badge-eecip-bluegreen {
     background-color: #199C98 !important;
     border-color: #199C98 !important;
 }
@@ -88,19 +90,6 @@ html {
     color: #65BCDA !important;
     font-size: 20px !important;
 }
-
-.help-button2 {
-    background-color: #65BCDA;
-    -moz-border-radius: 100%;
-    -webkit-border-radius: 100%;
-    border-radius: 100%;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 700;
-}
-    .help-button:before, .icon-question:before {
-        content: "\f128";
-    }
 
 .help-icon {
 }
@@ -742,8 +731,7 @@ ul.main-navigation-menu > li.active > a {
         filter: alpha(opacity=0);
     }
 
-.carousel.carousel-fade .next,
-.carousel.carousel-fade .prev {
+.carousel.carousel-fade .next, .carousel.carousel-fade .prev {
     left: 0;
     z-index: 1;
 }
@@ -758,10 +746,7 @@ ul.main-navigation-menu > li.active > a {
 /***********************FORUM STYLING ************************************************************************************************************/
 /*************************************************************************************************************************************************/
 
-/***************8 SUB NAVIGATION HEADER***********************/
-.sub-nav-container {
-}
-
+/***************SUB NAVIGATION HEADER***********************/
 section.content-strip {
     margin-top: -20px;
     margin-bottom: 20px;

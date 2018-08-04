@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Web;
 using System.Web.Mvc;
 
 namespace EECIP.HtmlHelpers
@@ -21,7 +20,6 @@ namespace EECIP.HtmlHelpers
 
             return classValue;
         }
-
     }
 
     /// <summary>

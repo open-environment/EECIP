@@ -491,7 +491,7 @@ namespace EECIP.Controllers
                             if (SuccID > 0)
                             {
                                 //SUCCESS - now delete from Azure
-                                AzureSearch.DeleteSearchIndexProject(id1);
+                                AzureSearch.DeleteAzureGuid(id1);
                             }
                             else
                                 return Json("Unable to delete project.");

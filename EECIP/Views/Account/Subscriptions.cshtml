@@ -1,0 +1,140 @@
+﻿@model EECIP.Models.vmAccountSubscriptions
+@{
+    ViewBag.Title = "Your Subscriptions";
+    ViewBag.SubSubTitle = "Control what information you see and your notification options.";
+    ViewBag.ShowBack = true;
+}
+@using (Html.BeginForm("Subscriptions", "Account", FormMethod.Post, new { @id = "norepostform", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+<div class="row ">
+    <div class="col-md-9 ">
+        <section class="panel panel-default ">
+            <div class="panel-heading">
+                Your Subscriptions
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <h4 class="btn-eecip" style="padding:10px;">Subscriptions Based on Your Expertise/Interests</h4>
+                @if (Model.SelectedExpertise == null || Model.SelectedExpertise.Count == 0)
+                {
+                    <div class="alert alert-block alert-danger fade in">
+                        <button data-dismiss="alert" class="close" type="button">×</button>
+                        <h4 class="alert-heading"><i class="clip-notification-2"></i> Share your interests!</h4>
+                        <p>
+                            By specifying your expertise and interests, content in EECIP can be tailored to your specified interests, and others know who to contact with questions or project ideas. Select from the list below or type in your own interests.
+                        </p>
+                    </div>
+                }
+                <div class="form-group">
+                    @*<label for="form-field-select-4">Expertise and/or Interests</label>*@
+                    @Html.ListBoxFor(model => model.SelectedExpertise, Model.AllExpertise, new { multiple = "multiple", @id = "form-field-select-4", @class = "form-control search-select" })
+                </div>
+                <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+                <br />
+                <br />
+
+
+                <h4 class="btn-eecip" style="padding:10px;">Subscribe to Promoted Communities of Interest</h4>
+                @foreach (var item in Model.CommunitiesOfInterest)
+                {
+                    <a href="@Url.Action("Subscribe", "Account", new { tag = item.TAG_NAME, sub = (item.Subscribe_ind ? "u" : "") })">
+                        <div class="col-sm-6 col-lg-6 col-md-6">
+                            <div class="flip">
+                                <div class="card" style="@(!item.Subscribe_ind ? "" : "background-color: #414e3d;")">
+                                    <div class="face front">
+                                        <div class="inner">
+                                            <div class="hd1">@item.TAG_NAME</div>
+                                            @if (item.Subscribe_ind)
+                                            {
+                                                <span class="label label-success"> Subscribed</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="face back">
+                                        <div class="flipinner text-center">
+                                            <div class="dash-unit">
+                                                <div class="dtitle"><div style="padding:6px">@item.TAG_NAME</div></div>
+                                                <div class="dash-body">
+                                                    <div style="padding:6px">@item.TAG_DESC</div>
+                                                    @if (!item.Subscribe_ind)
+                                                    {
+                                                        <div class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Subscribe</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="btn btn-rounded  btn-rounded btn-danger"><i class="glyphicon glyphicon-minus"></i> Unsubscribe</div>
+                                                    }
+
+                                                </div>
+                                                <div class="dash-footer">
+                                                    <div class="col-xs-6 dash-foot-green tooltips" data-original-title="Number of projects in this community of interest">
+                                                        <i class="glyphicon glyphicon-pushpin"></i>
+                                                        <div>@item.projCount</div>
+                                                    </div>
+                                                    <div class="col-xs-6 dash-foot-dark-green tooltips" data-original-title="Number of discussion topics in this community of interest">
+                                                        <i class="clip-bubble-dots-2"></i>
+                                                        <div>@item.discCount</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                }
+
+            </div>
+        </section>
+
+    </div>
+    <div class="col-md-3">
+        <section class="panel panel-default ">
+            <div class="panel-heading">
+                Notification Options
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.NOTIFY_DISCUSSION_IND, new { @class = "checkbox, display-inline" })
+                    <label style="display:inline;">Get Email notification for <a href="@Url.Action("Following", "Forum")">discussion topics you are following.</a></label>
+                </div>
+                <div class="form-group">
+                    @Html.CheckBoxFor(model => model.NOTIFY_BADGE_IND, new { @class = "checkbox, display-inline" })
+                    <label style="display:inline;">Get Email notification when badges are earned</label>
+                </div>
+                <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+            </div>
+        </section>  
+    </div>
+</div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/select2")
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        //function to initiate Select2
+        $(".search-select").select2({
+            placeholder: "Select expertise (or type in your own)",
+            allowClear: true,
+            tags: true
+        });
+
+    });
+
+
+    $('.flip').hover(function () {
+        $(this).find('.card').toggleClass('flipped');
+    });
+    </script>
+}

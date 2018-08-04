@@ -72,6 +72,11 @@
                                         <i class="glyphicon glyphicon-user"></i>&nbsp;My Profile
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="@Url.Action("Subscriptions", "Account") ">
+                                        <i class="glyphicon glyphicon-cog"></i>&nbsp;My Subscriptions
+                                    </a>
+                                </li>
                                 <li class="divider"></li>
                                 <li>
                                     @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))

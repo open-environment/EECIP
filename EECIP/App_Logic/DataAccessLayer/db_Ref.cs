@@ -957,7 +957,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static int InsertUpdatetT_OE_REF_TAGS(int? tAG_IDX, string tAG_NAME, string tAG_CAT_NAME, bool? pROMOTE_IND, int? cREATE_USER = 0)
+        public static int InsertUpdatetT_OE_REF_TAGS(int? tAG_IDX, string tAG_NAME, string tAG_DESC, string tAG_CAT_NAME, bool? pROMOTE_IND, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -979,6 +979,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
                     if (tAG_NAME != null) e.TAG_NAME = tAG_NAME;
+                    if (tAG_DESC != null) e.TAG_DESC = tAG_DESC;
                     if (tAG_CAT_NAME != null) e.TAG_CAT_NAME = tAG_CAT_NAME;
                     if (pROMOTE_IND != null) e.PROMOTE_IND = pROMOTE_IND ?? false;
 

@@ -817,7 +817,7 @@
     <Content Include="Views\Forum\_Poll.cshtml" />
     <Content Include="Views\Dashboard\Leaderboard.cshtml" />
     <Content Include="Views\Dashboard\LeaderboardDtl.cshtml" />
-    <Content Include="Views\Dashboard\Subscriptions.cshtml" />
+    <Content Include="Views\Account\Subscriptions.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
