@@ -3,7 +3,7 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
-**Version 1.2 7/23/2018 - 7/30/2018)**
+**Version 1.2 7/23/2018 - 7/31/2018)**
 - Added full points leaderboard
 - Add subscription management page
 - Added ability to search discussion forum responses
