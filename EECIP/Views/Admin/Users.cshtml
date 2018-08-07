@@ -13,8 +13,9 @@
             <div class="table-responsive">
                 <table class="table table-striped m-b-none" data-ride="datatables">
                     <tr>
-                        <th></th>
-                        <th>Name</th>
+                        <th style="min-width:70px;"></th>
+                        <th><a href="@Url.Action("Users", new { sort="FNAME" })">First Name</a></th>
+                        <th>Last Name</th>
                         <th>Agency</th>
                         <th>Job Title</th>
                         <th>Email</th>
@@ -36,6 +37,8 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.users.FNAME)
+                        </td>
+                        <td>
                             @Html.DisplayFor(modelItem => item.users.LNAME)
                         </td>
                         <td>
@@ -129,4 +132,14 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/confirmdelete")
+    @Scripts.Render("~/bundles/stickytableheaders")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //sticky header on table
+            $('.table').stickyTableHeaders({ fixedOffset: $('.navbar-inverse') });
+        });
+
+    </script>
 }

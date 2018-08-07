@@ -313,11 +313,11 @@
                                         <a href="#" class="btn btn-rounded btn-xs descinfo" title="Edit">
                                             <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
                                         </a>
-                                        <div class="postedfilename">                                          
+                                        <div class="postedfilename">
                                             @Html.DisplayFor(modelItem => Model.files_existing[i].DOC_NAME)
 
                                         </div>
-                                        <div id="divHideOnEdit">                                          
+                                        <div id="divHideOnEdit">
                                             @Html.DisplayFor(modelItem => Model.files_existing[i].DOC_COMMENT)
                                         </div>
                                         <div id="divShowOnEdit" style="display:none;">
@@ -341,7 +341,7 @@
         <div class="col-md-12">
             @if (!User.IsInRole("ReadOnly"))
             {
-            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+                <button id="btnSave" disabled type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
             }
             <a href="@Url.Action(Model.ReturnURL, "Dashboard")" class="btn btn-default">Close</a>
 
@@ -363,8 +363,20 @@
 @section Scripts {
     @Scripts.Render("~/bundles/confirmdelete")
     @Scripts.Render("~/bundles/select2")
+    @Scripts.Render("~/bundles/areyousure")
+
     <script type="text/javascript">
         $(document).ready(function () {
+
+            //warn user if leaving unsaved page
+            $('form').areYouSure();
+            $('form').on('dirty.areYouSure', function () {
+                $("#btnSave").prop("disabled", false);
+            });
+            $('form').on('clean.areYouSure', function () {
+                $("#btnSave").prop("disabled", true);
+            });
+
 
             $('a.descinfo').click(function () {
                 var dad = $(this).parent().parent();
@@ -375,7 +387,7 @@
 
             //function to initiate Select2
             $(".search-select").select2({
-                placeholder: "",
+                placeholder: "Select from list (or type in your own)",
                 allowClear: true,
                 tags: true,
                 width: ''
@@ -470,6 +482,7 @@
         }
 
         function AddProjectURL() {
+
             var m = $('#divurl input:last').attr('name');
             var index = 0;
 
@@ -492,6 +505,9 @@
                 '</div></div>';
 
             $('#divurl').append(html);
+
+            $('form').trigger('rescan.areYouSure');
+
         };
     </script>
 }

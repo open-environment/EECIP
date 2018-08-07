@@ -111,6 +111,10 @@ namespace EECIP.Models
     }
 
 
+    public class vmAdminSysLog
+    {
+        public List<T_OE_SYS_LOG> T_OE_SYS_LOG { get; set; }
+    }
 
     public class vmAdminSearch {
         public List<T_OE_REF_SYNONYMS> synonyms { get; set; }

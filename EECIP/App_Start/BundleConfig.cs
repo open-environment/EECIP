@@ -29,6 +29,7 @@ namespace EECIP
             bundles.Add(new ScriptBundle("~/bundles/stickytableheaders").Include("~/Scripts/jquery.stickytableheaders.js"));
             bundles.Add(new ScriptBundle("~/bundles/trunk8").Include("~/Scripts/trunk8.js"));
             bundles.Add(new ScriptBundle("~/bundles/chaperone").Include("~/Scripts/chaperone_init.js"));
+            bundles.Add(new ScriptBundle("~/bundles/areyousure").Include("~/Scripts/jquery.are-you-sure.js"));
 
 
             //****************** CSS ***********************************

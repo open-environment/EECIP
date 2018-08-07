@@ -1067,5 +1067,25 @@ namespace EECIP.App_Logic.DataAccessLayer
             db_Ref.InsertT_OE_SYS_LOG("ERROR", err.SubStringPlus(0, 2000));
 
         }
+
+        public static List<T_OE_SYS_LOG> GetT_OE_SYS_LOG(int pageCount, int recCount)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_SYS_LOG
+                            orderby a.LOG_DT descending
+                            select a).Skip((pageCount - 1) * recCount).Take(recCount).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
     }
 }

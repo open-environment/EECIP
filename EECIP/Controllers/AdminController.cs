@@ -440,6 +440,17 @@ namespace EECIP.Controllers
         }
 
 
+        //*************************************** SYS LOG **********************************************************
+        // GET: /Admin/SysLog
+        public ActionResult SysLog()
+        {
+            var model = new vmAdminSysLog
+            {
+                T_OE_SYS_LOG = db_Ref.GetT_OE_SYS_LOG(1, 100)
+            };
+
+            return View(model);
+        }
 
 
         //*************************************** SEARCH ADMIN **********************************************************

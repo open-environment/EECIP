@@ -1,0 +1,42 @@
+﻿@model EECIP.Models.vmAdminSysLog
+@{
+    ViewBag.Title = "System Log";
+    ViewBag.SubTitle = "View a log of system logging errors or messages (only most recent 500 messages listed).";
+}
+
+
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th>Log ID</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Message</th>
+                    </tr>
+
+                    @foreach (var item in Model.T_OE_SYS_LOG)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SYS_LOG_ID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LOG_DT)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LOG_TYPE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LOG_MSG)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+    </div>
+</div>

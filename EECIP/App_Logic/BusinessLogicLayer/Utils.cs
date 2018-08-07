@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml.Linq;
 using EECIP.App_Logic.DataAccessLayer;
-
+using System.Linq.Expressions;
 
 namespace EECIP.App_Logic.BusinessLogicLayer
 {
@@ -807,6 +807,32 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         #endregion
 
 
+        #region ENTITY FRAMEWORK HELPERS
+
+        public static IOrderedQueryable<TSource> OrderBy<TSource>(this IQueryable<TSource> source, string field, string dir = "asc")
+        {
+            var parametro = Expression.Parameter(typeof(TSource), "r");
+            var expressao = Expression.Property(parametro, field);
+            var lambda = Expression.Lambda<Func<TSource, string>>(expressao, parametro); 
+            if (string.Equals(dir, "desc", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return source.OrderByDescending(lambda);
+            }
+            return source.OrderBy(lambda);
+        }
+
+        public static IOrderedQueryable<TSource> ThenBy<TSource>(this IOrderedQueryable<TSource> source, string field, string dir = "asc")
+        {
+            var parametro = Expression.Parameter(typeof(TSource), "r");
+            var expressao = Expression.Property(parametro, field);
+            var lambda = Expression.Lambda<Func<TSource, string>>(expressao, parametro); 
+            if (string.Equals(dir, "desc", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return source.ThenByDescending(lambda);
+            }
+            return source.ThenBy(lambda);
+        }
+        #endregion
 
 
 
