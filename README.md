@@ -4,6 +4,7 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 ## Change Log
 **Version 1.3 (August 2018)**
+- Prompt user if unsaved changes
 - Admin feature enhancements: 
     - Added Error Log page
 
