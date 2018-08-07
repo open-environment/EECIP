@@ -3,7 +3,12 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
-**Version 1.2 7/23/2018 - 7/30/2018)**
+**Version 1.3 (August 2018)**
+- Prompt user if unsaved changes
+- Admin feature enhancements: 
+    - Added Error Log page
+
+**Version 1.2 (July 2018)**
 - Added full points leaderboard
 - Add subscription management page
 - Added ability to search discussion forum responses
@@ -14,14 +19,12 @@ The E-Enterprise Community Inventory Platform is an online community and living 
    - Allow admin to edit agency profiles
  
 
-**Version 1.1c/d (6/27/2018-6/30/2018)**
+**Version 1.1 (June 2018)**
 - Added polls to discussion forum
 - Added ability to sort data by last updated date on Seach page
 - Search page state facet sorted alphabetically 
 - Admin user list: add sorted by agency
 - Bug fixes
-
-**Version 1.1b (6/21/2018)**
 - Forum Enhancements
    - added ability to subscribe/unsubscribe to a forum topic
    - added 3 ways to view discussions:  (1) Latest posts (2) Posts the user is subscribed to, and (3) Posts the user has posted in
