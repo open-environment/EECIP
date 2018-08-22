@@ -5,8 +5,11 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 ## Change Log
 **Version 1.3 (August 2018)**
 - Prompt user if unsaved changes
+- Display phone on user page
 - Admin feature enhancements: 
     - Added Error Log page
+    - Ability to change organization or governance group to which project belongs
+ - Added IE11 support
 
 **Version 1.2 (July 2018)**
 - Added full points leaderboard
