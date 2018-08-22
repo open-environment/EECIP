@@ -27,15 +27,24 @@
                     @Model.User.JOB_TITLE
                 </div>
                 <div class="circle-tile-buttons text-faded">
-                    <a href="tel:@(Model.User.PHONE)" class="btn btn-primary">
-                        <i class="clip-phone"></i>
-                    </a>
+                    @if (!string.IsNullOrEmpty(Model.User.PHONE))
+                    {
+                        <a href="tel:@(Model.User.PHONE)" class="btn btn-primary hidden-md hidden-lg">
+                            <i class="clip-phone"></i>
+                        </a>
+                        <a href="#" class="btn btn-primary hidden-xs hidden-sm ">
+                            <i class="clip-phone"></i> @(Model.User.PHONE)
+                        </a>
+                    }
                     <a href="mailto:@(Model.User.EMAIL)" class="btn btn-primary">
                         <i class="glyphicon glyphicon-envelope"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/@(Model.User.LINKEDIN)" class="btn btn-primary" target="_blank">
-                        <i class="clip-linkedin"></i>
-                    </a>
+                    @if (!string.IsNullOrEmpty(Model.User.LINKEDIN))
+                    {
+                        <a href="https://www.linkedin.com/in/@(Model.User.LINKEDIN)" class="btn btn-primary" target="_blank">
+                            <i class="clip-linkedin"></i>
+                        </a>
+                    }
                 </div>
                 <br />
             </div>

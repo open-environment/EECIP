@@ -87,7 +87,7 @@ else
                                 {
                                     <tr>
                                         <td style="min-width: 68px;">
-                                            <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, orgIDX = Model.selAgency, returnURL="Governance" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a href="@Url.Action("ProjectDetails","Dashboard", new { id=item.PROJECT_IDX, returnURL="Governance" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
                                             @if (!User.IsInRole("ReadOnly"))
                                             {
                                                 <div class="delete-section" style="display:inline">

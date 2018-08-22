@@ -8,8 +8,12 @@
 2. User registers using a .gov/.us email for which no agency exists in EECIP
 		System prompts for agency. Agency auto created. Email rule created
 3. User registers using a .gov/.us email for which 1 agency exists in EECIP
+		Account created; verification email send
 4. User registers using a .gov/.us email for which more than 1 agency exists in EECIP
+		System prompts for user to select agency from list
 5. Site admin creates an account for someone
 6. User with account recovers lost password
+
+
 
 

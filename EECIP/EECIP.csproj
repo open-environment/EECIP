@@ -224,6 +224,12 @@
     <Compile Include="App_Logic\DataAccessLayer\SP_ENT_SVC_COUNT_DISPLAY_Result.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\SP_NEW_CONTENT_USER_AGE_Result.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\SP_PROJECT_CREATE_COUNT_Result.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\Topic.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -266,6 +272,9 @@
     <Compile Include="App_Logic\DataAccessLayer\T_OE_PROJECT_VOTES.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\T_OE_REF_EMAIL_TEMPLATE.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_REF_ENTERPRISE_PLATFORM.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -294,6 +303,9 @@
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_SYS_LOG.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\T_OE_SYS_SEARCH_LOG.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_USERS.cs">
@@ -505,6 +517,8 @@
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\chaperone_init.js" />
+    <Content Include="Scripts\Chart.bundle.js" />
+    <Content Include="Scripts\Chart.bundle.min.js" />
     <Content Include="Scripts\clip-main.js" />
     <Content Include="Scripts\confirm_delete.js" />
     <Content Include="Scripts\i18n\af.js" />
@@ -819,6 +833,8 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Views\Admin\AdmEmail.cshtml" />
+    <Content Include="Views\Dashboard\Metrics.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

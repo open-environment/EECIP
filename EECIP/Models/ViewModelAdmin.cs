@@ -116,6 +116,11 @@ namespace EECIP.Models
         public List<T_OE_SYS_LOG> T_OE_SYS_LOG { get; set; }
     }
 
+    public class vmAdminEmail
+    {
+        public List<T_OE_REF_EMAIL_TEMPLATE> T_OE_REF_EMAIL_TEMPLATE { get; set; }
+    }
+
     public class vmAdminSearch {
         public List<T_OE_REF_SYNONYMS> synonyms { get; set; }
         public int? edit_synonym_idx { get; set; }

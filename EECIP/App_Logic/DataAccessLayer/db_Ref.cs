@@ -8,6 +8,12 @@ using System.Web.Mvc;
 
 namespace EECIP.App_Logic.DataAccessLayer
 {
+    public class SearchTermCountDisplayType
+    {
+        public string LOG_TERM { get; set; }
+        public int? discCount { get; set; }
+    }
+
     public class db_Ref
     {
 
@@ -1015,6 +1021,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
         //*****************SYS_LOG**********************************
         public static int InsertT_OE_SYS_LOG(string logType, string logMsg)
         {
@@ -1077,6 +1084,76 @@ namespace EECIP.App_Logic.DataAccessLayer
                     return (from a in ctx.T_OE_SYS_LOG
                             orderby a.LOG_DT descending
                             select a).Skip((pageCount - 1) * recCount).Take(recCount).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+        //*****************SYS_SEARCH_LOG**********************************
+        public static int InsertT_OE_SYS_SEARCH_LOG(string searchTerm)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_SYS_SEARCH_LOG e = new T_OE_SYS_SEARCH_LOG();
+                    e.LOG_USERIDX = null; //anonymous 
+                    e.LOG_TERM = searchTerm;
+                    e.LOG_DT = System.DateTime.Now;
+
+                    ctx.T_OE_SYS_SEARCH_LOG.Add(e);
+                    ctx.SaveChanges();
+                    return e.SYS_SEARCH_LOG_ID;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public static List<SearchTermCountDisplayType> GetT_OE_SYS_SEARCH_LOG_Popular(int days)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    DateTime _fromDt = System.DateTime.Today.AddDays(days * -1);
+
+                    return (from a in ctx.T_OE_SYS_SEARCH_LOG
+                            where a.LOG_DT >= _fromDt
+                            group a by a.LOG_TERM
+                            into grp
+                            select new SearchTermCountDisplayType {
+                                LOG_TERM = grp.Key,
+                                discCount = grp.Count()
+                            }).OrderByDescending(x => x.discCount).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+
+        //*****************EMAIL TEMPLATE**********************************
+        public static List<T_OE_REF_EMAIL_TEMPLATE> GetT_OE_REF_EMAIL_TEMPLATE()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_EMAIL_TEMPLATE
+                            orderby a.EMAIL_TEMP_NAME 
+                            select a).ToList();
                 }
                 catch (Exception ex)
                 {

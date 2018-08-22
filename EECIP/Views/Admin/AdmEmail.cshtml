@@ -1,0 +1,43 @@
+﻿@model EECIP.Models.vmAdminEmail
+@{
+    ViewBag.Title = "Email Templates";
+    ViewBag.SubTitle = "Configure the emails sent out by EECIP.";
+}
+
+
+<!-- render the main content -->
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Last Modified</th>
+                    </tr>
+
+                    @foreach (var item in Model.T_OE_REF_EMAIL_TEMPLATE)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EMAIL_TEMP_ID)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EMAIL_TEMP_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EMAIL_TEMP_DESC)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MODIFY_DT)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+

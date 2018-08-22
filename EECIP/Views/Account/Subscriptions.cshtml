@@ -120,7 +120,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/select2")
 
-    <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function () {
 
         //function to initiate Select2
@@ -132,9 +132,12 @@
 
     });
 
-
+    //function to flip card (non IE11)
     $('.flip').hover(function () {
-        $(this).find('.card').toggleClass('flipped');
+        var isIE11 = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+        if (!isIE11) {
+            $(this).find('.card').toggleClass('flipped');
+        }
     });
-    </script>
+</script>
 }

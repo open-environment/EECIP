@@ -1676,5 +1676,28 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
+        //*******************************8 REPORTS ***************************************************
+        public static List<SP_NEW_CONTENT_USER_AGE_Result> GetSP_NEW_CONTENT_USER_AGE_Result()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var x = (from a in ctx.SP_NEW_CONTENT_USER_AGE()
+                             orderby a.UserAge
+                             select a).ToList();
+
+                    return x;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
     }
 }

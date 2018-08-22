@@ -1,0 +1,264 @@
+﻿@model EECIP.Models.vmDashboardMetrics
+@{
+    ViewBag.Title = "Site Metrics";
+    ViewBag.SubSubTitle = "A community platform for environmental agency staff to learn and collaborate on projects about business process, IT, advanced monitoring and more.";
+}
+<div class="row">
+
+    <!--  **************  PROJECT FRESHNESS **************************************-->
+    <section class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Project Freshness (Demo Data)
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <canvas id="chartFresh" width="400" height="400"></canvas>
+
+            </div>
+        </section>
+    </section>
+
+
+    <!--  **************  POPULAR SEARCH TERMS **************************************-->
+    <section class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Popular Search Terms
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                List of popular search terms used by people over the past 30 days
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>Search Term</th>
+                                <th>Searches</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.PopSearchTerms)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.LOG_TERM)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.discCount)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+    </section>
+</div>
+
+<div class="row">
+    <section class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                New Projects Added Over Time  (Demo Data)
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <canvas id="chartProjectNew" width="400" height="400"></canvas>
+
+            </div>
+        </section>
+    </section>
+
+    <section class="col-sm-6">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Recent Content Added by New or Old Users
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <canvas id="chartNewContentUsers" width="400" height="400"></canvas>
+
+            </div>
+        </section>
+    </section>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/chart")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //************ PROJECT FRESHNESS OVER TIME ***************************
+            var ctx = document.getElementById("chartFresh").getContext('2d');
+            const colors = {
+                green: {
+                    fill: '#1fe25d',
+                    stroke: '#009930',
+                },
+                yellow: {
+                    fill: '#fff159',
+                    stroke: '#ffe900',
+                },
+                orange: {
+                    fill: '#ffc04c',
+                    stroke: '#dd9000',
+                },
+                red: {
+                    fill: '#ef5871',
+                    stroke: '#c90424',
+                },
+            };
+            const newest = [50, 40, 45, 60, 45, 35, 25];
+            console.log(newest);
+            const newer = [50, 60, 55, 30, 45, 45, 25];
+            const new1 = [0, 0, 0, 10, 10, 15, 35];
+            const old = [0, 0, 0, 0, 0, 5, 15];
+            const xData = ['May 1, 2018', 'May 15, 2018', 'June 1, 2018', 'June 15, 2018', 'July 1, 2018', 'July 15, 2018', 'August 1, 2018'];
+
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xData,
+                    datasets: [{
+                        label: "One Year or Older",
+                        fill: true,
+                        backgroundColor: colors.red.fill,
+                        pointBackgroundColor: colors.red.stroke,
+                        borderColor: colors.red.stroke,
+                        pointHighlightStroke: colors.red.stroke,
+                        borderCapStyle: 'butt',
+                        data: old,
+
+                    }, {
+                        label: "6-12 months old",
+                        fill: true,
+                        backgroundColor: colors.orange.fill,
+                        pointBackgroundColor: colors.orange.stroke,
+                        borderColor: colors.orange.stroke,
+                        pointHighlightStroke: colors.orange.stroke,
+                        borderCapStyle: 'butt',
+                        data: new1,
+                    }, {
+                        label: "1-6 months old",
+                        fill: true,
+                        backgroundColor: colors.yellow.fill,
+                        pointBackgroundColor: colors.yellow.stroke,
+                        borderColor: colors.yellow.stroke,
+                        pointHighlightStroke: colors.yellow.stroke,
+                        borderCapStyle: 'butt',
+                        data: newer,
+                    }, {
+                        label: "Past month",
+                        fill: true,
+                        backgroundColor: colors.green.fill,
+                        pointBackgroundColor: colors.green.stroke,
+                        borderColor: colors.green.stroke,
+                        pointHighlightStroke: colors.green.stroke,
+                        data: newest,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        yAxes: [{
+                            stacked: true,
+                        }]
+                    },
+                    animation: {
+                        duration: 750,
+                    },
+                }
+            });
+
+
+
+            //new projects added over time
+            new Chart(document.getElementById("chartProjectNew"), {
+                type: 'line',
+                data: {
+                    labels: ['1/1/2018', '2/1/2018', '3/1/2018', '4/1/2018', '5/1/2018', '6/1/2018', '7/1/2018', '8/1/2018', '9/1/2018', '10/1/2018'],
+                    datasets: [{
+                        data: [1, 11, 2, 5, 22, 2, 11, 9, 12, 16],
+                        label: "Projects",
+                        borderColor: "#3e95cd",
+                        fill: false
+                    }, {
+                        data: [3, 2, 0, 0, 1, 2, 11, 3, 24, 17],
+                        label: "Discussion Topics",
+                        borderColor: "#8e5ea2",
+                        fill: false
+                    }
+                    ]
+                },
+                options: {
+                    elements: {
+                        line: {
+                            tension: 0.1
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'New Projects and New Discussion Topics Added Per Month'
+                    }
+                }
+            });
+
+
+            //for recently added content, how old are the users?
+            $(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("MetricChartUsers","Dashboard")',
+                    dataType: "json",
+                    traditional: true,
+                    success: function (response) {
+                        console.log(response);
+
+                        //data returned, render chart
+                        new Chart(document.getElementById("chartNewContentUsers"), {
+                            type: 'pie',
+                            data: {
+                                labels: ["Site Veterans (6+ months)", "Medium Users (1-6 months)", "New Users (<1 month)"],
+                                datasets: [{
+                                    label: "# Projects or Discussions Added",
+                                    backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+                                    //data: [2478, 5267, 734]
+                                    data: response
+                                }]
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Who has added content in the past 2 weeks'
+                                }
+                            }
+                        });
+                    },
+                    error: function (response) {
+                        toastr.warning(response || "cannot display chart.");
+                    }
+                });
+            });
+
+        });
+    </script>
+}

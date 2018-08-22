@@ -126,7 +126,7 @@ namespace EECIP.Models
         public IEnumerable<SelectListItem> ddl_Status { get; set; }
         public IEnumerable<SelectListItem> ddl_UseAmount { get; set; }
         public IEnumerable<SelectListItem> ddl_COTS { get; set; }
-
+        public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
         public IEnumerable<SelectListItem> ddl_AgencyUsers { get; set; }
 
         public IEnumerable<SelectListItem> AllProgramAreas { get; set; }
@@ -204,5 +204,10 @@ namespace EECIP.Models
     }
 
 
+    public class vmDashboardMetrics
+    {
+        public List<SearchTermCountDisplayType> PopSearchTerms { get; set; }
+         
+    }
 
 }

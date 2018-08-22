@@ -67,6 +67,11 @@ namespace EECIP.Controllers
                 searchResults = AzureSearch.QuerySearchIndex(q, facetDataType, facetMedia, facetRecordSource, facetAgency, facetState, facetOrgType, facetTags, facetPopDensity, facetRegion, facetStatus, currentPage.ConvertOrDefault<int?>() ?? 1, sortType, sortDir)
             };
 
+            //log search
+            if (!string.IsNullOrEmpty(q))
+                db_Ref.InsertT_OE_SYS_SEARCH_LOG(q.ToUpper().Trim());
+
+
             return View(model);
         }
 
@@ -366,6 +371,7 @@ namespace EECIP.Controllers
             model.ddl_AgencyUsers = ddlHelpers.get_ddl_users_by_organization(model.project.ORG_IDX.ConvertOrDefault<Guid>());
             model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
             model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Tags").Select(x => new SelectListItem { Value = x, Text = x });
+            model.ddl_Agencies = ddlHelpers.get_ddl_organizations(true, false);
             model.ReturnURL = returnURL ?? "Projects";
             return View(model);
 
@@ -813,6 +819,34 @@ namespace EECIP.Controllers
             return RedirectToAction("Governance");
         }
 
-        
+
+        public ActionResult Metrics()
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            var model = new vmDashboardMetrics
+            {
+                PopSearchTerms = db_Ref.GetT_OE_SYS_SEARCH_LOG_Popular(30)
+            };
+
+            return View(model);
+        }
+
+
+
+        public JsonResult MetricChartUsers()
+        {
+            List<SP_NEW_CONTENT_USER_AGE_Result> recs = db_EECIP.GetSP_NEW_CONTENT_USER_AGE_Result();
+
+            List<object> iData = new List<object>();
+            foreach (SP_NEW_CONTENT_USER_AGE_Result rec in recs)
+            {
+                iData.Add(rec.CNT);
+            }
+
+            //Source data returned as JSON  
+            return Json(iData, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

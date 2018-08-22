@@ -38,6 +38,10 @@ values ('superadmin@change.me', 'pwd','', 'First','Last','superadmin@change.me',
 --****************APP USER ROLES *****************************************************************************************
 insert into T_OE_USER_ROLES (USER_IDX, ROLE_IDX) values (1,1);
 
+--****************EMAIL TEMPLATES *****************************************************************************************
+insert into T_OE_REF_EMAIL_TEMPLATE(EMAIL_TEMP_ID, EMAIL_TEMP_NAME, EMAIL_TEMP_DESC, EMAIL_TEMP_SUBJECT, EMAIL_TEMP_BODY_HTML, EMAIL_TEMP_BODY_TXT, CREATE_USERID, CREATE_DT)
+values ('','','','','','','system',GetDate());
+
 
 --****************REF_ORG_TYPE  *****************************************************************************************
 insert into T_OE_REF_ORG_TYPE (ORG_TYPE, ORG_TYPE_DESC, SORT_SEQ) values ('State','State government agencies', 1);

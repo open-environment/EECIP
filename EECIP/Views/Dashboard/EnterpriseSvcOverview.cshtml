@@ -55,9 +55,13 @@
 
 @section Scripts {
     <script type="text/javascript">
-        $('.flip').hover(function () {
-            $(this).find('.card').toggleClass('flipped');
 
+        //function to flip card (non IE11)
+        $('.flip').hover(function () {
+            var isIE11 = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+            if (!isIE11) {
+                $(this).find('.card').toggleClass('flipped');
+            }
         });
 
     </script>

@@ -66,10 +66,22 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<Topic_Tags> Topic_Tags { get; set; }
         public virtual DbSet<TopicNotification> TopicNotifications { get; set; }
         public virtual DbSet<Vote> Votes { get; set; }
+        public virtual DbSet<T_OE_REF_EMAIL_TEMPLATE> T_OE_REF_EMAIL_TEMPLATE { get; set; }
+        public virtual DbSet<T_OE_SYS_SEARCH_LOG> T_OE_SYS_SEARCH_LOG { get; set; }
     
         public virtual ObjectResult<SP_ENT_SVC_COUNT_DISPLAY_Result> SP_ENT_SVC_COUNT_DISPLAY()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_ENT_SVC_COUNT_DISPLAY_Result>("SP_ENT_SVC_COUNT_DISPLAY");
+        }
+    
+        public virtual ObjectResult<SP_NEW_CONTENT_USER_AGE_Result> SP_NEW_CONTENT_USER_AGE()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_NEW_CONTENT_USER_AGE_Result>("SP_NEW_CONTENT_USER_AGE");
+        }
+    
+        public virtual ObjectResult<SP_PROJECT_CREATE_COUNT_Result> SP_PROJECT_CREATE_COUNT()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PROJECT_CREATE_COUNT_Result>("SP_PROJECT_CREATE_COUNT");
         }
     }
 }

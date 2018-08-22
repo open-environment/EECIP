@@ -8,7 +8,6 @@
 @using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id = "norepostform", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.project.ORG_IDX)
     @Html.HiddenFor(model => model.project.PROJECT_IDX)
     @Html.HiddenFor(model => model.ReturnURL)
 
@@ -23,6 +22,21 @@
                     </div>
                 </div>
                 <div class="panel-body">
+                    @if (User.IsInRole("Admins"))
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Organization</label>
+                                    @Html.DropDownListFor(model => model.project.ORG_IDX, Model.ddl_Agencies, "", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(model => model.project.ORG_IDX)
+                    }
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">

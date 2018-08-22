@@ -453,6 +453,20 @@ namespace EECIP.Controllers
         }
 
 
+        //*************************************** EMAIL TEMPLATES **********************************************************
+        // GET: /Admin/AdmEmail
+        public ActionResult AdmEmail()
+        {
+            var model = new vmAdminEmail
+            {
+                T_OE_REF_EMAIL_TEMPLATE = db_Ref.GetT_OE_REF_EMAIL_TEMPLATE()
+            };
+
+            return View(model);
+        }
+
+
+
         //*************************************** SEARCH ADMIN **********************************************************
         // GET: /Admin/SearchAdmin
         public ActionResult SearchAdmin()

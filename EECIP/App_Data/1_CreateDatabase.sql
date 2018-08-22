@@ -130,6 +130,23 @@ GO
 --ALTER TABLE [T_OE_REF_TAGS]  add [TAG_DESC] [varchar](500) NULL;
 --GO
 
+
+CREATE TABLE [dbo].[T_OE_REF_EMAIL_TEMPLATE](
+	[EMAIL_TEMP_ID] [varchar](50) NOT NULL,
+	[EMAIL_TEMP_NAME] [varchar](100) NULL,
+	[EMAIL_TEMP_DESC] [varchar](250) NULL,
+	[EMAIL_TEMP_SUBJECT] [varchar](200) NULL,
+	[EMAIL_TEMP_BODY_HTML] [varchar](max) NULL,
+	[EMAIL_TEMP_BODY_TXT] [varchar](max) NULL,
+	[CREATE_USERIDX] [int] NULL,
+	[CREATE_DT] [datetime2](0) NULL,
+	[MODIFY_USERIDX] [int] NULL,
+	[MODIFY_DT] [datetime2](0) NULL,
+ CONSTRAINT [PK_T_OE_REF_EMAIL_TEMP] PRIMARY KEY CLUSTERED  ([EMAIL_TEMP_ID] ASC)
+) ON [PRIMARY]
+
+GO
+
  
  CREATE TABLE [dbo].[T_OE_REF_ENTERPRISE_PLATFORM](
 	[ENT_PLATFORM_IDX] [int] IDENTITY(1,1) NOT NULL,
@@ -475,6 +492,15 @@ CREATE TABLE [dbo].[T_OE_APP_SETTINGS_CUSTOM](
 GO
 --  alter table [T_OE_APP_SETTINGS_CUSTOM] add [ANNOUNCEMENTS] [varchar](max) NULL;
 
+CREATE TABLE [dbo].[T_OE_SYS_SEARCH_LOG](
+	[SYS_SEARCH_LOG_ID] [int] IDENTITY(1,1) NOT NULL,
+	[LOG_DT] [datetime2](0) NOT NULL,
+	[LOG_USERIDX] [int] NULL,
+	[LOG_TERM] [varchar](1000) NULL,
+ CONSTRAINT [PK_T_OE_SYS_SEARCH_LOG] PRIMARY KEY CLUSTERED  ([SYS_SEARCH_LOG_ID] ASC)
+) ON [PRIMARY]
+
+GO
 
 
 CREATE PROCEDURE SP_ENT_SVC_COUNT_DISPLAY
@@ -486,5 +512,78 @@ BEGIN
 	left join T_OE_ORGANIZATION_ENT_SVCS b on a.ENT_PLATFORM_IDX = b.ENT_PLATFORM_IDX and (b.ACTIVE_INTEREST_IND=1 or b.IMPLEMENT_STATUS <> 'Not under consideration')
 	group by a.ENT_PLATFORM_IDX
 	order by CNT desc;
+END
+GO
+
+
+CREATE PROCEDURE SP_PROJECT_CREATE_COUNT
+AS
+BEGIN
+
+	DECLARE @StartDate SMALLDATETIME, @EndDate SMALLDATETIME;
+
+	SELECT @StartDate = '20171201'
+	select @EndDate = GetDate();
+
+	;WITH d(d) AS 
+	(
+	--  SELECT DATEADD(MONTH, n, DATEADD(MONTH, DATEDIFF(MONTH, 0, @StartDate), 0))
+	--  FROM ( SELECT TOP (DATEDIFF(WK, @StartDate, @EndDate) + 1) 
+	  SELECT DATEADD(MONTH, n, DATEADD(MONTH, DATEDIFF(MONTH, 0, @StartDate), 0))
+	  FROM ( SELECT TOP (DATEDIFF(MONTH, @StartDate, @EndDate) + 1) 
+		n = ROW_NUMBER() OVER (ORDER BY [object_id]) - 1
+		FROM sys.all_objects ORDER BY [object_id] ) AS n
+	)
+	SELECT 
+	  [Month]    = DATENAME(MONTH, d.d), 
+	--  [Week]    = DATENAME(WK, d.d), 
+	  [Year]     = YEAR(d.d), 
+	  OrderCount = COUNT(o.PROJECT_IDX) 
+	FROM d LEFT OUTER JOIN dbo.T_OE_PROJECTS AS o
+	  ON o.CREATE_DT >= d.d
+	--  AND o.CREATE_DT < DATEADD(WK, 2, d.d)
+	  AND o.CREATE_DT < DATEADD(MONTH, 1, d.d)
+	GROUP BY d.d
+	ORDER BY d.d;
+
+END
+GO
+
+
+
+
+CREATE PROCEDURE SP_NEW_CONTENT_USER_AGE
+AS
+BEGIN
+	select ZZZ.UserAge, SUM(CNT) as CNT
+	from
+	(select 
+	case when U.CREATE_DT > getdate()-30 then 3
+	when U.CREATE_DT > getdate()-182 and U.CREATE_DT <= getdate()-30 then 2
+	else 1
+	end as UserAge
+	,count(*) as CNT
+	from T_OE_PROJECTS P, T_OE_USERS U
+	where P.CREATE_USERIDX = U.USER_IDX
+	and P.CREATE_DT > getdate()-140
+	group by 
+	case when U.CREATE_DT > getdate()-30 then 3
+	when U.CREATE_DT > getdate()-182 and U.CREATE_DT <= getdate()-30 then 2
+	else 1 end
+	UNION ALL
+	select 
+	case when U.CREATE_DT > getdate()-30 then 3
+	when U.CREATE_DT > getdate()-182 and U.CREATE_DT <= getdate()-30 then 2
+	else 1
+	end as UserAge
+	,count(*) as CNT
+	from forum.Post P, T_OE_USERS U
+	where p.MembershipUser_Id = U.USER_IDX
+	and P.DateCreated > getdate()-140
+	group by 
+	case when U.CREATE_DT > getdate()-30 then 3
+	when U.CREATE_DT > getdate()-182 and U.CREATE_DT <= getdate()-30 then 2
+	else 1 end) ZZZ
+	group by userAge;
 END
 GO

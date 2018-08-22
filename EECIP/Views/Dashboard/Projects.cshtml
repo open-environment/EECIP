@@ -61,7 +61,7 @@
                         {
                             <tr>
                                 <td style="min-width: 68px;">
-                                    <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX, orgIDX = Model.selAgency, returnURL = "Projects" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                    <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX, returnURL = "Projects" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
                                 </td>
                                 @if (!User.IsInRole("ReadOnly"))
                                 {
