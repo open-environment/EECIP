@@ -268,6 +268,17 @@
           <Property Name="MODIFY_USERIDX" Type="int" />
           <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
         </EntityType>
+        <EntityType Name="T_OE_RPT_FRESHNESS">
+          <Key>
+            <PropertyRef Name="YR" />
+            <PropertyRef Name="MON" />
+            <PropertyRef Name="CAT" />
+          </Key>
+          <Property Name="YR" Type="int" Nullable="false" />
+          <Property Name="MON" Type="int" Nullable="false" />
+          <Property Name="CAT" Type="int" Nullable="false" />
+          <Property Name="COUNT" Type="int" />
+        </EntityType>
         <EntityType Name="T_OE_SYS_EMAIL_LOG">
           <Key>
             <PropertyRef Name="EMAIL_LOG_ID" />
@@ -1173,9 +1184,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="SP_DISCUSSION_CREATE_COUNT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_ENT_SVC_COUNT_DISPLAY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_NEW_CONTENT_USER_AGE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_PROJECT_CREATE_COUNT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SP_RPT_FRESHNESS_RECORD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="EECIPModelStoreContainer">
           <EntitySet Name="T_OE_APP_SETTINGS" EntityType="Self.T_OE_APP_SETTINGS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_APP_SETTINGS_CUSTOM" EntityType="Self.T_OE_APP_SETTINGS_CUSTOM" Schema="dbo" store:Type="Tables" />
@@ -1197,6 +1210,7 @@
           <EntitySet Name="T_OE_REF_TAG_CATEGORIES" EntityType="Self.T_OE_REF_TAG_CATEGORIES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_REF_TAGS" EntityType="Self.T_OE_REF_TAGS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ROLES" EntityType="Self.T_OE_ROLES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_RPT_FRESHNESS" EntityType="Self.T_OE_RPT_FRESHNESS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_SYS_EMAIL_LOG" EntityType="Self.T_OE_SYS_EMAIL_LOG" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_SYS_LOG" EntityType="Self.T_OE_SYS_LOG" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_SYS_SEARCH_LOG" EntityType="Self.T_OE_SYS_SEARCH_LOG" Schema="dbo" store:Type="Tables" />
@@ -1659,7 +1673,10 @@
           <EntitySet Name="T_OE_REF_EMAIL_TEMPLATE" EntityType="EECIPModel.T_OE_REF_EMAIL_TEMPLATE" />
           <EntitySet Name="T_OE_SYS_SEARCH_LOG" EntityType="EECIPModel.T_OE_SYS_SEARCH_LOG" />
           <FunctionImport Name="SP_NEW_CONTENT_USER_AGE" ReturnType="Collection(EECIPModel.SP_NEW_CONTENT_USER_AGE_Result)" />
+          <FunctionImport Name="SP_DISCUSSION_CREATE_COUNT" ReturnType="Collection(EECIPModel.SP_DISCUSSION_CREATE_COUNT_Result)" />
           <FunctionImport Name="SP_PROJECT_CREATE_COUNT" ReturnType="Collection(EECIPModel.SP_PROJECT_CREATE_COUNT_Result)" />
+          <EntitySet Name="T_OE_RPT_FRESHNESS" EntityType="EECIPModel.T_OE_RPT_FRESHNESS" />
+          <FunctionImport Name="SP_RPT_FRESHNESS_RECORD" />
           </EntityContainer>
         <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
           <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
@@ -2938,11 +2955,27 @@
           <Property Type="Int32" Name="UserAge" Nullable="false" />
           <Property Type="Int32" Name="CNT" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="SP_PROJECT_CREATE_COUNT_Result">
-          <Property Type="String" Name="Month" Nullable="true" MaxLength="30" />
+        <ComplexType Name="SP_DISCUSSION_CREATE_COUNT_Result">
+          <Property Type="Int32" Name="Month" Nullable="true" />
           <Property Type="Int32" Name="Year" Nullable="true" />
           <Property Type="Int32" Name="OrderCount" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="SP_PROJECT_CREATE_COUNT_Result">
+          <Property Type="Int32" Name="Month" Nullable="true" />
+          <Property Type="Int32" Name="Year" Nullable="true" />
+          <Property Type="Int32" Name="OrderCount" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="T_OE_RPT_FRESHNESS">
+          <Key>
+            <PropertyRef Name="YR" />
+            <PropertyRef Name="MON" />
+            <PropertyRef Name="CAT" />
+          </Key>
+          <Property Name="YR" Type="Int32" Nullable="false" />
+          <Property Name="MON" Type="Int32" Nullable="false" />
+          <Property Name="CAT" Type="Int32" Nullable="false" />
+          <Property Name="COUNT" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3540,6 +3573,15 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_DISCUSSION_CREATE_COUNT" FunctionName="EECIPModel.Store.SP_DISCUSSION_CREATE_COUNT">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EECIPModel.SP_DISCUSSION_CREATE_COUNT_Result">
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="OrderCount" ColumnName="OrderCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_PROJECT_CREATE_COUNT" FunctionName="EECIPModel.Store.SP_PROJECT_CREATE_COUNT">
             <ResultMapping>
               <ComplexTypeMapping TypeName="EECIPModel.SP_PROJECT_CREATE_COUNT_Result">
@@ -3549,6 +3591,17 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="T_OE_RPT_FRESHNESS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_RPT_FRESHNESS">
+              <MappingFragment StoreEntitySet="T_OE_RPT_FRESHNESS">
+                <ScalarProperty Name="COUNT" ColumnName="COUNT" />
+                <ScalarProperty Name="CAT" ColumnName="CAT" />
+                <ScalarProperty Name="MON" ColumnName="MON" />
+                <ScalarProperty Name="YR" ColumnName="YR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_RPT_FRESHNESS_RECORD" FunctionName="EECIPModel.Store.SP_RPT_FRESHNESS_RECORD" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

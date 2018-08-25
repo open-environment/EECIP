@@ -1132,7 +1132,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                             select new SearchTermCountDisplayType {
                                 LOG_TERM = grp.Key,
                                 discCount = grp.Count()
-                            }).OrderByDescending(x => x.discCount).ToList();
+                            }).OrderByDescending(x => x.discCount).Take(15).ToList();
                 }
                 catch (Exception ex)
                 {

@@ -502,6 +502,15 @@ CREATE TABLE [dbo].[T_OE_SYS_SEARCH_LOG](
 
 GO
 
+CREATE TABLE [dbo].[T_OE_RPT_FRESHNESS](
+	[YR] [int] NOT NULL,
+	[MON] [int] NOT NULL,	
+	[CAT] [int] NOT NULL,
+	[COUNT] [int] NULL,		
+ CONSTRAINT [PK_T_OE_RPT_FRESHNESS] PRIMARY KEY CLUSTERED  ([YR], [MON], [CAT])
+) ON [PRIMARY]
+
+GO
 
 CREATE PROCEDURE SP_ENT_SVC_COUNT_DISPLAY
 AS
@@ -522,7 +531,7 @@ BEGIN
 
 	DECLARE @StartDate SMALLDATETIME, @EndDate SMALLDATETIME;
 
-	SELECT @StartDate = '20171201'
+	SELECT @StartDate = '20180101'
 	select @EndDate = GetDate();
 
 	;WITH d(d) AS 
@@ -535,7 +544,7 @@ BEGIN
 		FROM sys.all_objects ORDER BY [object_id] ) AS n
 	)
 	SELECT 
-	  [Month]    = DATENAME(MONTH, d.d), 
+	  [Month]    = MONTH(d.d), 
 	--  [Week]    = DATENAME(WK, d.d), 
 	  [Year]     = YEAR(d.d), 
 	  OrderCount = COUNT(o.PROJECT_IDX) 
@@ -587,3 +596,65 @@ BEGIN
 	group by userAge;
 END
 GO
+
+
+CREATE PROCEDURE SP_DISCUSSION_CREATE_COUNT
+AS
+BEGIN
+
+	DECLARE @StartDate SMALLDATETIME, @EndDate SMALLDATETIME;
+
+	SELECT @StartDate = '20180101'
+	select @EndDate = GetDate();
+
+	;WITH d(d) AS 
+	(
+	--  SELECT DATEADD(MONTH, n, DATEADD(MONTH, DATEDIFF(MONTH, 0, @StartDate), 0))
+	--  FROM ( SELECT TOP (DATEDIFF(WK, @StartDate, @EndDate) + 1) 
+	  SELECT DATEADD(MONTH, n, DATEADD(MONTH, DATEDIFF(MONTH, 0, @StartDate), 0))
+	  FROM ( SELECT TOP (DATEDIFF(MONTH, @StartDate, @EndDate) + 1) 
+		n = ROW_NUMBER() OVER (ORDER BY [object_id]) - 1
+		FROM sys.all_objects ORDER BY [object_id] ) AS n
+	)
+	SELECT 
+	  [Month]    = MONTH(d.d), 
+	--  [Week]    = DATENAME(WK, d.d), 
+	  [Year]     = YEAR(d.d), 
+	  OrderCount = COUNT(o.Id) 
+	FROM d LEFT OUTER JOIN forum.Topic AS o
+	  ON o.CreateDate >= d.d
+	--  AND o.CREATE_DT < DATEADD(WK, 2, d.d)
+	  AND o.CreateDate < DATEADD(MONTH, 1, d.d)
+	GROUP BY d.d
+	ORDER BY d.d;
+
+END
+GO
+
+
+CREATE PROCEDURE SP_RPT_FRESHNESS_RECORD
+AS
+BEGIN
+
+	declare @iCount int;
+	delete from [T_OE_RPT_FRESHNESS] where YR = year(getdate()) and MON = month(getdate());
+
+	select @iCount = count(*) from T_OE_PROJECTS
+
+	insert into [T_OE_RPT_FRESHNESS](YR,MON,CAT,COUNT)
+	select year(getdate()), month(getdate()), 
+	case when datediff(day,coalesce(MODIFY_DT, create_dt),GetDate())<=31 then 1
+	when  datediff(day,coalesce(MODIFY_DT, create_dt),GetDate()) between 31 and 182 then 2
+	when  datediff(day,coalesce(MODIFY_DT, create_dt),GetDate()) between 182 and 365 then 3
+	else 4 end
+	, (count(*) *100) / @iCount
+	 from T_OE_PROJECTS
+	 group by
+	case when datediff(day,coalesce(MODIFY_DT, create_dt),GetDate())<=31 then 1
+	when  datediff(day,coalesce(MODIFY_DT, create_dt),GetDate()) between 31 and 182 then 2
+	when  datediff(day,coalesce(MODIFY_DT, create_dt),GetDate()) between 182 and 365 then 3
+	else 4 end;
+END
+GO
+
+

@@ -1,7 +1,7 @@
 ﻿@model EECIP.Models.vmDashboardMetrics
 @{
     ViewBag.Title = "Site Metrics";
-    ViewBag.SubSubTitle = "A community platform for environmental agency staff to learn and collaborate on projects about business process, IT, advanced monitoring and more.";
+    ViewBag.SubSubTitle = "View site usage data.";
 }
 <div class="row">
 
@@ -9,7 +9,7 @@
     <section class="col-sm-6">
         <section class="panel panel-default">
             <div class="panel-heading">
-                Project Freshness (Demo Data)
+                Project Freshness
                 <div class="panel-tools">
                     <a class="btn btn-xs panel-collapse collapses" href="#">
                     </a>
@@ -69,7 +69,7 @@
     <section class="col-sm-6">
         <section class="panel panel-default">
             <div class="panel-heading">
-                New Projects Added Over Time  (Demo Data)
+                New Projects Added Over Time 
                 <div class="panel-tools">
                     <a class="btn btn-xs panel-collapse collapses" href="#">
                     </a>
@@ -108,122 +108,183 @@
         $(document).ready(function () {
 
             //************ PROJECT FRESHNESS OVER TIME ***************************
-            var ctx = document.getElementById("chartFresh").getContext('2d');
-            const colors = {
-                green: {
-                    fill: '#1fe25d',
-                    stroke: '#009930',
-                },
-                yellow: {
-                    fill: '#fff159',
-                    stroke: '#ffe900',
-                },
-                orange: {
-                    fill: '#ffc04c',
-                    stroke: '#dd9000',
-                },
-                red: {
-                    fill: '#ef5871',
-                    stroke: '#c90424',
-                },
-            };
-            const newest = [50, 40, 45, 60, 45, 35, 25];
-            console.log(newest);
-            const newer = [50, 60, 55, 30, 45, 45, 25];
-            const new1 = [0, 0, 0, 10, 10, 15, 35];
-            const old = [0, 0, 0, 0, 0, 5, 15];
-            const xData = ['May 1, 2018', 'May 15, 2018', 'June 1, 2018', 'June 15, 2018', 'July 1, 2018', 'July 15, 2018', 'August 1, 2018'];
+            $(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("MetricChartFreshness", "Dashboard")',
+                    dataType: "json",
+                    traditional: true,
+                    success: function (response) {
 
-            const myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: xData,
-                    datasets: [{
-                        label: "One Year or Older",
-                        fill: true,
-                        backgroundColor: colors.red.fill,
-                        pointBackgroundColor: colors.red.stroke,
-                        borderColor: colors.red.stroke,
-                        pointHighlightStroke: colors.red.stroke,
-                        borderCapStyle: 'butt',
-                        data: old,
+                        //console.log(response);
+                        //data returned, render chart
+                        var ctx = document.getElementById("chartFresh").getContext('2d');
+                        const colors = {
+                            green: {
+                                fill: '#1fe25d',
+                                stroke: '#009930'
+                            },
+                            yellow: {
+                                fill: '#fff159',
+                                stroke: '#ffe900'
+                            },
+                            orange: {
+                                fill: '#ffc04c',
+                                stroke: '#dd9000'
+                            },
+                            red: {
+                                fill: '#ef5871',
+                                stroke: '#c90424'
+                            }
+                        };
+                        const _labels = response.Cat1.map(function (e) {
+                            return e.MON + ' ' + e.YR;
+                        });
+                        const newest = response.Cat1.map(function (e) {
+                            return e.COUNT;
+                        });
+                        const newer = response.Cat2.map(function (e) {
+                            return e.COUNT;
+                        });
+                        const new1 = response.Cat3.map(function (e) {
+                            return e.COUNT;
+                        });
+                        const old = response.Cat4.map(function (e) {
+                            return e.COUNT;
+                        });
 
-                    }, {
-                        label: "6-12 months old",
-                        fill: true,
-                        backgroundColor: colors.orange.fill,
-                        pointBackgroundColor: colors.orange.stroke,
-                        borderColor: colors.orange.stroke,
-                        pointHighlightStroke: colors.orange.stroke,
-                        borderCapStyle: 'butt',
-                        data: new1,
-                    }, {
-                        label: "1-6 months old",
-                        fill: true,
-                        backgroundColor: colors.yellow.fill,
-                        pointBackgroundColor: colors.yellow.stroke,
-                        borderColor: colors.yellow.stroke,
-                        pointHighlightStroke: colors.yellow.stroke,
-                        borderCapStyle: 'butt',
-                        data: newer,
-                    }, {
-                        label: "Past month",
-                        fill: true,
-                        backgroundColor: colors.green.fill,
-                        pointBackgroundColor: colors.green.stroke,
-                        borderColor: colors.green.stroke,
-                        pointHighlightStroke: colors.green.stroke,
-                        data: newest,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        yAxes: [{
-                            stacked: true,
-                        }]
+
+
+                        const myChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: _labels,
+                                datasets: [{
+                                    label: "One Year or Older",
+                                    fill: true,
+                                    backgroundColor: colors.red.fill,
+                                    pointBackgroundColor: colors.red.stroke,
+                                    borderColor: colors.red.stroke,
+                                    pointHighlightStroke: colors.red.stroke,
+                                    borderCapStyle: 'butt',
+                                    data: old
+                                }, {
+                                    label: "6-12 months old",
+                                    fill: true,
+                                    backgroundColor: colors.orange.fill,
+                                    pointBackgroundColor: colors.orange.stroke,
+                                    borderColor: colors.orange.stroke,
+                                    pointHighlightStroke: colors.orange.stroke,
+                                    borderCapStyle: 'butt',
+                                    data: new1
+                                }, {
+                                    label: "1-6 months old",
+                                    fill: true,
+                                    backgroundColor: colors.yellow.fill,
+                                    pointBackgroundColor: colors.yellow.stroke,
+                                    borderColor: colors.yellow.stroke,
+                                    pointHighlightStroke: colors.yellow.stroke,
+                                    borderCapStyle: 'butt',
+                                    data: newer
+                                }, {
+                                    label: "Past month",
+                                    fill: true,
+                                    backgroundColor: colors.green.fill,
+                                    pointBackgroundColor: colors.green.stroke,
+                                    borderColor: colors.green.stroke,
+                                    pointHighlightStroke: colors.green.stroke,
+                                    data: newest
+                                }]
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'How recently projects were updated on a month-by-month basis'
+                                },
+                                responsive: true,
+                                scales: {
+                                    yAxes: [{
+                                        stacked: true,
+                                    }]
+                                },
+                                animation: {
+                                    duration: 750
+                                }
+                            }
+                        });
+
+
                     },
-                    animation: {
-                        duration: 750,
-                    },
-                }
+                    error: function (response) {
+                        toastr.warning(response || "cannot display chart.");
+                    }
+                });
             });
 
 
 
-            //new projects added over time
-            new Chart(document.getElementById("chartProjectNew"), {
-                type: 'line',
-                data: {
-                    labels: ['1/1/2018', '2/1/2018', '3/1/2018', '4/1/2018', '5/1/2018', '6/1/2018', '7/1/2018', '8/1/2018', '9/1/2018', '10/1/2018'],
-                    datasets: [{
-                        data: [1, 11, 2, 5, 22, 2, 11, 9, 12, 16],
-                        label: "Projects",
-                        borderColor: "#3e95cd",
-                        fill: false
-                    }, {
-                        data: [3, 2, 0, 0, 1, 2, 11, 3, 24, 17],
-                        label: "Discussion Topics",
-                        borderColor: "#8e5ea2",
-                        fill: false
-                    }
-                    ]
-                },
-                options: {
-                    elements: {
-                        line: {
-                            tension: 0.1
-                        }
+
+
+
+
+            //************ PROJECT CREATED BY MONTH***************************
+            $(function () {
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("MetricChartProjects", "Dashboard")',
+                    dataType: "json",
+                    traditional: true,
+                    success: function (response) {
+                        var _labels = response.Projects.map(function (e) {
+                            return e.Month + ' ' + e.Year;
+                        });
+                        var _proj = response.Projects.map(function (e) {
+                            return e.OrderCount;
+                        });
+                        var _disc = response.Discussions.map(function (e) {
+                            return e.OrderCount;
+                        });
+
+                        //data returned, render chart
+                        new Chart(document.getElementById("chartProjectNew"), {
+                            type: 'line',
+                            data: {
+                                labels: _labels,
+                                datasets: [{
+                                    data: _proj,
+                                    label: "Projects",
+                                    borderColor: "#3e95cd",
+                                    fill: false
+                                }, {
+                                    data: _disc,
+                                    label: "Discussion Topics",
+                                    borderColor: "#8e5ea2",
+                                    fill: false
+                                }
+                                ]
+                            },
+                            options: {
+                                elements: {
+                                    line: {
+                                        tension: 0.1
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'New Projects and New Discussion Topics Added Per Month'
+                                }
+                            }
+                        });
                     },
-                    title: {
-                        display: true,
-                        text: 'New Projects and New Discussion Topics Added Per Month'
+                    error: function (response) {
+                        toastr.warning(response || "cannot display chart.");
                     }
-                }
+                });
             });
 
 
-            //for recently added content, how old are the users?
+
+            //************ for recently added content, how old are the users***************************
             $(function () {
                 $.ajax({
                     type: "GET",
@@ -231,7 +292,6 @@
                     dataType: "json",
                     traditional: true,
                     success: function (response) {
-                        console.log(response);
 
                         //data returned, render chart
                         new Chart(document.getElementById("chartNewContentUsers"), {

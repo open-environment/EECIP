@@ -10,11 +10,13 @@
 namespace EECIP.App_Logic.DataAccessLayer
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class SP_PROJECT_CREATE_COUNT_Result
+    public partial class T_OE_RPT_FRESHNESS
     {
-        public Nullable<int> Month { get; set; }
-        public Nullable<int> Year { get; set; }
-        public Nullable<int> OrderCount { get; set; }
+        public int YR { get; set; }
+        public int MON { get; set; }
+        public int CAT { get; set; }
+        public Nullable<int> COUNT { get; set; }
     }
 }

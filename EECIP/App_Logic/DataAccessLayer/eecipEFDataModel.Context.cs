@@ -68,6 +68,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<Vote> Votes { get; set; }
         public virtual DbSet<T_OE_REF_EMAIL_TEMPLATE> T_OE_REF_EMAIL_TEMPLATE { get; set; }
         public virtual DbSet<T_OE_SYS_SEARCH_LOG> T_OE_SYS_SEARCH_LOG { get; set; }
+        public virtual DbSet<T_OE_RPT_FRESHNESS> T_OE_RPT_FRESHNESS { get; set; }
     
         public virtual ObjectResult<SP_ENT_SVC_COUNT_DISPLAY_Result> SP_ENT_SVC_COUNT_DISPLAY()
         {
@@ -79,9 +80,19 @@ namespace EECIP.App_Logic.DataAccessLayer
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_NEW_CONTENT_USER_AGE_Result>("SP_NEW_CONTENT_USER_AGE");
         }
     
+        public virtual ObjectResult<SP_DISCUSSION_CREATE_COUNT_Result> SP_DISCUSSION_CREATE_COUNT()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_DISCUSSION_CREATE_COUNT_Result>("SP_DISCUSSION_CREATE_COUNT");
+        }
+    
         public virtual ObjectResult<SP_PROJECT_CREATE_COUNT_Result> SP_PROJECT_CREATE_COUNT()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_PROJECT_CREATE_COUNT_Result>("SP_PROJECT_CREATE_COUNT");
+        }
+    
+        public virtual int SP_RPT_FRESHNESS_RECORD()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_RPT_FRESHNESS_RECORD");
         }
     }
 }

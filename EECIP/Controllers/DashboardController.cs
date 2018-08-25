@@ -848,5 +848,38 @@ namespace EECIP.Controllers
             return Json(iData, JsonRequestBehavior.AllowGet);
         }
 
+
+        public JsonResult MetricChartProjects()
+        {
+            List<SP_PROJECT_CREATE_COUNT_Result> recs = db_EECIP.GetSP_PROJECT_CREATE_COUNT_Result();
+            List<SP_DISCUSSION_CREATE_COUNT_Result> recs2 = db_EECIP.GetSP_DISCUSSION_CREATE_COUNT_Result();
+
+            return Json(new
+            {
+                Projects = recs,
+                Discussions = recs2
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult MetricChartFreshness()
+        {
+            //first refresh the current month data
+            db_EECIP.GetSP_RPT_FRESHNESS_RECORD_Result();
+
+            //retrieve data
+            List<T_OE_RPT_FRESHNESS> iData1 = db_EECIP.GetT_OE_RPT_FRESHNESS_ByCat(1);
+            List<T_OE_RPT_FRESHNESS> iData2 = db_EECIP.GetT_OE_RPT_FRESHNESS_ByCat(2);
+            List<T_OE_RPT_FRESHNESS> iData3 = db_EECIP.GetT_OE_RPT_FRESHNESS_ByCat(3);
+            List<T_OE_RPT_FRESHNESS> iData4 = db_EECIP.GetT_OE_RPT_FRESHNESS_ByCat(4);
+
+            return Json(new
+            {
+                Cat1 = iData1,
+                Cat2 = iData2,
+                Cat3 = iData3,
+                Cat4 = iData4
+            }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

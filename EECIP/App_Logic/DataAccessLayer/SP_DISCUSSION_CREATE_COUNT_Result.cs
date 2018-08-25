@@ -11,7 +11,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 {
     using System;
     
-    public partial class SP_PROJECT_CREATE_COUNT_Result
+    public partial class SP_DISCUSSION_CREATE_COUNT_Result
     {
         public Nullable<int> Month { get; set; }
         public Nullable<int> Year { get; set; }

@@ -95,6 +95,7 @@
         <AssociationConnector Association="EECIPModel.FK__TopicNoti__Topic__3F6663D5" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_EMAIL_TEMPLATE" Width="1.5" PointX="7.375" PointY="3.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_SEARCH_LOG" Width="1.5" PointX="3.375" PointY="7.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_RPT_FRESHNESS" Width="1.5" PointX="5.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

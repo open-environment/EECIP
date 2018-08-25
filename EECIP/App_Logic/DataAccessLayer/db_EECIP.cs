@@ -1678,6 +1678,67 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
         //*******************************8 REPORTS ***************************************************
+        public static int InsertUpdateT_OE_RPT_FRESHNESS(int yR, int mON, int cAT, int cOUNT)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Boolean insInd = false;
+
+                    T_OE_RPT_FRESHNESS e = (from c in ctx.T_OE_RPT_FRESHNESS
+                                            where c.YR == yR
+                                            && c.MON == mON
+                                            && c.CAT == cAT
+                                            select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_RPT_FRESHNESS();
+                    }
+
+                    e.YR = yR;
+                    e.MON = mON;
+                    e.CAT = cAT;
+                    e.COUNT = cOUNT;
+
+                    if (insInd)
+                        ctx.T_OE_RPT_FRESHNESS.Add(e);
+
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+        public static List<T_OE_RPT_FRESHNESS> GetT_OE_RPT_FRESHNESS_ByCat(int Cat)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_RPT_FRESHNESS
+                            where a.CAT == Cat
+                            orderby a.YR, a.MON, a.CAT
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+
         public static List<SP_NEW_CONTENT_USER_AGE_Result> GetSP_NEW_CONTENT_USER_AGE_Result()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1697,6 +1758,69 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+
+        public static List<SP_PROJECT_CREATE_COUNT_Result> GetSP_PROJECT_CREATE_COUNT_Result()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var x = (from a in ctx.SP_PROJECT_CREATE_COUNT()
+                             orderby a.Year, a.Month
+                             select a).ToList();
+
+                    return x;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+        public static List<SP_DISCUSSION_CREATE_COUNT_Result> GetSP_DISCUSSION_CREATE_COUNT_Result()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var x = (from a in ctx.SP_DISCUSSION_CREATE_COUNT()
+                             orderby a.Year, a.Month
+                             select a).ToList();
+
+                    return x;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+        public static int GetSP_RPT_FRESHNESS_RECORD_Result()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var x = ctx.SP_RPT_FRESHNESS_RECORD();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
 
 
     }

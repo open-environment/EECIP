@@ -221,6 +221,9 @@
     <Compile Include="App_Logic\DataAccessLayer\PostFile.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\SP_DISCUSSION_CREATE_COUNT_Result.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\SP_ENT_SVC_COUNT_DISPLAY_Result.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -297,6 +300,9 @@
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_ROLES.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\T_OE_RPT_FRESHNESS.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_SYS_EMAIL_LOG.cs">
