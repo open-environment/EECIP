@@ -2,7 +2,7 @@
 @model EECIP.Models.vmDashboardProjectDetails
 @{
     ViewBag.Title = "Project Details";
-    ViewBag.SubTitle = "for " + Model.orgName;
+    //ViewBag.SubTitle = "for " + Model.orgName;
 }
 
 @using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id = "norepostform", enctype = "multipart/form-data" }))
@@ -10,6 +10,8 @@
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.project.PROJECT_IDX)
     @Html.HiddenFor(model => model.ReturnURL)
+    @Html.HiddenFor(model => model.NewProjInd)
+    @Html.HiddenFor(model => model.NewProjOrgIDX)
 
     <div class="row ">
         <div class="col-sm-6 ">
@@ -22,21 +24,24 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    @if (User.IsInRole("Admins"))
-                    {
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Organization</label>
-                                    @Html.DropDownListFor(model => model.project.ORG_IDX, Model.ddl_Agencies, "", new { @class = "form-control" })
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        @Html.HiddenFor(model => model.project.ORG_IDX)
-                    }
+
+
+
+                    @*@if (User.IsInRole("Admins"))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Organization</label>
+                        @Html.DropDownListFor(model => model.project.ORG_IDX, Model.ddl_Agencies, "", new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @Html.HiddenFor(model => model.project.ORG_IDX)
+        }*@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -54,6 +59,41 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="table-responsive" style="max-height:700px;">
+                        <table class="table table-striped m-b-none table-bordered" data-ride="datatables" style="margin-bottom:15px;">
+                            <tr>
+                                @if (Model.ProjectOrgs != null & Model.ProjectOrgs.Count > 1)
+                                {
+                                    <th></th>
+                                }
+                                <th>Agency 
+                                @if (!Model.NewProjInd && !User.IsInRole("ReadOnly"))
+                                {
+                                <a id="btnAddAgency" href="@Url.Action("AddProjectOrg", "Dashboard", new { id = Model.project.PROJECT_IDX })" class="btn btn-primary btn-xs pull-right">Add Other Agencies</a>}
+                                </th>
+                            </tr>
+                            @foreach (var item in Model.ProjectOrgs)
+                            {
+                                <tr>
+                                    @if (Model.ProjectOrgs != null && Model.ProjectOrgs.Count > 1)
+                                    {
+                                        <td>
+                                            <div class="delete-section" style="display:inline">
+                                                <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                                <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.ORG_IDX" data-delete-id2="@Model.project.PROJECT_IDX" data-delete-p="/ProjectOrgDelete"><b>Confirm Delete</b></div>
+                                            </div>
+                                        </td>
+                                    }
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ORG_NAME)
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -197,7 +237,7 @@
                                                 @Html.TextBoxFor(modelItem => Model.sProjectUrlList[i].PROJ_URL_DESC, new { @class = "form-control projurldesc" })
                                             </div>
                                             <div class="col-md-2" style="padding-top: 25px;">
-                                                <a href="#" onclick="RemoveTextBox(this)">Remove</a>
+                                                <a href="#" onclick="RemoveTextBox(this);">Remove</a>
                                             </div>
                                         </div>
                                     }
@@ -213,7 +253,7 @@
 
     <div class="row aligned-row">
         <section class="col-md-6 ">
-            <section class="panel panel-default @(Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && Model.orgType != "Governance" ? "danger" : "") ">
+            <section class="panel panel-default @(Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && !Model.governanceInd ? "danger" : "") ">
                 <div class="panel-heading">
                     Project Contact
                     <div class="panel-tools">
@@ -222,7 +262,7 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    @if (Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && Model.orgType != "Governance")
+                    @if (Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && !Model.governanceInd)
                     {
                         <div class="alert alert-block alert-danger fade in">
                             <button data-dismiss="alert" class="close" type="button">×</button>
@@ -233,7 +273,7 @@
                         </div>
                     }
 
-                    @if (Model.orgType != "Governance")
+                    @if (!Model.governanceInd)
                     {
                         <div class="row">
                             <div class="col-md-12">
@@ -247,13 +287,13 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                @if (Model.orgType != "Governance")
+                                @if (Model.governanceInd)
                                 {
-                                    <label>Or if user doesn't have an EECIP account, enter contact info here:</label>
+                                    <label>Governance group contact:</label>
                                 }
                                 else
                                 {
-                                    <label>Governance group contact:</label>
+                                    <label>Or if user doesn't have an EECIP account, enter contact info here:</label>
                                 }
                                 @Html.TextBoxFor(model => model.project.PROJECT_CONTACT, new { @class = "form-control", @maxlength = "100" })
                                 @Html.ValidationMessageFor(model => model.project.PROJECT_CONTACT)
@@ -386,9 +426,11 @@
             $('form').areYouSure();
             $('form').on('dirty.areYouSure', function () {
                 $("#btnSave").prop("disabled", false);
+                $("#btnAddAgency").fadeOut(400);
             });
             $('form').on('clean.areYouSure', function () {
                 $("#btnSave").prop("disabled", true);
+                $("#btnAddAgency").show();
             });
 
 
@@ -460,7 +502,7 @@
             }
 
             function toggleDIV(a, b, c, d) {
-                if ($(a).text() == 'Yes: Major Component' || $(a).text() == 'Yes: Minor Component') {
+                if ($(a).text() === 'Yes: Major Component' || $(a).text() === 'Yes: Minor Component') {
                     $(b).show();
 
                     if (d == true) {
@@ -522,6 +564,6 @@
 
             $('form').trigger('rescan.areYouSure');
 
-        };
+        }
     </script>
 }

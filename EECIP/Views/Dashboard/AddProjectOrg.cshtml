@@ -1,0 +1,41 @@
+﻿@model EECIP.Models.vmDashboardAddProjectOrg
+@{
+    ViewBag.Title = "Add Agency to Project";
+    ViewBag.SubTitle = "Add another agency that jointly worked on this project.";
+}
+
+<!-- render the main content -->
+@using (Html.BeginForm("AddProjectOrg", "Dashboard", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.project.PROJECT_IDX)
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Project</label>
+                <div class="col-sm-6">
+                    @Html.TextBoxFor(model => model.project.PROJ_NAME, new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">
+                    Agency to Add:
+                </label>
+                <div class="col-sm-6">
+                    @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" name="submitButton" value="Save" class="btn btn-primary">Save</button>
+            <a href="@Url.Action("ProjectDetails", "Dashboard", new { id=Model.project.PROJECT_IDX })" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+}

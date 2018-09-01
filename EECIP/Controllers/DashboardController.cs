@@ -43,7 +43,6 @@ namespace EECIP.Controllers
             return View(model);
         }
 
-
         // GET: Dashboard/Search
         public ActionResult Search(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetOrgType, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType, string sortDir)
         {
@@ -75,7 +74,6 @@ namespace EECIP.Controllers
             return View(model);
         }
 
-
         public ActionResult Leaderboard()
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -102,7 +100,6 @@ namespace EECIP.Controllers
 
             return View(model);
         }
-
 
         #endregion
 
@@ -317,25 +314,31 @@ namespace EECIP.Controllers
             int UserIDX = db_Accounts.GetUserIDX();
             var model = new vmDashboardProjectDetails();
 
-            //new case
+            //new case********************************************
             if (id == null)
             {
                 //if new case and either no org supplied or the org supplied the user doesn't have rights to edit, then fail
                 if ((orgIDX == null) || (User.IsInRole("Admins") == false && db_Accounts.UserCanEditOrgIDX(UserIDX, orgIDX.ConvertOrDefault<Guid>()) == false ))
                 {
-                    TempData["Error"] = "You cannot edit projects for this agency.";
+                    TempData["Error"] = "You cannot edit projects for this agency or no agency supplied.";
                     return RedirectToAction("AccessDenied", "Home");
                 }
 
                 //if got this far then initialize valid new project
                 model.project = new T_OE_PROJECTS
                 {
-                    ORG_IDX = orgIDX,
                     PROJECT_IDX = Guid.NewGuid(),
                 };
+
+                //populate org for new project
+                T_OE_ORGANIZATION o = db_Ref.GetT_OE_ORGANIZATION_ByID(orgIDX.ConvertOrDefault<Guid>()); 
+                model.ProjectOrgs = new List<T_OE_ORGANIZATION>();
+                model.ProjectOrgs.Add(o);
+
                 model.NewProjInd = true;
+                model.NewProjOrgIDX = orgIDX;
             }
-            else
+            else  //edit case********************************************
             {
                 model.project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
                 if (model.project == null)
@@ -345,8 +348,10 @@ namespace EECIP.Controllers
                 }
                 else
                 {
+                    model.ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(id.ConvertOrDefault<Guid>());
+
                     //should be existing case
-                    if (User.IsInRole("Admins") == false && db_Accounts.UserCanEditOrgIDX(UserIDX, model.project.ORG_IDX.ConvertOrDefault<Guid>()) == false)
+                    if (User.IsInRole("Admins") == false && db_Accounts.UserCanEditOrgList(UserIDX, model.ProjectOrgs) == false)
                     {
                         TempData["Error"] = "You cannot edit projects for this agency.";
                         return RedirectToAction("AccessDenied", "Home");
@@ -361,17 +366,15 @@ namespace EECIP.Controllers
 
 
             //if got this far (regardless of new or existing) then add more to the model
-            T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.project.ORG_IDX.ConvertOrDefault<Guid>());
-            if (_org != null)
-            {
-                model.orgName = _org.ORG_NAME;
-                model.orgType = _org.ORG_TYPE;
-            }
+            T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.ProjectOrgs[0].ORG_IDX.ConvertOrDefault<Guid>());
+            if (_org != null && _org.ORG_TYPE == "Governance")
+                model.governanceInd = true;
+
             model.sProjectUrlList = db_EECIP.GetT_OE_PROJECTS_URL_ByProjIDX(model.project.PROJECT_IDX);
-            model.ddl_AgencyUsers = ddlHelpers.get_ddl_users_by_organization(model.project.ORG_IDX.ConvertOrDefault<Guid>());
+            model.ddl_AgencyUsers = ddlHelpers.get_ddl_users_by_organizationList(model.ProjectOrgs);
             model.AllProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Program Area").Select(x => new SelectListItem { Value = x, Text = x });
             model.AllFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeAll(model.project.PROJECT_IDX, "Tags").Select(x => new SelectListItem { Value = x, Text = x });
-            model.ddl_Agencies = ddlHelpers.get_ddl_organizations(true, false);
+            //model.ddl_Agencies = ddlHelpers.get_ddl_organizations(true, false);
             model.ReturnURL = returnURL ?? "Projects";
             return View(model);
 
@@ -384,11 +387,13 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
+            model.ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(model.project.PROJECT_IDX);
+        
             //CHECK PERMISSIONS
-            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(UserIDX, model.project.ORG_IDX.ConvertOrDefault<Guid>()))
+            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(UserIDX, model.ProjectOrgs))
             {
                 //update project data
-                Guid? newProjID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, model.project.ORG_IDX, model.project.PROJ_NAME ?? "",
+                Guid? newProjID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, null, model.project.PROJ_NAME ?? "",
                     model.project.PROJ_DESC ?? "", model.project.MEDIA_TAG, model.project.START_YEAR ?? -1, model.project.PROJ_STATUS ?? "",
                     model.project.DATE_LAST_UPDATE ?? -1, model.project.RECORD_SOURCE ?? "", model.project.PROJECT_URL ?? "", model.project.MOBILE_IND,
                     model.project.MOBILE_DESC ?? "", model.project.ADV_MON_IND, model.project.ADV_MON_DESC ?? "", model.project.BP_MODERN_IND,
@@ -397,6 +402,12 @@ namespace EECIP.Controllers
                 if (newProjID != null)
                 {
                     Guid newProjID2 = newProjID.ConvertOrDefault<Guid>();
+
+                    //update project org
+                    if (model.NewProjOrgIDX != null)
+                        db_EECIP.InsertUpdateT_OE_PROJECT_ORGS(newProjID2, model.NewProjOrgIDX.ConvertOrDefault<Guid>(), UserIDX);
+
+
                     //update program area tags
                     db_EECIP.DeleteT_OE_PROJECT_TAGS(newProjID2, "Program Area");
                     foreach (string expertise in model.SelectedProgramAreas ?? new List<string>())
@@ -470,7 +481,7 @@ namespace EECIP.Controllers
             else
                 TempData["Error"] = "You don't have permissions to edit this project.";
 
-            return RedirectToAction(model.ReturnURL ?? "Projects", new { selAgency = model.project.ORG_IDX } );
+            return RedirectToAction(model.ReturnURL ?? "Projects", new { selAgency = model.NewProjOrgIDX } );
         }
 
 
@@ -479,9 +490,7 @@ namespace EECIP.Controllers
         public JsonResult ProjectsDelete(IEnumerable<Guid> id)
         {
             int UserIDX = db_Accounts.GetUserIDX();
-            if (id == null)
-                return Json("No record selected to delete");
-            else if (id.Count() == 0)
+            if (id == null || id.Count() == 0)
                 return Json("No record selected to delete");
             else
             {
@@ -491,16 +500,20 @@ namespace EECIP.Controllers
                     T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(id1);
                     if (p != null)
                     {
-                        if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), p.ORG_IDX.ConvertOrDefault<Guid>()))
+                        List<T_OE_ORGANIZATION> orgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(p.PROJECT_IDX);
+                        if (orgs != null)
                         {
-                            int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id1);
-                            if (SuccID > 0)
+                            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(db_Accounts.GetUserIDX(), orgs))
                             {
-                                //SUCCESS - now delete from Azure
-                                AzureSearch.DeleteAzureGuid(id1);
+                                int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id1);
+                                if (SuccID > 0)
+                                {
+                                    //SUCCESS - now delete from Azure
+                                    AzureSearch.DeleteAzureGuid(id1);
+                                }
+                                else
+                                    return Json("Unable to delete project.");
                             }
-                            else
-                                return Json("Unable to delete project.");
                         }
                     }
                 }
@@ -525,9 +538,11 @@ namespace EECIP.Controllers
 
                 if (model.project != null)
                 {
-                    T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.project.ORG_IDX.ConvertOrDefault<Guid>());
-                    if (_org != null)
-                        model.OrgName = _org.ORG_NAME;
+                    model.ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(id.ConvertOrDefault<Guid>());
+
+                    //T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.project.ORG_IDX.ConvertOrDefault<Guid>());
+                    //if (_org != null)
+                    //    model.OrgName = _org.ORG_NAME;
 
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
                     model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Tags");
@@ -709,6 +724,91 @@ namespace EECIP.Controllers
         }
 
 
+        public ActionResult AddProjectOrg(Guid? id)
+        {
+            var model = new vmDashboardAddProjectOrg();
+            model.project = db_EECIP.GetT_OE_PROJECTS_ByIDX(id);
+
+            return View(model);
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult AddProjectOrg(vmDashboardAddProjectOrg model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            if (model.selAgency != null)
+            {
+                List<T_OE_ORGANIZATION> projectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(model.project.PROJECT_IDX);
+                if (projectOrgs != null && projectOrgs.Count > 0)
+                {
+                    //CHECK PERMISSIONS
+                    if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(UserIDX, projectOrgs))
+                    {
+                        db_EECIP.InsertUpdateT_OE_PROJECT_ORGS(model.project.PROJECT_IDX, model.selAgency.ConvertOrDefault<Guid>(), UserIDX);
+
+                        //now update the Azure search
+                        db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, false);
+                        AzureSearch.PopulateSearchIndexProject(model.project.PROJECT_IDX);
+
+                        TempData["Success"] = "Update successful.";
+                        return RedirectToAction("ProjectDetails", "Dashboard", new { id = model.project.PROJECT_IDX });
+                    }
+                    else
+                        TempData["Error"] = "You do not have rights to edit this project";
+                }
+                else
+                    TempData["Error"] = "No project found";
+            }
+            else
+                TempData["Error"] = "Please select an agency";
+
+            return RedirectToAction("AddProjectOrg", "Dashboard", new { id = model.project.PROJECT_IDX });
+        }
+
+
+        [HttpPost]
+        public JsonResult ProjectOrgDelete(string id, string id2)
+        {
+            if (id == null)
+                return Json("No record selected to delete");
+            else
+            {
+                Guid orgIDX = Guid.Parse(id);
+                Guid projIDX = Guid.Parse(id2);
+
+                List<T_OE_ORGANIZATION> allPO = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(projIDX);
+                if (allPO != null)
+                {
+                    //CHECK PERMISSIONS IF USER CAN EDIT PROJECT BASED ON ALL ORGS ASSOCIATED WITH PROJECT
+                    int UserIDX = db_Accounts.GetUserIDX();
+                    if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(UserIDX, allPO))
+                    {
+                        //FIND EXACT RECORD TO REMOVE
+                        T_OE_PROJECT_ORGS po = db_EECIP.GetT_OE_PROJECT_ORGS_ByProj_Org(orgIDX, projIDX);
+                        if (po != null)
+                        {
+                            int SuccID = db_EECIP.DeleteT_OE_PROJECT_ORGS(po.PROJECT_ORG_IDX);
+                            if (SuccID > 0)
+                            {
+                                //SUCCESS - now delete from Azure
+                                //now update the Azure search
+                                db_EECIP.InsertUpdatetT_OE_PROJECTS(projIDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, false);
+                                AzureSearch.DeleteSearchIndexKey(id2 + "_" + id);
+                                return Json("Success");
+                            }
+                        }
+                    }
+                    else
+                        return Json("You don't have rights to remove .");
+                }
+            }
+
+            //if got this far, generic error
+            return Json("Unable to delete.");
+
+        }
         #endregion
 
 
@@ -833,7 +933,6 @@ namespace EECIP.Controllers
         }
 
 
-
         public JsonResult MetricChartUsers()
         {
             List<SP_NEW_CONTENT_USER_AGE_Result> recs = db_EECIP.GetSP_NEW_CONTENT_USER_AGE_Result();
@@ -860,6 +959,7 @@ namespace EECIP.Controllers
                 Discussions = recs2
             }, JsonRequestBehavior.AllowGet);
         }
+
 
         public JsonResult MetricChartFreshness()
         {

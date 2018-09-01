@@ -22,6 +22,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             this.T_OE_ORGANIZATION_EMAIL_RULE = new HashSet<T_OE_ORGANIZATION_EMAIL_RULE>();
             this.T_OE_PROJECTS = new HashSet<T_OE_PROJECTS>();
             this.T_OE_USERS = new HashSet<T_OE_USERS>();
+            this.T_OE_PROJECT_ORGS = new HashSet<T_OE_PROJECT_ORGS>();
         }
     
         public System.Guid ORG_IDX { get; set; }
@@ -52,5 +53,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual ICollection<T_OE_PROJECTS> T_OE_PROJECTS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_USERS> T_OE_USERS { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_OE_PROJECT_ORGS> T_OE_PROJECT_ORGS { get; set; }
     }
 }

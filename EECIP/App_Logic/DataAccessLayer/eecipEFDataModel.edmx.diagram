@@ -96,6 +96,9 @@
         <EntityTypeShape EntityType="EECIPModel.T_OE_REF_EMAIL_TEMPLATE" Width="1.5" PointX="7.375" PointY="3.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_SYS_SEARCH_LOG" Width="1.5" PointX="3.375" PointY="7.75" />
         <EntityTypeShape EntityType="EECIPModel.T_OE_RPT_FRESHNESS" Width="1.5" PointX="5.375" PointY="7.75" />
+        <EntityTypeShape EntityType="EECIPModel.T_OE_PROJECT_ORGS" Width="1.5" PointX="13.5" PointY="32.5" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__ORG_I__5E3FF0B0" />
+        <AssociationConnector Association="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -94,7 +94,6 @@ namespace EECIP.Models
 
         public static IEnumerable<SelectListItem> get_ddl_users_by_organization(Guid orgID)
         {
-
             return db_Accounts.GetT_OE_USERSByAgency(orgID).Select(x => new SelectListItem
             {
                 Value = x.USER_IDX.ToString(),
@@ -102,6 +101,14 @@ namespace EECIP.Models
             });
         }
 
+        public static IEnumerable<SelectListItem> get_ddl_users_by_organizationList(List<T_OE_ORGANIZATION> orgs)
+        {
+            return db_Accounts.GetT_OE_USERSByAgencyList(orgs).Select(x => new SelectListItem
+            {
+                Value = x.USER_IDX.ToString(),
+                Text = x.FNAME + " " + x.LNAME
+            });
+        }
 
 
     }

@@ -229,6 +229,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+        
         //************************** ORGANIZTION_ENTERPRISE_PLATFORM *************************************************
         public static List<OrganizationEntServicesDisplayType> GetT_OE_ORGANIZATION_ENTERPRISE_PLATFORM(Guid OrgID)
         {
@@ -534,11 +535,13 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     var xxx = (from a in ctx.T_OE_PROJECTS
+                               join b in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals b.PROJECT_IDX
+                               where b.ORG_IDX == OrgID
+                               orderby a.CREATE_DT
+                               select a)
                                .Include(x => x.T_OE_REF_TAGS2) //media
                                .Include(x => x.T_OE_PROJECT_TAGS)
-                            where a.ORG_IDX == OrgID
-                            orderby a.CREATE_DT
-                            select a).ToList();
+                               .ToList();
 
                     return xxx;
                 }
@@ -623,9 +626,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     var xxx = (from a in ctx.T_OE_PROJECTS
-                               join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                               join b in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals b.PROJECT_IDX
+                               join o in ctx.T_OE_ORGANIZATION on b.ORG_IDX equals o.ORG_IDX
                                where o.ORG_TYPE != "Governance"
-                               select a).Count();
+                               select a).Distinct().Count();
 
                     return xxx;
                 }
@@ -644,9 +648,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     var xxx = (from a in ctx.T_OE_PROJECTS
-                               join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX
+                               join b in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals b.PROJECT_IDX
+                               join o in ctx.T_OE_ORGANIZATION on b.ORG_IDX equals o.ORG_IDX
                                where o.ORG_TYPE == "Governance"
-                               select a).Count();
+                               select a).Distinct().Count();
 
                     return xxx;
                 }
@@ -669,10 +674,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (u != null)
                     {
                         return (from a in ctx.T_OE_PROJECTS
-                                where a.ORG_IDX == u.ORG_IDX
+                                join b in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals b.PROJECT_IDX
+                                where b.ORG_IDX == u.ORG_IDX
                                 && ((a.MODIFY_DT != null ? a.MODIFY_DT < staleDate : a.CREATE_DT < staleDate)
                                 || (a.PROJECT_CONTACT_IDX == null && (a.PROJECT_CONTACT == null || a.PROJECT_CONTACT == "")))
-                                select a).ToList();
+                                select a).Distinct().ToList();
                     }
                     else
                         return null;
@@ -697,10 +703,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (u != null)
                     {
                         return (from a in ctx.T_OE_PROJECTS
-                                where a.ORG_IDX == u.ORG_IDX
+                                join b in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals b.PROJECT_IDX
+                                where b.ORG_IDX == u.ORG_IDX
                                 && ((a.MODIFY_DT != null ? a.MODIFY_DT < staleDate : a.CREATE_DT < staleDate)
                                 || (a.PROJECT_CONTACT_IDX == null && (a.PROJECT_CONTACT == null || a.PROJECT_CONTACT == "")))
-                                select a).ToList().Count();
+                                select a).Distinct().ToList().Count();
                     }
                     else
                         return 0;
@@ -728,14 +735,15 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (user_tags != null)
                     {
                         xxx = (from a in ctx.T_OE_PROJECTS
-                               join b in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals b.ORG_IDX
+                               join po in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals po.PROJECT_IDX
+                               join b in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals b.ORG_IDX
                                join c in ctx.T_OE_PROJECT_TAGS on a.PROJECT_IDX equals c.PROJECT_IDX
                                where user_tags.Contains(c.PROJECT_TAG_NAME)
                                orderby a.MODIFY_DT ?? a.CREATE_DT descending
                                 select new ProjectShortDisplayType
                                 {
                                     PROJECT_IDX = a.PROJECT_IDX,
-                                    ORG_IDX = a.ORG_IDX,
+                                    ORG_IDX = po.ORG_IDX,
                                     PROJ_NAME = a.PROJ_NAME,
                                     ORG_NAME = b.ORG_NAME,
                                     LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
@@ -746,12 +754,13 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (xxx == null || xxx.Count() == 0)
                     {
                         xxx = (from a in ctx.T_OE_PROJECTS
-                               join b in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals b.ORG_IDX
+                               join po in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals po.PROJECT_IDX
+                               join b in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals b.ORG_IDX
                                orderby a.MODIFY_DT ?? a.CREATE_DT descending
                                select new ProjectShortDisplayType
                                {
                                    PROJECT_IDX = a.PROJECT_IDX,
-                                   ORG_IDX = a.ORG_IDX,
+                                   ORG_IDX = po.ORG_IDX,
                                    PROJ_NAME = a.PROJ_NAME,
                                    ORG_NAME = b.ORG_NAME,
                                    LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
@@ -777,19 +786,21 @@ namespace EECIP.App_Logic.DataAccessLayer
                 try
                 {
                     var xxx = (from a in ctx.T_OE_PROJECTS
-                            join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX 
+                               join po in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals po.PROJECT_IDX
+                            join o in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals o.ORG_IDX 
                             join s in ctx.T_OE_REF_STATE on o.STATE_CD equals s.STATE_CD into sr1 from x1 in sr1.DefaultIfEmpty() //left join
                             join b in ctx.T_OE_REF_TAGS on a.MEDIA_TAG equals b.TAG_IDX into sr from x in sr.DefaultIfEmpty()  //left join
                             where a.SYNC_IND == false
                             && a.ACT_IND == true
                             && (ProjectIDX == null ? true : a.PROJECT_IDX == ProjectIDX)
+                            orderby a.PROJ_NAME
                             select new EECIP_Index {
                                 Agency = o.ORG_NAME,
                                 AgencyAbbreviation = o.ORG_ABBR,
                                 OrgType = o.ORG_TYPE,
                                 State = (o.ORG_TYPE == "State" ? x1.STATE_NAME : null),
                                 //State_or_Tribal = (o.ORG_TYPE == "State" ? x1.STATE_NAME : o.ORG_TYPE),
-                                KeyID = a.PROJECT_IDX.ToString(),
+                                KeyID = a.PROJECT_IDX.ToString() + "_" + o.ORG_IDX.ToString(),
                                 DataType = (o.ORG_TYPE == "Governance" ? "Governance" : "Project"),
                                 Record_Source = a.RECORD_SOURCE,
                                 Name = a.PROJ_NAME,
@@ -802,7 +813,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                             }).Take(50).ToList();
 
                     foreach (EECIP_Index e in xxx)
-                        e.Tags = GetT_OE_PROJECT_TAGS_ByTwoAttributeSelected(new Guid(e.KeyID), "Tags", "Program Area").ToArray();
+                        e.Tags = GetT_OE_PROJECT_TAGS_ByTwoAttributeSelected(new Guid(e.KeyID.SubStringPlus(0,36)), "Tags", "Program Area").ToArray();
 
                     return xxx;
                 }
@@ -873,7 +884,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         }
                     }
 
-                    if (oRG_IDX != null) e.ORG_IDX = oRG_IDX.ConvertOrDefault<Guid>();
+                    //if (oRG_IDX != null) e.ORG_IDX = oRG_IDX.ConvertOrDefault<Guid>();
                     if (pROJ_NAME != null) e.PROJ_NAME = pROJ_NAME;
                     if (pROJ_DESC != null) e.PROJ_DESC = pROJ_DESC;
                     if (mEDIA_TAG != null) e.MEDIA_TAG = mEDIA_TAG;
@@ -998,6 +1009,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
 
 
         //***************************project local (temp when importing)****************************************
@@ -1209,6 +1221,127 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+        //***************************PROJECT ORGS****************************************
+        public static T_OE_PROJECT_ORGS GetT_OE_PROJECT_ORGS_ByID(Guid ProjectOrgIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_PROJECT_ORGS
+                            where a.PROJECT_ORG_IDX == ProjectOrgIDX
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static T_OE_PROJECT_ORGS GetT_OE_PROJECT_ORGS_ByProj_Org(Guid OrgIDX, Guid ProjIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_PROJECT_ORGS
+                            where a.ORG_IDX == OrgIDX
+                            && a.PROJECT_IDX == ProjIDX
+                            select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<T_OE_ORGANIZATION> GetT_OE_PROJECT_ORGS_ByProject(Guid ProjectIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_PROJECT_ORGS
+                            join b in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals b.ORG_IDX
+                            where a.PROJECT_IDX == ProjectIDX
+                            select b).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static Guid? InsertUpdateT_OE_PROJECT_ORGS(Guid pROJECT_IDX, Guid oRG_IDX, int? cREATE_USER = 0)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Boolean insInd = false;
+
+                    T_OE_PROJECT_ORGS e = (from c in ctx.T_OE_PROJECT_ORGS
+                                           where c.PROJECT_IDX == pROJECT_IDX
+                                           && c.ORG_IDX == oRG_IDX
+                                           select c).FirstOrDefault();
+
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_PROJECT_ORGS();
+                        e.PROJECT_ORG_IDX = Guid.NewGuid();
+                        e.CREATE_DT = System.DateTime.Now;
+                        e.CREATE_USERIDX = cREATE_USER;
+                    }
+                    else
+                    {
+                        e.MODIFY_DT = System.DateTime.Now;
+                        e.MODIFY_USERIDX = cREATE_USER;
+                    }
+
+
+                    e.PROJECT_IDX = pROJECT_IDX;
+                    e.ORG_IDX = oRG_IDX;
+
+                    if (insInd)
+                        ctx.T_OE_PROJECT_ORGS.Add(e);
+
+                    ctx.SaveChanges();
+                    return e.PROJECT_ORG_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static int DeleteT_OE_PROJECT_ORGS(Guid id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_PROJECT_ORGS rec = new T_OE_PROJECT_ORGS { PROJECT_ORG_IDX = id };
+                    ctx.Entry(rec).State = System.Data.Entity.EntityState.Deleted;
+                    ctx.SaveChanges();
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
         //***************************PROJECT TAGS****************************************
         public static List<string> GetT_OE_PROJECT_TAGS_ByAttributeSelected(Guid ProjectIDX, string aTTRIBUTE)
@@ -1442,6 +1575,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+        
         //*******************************DOCUMENTS *********************************************
         public static Guid? InsertUpdateT_OE_DOCUMENTS(Guid? dOC_IDX, byte[] dOC_CONTENT, string dOC_NAME, string dOC_TYPE, string dOC_FILE_TYPE, int? dOC_SIZE, string dOC_COMMENT, 
             string dOC_AUTHOR, Guid? pROJECT_IDX, int? oRG_ENT_SVCS_IDX, int? UserIDX)
@@ -1553,6 +1687,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
            }
         }       
+
 
 
         //******************************* NOTIFICATIONS ***************************************
@@ -1677,6 +1812,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+
         //*******************************8 REPORTS ***************************************************
         public static int InsertUpdateT_OE_RPT_FRESHNESS(int yR, int mON, int cAT, int cOUNT)
         {
@@ -1737,8 +1873,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
-
         public static List<SP_NEW_CONTENT_USER_AGE_Result> GetSP_NEW_CONTENT_USER_AGE_Result()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1758,7 +1892,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
 
         public static List<SP_PROJECT_CREATE_COUNT_Result> GetSP_PROJECT_CREATE_COUNT_Result()
         {
@@ -1780,7 +1913,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
         public static List<SP_DISCUSSION_CREATE_COUNT_Result> GetSP_DISCUSSION_CREATE_COUNT_Result()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1801,7 +1933,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
         public static int GetSP_RPT_FRESHNESS_RECORD_Result()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1819,9 +1950,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
-
 
     }
 }

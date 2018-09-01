@@ -736,9 +736,15 @@ namespace EECIP.Controllers
                 {
                     //import projects
                     T_OE_PROJECTS x = ps.T_OE_PROJECT;
-                    Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, x.ORG_IDX, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS, 
+                    Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, null, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS, 
                         x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
                         x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, null, true, false, UserIDX, x.IMPORT_ID, true);
+
+                    //import orject orgs
+                    if (x.ORG_IDX != null)
+                    {
+                        Guid? ProjectOrgIDX = db_EECIP.InsertUpdateT_OE_PROJECT_ORGS(ProjectIDX.ConvertOrDefault<Guid>(), x.ORG_IDX.ConvertOrDefault<Guid>(), UserIDX);
+                    }
 
                     //import features
                     if (ps.FEATURES != null)

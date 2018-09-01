@@ -69,6 +69,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<T_OE_REF_EMAIL_TEMPLATE> T_OE_REF_EMAIL_TEMPLATE { get; set; }
         public virtual DbSet<T_OE_SYS_SEARCH_LOG> T_OE_SYS_SEARCH_LOG { get; set; }
         public virtual DbSet<T_OE_RPT_FRESHNESS> T_OE_RPT_FRESHNESS { get; set; }
+        public virtual DbSet<T_OE_PROJECT_ORGS> T_OE_PROJECT_ORGS { get; set; }
     
         public virtual ObjectResult<SP_ENT_SVC_COUNT_DISPLAY_Result> SP_ENT_SVC_COUNT_DISPLAY()
         {

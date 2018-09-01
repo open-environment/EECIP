@@ -106,6 +106,18 @@
           <Property Name="CREATE_USERIDX" Type="int" />
           <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
         </EntityType>
+        <EntityType Name="T_OE_PROJECT_ORGS">
+          <Key>
+            <PropertyRef Name="PROJECT_ORG_IDX" />
+          </Key>
+          <Property Name="PROJECT_ORG_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PROJECT_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORG_IDX" Type="uniqueidentifier" />
+          <Property Name="CREATE_USERIDX" Type="int" />
+          <Property Name="CREATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="int" />
+          <Property Name="MODIFY_DT" Type="datetime2" Precision="0" />
+        </EntityType>
         <EntityType Name="T_OE_PROJECT_TAGS">
           <Key>
             <PropertyRef Name="PROJECT_IDX" />
@@ -896,6 +908,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__T_OE_PROJ__ORG_I__5E3FF0B0">
+          <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="0..1" />
+          <End Role="T_OE_PROJECT_ORGS" Type="Self.T_OE_PROJECT_ORGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_ORGS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
           <End Role="T_OE_ORGANIZATION" Type="Self.T_OE_ORGANIZATION" Multiplicity="0..1" />
           <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="*" />
@@ -905,6 +929,18 @@
             </Principal>
             <Dependent Role="T_OE_PROJECTS">
               <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__5F3414E9">
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="1" />
+          <End Role="T_OE_PROJECT_ORGS" Type="Self.T_OE_PROJECT_ORGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_ORGS">
+              <PropertyRef Name="PROJECT_IDX" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1197,6 +1233,7 @@
           <EntitySet Name="T_OE_ORGANIZATION_EMAIL_RULE" EntityType="Self.T_OE_ORGANIZATION_EMAIL_RULE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION_ENT_SVCS" EntityType="Self.T_OE_ORGANIZATION_ENT_SVCS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_ORGANIZATION_TAGS" EntityType="Self.T_OE_ORGANIZATION_TAGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="T_OE_PROJECT_ORGS" EntityType="Self.T_OE_PROJECT_ORGS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_PROJECT_TAGS" EntityType="Self.T_OE_PROJECT_TAGS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_PROJECT_URLS" EntityType="Self.T_OE_PROJECT_URLS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="T_OE_PROJECT_VOTES" EntityType="Self.T_OE_PROJECT_VOTES" Schema="dbo" store:Type="Tables" />
@@ -1340,9 +1377,17 @@
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
             <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
           </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_I__5E3FF0B0" Association="Self.FK__T_OE_PROJ__ORG_I__5E3FF0B0">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_PROJECT_ORGS" EntitySet="T_OE_PROJECT_ORGS" />
+          </AssociationSet>
           <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6BE40491" Association="Self.FK__T_OE_PROJ__ORG_I__6BE40491">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__5F3414E9" Association="Self.FK__T_OE_PROJ__PROJE__5F3414E9">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_ORGS" EntitySet="T_OE_PROJECT_ORGS" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_PROJ__PROJE__795DFB40" Association="Self.FK__T_OE_PROJ__PROJE__795DFB40">
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
@@ -1677,6 +1722,15 @@
           <FunctionImport Name="SP_PROJECT_CREATE_COUNT" ReturnType="Collection(EECIPModel.SP_PROJECT_CREATE_COUNT_Result)" />
           <EntitySet Name="T_OE_RPT_FRESHNESS" EntityType="EECIPModel.T_OE_RPT_FRESHNESS" />
           <FunctionImport Name="SP_RPT_FRESHNESS_RECORD" />
+          <EntitySet Name="T_OE_PROJECT_ORGS" EntityType="EECIPModel.T_OE_PROJECT_ORGS" />
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_I__5E3FF0B0" Association="EECIPModel.FK__T_OE_PROJ__ORG_I__5E3FF0B0">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_PROJECT_ORGS" EntitySet="T_OE_PROJECT_ORGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__5F3414E9" Association="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_ORGS" EntitySet="T_OE_PROJECT_ORGS" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
           <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
@@ -1752,6 +1806,7 @@
           <NavigationProperty Name="T_OE_REF_STATE" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_STATE" />
           <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_USERS" />
+          <NavigationProperty Name="T_OE_PROJECT_ORGS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__5E3FF0B0" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECT_ORGS" />
         </EntityType>
         <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
           <Key>
@@ -1878,6 +1933,7 @@
           <NavigationProperty Name="T_OE_REF_TAGS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <NavigationProperty Name="T_OE_REF_TAGS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <NavigationProperty Name="T_OE_REF_TAGS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_PROJECT_ORGS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_ORGS" />
         </EntityType>
         <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
           <Key>
@@ -2976,6 +3032,44 @@
           <Property Name="CAT" Type="Int32" Nullable="false" />
           <Property Name="COUNT" Type="Int32" />
         </EntityType>
+        <EntityType Name="T_OE_PROJECT_ORGS">
+          <Key>
+            <PropertyRef Name="PROJECT_ORG_IDX" />
+          </Key>
+          <Property Name="PROJECT_ORG_IDX" Type="Guid" Nullable="false" />
+          <Property Name="PROJECT_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ORG_IDX" Type="Guid" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__5E3FF0B0" FromRole="T_OE_PROJECT_ORGS" ToRole="T_OE_ORGANIZATION" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9" FromRole="T_OE_PROJECT_ORGS" ToRole="T_OE_PROJECTS" />
+        </EntityType>
+        <Association Name="FK__T_OE_PROJ__ORG_I__5E3FF0B0">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECT_ORGS" Role="T_OE_PROJECT_ORGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_ORGS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__5F3414E9">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="1" />
+          <End Type="EECIPModel.T_OE_PROJECT_ORGS" Role="T_OE_PROJECT_ORGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_ORGS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3602,6 +3696,19 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="SP_RPT_FRESHNESS_RECORD" FunctionName="EECIPModel.Store.SP_RPT_FRESHNESS_RECORD" />
+          <EntitySetMapping Name="T_OE_PROJECT_ORGS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECT_ORGS">
+              <MappingFragment StoreEntitySet="T_OE_PROJECT_ORGS">
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+                <ScalarProperty Name="PROJECT_ORG_IDX" ColumnName="PROJECT_ORG_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

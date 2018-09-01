@@ -21,6 +21,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             this.T_OE_PROJECT_TAGS = new HashSet<T_OE_PROJECT_TAGS>();
             this.T_OE_PROJECT_URLS = new HashSet<T_OE_PROJECT_URLS>();
             this.T_OE_PROJECT_VOTES = new HashSet<T_OE_PROJECT_VOTES>();
+            this.T_OE_PROJECT_ORGS = new HashSet<T_OE_PROJECT_ORGS>();
         }
     
         public System.Guid PROJECT_IDX { get; set; }
@@ -64,5 +65,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual T_OE_REF_TAGS T_OE_REF_TAGS1 { get; set; }
         public virtual T_OE_REF_TAGS T_OE_REF_TAGS2 { get; set; }
         public virtual T_OE_REF_TAGS T_OE_REF_TAGS3 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_OE_PROJECT_ORGS> T_OE_PROJECT_ORGS { get; set; }
     }
 }

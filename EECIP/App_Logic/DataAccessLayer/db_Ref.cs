@@ -1104,7 +1104,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     T_OE_SYS_SEARCH_LOG e = new T_OE_SYS_SEARCH_LOG();
                     e.LOG_USERIDX = null; //anonymous 
-                    e.LOG_TERM = searchTerm;
+                    e.LOG_TERM = searchTerm.Replace("\"","");
                     e.LOG_DT = System.DateTime.Now;
 
                     ctx.T_OE_SYS_SEARCH_LOG.Add(e);

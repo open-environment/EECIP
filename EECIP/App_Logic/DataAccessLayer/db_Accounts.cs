@@ -127,6 +127,30 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<T_OE_USERS> GetT_OE_USERSByAgencyList(List<T_OE_ORGANIZATION> orgs)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    List<Guid?> orgList = new List<Guid?>();
+                    foreach (T_OE_ORGANIZATION org in orgs)
+                        orgList.Add(org.ORG_IDX);
+
+                    return (from a in ctx.T_OE_USERS
+                            where orgList.Contains(a.ORG_IDX)
+                            orderby a.LNAME
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
         public static bool UserCanEditOrgIDX(int idx, Guid orgIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -147,6 +171,36 @@ namespace EECIP.App_Logic.DataAccessLayer
                               select a).Count();
 
                     return (c > 0);
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
+
+        public static bool UserCanEditOrgList(int idx, List<T_OE_ORGANIZATION> orgs)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    bool canEdit = false;
+
+                    foreach (T_OE_ORGANIZATION org in orgs)
+                    {
+                        //otherwise, check if user belongs
+                        int c = (from a in ctx.T_OE_USERS
+                                 where a.ORG_IDX == org.ORG_IDX
+                                 && a.USER_IDX == idx
+                                 select a).Count();
+                        if (c > 0)
+                            canEdit = true;
+                    }
+
+                    return canEdit;
                 }
                 catch (Exception ex)
                 {

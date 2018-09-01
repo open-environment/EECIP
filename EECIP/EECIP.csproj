@@ -266,6 +266,9 @@
     <Compile Include="App_Logic\DataAccessLayer\T_OE_PROJECTS.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\T_OE_PROJECT_ORGS.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_PROJECT_TAGS.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -354,6 +357,7 @@
   <ItemGroup>
     <Content Include="App_Data\1b_CreateDatabaseForum.sql" />
     <Content Include="App_Data\1_CreateDatabase.sql" />
+    <Content Include="App_Data\20180828_MigrateProjectOrg.sql" />
     <Content Include="App_Data\2_PopulateData.sql" />
     <Content Include="App_Data\20180509_MigrateProjectURL.sql" />
     <Content Include="App_Docs\ImportColumnsConfig.xml">
@@ -841,6 +845,7 @@
     <Content Include="Scripts\tinymce\langs\readme.md" />
     <Content Include="Views\Admin\AdmEmail.cshtml" />
     <Content Include="Views\Dashboard\Metrics.cshtml" />
+    <Content Include="Views\Dashboard\AddProjectOrg.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

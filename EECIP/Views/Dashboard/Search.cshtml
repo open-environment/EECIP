@@ -333,7 +333,7 @@
                                         <td>
                                             @if (item.Document.DataType == "Project")
                                             {
-                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-success btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;"><i class="clip-info"></i> Project</a>
+                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID.SubStringPlus(0,36) })" class="label label-success btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;"><i class="clip-info"></i> Project</a>
                                             }
                                             @if (item.Document.DataType == "Agency")
                                             {
@@ -353,7 +353,7 @@
                                             }
                                             @if (item.Document.DataType == "Governance")
                                             {
-                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br />Project</a>
+                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID.SubStringPlus(0,36) })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br />Project</a>
                                             }
                                             @if (User.IsInRole("Admins"))
                                             {

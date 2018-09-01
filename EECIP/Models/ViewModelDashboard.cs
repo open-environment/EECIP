@@ -118,15 +118,16 @@ namespace EECIP.Models
 
 
     public class vmDashboardProjectDetails {
-        public string orgName { get; set; }
-        public string orgType { get; set; }
+        //public string orgName { get; set; }
+        public bool governanceInd { get; set; }
         public T_OE_PROJECTS project { get; set; }
         public List<T_OE_PROJECT_URLS> sProjectUrlList { get; set; }
+        public List<T_OE_ORGANIZATION> ProjectOrgs { get; set; }
         public IEnumerable<SelectListItem> ddl_Media { get; set; }
         public IEnumerable<SelectListItem> ddl_Status { get; set; }
         public IEnumerable<SelectListItem> ddl_UseAmount { get; set; }
         public IEnumerable<SelectListItem> ddl_COTS { get; set; }
-        public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
+        //public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
         public IEnumerable<SelectListItem> ddl_AgencyUsers { get; set; }
 
         public IEnumerable<SelectListItem> AllProgramAreas { get; set; }
@@ -134,11 +135,13 @@ namespace EECIP.Models
         public IEnumerable<SelectListItem> AllFeatures { get; set; }
         public List<string> SelectedFeatures { get; set; }
         public bool NewProjInd { get; set; }
+        public Guid? NewProjOrgIDX { get; set; }
+
         [DisplayName("Upload File")]
         public HttpPostedFileBase[] files { get; set; }
         public List<T_OE_DOCUMENTS> files_existing { get; set; }
-        public string ReturnURL { get; set; }
         public string FileDescription { get; set; }
+        public string ReturnURL { get; set; }
 
         public vmDashboardProjectDetails()
         {
@@ -146,6 +149,9 @@ namespace EECIP.Models
             ddl_Status = db_Ref.GetT_OE_REF_TAGS_ByCategory_ProjStatus(true);
             ddl_UseAmount = ddlHelpers.get_ddl_tags_by_category("Use Amount");
             ddl_COTS = ddlHelpers.get_ddl_tags_by_category_stringy("COTS");
+            governanceInd = false;
+            NewProjInd = false;
+            NewProjOrgIDX = null;
         }
 
     }
@@ -154,7 +160,7 @@ namespace EECIP.Models
     {
         public T_OE_PROJECTS project { get; set; }
         public IEnumerable<T_OE_PROJECT_URLS> sProjectUrlList { get; set; }
-        public string OrgName { get; set; }
+        //public string OrgName { get; set; }
         public List<string> SelectedProgramAreas { get; set; }
         public List<string> SelectedFeatures { get; set; }
         public string LastUpdatedUser { get; set; }
@@ -163,10 +169,24 @@ namespace EECIP.Models
         public bool UserBelongsToProjectAgency { get; set; }
         public T_OE_USERS ProjectContact { get; set; }
         public List<T_OE_DOCUMENTS> files_existing { get; set; }
-
+        public List<T_OE_ORGANIZATION> ProjectOrgs { get; set; }
     }
 
-    public class vmDashboardEntSvcOverview{
+
+    public class vmDashboardAddProjectOrg
+    {
+        public T_OE_PROJECTS project { get; set; }
+        public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
+        public Guid? selAgency { get; set; }
+
+        public vmDashboardAddProjectOrg()
+        {
+            ddl_Agencies = ddlHelpers.get_ddl_organizations(true, true);
+        }
+    }
+
+    public class vmDashboardEntSvcOverview
+    {
         public List<SP_ENT_SVC_COUNT_DISPLAY_Result> EntSvcOverviewDisplay { get; set; }
     }
 

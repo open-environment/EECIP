@@ -263,7 +263,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                             //update local rec sync ind
                             foreach (EECIP_Index p in _ps)
                             {
-                                Guid proj_idx = Guid.Parse(p.KeyID);
+                                Guid proj_idx = Guid.Parse(p.KeyID.SubStringPlus(0,36));
                                 db_EECIP.InsertUpdatetT_OE_PROJECTS(proj_idx, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                                     null, null, null, null, null, true, true, null, null, false);
                             }
@@ -627,6 +627,40 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
+        public static void DeleteSearchIndexKey(string strKey)
+        {
+            try
+            {
+                //connect to Azure Search
+                SearchServiceClient serviceClient = CreateSearchServiceClient();
+
+                //get user needing to delete sync
+                IEnumerable<string> ss = new List<string>() { strKey };
+                var batch = IndexBatch.Delete("KeyID", ss);
+
+                try
+                {
+                    ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+                    indexClient.Documents.Index(batch);
+                }
+                catch (IndexBatchException e)
+                {
+                    // Sometimes when your Search service is under load, indexing will fail for some of the documents in
+                    // the batch. Depending on your application, you can take compensating actions like delaying and
+                    // retrying. For this simple demo, we just log the failed document keys and continue.
+                    Console.WriteLine(
+                        "Failed to index some of the documents: {0}",
+                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", (ex.InnerException != null ? ex.InnerException.ToString() : ex.Message).SubStringPlus(0, 2000));
+            }
+        }
+
         public static void DeleteAzureGuid(Guid? GuidID)
         {
             try
@@ -634,7 +668,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //connect to Azure Search
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
-                //get Forum Post needing to delete sync
+                //get Guid needing to delete sync
                 IEnumerable<string> ss = new List<string>() { GuidID.ToString() };
                 var batch = IndexBatch.Delete("KeyID", ss);
 

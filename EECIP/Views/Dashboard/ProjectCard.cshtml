@@ -2,7 +2,7 @@
 @model EECIP.Models.vmDashboardProjectCard
 @{
     ViewBag.Title = Model.project.PROJ_NAME;
-    ViewBag.SubTitle = Model.OrgName;
+    //ViewBag.SubTitle = Model.OrgName;
     ViewBag.ShowBack = true;
 }
 @if (Model.project != null)
@@ -19,6 +19,31 @@
                 </div>
             </div>
             <div class="panel-body">
+
+                <div class="table-responsive" style="max-height:700px;">
+                    <table class="table table-striped m-b-none table-bordered" data-ride="datatables" style="margin-bottom:20px;">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>Agency 
+                                @*<a href="@Url.Action("AddProjectOrg", "Dashboard", new { id=Model.project.PROJECT_IDX })" class="btn btn-primary btn-xs pull-right">Add Other Agencies</a>*@
+                                </th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.ProjectOrgs)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ORG_NAME)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    @if (!User.IsInRole("ReadOnly"))
+                    {
+
+                    }
+                </div>
+
                 <dl class="dl-horizontal">
                     <dt>
                         Start Year:
@@ -48,20 +73,20 @@
                         Project URL:
                     </dt>
                     @*<dd id="projUrl">
-            @Model.project.PROJECT_URL
-        </dd>*@
+                @Model.project.PROJECT_URL
+            </dd>*@
                     <dd>
                         <table>
 
                             @foreach (var pu in Model.sProjectUrlList)
                             {
-                        <tr>
-                            <td>
-                                @* <div>@pu.PROJECT_URL</div>*@   
-                                <a href="@Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))" title="@Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))"> @Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))</a>
-                              
-                            </td>
-                        </tr>
+                                <tr>
+                                    <td>
+                                        @* <div>@pu.PROJECT_URL</div>*@
+                                        <a href="@Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))" title="@Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))"> @Html.Raw(Html.AttributeEncode(pu.PROJECT_URL))</a>
+
+                                    </td>
+                                </tr>
                             }
                         </table>
                     </dd>
