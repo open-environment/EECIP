@@ -45,7 +45,6 @@ $(function () {
             $.ajax({
                 type: "POST",
                 url: delPath,
-                //contentType: "application/json",
                 dataType: "json",
                 traditional: true,
                 data: {
@@ -53,7 +52,6 @@ $(function () {
                     id2: confirmButton.attr('data-delete-id2')
                 },
                 success: function (response) {
-                    console.log(response);
                     if (response == "Success") {
                         if (confirmButton.attr('data-success-url') != null && confirmButton.attr('data-success-url').length > 0) {
                             var redirPath = window.location.protocol + "//" + window.location.host + "/" + appPath + confirmButton.attr('data-success-url');
