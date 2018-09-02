@@ -5,11 +5,13 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 ## Change Log
 **Version 1.3 (August 2018)**
 - Added Site Metrics page
-- Added ability to have multi-agency projects
-- Prompt user if unsaved changes
+- Added support for multi-agency projects
+- On dashboard, will display the tag that caused project or discussion to display in most recent items matching your interest
+- When editing data, will now prompt if unsaved changes
 - Display phone on user page
 - Admin feature enhancements: 
     - Added Error Log page
+    - User Management: paging/sorting
     - Ability to change organization or governance group to which project belongs
  - Added IE11 support
 
