@@ -12,61 +12,66 @@
         <section class="panel panel-default">
             <div class="table-responsive">
                 <table class="table table-striped m-b-none" data-ride="datatables">
-                    <tr>
-                        <th style="min-width:70px;"></th>
-                        <th><a href="@Url.Action("Users", new { sort="FNAME" })">First Name</a></th>
-                        <th>Last Name</th>
-                        <th>Agency</th>
-                        <th>Job Title</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Created</th>
-                        <th>Last Login</th>
-                        <th>Active</th>
-                    </tr>
-
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th style="min-width:70px;"></th>
+                            <th><a href="@Url.Action("Users", new { sort="FNAME" })">First Name</a></th>
+                            <th><a href="@Url.Action("Users", new { sort="LNAME" })">Last Name</a></th>
+                            <th><a href="@Url.Action("Users", new { sort="ORG_NAME" })">Agency</a></th>
+                            <th>Job Title</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th><a href="@Url.Action("Users", new { sort="CREATE_DT" })">Created</a></th>
+                            <th><a href="@Url.Action("Users", new { sort="LASTLOGIN_DT" })">Last Login</a></th>
+                            <th>Active</th>
+                        </tr>
+                    </thead>
                     @foreach (var item in Model.users)
                     {
-                    <tr>
-                        <td>
-                            <a href="@Url.Action("UserProfile","Account", new { id=item.users.USER_IDX, a="a" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
-                            <div class="delete-section" style="display:inline">
-                                <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
-                                <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.users.USER_IDX" data-delete-p="/Admin/UserDelete"><b>Confirm Delete</b></div>
-                            </div>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.users.FNAME)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.users.LNAME)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ORG_NAME)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.users.JOB_TITLE)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.users.EMAIL)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.users.PHONE)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.users.CREATE_DT)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.users.LASTLOGIN_DT)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.users.ACT_IND)
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("UserProfile","Account", new { id=item.users.USER_IDX, a="a" })" class="btn btn-rounded btn-xs btn-info"><i class="glyphicon glyphicon-pencil"></i></a>
+                                <div class="delete-section" style="display:inline">
+                                    <a class=" btn btn-rounded btn-xs btn-danger delete-link"><i class="glyphicon glyphicon-remove"></i></a>
+                                    <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.users.USER_IDX" data-delete-p="/Admin/UserDelete"><b>Confirm Delete</b></div>
+                                </div>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.users.FNAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.users.LNAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ORG_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.users.JOB_TITLE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.users.EMAIL)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.users.PHONE)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.users.CREATE_DT)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.users.LASTLOGIN_DT)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.users.ACT_IND)
+                            </td>
+                        </tr>
                     }
                 </table>
             </div>
         </section>
+        @if (Model.userCount > 50)
+        {
+            <ul class="pagination" id="pagination" style="margin:0px"></ul>
+        }
         <p>
             <a id="add-it" href="#modal-form" data-toggle="modal" class="add-it btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New User</a>
         </p>
@@ -133,12 +138,33 @@
 @section Scripts {
     @Scripts.Render("~/bundles/confirmdelete")
     @Scripts.Render("~/bundles/stickytableheaders")
+    @Scripts.Render("~/bundles/pagination")
+
 
     <script type="text/javascript">
 
         $(document).ready(function () {
+
             //sticky header on table
             $('.table').stickyTableHeaders({ fixedOffset: $('.navbar-inverse') });
+
+
+            //pagination
+            $(function () {
+                var _totalRec = @(Model.userCount);
+                var _sort = '@(Model.strSort ?? "")';
+                var _totalPages = Math.floor(_totalRec / 50) + 1;
+                var obj = $('#pagination').twbsPagination({
+                    totalPages: _totalPages,
+                    initiateStartPageClick: false,
+                    visiblePages: 10,
+                    startPage: @(Model.currPage ?? 1),
+                    onPageClick: function (event, page) {
+                        var sortStr = _sort.length > 1 ? 'sort=' + _sort + '&' : '';
+                        window.location.href = '@Url.Action("Users", "Admin")/?' + sortStr + 'currPage=' + page;
+                    }
+                });
+            });
         });
 
     </script>

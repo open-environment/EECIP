@@ -76,6 +76,95 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
+        public static List<UserDisplayType> GetT_OE_USERS_Search(string sort, int page)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = new List<UserDisplayType>();
+
+                    if (sort == null || sort == "ORG_NAME")
+                        xxx = (from a in ctx.T_OE_USERS
+                               join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
+                               from x1 in sr1.DefaultIfEmpty() //left join
+                               orderby x1.ORG_NAME, a.FNAME
+                               select new UserDisplayType
+                               {
+                                   users = a,
+                                   ORG_NAME = x1.ORG_NAME
+                               }).Skip((page - 1) * 50).Take(50).ToList();
+                    else if (sort == "FNAME")
+                        xxx = (from a in ctx.T_OE_USERS
+                               join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
+                               from x1 in sr1.DefaultIfEmpty() //left join
+                               orderby a.FNAME
+                               select new UserDisplayType
+                               {
+                                   users = a,
+                                   ORG_NAME = x1.ORG_NAME
+                               }).Skip((page - 1) * 50).Take(50).ToList();
+                    else if (sort == "LNAME")
+                        xxx = (from a in ctx.T_OE_USERS
+                               join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
+                               from x1 in sr1.DefaultIfEmpty() //left join
+                               orderby a.LNAME
+                               select new UserDisplayType
+                               {
+                                   users = a,
+                                   ORG_NAME = x1.ORG_NAME
+                               }).Skip((page - 1) * 50).Take(50).ToList();
+                    else if (sort == "LASTLOGIN_DT")
+                        xxx = (from a in ctx.T_OE_USERS
+                               join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
+                               from x1 in sr1.DefaultIfEmpty() //left join
+                               orderby a.LASTLOGIN_DT descending
+                               select new UserDisplayType
+                               {
+                                   users = a,
+                                   ORG_NAME = x1.ORG_NAME
+                               }).Skip((page - 1) * 50).Take(50).ToList();
+                    else if (sort == "CREATE_DT")
+                        xxx = (from a in ctx.T_OE_USERS
+                               join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
+                               from x1 in sr1.DefaultIfEmpty() //left join
+                               orderby a.CREATE_DT descending
+                               select new UserDisplayType
+                               {
+                                   users = a,
+                                   ORG_NAME = x1.ORG_NAME
+                               }).Skip((page - 1) * 50).Take(50).ToList();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    throw ex;
+                }
+            }
+        }
+
+        public static int GetT_OE_USERS_Count()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_USERS
+                            select a).Count();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    throw ex;
+                }
+            }
+        }
+
+
+
         public static T_OE_USERS GetT_OE_USERSByIDX(int idx)
         {
             using (EECIPEntities ctx = new EECIPEntities())

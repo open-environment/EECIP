@@ -20,11 +20,14 @@ namespace EECIP.Controllers
     {
         //************************************* USERS ************************************************************
         // GET: /Admin/Users
-        public ActionResult Users()
+        public ActionResult Users(string sort, int? currPage)
         {
             var model = new vmAdminUsers
             {
-                users = db_Accounts.GetT_OE_USERS()
+                users = db_Accounts.GetT_OE_USERS_Search(sort, currPage ?? 1),
+                userCount = db_Accounts.GetT_OE_USERS_Count(),
+                currPage = currPage,
+                strSort = sort
             };
             return View(model);
         }

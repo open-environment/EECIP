@@ -1399,6 +1399,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
                                    topicCreator = c.FNAME + " " + c.LNAME,
                                    postCount = 999 //hack to indicate tag match
+                                   ,CategorySlug = d.TopicTag  //hack to display the matched tag
                                }).Take(5).ToList();
 
                     }

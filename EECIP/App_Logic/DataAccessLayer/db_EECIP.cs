@@ -54,6 +54,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string ORG_NAME { get; set; }
         public DateTime LAST_ACTIVITY_DATE { get; set; }
         public bool? TagMatch { get; set; }
+        public string Tag { get; set; }
     }
 
 
@@ -747,7 +748,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                     PROJ_NAME = a.PROJ_NAME,
                                     ORG_NAME = b.ORG_NAME,
                                     LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
-                                    TagMatch = true
+                                    TagMatch = true,
+                                    Tag = c.PROJECT_TAG_NAME
                                 }).Take(6).ToList();
                     }
 

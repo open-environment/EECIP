@@ -48,6 +48,9 @@ namespace EECIP.Models
 
         [Required]
         public string newUserEmail { get; set; }
+        public int userCount { get; set; }
+        public int? currPage { get; set; }
+        public string strSort { get; set; }
     }
 
 
