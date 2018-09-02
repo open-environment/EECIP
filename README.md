@@ -11,6 +11,7 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 - Display phone on user page
 - Admin feature enhancements: 
     - Added Error Log page
+    - User Management: paging/sorting
     - Ability to change organization or governance group to which project belongs
  - Added IE11 support
 
