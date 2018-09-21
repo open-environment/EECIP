@@ -38,8 +38,13 @@ namespace EECIP.Controllers
                 }
             }
 
+            var model = new vmAccountLogin
+            {
+                RememberMe = true
+            };
+
             ViewBag.ReturnUrl = returnUrl;
-            return View("Login");
+            return View(model);
         }
 
         // POST: /Account/Login
@@ -63,7 +68,10 @@ namespace EECIP.Controllers
                     {
                         //set last login time and reset failed login attempts
                         db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null, null, null, null);
-                        return RedirectToAction("Index", "Dashboard");
+                        if (returnUrl == null)
+                            return RedirectToAction("Index", "Dashboard");
+                        else
+                            return RedirectToLocal(returnUrl);
                     }
 
                 }
@@ -668,6 +676,18 @@ namespace EECIP.Controllers
             }
         }
         #endregion
+
+        private ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Dashboard");
+            }
+        }
 
     }
 }

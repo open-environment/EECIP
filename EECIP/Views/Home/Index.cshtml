@@ -8,7 +8,7 @@
         <div class="row" style="min-height:180px;">
             <div class="col-sm-12 center">
                 <h2 style="color:#199C98;padding-bottom:40px;">Welcome to the E-Enterprise Community Inventory Platform</h2>
-                <a class="btn btn-success btn-lg" href="@Url.Action("Login","Account")" style="margin-right:30px;"><i class="clip-arrow-right"></i> Log In</a>
+                <a class="btn btn-success btn-lg" href="@Url.Action("Login","Account", new { ReturnUrl = ViewBag.ReturnUrl })" style="margin-right:30px;"><i class="clip-arrow-right"></i> Log In</a>
                 <a class="btn btn-primary  btn-lg" href="@Url.Action("Register","Account")"><i class="clip-arrow-right"></i> Register</a>
             </div>
         </div>
