@@ -3,6 +3,9 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
+**Version 1.4 (September 2018)**
+- Site redirect upon login
+
 **Version 1.3 (August 2018)**
 - Added Site Metrics page
 - Added support for multi-agency projects
