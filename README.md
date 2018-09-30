@@ -4,7 +4,9 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 ## Change Log
 **Version 1.4 (September 2018)**
-- Site redirect upon login
+- Site redirect upon login to original page requested
+- Search sorting tweak: last updated date
+- Changed online help provider
 
 **Version 1.3 (August 2018)**
 - Added Site Metrics page
