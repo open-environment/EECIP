@@ -5,7 +5,7 @@
         ViewBag.Title = Model.agency.ORG_NAME;
     }
     ViewBag.SubTitle = "";
-    ViewBag.ShowTour = false;
+    ViewBag.ShowTour = true;
 }
 @if (User.IsInRole("Admins"))
 {
@@ -27,7 +27,7 @@
 <!-- render the main content -->
 <div class="row">
     <div class="col-sm-6">
-        <section class="panel panel-default">
+        <section class="panel panel-default" id="pnlAgencyDetails">
             <div class="panel-heading">
                 Agency Details
                 <div class="panel-tools">
@@ -103,7 +103,7 @@
     </div>
     <!-- AGENCY USERS -->
     <div class="col-sm-6">
-        <section class="panel panel-default">
+        <section class="panel panel-default" id="pnlAgencyUsers">
             <div class="panel-heading">
                 Agency Users
                 <div class="panel-tools">
@@ -173,7 +173,7 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <section class="panel panel-default">
+        <section class="panel panel-default" id="pnlEntServices">
             <div class="panel-heading">
                 Enterprise Services
                 <div class="panel-tools">
@@ -213,6 +213,7 @@
                                                 <a><i class="glyphicon glyphicon-heart" style="font-size: 20px; color:forestgreen; float:right" title="Active Interest"></i></a>
                                             }*@
 
+                                        @Html.HiddenFor(modelItem => item.ORG_ENT_SVCS_IDX)
                                         @Html.HiddenFor(modelItem => item.ENT_PLATFORM_IDX)
                                         @Html.HiddenFor(modelItem => item.ENT_PLATFORM_NAME)
                                         @Html.HiddenFor(modelItem => item.PROJECT_NAME)
@@ -259,6 +260,7 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.agency.ORG_IDX)
             @Html.HiddenFor(model => model.edit_ent_services.ENT_PLATFORM_IDX)
+            @Html.HiddenFor(model => model.edit_ent_services.ORG_ENT_SVCS_IDX)
 
             <div class="modal-content">
                 <div class="modal-header">
@@ -344,10 +346,7 @@
 <!-- END MODAL FORM -->
 
 
-
 @section Scripts {
-    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
-    @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/confirmdelete")
     @Scripts.Render("~/bundles/select2")
     @Scripts.Render("~/bundles/areyousure")
@@ -378,6 +377,7 @@
 
             //create an event when button is clicked to display modal
             $(".modal-it").click(function () {
+                $('#edit_ent_services_ORG_ENT_SVCS_IDX').val($(this).parent('td').find('#item_ORG_ENT_SVCS_IDX').val());
                 $('#edit_ent_services_ENT_PLATFORM_IDX').val($(this).parent('td').find('#item_ENT_PLATFORM_IDX').val());
                 $('#edit_ent_services_ENT_PLATFORM_NAME').val($(this).parent('td').find('#item_ENT_PLATFORM_NAME').val());
                 $('#edit_ent_services_PROJECT_NAME').val($(this).parent('td').find('#item_PROJECT_NAME').val());
@@ -386,9 +386,35 @@
                 $('#edit_ent_services_COMMENTS').val($(this).parent('td').find('#item_COMMENTS').val());
                 $('#edit_ent_services_PROJECT_CONTACT').val($(this).parent('td').find('#item_PROJECT_CONTACT').val());
                 $('#edit_ent_services_ACTIVE_INTEREST_IND').val($(this).parent('td').find('#item_ACTIVE_INTEREST_IND').val());
-                $('#edit_ent_services.ACTIVE_INTEREST_IND').val($(this).parent('td').find('#item_ACTIVE_INTEREST_IND').val());
 
             });
         });
+    </script>
+
+
+    @Scripts.Render("~/bundles/introjs")
+
+    <script>
+        function startIntro() {
+            var intro = introJs();
+            intro.setOptions({
+                steps: [
+                    {
+                        element: '#pnlAgencyDetails',
+                        intro: "<h4>Basic Technical Set Up of Your Agency</h4>These fields help agencies find compatible partners and the community to understand overall trends."
+                    },
+                    {
+                        element: '#pnlAgencyUsers',
+                        intro: "<h4>These are the users from your agency</h4>Users can add themselves to your agency based on their email domain. Let us know if you see someone who does not belong here by emailing eecip@ecos.org"
+                    },
+                    {
+                        element: '#pnlEntServices',
+                        intro: "<h4>What enterprise services is your agency considering or using?</h4>This is really important, more and more agencies are building services across program areas. Please indicate for each of the services listed, what your agency status/interest is. If you think there is a service area missing, please let us know."
+                    }
+                ]
+            });
+
+            intro.start();
+        }
     </script>
 }

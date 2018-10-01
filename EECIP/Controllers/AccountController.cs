@@ -67,7 +67,7 @@ namespace EECIP.Controllers
                     else
                     {
                         //set last login time and reset failed login attempts
-                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null, null, null, null);
+                        db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null, null, null, null, null);
                         if (returnUrl == null)
                             return RedirectToAction("Index", "Dashboard");
                         else
@@ -197,7 +197,7 @@ namespace EECIP.Controllers
                             }
 
                             //update first name, last name, and agency
-                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null, false, true, true);
+                            db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null, false, true, true, true);
 
                             //redirect user to registration success view
                             return RedirectToAction("RegisterSuccess", "Account");
@@ -310,7 +310,7 @@ namespace EECIP.Controllers
                     if (model.OrgIDX == null && model.uListInd == "a")
                         model.OrgIDX = Guid.Empty;
 
-                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin, model.ExcludeBadges, null, null);
+                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin, model.ExcludeBadges, null, null, null);
 
                     //update user expertise
                     db_EECIP.DeleteT_OE_USER_EXPERTISE(model.UserIDX);
@@ -589,7 +589,8 @@ namespace EECIP.Controllers
                 AllExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX_All(id).Select(x => new SelectListItem { Value = x, Text = x }),
                 CommunitiesOfInterest = db_EECIP.GetCommunityOfInterest_AndSubscription_ByUserIDX(id),
                 NOTIFY_DISCUSSION_IND = u.NOTIFY_DISCUSSION_IND,
-                NOTIFY_BADGE_IND = u.NOTIFY_BADGE_IND
+                NOTIFY_BADGE_IND = u.NOTIFY_BADGE_IND,
+                NOTIFY_NEWSLETTER = u.NOTIFY_NEWSLETTER
             };
 
             return View(model);
@@ -601,7 +602,7 @@ namespace EECIP.Controllers
             int UserIDX = db_Accounts.GetUserIDX();
 
             //update profile
-            int SuccID = db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, model.NOTIFY_DISCUSSION_IND, model.NOTIFY_BADGE_IND);
+            int SuccID = db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, model.NOTIFY_DISCUSSION_IND, model.NOTIFY_BADGE_IND, model.NOTIFY_NEWSLETTER);
 
             //update user expertise
             db_EECIP.DeleteT_OE_USER_EXPERTISE(UserIDX);

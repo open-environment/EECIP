@@ -49,7 +49,6 @@
 
             <!-- start: RIGHT NAVIGATION BANNER (ACCOUNT STUFF)-->
             <div class="navbar-tools">
-
                 <ul class="nav navbar-nav navbar-right pull-right" style="margin:0px !important">
                     @if (Request.IsAuthenticated)
                     {
@@ -131,7 +130,7 @@
                             }
                             @if (ViewBag.ShowBadge == true)
                             {
-                                <div href="#modal-form" class="badge-alert pull-right  modal-it" data-toggle="modal">
+                                <div href="#modal-form" class="badge-alert pull-right  modal-it" data-toggle="modal" id="headBadge">
                                     <img src="/Content/Images/badges/recognised-post.png" alt="Badges" style="width:45px; margin-left:20px" />
                                     <p class="publicbadgenamedesc" style="font-size:10px;">@ViewBag.BadgeCount Badges Earned</p>
                                 </div>

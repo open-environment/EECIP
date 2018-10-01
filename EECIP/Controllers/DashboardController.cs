@@ -25,8 +25,8 @@ namespace EECIP.Controllers
                 UserBadges = db_Forum.GetBadgesForUser(UserIDX),  //badge progress
                 ProjectsNeedingReviewCount = db_EECIP.GetT_OE_PROJECTS_NeedingReviewCount(UserIDX),  //projects needing review
                 UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(6),  //user point leaders
-                LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX),  //latest projects matching interest
-                LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX), //latest topics matching interest
+                LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX, 900, true, 6),  //latest projects matching interest
+                LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX, 900, true, 6), //latest topics matching interest
                 ProjectCount = db_EECIP.GetT_OE_PROJECTS_CountNonGovernance(),
                 GovernanceCount = db_EECIP.GetT_OE_PROJECTS_CountGovernance(),
                 DiscussionCount = db_Forum.GetTopicCount(null),
@@ -199,7 +199,7 @@ namespace EECIP.Controllers
             if (ModelState.IsValid)
             {
                 var z = model.edit_ent_services;
-                int SuccID = db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(z.ENT_PLATFORM_IDX, model.agency.ORG_IDX, z.ENT_PLATFORM_IDX, z.PROJECT_NAME, z.VENDOR, z.IMPLEMENT_STATUS,
+                int SuccID = db_EECIP.InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(z.ORG_ENT_SVCS_IDX, model.agency.ORG_IDX, z.ENT_PLATFORM_IDX, z.PROJECT_NAME, z.VENDOR, z.IMPLEMENT_STATUS,
                     z.COMMENTS, z.PROJECT_CONTACT, z.ACTIVE_INTEREST_IND, false, db_Accounts.GetUserIDX(), true);
                 if (SuccID > 0)
                 {
@@ -387,7 +387,14 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
+
             model.ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(model.project.PROJECT_IDX);
+
+            //for insert case, project orgs will not have org yet
+            if (model.ProjectOrgs.Count == 0 && model.NewProjOrgIDX != null)
+            {
+                model.ProjectOrgs.Add(db_Ref.GetT_OE_ORGANIZATION_ByID(model.NewProjOrgIDX.ConvertOrDefault<Guid>()));
+            }
         
             //CHECK PERMISSIONS
             if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(UserIDX, model.ProjectOrgs))

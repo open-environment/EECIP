@@ -64,6 +64,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public bool EXCLUDE_POINTS_IND { get; set; }
         public bool NOTIFY_DISCUSSION_IND { get; set; }
         public bool NOTIFY_BADGE_IND { get; set; }
+        public bool NOTIFY_NEWSLETTER { get; set; }
     
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

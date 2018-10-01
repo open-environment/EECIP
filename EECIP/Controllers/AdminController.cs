@@ -45,7 +45,7 @@ namespace EECIP.Controllers
                 {
                     int UserIDX = (int)Membership.GetUser(model.newUserEmail).ProviderUserKey;
                     //update first name and last name
-                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false, true, true);
+                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false, true, true, true);
                     TempData["Success"] = "User created and verification email sent to user.";
                 }
                 else
@@ -659,6 +659,30 @@ namespace EECIP.Controllers
             //return View(model);
             return RedirectToAction("SearchAdmin");
 
+        }
+
+
+
+        //*************************************** NEWSLETTER TESTING **********************************************************
+        public ActionResult Newsletter()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Newsletter(string s)
+        {
+            try
+            {
+                App_Logic.NewsletterClass.generateNewsletter();
+                TempData["Success"] = "Done.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.ToString().SubStringPlus(0, 100);
+            }
+
+            return RedirectToAction("Newsletter", "Admin");
         }
 
 

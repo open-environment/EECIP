@@ -394,6 +394,7 @@
           <Property Name="EXCLUDE_POINTS_IND" Type="bit" Nullable="false" />
           <Property Name="NOTIFY_DISCUSSION_IND" Type="bit" Nullable="false" />
           <Property Name="NOTIFY_BADGE_IND" Type="bit" Nullable="false" />
+          <Property Name="NOTIFY_NEWSLETTER" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Badge">
           <Key>
@@ -933,7 +934,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK__T_OE_PROJ__PROJE__5F3414E9">
-          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="1" />
+          <End Role="T_OE_PROJECTS" Type="Self.T_OE_PROJECTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="T_OE_PROJECT_ORGS" Type="Self.T_OE_PROJECT_ORGS" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_PROJECTS">
@@ -2141,6 +2144,7 @@
           <NavigationProperty Name="Votes1" Relationship="EECIPModel.FK_VoteMembershipBy" FromRole="T_OE_USERS" ToRole="Vote" />
           <Property Name="NOTIFY_DISCUSSION_IND" Type="Boolean" Nullable="false" />
           <Property Name="NOTIFY_BADGE_IND" Type="Boolean" Nullable="false" />
+          <Property Name="NOTIFY_NEWSLETTER" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
           <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
@@ -3416,6 +3420,7 @@
           <EntitySetMapping Name="T_OE_USERS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_USERS">
               <MappingFragment StoreEntitySet="T_OE_USERS">
+                <ScalarProperty Name="NOTIFY_NEWSLETTER" ColumnName="NOTIFY_NEWSLETTER" />
                 <ScalarProperty Name="NOTIFY_BADGE_IND" ColumnName="NOTIFY_BADGE_IND" />
                 <ScalarProperty Name="NOTIFY_DISCUSSION_IND" ColumnName="NOTIFY_DISCUSSION_IND" />
                 <ScalarProperty Name="EXCLUDE_POINTS_IND" ColumnName="EXCLUDE_POINTS_IND" />

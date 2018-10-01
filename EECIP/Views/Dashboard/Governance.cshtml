@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Governance Materials";
     ViewBag.SubTitle = "Share project and materials created by E-Enterprise Governance or other active workgroups";
-    ViewBag.ShowTour = false;
+    ViewBag.ShowTour = true;
 }
 
 @if (Model.UnlockedInd == false)
@@ -39,7 +39,7 @@ else
                             @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Dashboard/Governance?selAgency=' + this.options[this.selectedIndex].value;" })
                             @if (!User.IsInRole("ReadOnly"))
                             {
-                                <span class="input-group-btn">
+                                <span id="spnAddGroup" class="input-group-btn">
                                     <a href="#modal-form" data-toggle="modal" class="btn btn-info">
                                         <i class="glyphicon glyphicon-plus"></i> Add New Group
                                     </a>
@@ -151,7 +151,7 @@ else
     if (Model.selAgency != null && !User.IsInRole("ReadOnly"))
     {
         <div class="col-md-1">
-            <a href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency, returnURL="Governance" })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New Project</a>
+            <a id="btnAddProject" href="@Url.Action("ProjectDetails", "Dashboard", new { orgIDX = Model.selAgency, returnURL="Governance" })" class="btn btn-rounded  btn-rounded btn-success"><i class="glyphicon glyphicon-plus"></i> Add New Project</a>
         </div>
     }
 }
@@ -205,8 +205,35 @@ else
 
 
 @section Scripts {
-    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
-    @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/confirmdelete")
+
+    @Scripts.Render("~/bundles/introjs")
+
+    <script>
+        function startIntro() {
+            var intro = introJs();
+            intro.setOptions({
+                steps: [
+                    {
+                        intro: "<h4>What are we up to as a community?</h4>This section provides a place for community members to post projects and documents related to broader multi-agency and national projects. Our goal is to better link individual agencies into the E-Enterprise and Exchange Network community.<br/><br/>﻿Note: you can also discuss these projects in the discussion forum."
+                    },
+                    {
+                        element: '#spnAddGroup',
+                        intro: "<h4>You can add a new group here</h4>You can add your group here. The EECIP moderator may contact you for more information."
+                    },
+                    {
+                        element: '#selAgency',
+                        intro: "<h4>Select the group relevant to your post.</h4>Once you select the appropriate group, the associated projects will appear below. You can also add projects."
+                    },
+                    {
+                        element: '#btnAddProject',
+                        intro: "<h4>Add a New Project for your group here</h4>This will take you to a page to add a project."
+                    }
+                ]
+            });
+
+            intro.start();
+        }
+    </script>
 }
 

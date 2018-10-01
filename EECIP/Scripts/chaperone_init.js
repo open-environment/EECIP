@@ -1,2 +1,0 @@
-﻿window.chaperone = window.chaperone || [], chaperone.init || (chaperone.init = function (n) { for (var e = ["destroy"], o = function (n) { return function () { chaperone.push([n, Array.prototype.slice.call(arguments, 0)]) } }, r = 0; r < e.length; r++)chaperone[e[r]] = o(e[r]); chaperone.push(["init", [n]]) });
-chaperone.init({ "api_key": "lBuTEvIH43bg5g" });

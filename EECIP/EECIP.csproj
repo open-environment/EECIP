@@ -332,6 +332,7 @@
     <Compile Include="App_Logic\DataAccessLayer\Vote.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\Newsletter.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Logic\BusinessLogicLayer\CustomMembership.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -377,8 +378,6 @@
     <Content Include="Content\auto-complete.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap-tour.css" />
-    <Content Include="Content\bootstrap-tour.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\select2.css" />
@@ -483,6 +482,7 @@
     <Content Include="Content\Images\seal.png" />
     <Content Include="Content\Images\sep-half.png" />
     <Content Include="Content\Images\Users\dummy.txt" />
+    <Content Include="Content\introjs.min.css" />
     <Content Include="Content\main-responsive.css" />
     <Content Include="Content\main.css" />
     <Content Include="Content\theme_dark.css" />
@@ -524,9 +524,9 @@
     <Content Include="App_Docs\ProjectImportTemplate.xlsx" />
     <Content Include="App_Docs\EntServicesImportTemplate.xlsx" />
     <Content Include="App_Docs\DataDictionary.xlsx" />
+    <Content Include="App_Docs\EECIP_AdminGuide_MaintenancePlan.docx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
-    <Content Include="Scripts\chaperone_init.js" />
     <Content Include="Scripts\Chart.bundle.js" />
     <Content Include="Scripts\Chart.bundle.min.js" />
     <Content Include="Scripts\clip-main.js" />
@@ -585,6 +585,7 @@
     <Content Include="Scripts\i18n\vi.js" />
     <Content Include="Scripts\i18n\zh-CN.js" />
     <Content Include="Scripts\i18n\zh-TW.js" />
+    <Content Include="Scripts\intro.min.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />
     <Content Include="Scripts\jquery-3.2.1.slim.js" />
@@ -846,6 +847,7 @@
     <Content Include="Views\Admin\AdmEmail.cshtml" />
     <Content Include="Views\Dashboard\Metrics.cshtml" />
     <Content Include="Views\Dashboard\AddProjectOrg.cshtml" />
+    <Content Include="Views\Admin\Newsletter.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

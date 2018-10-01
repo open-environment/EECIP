@@ -1371,7 +1371,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterest(int UserIDX)
+        public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterest(int UserIDX, int daysSince, bool fallbackAny, int recCount)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -1382,6 +1382,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                     //get interest tags
                     List<string> user_tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
 
+                    DateTime begDt = System.DateTime.Now.AddDays(daysSince * -1);
+
                     if (user_tags != null)
                     {
 
@@ -1391,6 +1393,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
                                where user_tags.Contains(d.TopicTag)
                                && b.IsTopicStarter == true
+                               //&& (a.CreateDate > begDt || b.DateCreated > begDt)
                                orderby a.CreateDate descending
                                select new TopicOverviewDisplay
                                {
@@ -1400,25 +1403,28 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    topicCreator = c.FNAME + " " + c.LNAME,
                                    postCount = 999 //hack to indicate tag match
                                    ,CategorySlug = d.TopicTag  //hack to display the matched tag
-                               }).Take(5).ToList();
+                               }).Take(recCount).ToList();
 
                     }
 
-                    if (xxx == null || xxx.Count() == 0)
+                    if (fallbackAny)
                     {
-                        xxx = (from a in ctx.Topics.AsNoTracking()
-                               join b in ctx.Posts on a.Id equals b.Topic_Id
-                               join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
-                               where b.IsTopicStarter == true
-                               orderby a.CreateDate descending
-                               select new TopicOverviewDisplay
-                               {
-                                   _topic = a,
-                                   _postStart = b,
-                                   _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
-                                   topicCreator = c.FNAME + " " + c.LNAME,
-                                   postCount = 0 //hack to indicate tag match
-                               }).Take(5).ToList();
+                        if (xxx == null || xxx.Count() == 0)
+                        {
+                            xxx = (from a in ctx.Topics.AsNoTracking()
+                                   join b in ctx.Posts on a.Id equals b.Topic_Id
+                                   join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
+                                   where b.IsTopicStarter == true
+                                   orderby a.CreateDate descending
+                                   select new TopicOverviewDisplay
+                                   {
+                                       _topic = a,
+                                       _postStart = b,
+                                       _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
+                                       topicCreator = c.FNAME + " " + c.LNAME,
+                                       postCount = 0 //hack to indicate tag match
+                                   }).Take(recCount).ToList();
+                        }
                     }
 
                     return xxx;
@@ -1430,6 +1436,61 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+        public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterestNewsletter(int UserIDX, int daysSince, int recCount)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    List<TopicOverviewDisplay> xxx = null;
+
+                    //get interest tags
+                    List<string> user_tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
+
+                    DateTime begDt = System.DateTime.Now.AddDays(daysSince * -1);
+
+                    if (user_tags != null)
+                    {
+
+                        xxx = (from a in ctx.Topics.AsNoTracking()
+                               join b in ctx.Posts on a.Id equals b.Topic_Id
+                               join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
+                               join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
+                               where user_tags.Contains(d.TopicTag)
+                               && b.IsTopicStarter == true
+                               //&& (a.CreateDate > begDt || b.DateCreated > begDt)
+                               orderby a.CreateDate descending
+                               select new TopicOverviewDisplay
+                               {
+                                   _topic = a,
+                                   _postStart = b,
+                                   _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
+                                   topicCreator = c.FNAME + " " + c.LNAME,
+                                   postCount = 999 //hack to indicate tag match
+                                   ,
+                                   CategorySlug = d.TopicTag  //hack to display the matched tag
+                               }).Take(recCount).ToList();
+
+                        var yyy = (from a in xxx
+                                   where a._postLatest.Post.DateCreated > begDt
+                                   select a).ToList();
+
+                        return yyy;
+
+                    }
+
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
 
         public static List<EECIP_Index> GetTopic_ReadyToSync(Guid? TopicID)
         {

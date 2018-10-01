@@ -146,5 +146,6 @@ namespace EECIP.Models
         public List<CommunityOfInterestDisplayType> CommunitiesOfInterest { get; set; }
         public bool NOTIFY_DISCUSSION_IND { get; set; }
         public bool NOTIFY_BADGE_IND { get; set; }
+        public bool NOTIFY_NEWSLETTER { get; set; }
     }
 }

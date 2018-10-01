@@ -149,7 +149,6 @@ html {
     margin-left: 0;
 }
 
-
 .navbar-brand {
     height:46px;
 }
@@ -193,6 +192,58 @@ ul.main-navigation-menu > li.active > a {
     }
 }
 
+
+/**********btnTour    */
+.btntour {
+    position: fixed;
+    left: 20px;
+    bottom: 50px;
+    font-size: 18px;
+    color: #fff;
+    background-color: rgb(25, 156, 152);
+    padding: 6px 9px;
+}
+
+@media (min-width: 768px) {
+    .navigation-small .btntour {
+        left: 0px !important;
+        width: 35px !important;
+        border-radius: 0px;
+    }
+
+    .navigation-small .btntour:hover {
+        width: 225px !important;
+    }
+
+    .navigation-small .btntour > span {
+        display: none;
+    }
+
+    .navigation-small .btntour:hover > span {
+        display: inline;
+    }
+}
+
+
+@media (max-width: 979px) and (min-width: 768px) {
+    .main-navigation > .btntour {
+        left: 0px !important;
+        width: 35px !important;
+        border-radius: 0px;
+    }
+
+        .main-navigation > .btntour:hover {
+            width: 225px !important;
+        }
+
+        .main-navigation > .btntour > span {
+            display: none;
+        }
+
+        .main-navigation > .btntour:hover > span {
+            display: inline;
+        }
+}
 
 /***************     FACET STYLING     ******************/
 .facetHead {

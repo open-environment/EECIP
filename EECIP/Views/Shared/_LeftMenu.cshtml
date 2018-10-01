@@ -23,7 +23,7 @@
                 <span class="title">Search Inventory</span><span class="selected"></span>
             </a>
         </li>
-        <li class="open">
+        <li class="open" id="liEditProfiles">
             <a href="javascript:void(0)">
                 <i class="clip-pencil-3"></i>
                 <span class="title">Edit Profiles </span><i class="icon-arrow"></i>
@@ -55,7 +55,7 @@
 
         <li>
             <a href="@Url.Action("Index","Forum")">
-                <i class="clip-question"></i>
+                <i class="clip-bubble"></i>
                 <span class="title">Discussion </span><span class="selected"></span>
             </a>
         </li>
@@ -180,8 +180,10 @@
         </li>
     </ul>
     <!-- end: MAIN NAVIGATION MENU -->
-    @*@if (ViewBag.ShowTour == true)
+    @if (ViewBag.ShowTour == true)
     {
-        <button id="btnTour" class="btn btn-info" style="position: fixed; left: 20px; bottom: 50px;     font-size: 18px; color: #fff; background-color:rgb(25, 156, 152)"><i class="clip-question-2"></i> Find help here</button>
-    }*@
+        <button id="btnTour" class="btn btntour" onclick="javascript: startIntro();">
+            <i class="clip-question-2"></i> <span>Find help here</span>
+        </button>
+    }
     </div>

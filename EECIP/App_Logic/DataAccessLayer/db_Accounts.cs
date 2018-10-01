@@ -75,8 +75,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
+        
         public static List<UserDisplayType> GetT_OE_USERS_Search(string sort, int page)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -163,8 +162,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
-
         public static T_OE_USERS GetT_OE_USERSByIDX(int idx)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -238,8 +235,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
+        
         public static bool UserCanEditOrgIDX(int idx, Guid orgIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -268,8 +264,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
-
-
+        
         public static bool UserCanEditOrgList(int idx, List<T_OE_ORGANIZATION> orgs)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -301,7 +296,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
         public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, 
             DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE, 
-            string lINKED_IN, bool? NodeAdmin, bool? ExcludeBadges, bool? nOTIFY_DISCUSSION_IND, bool? nOTIFY_BADGE_IND)
+            string lINKED_IN, bool? NodeAdmin, bool? ExcludeBadges, bool? nOTIFY_DISCUSSION_IND, bool? nOTIFY_BADGE_IND, bool? nOTIFY_NEWSLETTER)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -331,6 +326,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (ExcludeBadges != null) row.EXCLUDE_POINTS_IND = (bool)ExcludeBadges;
                     if (nOTIFY_DISCUSSION_IND != null) row.NOTIFY_DISCUSSION_IND = (bool)nOTIFY_DISCUSSION_IND;
                     if (nOTIFY_BADGE_IND != null) row.NOTIFY_BADGE_IND = (bool)nOTIFY_BADGE_IND;
+                    if (nOTIFY_NEWSLETTER != null) row.NOTIFY_NEWSLETTER = (bool)nOTIFY_NEWSLETTER;
 
 
                     row.MODIFY_DT = System.DateTime.Now;
@@ -380,7 +376,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 catch (Exception ex)
                 {
                     //set to inactive if cannot delete
-                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
                     db_Ref.LogEFException(ex);
                     return 0;
                 }
@@ -502,6 +498,38 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     db_Ref.LogEFException(ex);
                     return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns users who have opted into newsletter
+        /// </summary>
+        /// <returns></returns>
+        public static List<UserDisplayType> GetT_OE_USERS_ForNewsLetter()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.T_OE_USERS
+                               join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
+                               from x1 in sr1.DefaultIfEmpty() //left join
+                               where a.ACT_IND == true
+                               && a.NOTIFY_NEWSLETTER == true
+                               orderby x1.ORG_NAME, a.FNAME
+                               select new UserDisplayType
+                               {
+                                   users = a,
+                                   ORG_NAME = x1.ORG_NAME
+                               }).ToList();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    throw ex;
                 }
             }
         }

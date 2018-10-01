@@ -765,6 +765,51 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             }
         }
 
+        public static DocumentSearchResult<EECIP_Index> QuerySearchIndexNewsletter(string searchStr, string dataTypeFacet)
+        {
+            try
+            {
+                //connect to Azure Search
+                SearchServiceClient serviceClient = CreateSearchServiceClient();
+                ISearchIndexClient indexClient = serviceClient.Indexes.GetClient("eecip");
+
+                //Search the index 
+                SearchParameters parameters = new SearchParameters()
+                {
+                    Top = 10,
+                    Skip = 0,
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State", "OrgType", "Name", "Description", "Tags", "Status", "LastUpdated" },
+                    IncludeTotalResultCount = false
+                };
+
+                //project/discussion toggle
+                parameters.Filter = "DataType eq '" + dataTypeFacet + "' and LastUpdated ge 2018-01-01";
+
+                //sort handling
+                parameters.OrderBy = new List<string>() { "LastUpdated desc" };
+
+                try
+                {
+                    DocumentSearchResult<EECIP_Index> results = indexClient.Documents.Search<EECIP_Index>(searchStr, parameters);
+                    return results;
+                }
+                catch (IndexBatchException e)
+                {
+                    Console.WriteLine(
+                        "Failed to index some of the documents: {0}",
+                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                    return null;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                db_Ref.InsertT_OE_SYS_LOG("AzureSearch", (ex.InnerException != null ? ex.InnerException.ToString() : ex.Message).SubStringPlus(0, 2000));
+                return null;
+            }
+        }
+
+
         public static DocumentSuggestResult Suggest(string searchText, bool fuzzy)
         {
             // Execute search based on query string

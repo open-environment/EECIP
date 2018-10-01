@@ -1,5 +1,7 @@
 ﻿@model EECIP.Models.vmForumLatestTopicsView
-
+@{ 
+    ViewBag.ShowTour = true;
+}
 @Html.Partial("_SubNavigation")
 
 <div class="row">
@@ -29,9 +31,8 @@
 </div>
 
 @section Scripts {
-    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
-    @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/pagination")
+    @Scripts.Render("~/bundles/introjs")
 
     <script type="text/javascript">
         $(function () {
@@ -47,5 +48,32 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        function startIntro() {
+            var intro = introJs();
+            intro.setOptions({
+                steps: [
+                    {
+                        element: '.content-strip',
+                        intro: "<h4>Data filters</h4>You can choose to view the latest dicscussion topics, or filter to only see topics you are currently following or topics in which you have posted."
+                    },
+                    {
+                        element: '.categories-box',
+                        intro: "<h4>Discussion Categories</h4>Discussions are divided into categories.<br/><b>Enterprise Services: </b>Place to discuss what enterprise services are.<br/><b>Reading Resources/Book Club: </b>Category to capture ideas for good reading resources for environmental professionals.<br/><b>Collaborators sought: </b>Place to post your ideas for collaborations with peers"
+                    },
+                    {
+                        element: '.btn-lg',
+                        intro: "<h4>New Discussion</h4>This will allow you to create a new discussion topic."
+                    }
+                ]
+            });
+
+            intro.start();
+            //intro.start().oncomplete(function () {
+            //    window.location.href = 'Forum/Create';
+            //});
+        }
     </script>
 }

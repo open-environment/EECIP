@@ -5,7 +5,7 @@
     ViewBag.SubSubTitle = "A community platform for environmental agency staff to learn and collaborate on projects about business process, IT, advanced monitoring and more.";
     ViewBag.ShowBadge = true;
     ViewBag.BadgeCount = Model.UserBadgeEarnedCount;
-    ViewBag.ShowTour = false;
+    ViewBag.ShowTour = true;
 }
 
 @if (!string.IsNullOrEmpty(Model.Announcement))
@@ -17,7 +17,7 @@
 }
 
 <div class="row">
-    <div class="col-sm-3 col-xs-6">
+    <div class="col-sm-3 col-xs-6" id="btnSearchParent">
         <button onclick="location.href='@Url.Action("Search", "Dashboard")';return false;" class="btn btn-icon btn-block" id="btnSearch">
             <i class="clip-search"></i>
             Search the Inventory
@@ -43,20 +43,20 @@
     </div>
     @if (Model.ProjectsNeedingReviewCount > 0)
     {
-        <div class="col-sm-3 col-xs-6">
+        <div class="col-sm-3 col-xs-6" id="btnReviewParent">
             <button onclick="location.href='@Url.Action("ProjectReview", "Dashboard")';return false;" class="btn btn-icon btn-block" style="background-color:#e07a84" id="btnReview">
                 <i class="clip-warning"></i>
                 Projects Needing Review<span class="badge badge-danger"> @Model.ProjectsNeedingReviewCount </span>
             </button>
         </div>
     }
-    <div class="col-sm-3 col-xs-6">
+    <div class="col-sm-3 col-xs-6" id="btnAddProjectParent">
         <button onclick="location.href='@Url.Action("Projects", "Dashboard")';return false;" class="btn btn-icon btn-block">
             <i class="clip-file-3"></i>
             Add a New Project
         </button>
     </div>
-    <div class="col-sm-3 col-xs-6">
+    <div class="col-sm-3 col-xs-6" id="btnAddQuestionParent">
         <button onclick="location.href='@Url.Action("Index", "Forum")';return false;" class="btn btn-icon btn-block">
             <i class="clip-question"></i>
             Ask a Question
@@ -68,16 +68,16 @@
     <div class="col-md-12">
         <section class="panel panel-default ">
             <div class="panel-heading">
-                Recent Items Matching Your Interest
+                Recent Items Matching Your Subscription
                 <div class="panel-tools">
-                    <a href="@Url.Action("Subscriptions", "Account")" class="btn btn-rounded btn-xs btn-info btn-eecip" ><i class="glyphicon glyphicon-cog"></i> Subscriptions</a>
+                    <a id="lnkSubscriptions" href="@Url.Action("Subscriptions", "Account")" class="btn btn-rounded btn-xs btn-info btn-eecip"><i class="glyphicon glyphicon-cog"></i> Edit Subscriptions</a>
                 </div>
             </div>
             <div class="panel-body">
 
                 <div class="row">
                     <div class="col-md-6">
-                        <h3 style="margin-top:0px;">Recent Projects <span style="font-size:75%; color:#6d6d6d">@(Model.LatestProjects[0].TagMatch == true ? "(matching your tag interest)" : "")</span></h3>
+                        <h3 style="margin-top:0px;">Recent Projects <span style="font-size:75%; color:#6d6d6d">@(Model.LatestProjects[0].TagMatch == true ? "(matching your subscriptions)" : "")</span></h3>
 
                         <!--  **************  MOST RECENT PROJECTS **************************************-->
                         <div class="table-responsive">
@@ -97,11 +97,11 @@
                                             <td>
                                                 <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-eecip"><i class="glyphicon glyphicon-info-sign"></i> Info</a>
                                             </td>
-                                            <td >
+                                            <td>
                                                 @Html.DisplayFor(modelItem => item.PROJ_NAME)
                                                 @if (item.Tag != null)
                                                 {
-                                                <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => item.Tag)</span>
+                                                    <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => item.Tag)</span>
                                                 }
                                             </td>
                                             <td>
@@ -120,8 +120,8 @@
                     </div>
                     <div class="col-md-6">
                         <h3 style="margin-top:0px;">
-                            Recent Discussion Topics <span style="font-size:75%; color:#6d6d6d">@(Model.LatestTopics[0].postCount == 999 ? "(matching your tag interest)" : "")</span>
-</h3>
+                            Recent Discussion Topics <span style="font-size:75%; color:#6d6d6d">@(Model.LatestTopics[0].postCount == 999 ? "(matching your subscriptions)" : "")</span>
+                        </h3>
 
                         <!--  **************  LATEST DISCUSSIONS **************************************-->
                         @if (Model.LatestTopics != null && Model.LatestTopics.Count > 0)
@@ -263,6 +263,48 @@
 
 
 @section Scripts {
-    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
-    @Scripts.Render("~/bundles/chaperone")
+    @Scripts.Render("~/bundles/introjs")
+
+    <script>
+        function startIntro() {
+            var intro = introJs();
+            intro.setOptions({
+                steps: [
+                    {
+                        element: '#btnSearchParent',
+                        intro: "<h4>Search everything in one place!</h4>You can search the inventory here.  Each category of information has its own tab - Projects, Discussions, Agencies, and Governance. <br/><br/><br/>If you don't find what you are looking for, you can post a question at <b>Ask a Question.</b>"
+                    },
+                    {
+                        element: '#btnReviewParent',
+                        intro: "<h4>Help us update your agency projects</h4>Click here to view the projects for your agency that have either not been updated in 6-12 months or do not have a contact listed.</br></br>You can see the source for these on the right. You can also delete projects if you think they are not relevant by clicking the X."
+                    },
+                    {
+                        element: '#btnAddProjectParent',
+                        intro: "<h4>Tell us about your cool project!</h4>You can view, add, update and delete your agency projects here."
+                    },
+                    {
+                        element: '#btnAddQuestionParent',
+                        intro: "<h4>Ask a question or respond to one</h4>Ask a question about something you didn't find in your search, about a recommendation for the site, or to reach out to other agencies to get answers."
+                    },
+                    {
+                        element: '#headBadge',
+                        intro: "<h4>Social science says badges work.</h4>EECIP uses badges to keep track of contributions people make to the platform. Earn badges by participating in discussions, up-voting projects, updating your agency profile and more.</br></br>Suggest new badges or your ideas about them in the Discussion area."
+                    },
+                    {
+                        element: '#liEditProfiles',
+                        intro: "<h4>All your information is here.</h4>Here you can edit your individual user information and your agency information. The agency profile and projects includes your enterprise services, projects, and collaborative work going on at the governance and community level."
+                    },
+                    {
+                        element: '#lnkSubscriptions',
+                        position: "left",
+                        intro: "<h4>Subscriptions</h4>Subscribe to topics and you will be notified (both on this dashboard and via email newsletter) when other agencies add content for that topic."
+                    }
+
+                ], 
+                showStepNumbers: false
+            });
+
+            intro.start();
+        }
+    </script>
 }

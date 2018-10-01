@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "User Profile";
     ViewBag.SubTitle = Model.OrgName;
-    ViewBag.ShowTour = false;
+    ViewBag.ShowTour = true;
 }
 
 @using (Html.BeginForm("UserProfile", "Account", FormMethod.Post, new { @class = "hbox stretch", @id = "norepostform", enctype = "multipart/form-data" }))
@@ -13,7 +13,7 @@
 
     <div class="row ">
         <div class="col-md-6 ">
-            <section class="panel panel-default ">
+            <section id="sectBasic" class="panel panel-default">
                 <div class="panel-heading">
                     Basic Info
                     <div class="panel-tools">
@@ -170,7 +170,7 @@
                                 <span class="help-block"><i class="clip-info"></i> This gives other users more information about you without having to reenter it here.</span>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div id="expertise-parent" class="col-md-12">
                             @if (Model.SelectedExpertise == null || Model.SelectedExpertise.Count == 0)
                             {
                                 <div class="alert alert-block alert-danger fade in">
@@ -215,10 +215,9 @@
 
 
 @section Scripts {
-    <script src="https://app.getchaperone.com/embed/chaperone.js"></script>
-    @Scripts.Render("~/bundles/chaperone")
     @Scripts.Render("~/bundles/select2")
     @Scripts.Render("~/bundles/areyousure")
+    @Scripts.Render("~/bundles/introjs")
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -281,6 +280,30 @@
             $("#imgPreview").hide();
         }
 
+    </script>
+    <script>
+        function startIntro() {
+            var intro = introJs();
+            intro.setOptions({
+                steps: [
+                    {
+                        element: '#sectBasic',
+                        intro: "<h4>Basic Information</h4>The Basic Information lets your peers know more about you and how to reach you."
+                    },
+                    {
+                        element: '#LinkedIn',
+                        intro: "<h4>LinkedIn Profile link</h4>You can go to LinkedIn and find a link to your profile under your picture in the header. You can copy and paste that here. <br/>It should be in the form of john-doe-1a2df34/"
+                    },
+                    {
+                        element: '#expertise-parent',
+                        intro: "<h4>What do you know? What do you want to know about?</h4>EECIP uses these tags to help match people with interests and or expertise in specific areas. These tags drive the projects you will see on your home page, so please provide at least a few to start. You can always change them later.<br/>Make sure you hit enter after each entry to be able to add a new one."
+                    }
+                ],
+                showStepNumbers: true
+            });
+
+            intro.start();
+        }
     </script>
 }
 

@@ -6,6 +6,7 @@
     ViewBag.Title = "Browse or Search Content";
     ViewBag.SubTitle = @"Find projects, agencies, people, or discussions that match your interests  (You can use "" and -  and + to refine your search)";
     int counter = 1;
+    ViewBag.ShowTour = true;
 }
 
 @using (Html.BeginForm("Search", "Dashboard", FormMethod.Get, new { @id = "norepostform" }))
@@ -223,7 +224,7 @@
 
                     <div class="table-responsive">
                         <table class="table table-striped m-b-none" data-ride="datatables">
-                            <thead class="thead-inverse" >
+                            <thead class="thead-inverse">
                                 <tr>
                                     <th>Type</th>
                                     <th>Agency</th>
@@ -310,7 +311,7 @@
                                     }
                                     <th>Tags</th>
                                     <th>
-                                        <a href="#" class="col-header" data-id="LastUpdated">
+                                        <a href="#" class="col-header" data-id="LastUpdated" data-default-sort-dir="1">
                                             Last Updated @if (Model.sortType == "LastUpdated")
                                             {
                                                 if (Model.sortDir == "1")
@@ -497,12 +498,11 @@
 }
 
 @section Scripts {
-    @*<script src="https://app.getchaperone.com/embed/chaperone.js"></script>
-        @Scripts.Render("~/bundles/chaperone")*@
     @Scripts.Render("~/bundles/autocomplete")
     @Scripts.Render("~/bundles/pagination")
     @Scripts.Render("~/bundles/stickytableheaders")
     @Scripts.Render("~/bundles/trunk8")
+    @Scripts.Render("~/bundles/introjs")
 
     <script type="text/javascript">
 
@@ -521,7 +521,6 @@
             $(this).parent().trunk8();
             return false;
         });
-
 
 
 
@@ -702,17 +701,62 @@
             //column header sorting click
             $('.col-header').click(function (e) {
                 e.preventDefault();
+
+                //getting sort type
                 var _sortTyp = $(this).attr('data-id');
                 var _prevSortType = $('#sortType').val();
                 $('#sortType').val(_sortTyp);
-                if (_sortTyp == _prevSortType && $('#sortDir').val() != '1')
-                    $('#sortDir').val('1');
-                else
+
+                //handling reverse default sort
+                var _tempSortDir = $('#sortDir').val();
+                if (_tempSortDir == '') {
+                    var _sortDirDefault = $(this).attr('data-default-sort-dir');
+                    if (_sortDirDefault == "1") {
+                        $('#sortDir').val('1');
+                    }
+                }
+
+                //handling same sort click again (inverse it)
+                if (_sortTyp == _prevSortType && $('#sortDir').val() == '1') {
                     $('#sortDir').val('0');
+                }
+                else if (_sortTyp == _prevSortType && $('#sortDir').val() == '0') {
+                    $('#sortDir').val('1');
+                }
+
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
             });
 
         });
+    </script>
+
+    <script>
+        function startIntro() {
+            var intro = introJs();
+            intro.setOptions({
+                steps: [
+                    {
+                        element: '#txtSearch',
+                        intro: "<h4>You can type anything</h4>You can type anything but the most powerful search is to use the * at the end of the first initial letters.<br/>You can type in 2 words and the results will show all record with either or both words in any field within the record."
+                    },
+                    {
+                        element: '#txtSearch',
+                        intro: "<h4>Add \"quotes\"</h4>Use double quotes around a phrase and the results will show you any record with that exact phrase - as you typed it - in any field."
+                    },
+                    {
+                        element: '#txtSearch',
+                        intro: "<h4>Use +</h4>You can use the + sign to get results for both words.<br/>For example, used permit+air to show results containing both words in them.<br/>(<b>Note:</b> You can use quotes with the + to be the most accurate.)"
+                    }
+                    //,
+                    //{
+                    //    element: '#txtSearch',
+                    //    intro: "<h4>Use -</h4>You can also use a - sign if you want to remove a category from the search.<br/><b>Note:</b> there is a required space in front of the minus sign and no space after it."
+                    //}
+                ]
+            });
+
+            intro.start();
+        }
     </script>
 }

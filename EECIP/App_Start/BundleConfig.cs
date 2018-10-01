@@ -28,9 +28,10 @@ namespace EECIP
             bundles.Add(new ScriptBundle("~/bundles/pagination").Include("~/Scripts/jquery.twbsPagination.js"));
             bundles.Add(new ScriptBundle("~/bundles/stickytableheaders").Include("~/Scripts/jquery.stickytableheaders.js"));
             bundles.Add(new ScriptBundle("~/bundles/trunk8").Include("~/Scripts/trunk8.js"));
-            bundles.Add(new ScriptBundle("~/bundles/chaperone").Include("~/Scripts/chaperone_init.js"));
             bundles.Add(new ScriptBundle("~/bundles/areyousure").Include("~/Scripts/jquery.are-you-sure.js"));
             bundles.Add(new ScriptBundle("~/bundles/chart").Include("~/Scripts/Chart.bundle.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/introjs").Include("~/Scripts/intro.min.js"));
 
 
             //****************** CSS ***********************************
@@ -44,8 +45,8 @@ namespace EECIP
                 "~/Content/theme_dark.css",
                 "~/Content/css/select2.css",
                 "~/Content/auto-complete.css",
-                "~/Content/bootstrap-tour.css",
                 "~/Content/toastr.css",
+                "~/Content/introjs.min.css",
                 "~/Content/site.css"));
         }
     }

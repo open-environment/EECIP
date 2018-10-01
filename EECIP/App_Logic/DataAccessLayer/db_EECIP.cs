@@ -722,7 +722,8 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(int UserIDX)
+
+        public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(int UserIDX, int daysSince, bool fallbackAny, int recCount)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -733,6 +734,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                     //get interest tags
                     List<string> user_tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
 
+                    DateTime begDt = System.DateTime.Now.AddDays(daysSince * -1);
+
                     if (user_tags != null)
                     {
                         xxx = (from a in ctx.T_OE_PROJECTS
@@ -740,24 +743,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                join b in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals b.ORG_IDX
                                join c in ctx.T_OE_PROJECT_TAGS on a.PROJECT_IDX equals c.PROJECT_IDX
                                where user_tags.Contains(c.PROJECT_TAG_NAME)
-                               orderby a.MODIFY_DT ?? a.CREATE_DT descending
-                                select new ProjectShortDisplayType
-                                {
-                                    PROJECT_IDX = a.PROJECT_IDX,
-                                    ORG_IDX = po.ORG_IDX,
-                                    PROJ_NAME = a.PROJ_NAME,
-                                    ORG_NAME = b.ORG_NAME,
-                                    LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
-                                    TagMatch = true,
-                                    Tag = c.PROJECT_TAG_NAME
-                                }).Take(6).ToList();
-                    }
-
-                    if (xxx == null || xxx.Count() == 0)
-                    {
-                        xxx = (from a in ctx.T_OE_PROJECTS
-                               join po in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals po.PROJECT_IDX
-                               join b in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals b.ORG_IDX
+                               && (a.CREATE_DT > begDt || a.MODIFY_DT > begDt)
                                orderby a.MODIFY_DT ?? a.CREATE_DT descending
                                select new ProjectShortDisplayType
                                {
@@ -766,8 +752,29 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    PROJ_NAME = a.PROJ_NAME,
                                    ORG_NAME = b.ORG_NAME,
                                    LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
-                                   TagMatch = false
-                               }).Take(6).ToList();
+                                   TagMatch = true,
+                                   Tag = c.PROJECT_TAG_NAME
+                               }).Take(recCount).ToList();
+                    }
+
+                    if (fallbackAny)
+                    {
+                        if (xxx == null || xxx.Count() == 0)
+                        {
+                            xxx = (from a in ctx.T_OE_PROJECTS
+                                   join po in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals po.PROJECT_IDX
+                                   join b in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals b.ORG_IDX
+                                   orderby a.MODIFY_DT ?? a.CREATE_DT descending
+                                   select new ProjectShortDisplayType
+                                   {
+                                       PROJECT_IDX = a.PROJECT_IDX,
+                                       ORG_IDX = po.ORG_IDX,
+                                       PROJ_NAME = a.PROJ_NAME,
+                                       ORG_NAME = b.ORG_NAME,
+                                       LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
+                                       TagMatch = false
+                                   }).Take(recCount).ToList();
+                        }
                     }
 
 
