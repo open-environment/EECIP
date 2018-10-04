@@ -12,6 +12,7 @@ The E-Enterprise Community Inventory Platform is an online community and living 
     - Admin module: org filter on user maintenance page 
     - Search sorting tweak: last updated date
     - Changed online help provider
+    - Bug fix: admin adding user
 
 **Version 1.3 (August 2018)**
 - Added Site Metrics page
