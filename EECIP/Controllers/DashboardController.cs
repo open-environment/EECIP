@@ -16,7 +16,7 @@ namespace EECIP.Controllers
         #region DASHBOARD    
         
         // GET: Dashboard
-        public ActionResult Index()
+        public ActionResult Index(string selSub)
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
@@ -25,14 +25,16 @@ namespace EECIP.Controllers
                 UserBadges = db_Forum.GetBadgesForUser(UserIDX),  //badge progress
                 ProjectsNeedingReviewCount = db_EECIP.GetT_OE_PROJECTS_NeedingReviewCount(UserIDX),  //projects needing review
                 UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(6),  //user point leaders
-                LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX, 900, true, 6),  //latest projects matching interest
-                LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX, 900, true, 6), //latest topics matching interest
+                LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX, 900, true, 6, (selSub == "Default View" ? null : selSub)),  //latest projects matching interest
+                LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX, 900, true, 6, (selSub == "Default View" ? null : selSub)), //latest topics matching interest
                 ProjectCount = db_EECIP.GetT_OE_PROJECTS_CountNonGovernance(),
                 GovernanceCount = db_EECIP.GetT_OE_PROJECTS_CountGovernance(),
                 DiscussionCount = db_Forum.GetTopicCount(null),
                 AgencyCount = db_Ref.GetT_OE_ORGANIZATION_Count(),
                 UserBadgeEarnedCount = db_Forum.GetBadgesForUserCount(UserIDX),
-                Announcement = db_Ref.GetT_OE_APP_SETTING_CUSTOM().ANNOUNCEMENTS
+                Announcement = db_Ref.GetT_OE_APP_SETTING_CUSTOM().ANNOUNCEMENTS,
+                ddl_Subscriptions = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX_withDefault(UserIDX).Select(x => new SelectListItem { Value = x, Text = x }),
+                selSub = (selSub ?? "Default View")
             };
 
             T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);

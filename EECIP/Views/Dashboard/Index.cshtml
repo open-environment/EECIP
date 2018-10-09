@@ -68,9 +68,12 @@
     <div class="col-md-12">
         <section class="panel panel-default ">
             <div class="panel-heading">
-                Recent Items Matching Your Subscription
+                Recent Items Matching Your Subscriptions
+
                 <div class="panel-tools">
-                    <a id="lnkSubscriptions" href="@Url.Action("Subscriptions", "Account")" class="btn btn-rounded btn-xs btn-info btn-eecip"><i class="glyphicon glyphicon-cog"></i> Edit Subscriptions</a>
+                    @Html.DropDownListFor(model => model.selSub, Model.ddl_Subscriptions, "", new { @class = "btn-xs", @onchange = "document.location.href = '/Dashboard/Index?selSub=' + this.options[this.selectedIndex].value;" })
+
+                    <a id="lnkSubscriptions" href="@Url.Action("Subscriptions", "Account")" class="btn btn-rounded btn-xs btn-eecip"><i class="glyphicon glyphicon-cog"></i> Edit Subscriptions</a>
                 </div>
             </div>
             <div class="panel-body">
@@ -182,7 +185,7 @@
             <div class="panel-heading">
                 Most Active Users
                 <div class="panel-tools">
-                    <a href="@Url.Action("Leaderboard", "Dashboard")" class="btn  btn-xs btn-info" style="background-color:rgb(25, 156, 152)"><i class="glyphicon glyphicon-star-empty"></i> Full Leaderboard</a>
+                    <a href="@Url.Action("Leaderboard", "Dashboard")" class="btn  btn-xs btn-eecip"><i class="glyphicon glyphicon-star-empty"></i> Full Leaderboard</a>
                 </div>
             </div>
             <div class="panel-body">

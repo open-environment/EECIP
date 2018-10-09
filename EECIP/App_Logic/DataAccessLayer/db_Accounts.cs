@@ -76,7 +76,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
         
-        public static List<UserDisplayType> GetT_OE_USERS_Search(string sort, int page)
+        public static List<UserDisplayType> GetT_OE_USERS_Search(string sort, int page, Guid? orgIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -88,6 +88,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         xxx = (from a in ctx.T_OE_USERS
                                join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
                                from x1 in sr1.DefaultIfEmpty() //left join
+                               where (orgIDX == null ? true : x1.ORG_IDX == orgIDX)
                                orderby x1.ORG_NAME, a.FNAME
                                select new UserDisplayType
                                {
@@ -98,6 +99,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         xxx = (from a in ctx.T_OE_USERS
                                join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
                                from x1 in sr1.DefaultIfEmpty() //left join
+                               where (orgIDX == null ? true : x1.ORG_IDX == orgIDX)
                                orderby a.FNAME
                                select new UserDisplayType
                                {
@@ -108,6 +110,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         xxx = (from a in ctx.T_OE_USERS
                                join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
                                from x1 in sr1.DefaultIfEmpty() //left join
+                               where (orgIDX == null ? true : x1.ORG_IDX == orgIDX)
                                orderby a.LNAME
                                select new UserDisplayType
                                {
@@ -118,6 +121,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         xxx = (from a in ctx.T_OE_USERS
                                join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
                                from x1 in sr1.DefaultIfEmpty() //left join
+                               where (orgIDX == null ? true : x1.ORG_IDX == orgIDX)
                                orderby a.LASTLOGIN_DT descending
                                select new UserDisplayType
                                {
@@ -128,6 +132,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         xxx = (from a in ctx.T_OE_USERS
                                join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
                                from x1 in sr1.DefaultIfEmpty() //left join
+                               where (orgIDX == null ? true : x1.ORG_IDX == orgIDX)
                                orderby a.CREATE_DT descending
                                select new UserDisplayType
                                {
@@ -709,6 +714,54 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 select itemA;
 
                     return roles.ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+        public static List<T_OE_ROLES> GetT_OE_ROLESInUserIDX(int userIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var roles = from itemA in ctx.T_OE_ROLES
+                                join itemB in ctx.T_OE_USER_ROLES on itemA.ROLE_IDX equals itemB.ROLE_IDX
+                                where itemB.USER_IDX == userIDX
+                                select itemA;
+
+                    return roles.ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<T_OE_ROLES> GetT_OE_ROLESNotInUserIDX(int userIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    //first get all roles
+                    var allRoles = (from itemA in ctx.T_OE_ROLES select itemA);
+
+                    //next get all roles that user has
+                    var rolesUserHas = from itemA in ctx.T_OE_ROLES
+                                join itemB in ctx.T_OE_USER_ROLES on itemA.ROLE_IDX equals itemB.ROLE_IDX
+                                where itemB.USER_IDX == userIDX
+                                select itemA;
+
+                    //then get exclusions
+                    var rolesNotInRole = allRoles.Except(rolesUserHas);
+
+                    return rolesNotInRole.OrderBy(a => a.ROLE_NAME).ToList();
                 }
                 catch (Exception ex)
                 {

@@ -23,6 +23,8 @@ namespace EECIP.Models
         public int GovernanceCount { get; set; }
         public int UserBadgeEarnedCount { get; set; }
         public string Announcement { get; set; }
+        public IEnumerable<SelectListItem> ddl_Subscriptions { get; set; }
+        public string selSub { get; set; }
     }
 
 

@@ -4,6 +4,20 @@
     ViewBag.SubTitle = "Manage application users.";
 }
 
+    <div class="row">
+        <div class="col-sm-11">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                        Select Agency:
+                    </label>
+                    <div class="col-sm-5">
+                        @Html.DropDownListFor(model => model.selAgency, Model.ddl_Agencies, "", new { @class = "form-control", @onchange = "document.location.href = '/Admin/Users?currPage=1&selAgency=' + this.options[this.selectedIndex].value;" })
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
 <!-- render the main content -->

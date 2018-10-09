@@ -279,6 +279,21 @@ namespace EECIP.Controllers
                 T_OE_ORGANIZATION org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.OrgIDX.ConvertOrDefault<Guid>());
                 if (org != null)
                     model.OrgName = org.ORG_NAME;
+
+                //role handling
+                if (a == "a")
+                {
+                    model.Roles_In_User = db_Accounts.GetT_OE_ROLESInUserIDX(model.UserIDX).Select(x => new SelectListItem
+                    {
+                        Value = x.ROLE_IDX.ToString(),
+                        Text = x.ROLE_NAME
+                    });
+                    model.Roles_Not_In_User = db_Accounts.GetT_OE_ROLESNotInUserIDX(model.UserIDX).Select(x => new SelectListItem
+                    {
+                        Value = x.ROLE_IDX.ToString(),
+                        Text = x.ROLE_NAME
+                    });
+                }
             }
 
             return View(model);

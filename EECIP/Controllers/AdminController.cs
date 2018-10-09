@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using EECIP.App_Logic.BusinessLogicLayer;
 using EECIP.App_Logic.DataAccessLayer;
 using EECIP.Models;
 using System.Web.Security;
 using System.IO;
-using System.Text;
 using System.Data;
 using ClosedXML.Excel;
-using System.Web.Hosting;
 
 namespace EECIP.Controllers
 {
@@ -20,12 +17,14 @@ namespace EECIP.Controllers
     {
         //************************************* USERS ************************************************************
         // GET: /Admin/Users
-        public ActionResult Users(string sort, int? currPage)
+        public ActionResult Users(string sort, int? currPage, Guid? selAgency)
         {
             var model = new vmAdminUsers
             {
-                users = db_Accounts.GetT_OE_USERS_Search(sort, currPage ?? 1),
-                userCount = db_Accounts.GetT_OE_USERS_Count(),
+                users = db_Accounts.GetT_OE_USERS_Search(sort, currPage ?? 1, selAgency),
+                ddl_Agencies = ddlHelpers.get_ddl_organizations(true, true),
+                selAgency = selAgency,
+                userCount = (selAgency == null ? db_Accounts.GetT_OE_USERS_Count() : 1),
                 currPage = currPage,
                 strSort = sort
             };
@@ -40,16 +39,16 @@ namespace EECIP.Controllers
                 MembershipCreateStatus status;
 
                 //create user and send out verification email
-                Membership.Provider.CreateUser(model.newUserEmail, "", model.newUserEmail, null, null, false, null, out status);
+                MembershipUser _u = Membership.Provider.CreateUser(model.newUserEmail, "", model.newUserEmail, null, null, false, null, out status);
                 if (status == MembershipCreateStatus.Success)
                 {
-                    int UserIDX = (int)Membership.GetUser(model.newUserEmail).ProviderUserKey;
+                    int UserIDX = _u.ProviderUserKey.ConvertOrDefault<int>();
                     //update first name and last name
                     db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false, true, true, true);
                     TempData["Success"] = "User created and verification email sent to user.";
                 }
                 else
-                {
+                    {
                     if (status.ToString() == "DuplicateUserName")
                         TempData["Error"] = "An account has already been created with that email address. Please recover lost password.";
                     else if (status.ToString() == "InvalidEmail")
@@ -147,6 +146,41 @@ namespace EECIP.Controllers
         }
 
 
+        // POST: /Admin/RoleEdit
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult UserRoleEdit(vmAccountUserProfile model, string submitButton)
+        {
+            int SuccID = 0;
+            int UserIDX = model.UserIDX;
+            int AdmIDX = db_Accounts.GetUserIDX();
+
+            // ADDING USER TO ROLE
+            if (submitButton == "Add")
+            {
+                foreach (string u in model.Roles_Not_In_User_Selected)
+                    SuccID = db_Accounts.CreateT_OE_USER_ROLE(u.ConvertOrDefault<int>(), UserIDX, AdmIDX);
+
+                if (SuccID > 0)
+                    TempData["Success"] = "Update successful.";
+
+                //return View(model);
+                return RedirectToAction("UserProfile", "Account", new { id = UserIDX, a = "a" });
+
+            }
+            // REMOVE USER FROM ROLE
+            else if (submitButton == "Remove")
+            {
+                foreach (string u in model.Roles_In_User_Selected)
+                    SuccID = db_Accounts.DeleteT_OE_USER_ROLE(UserIDX, u.ConvertOrDefault<int>());
+
+                if (SuccID > 0)
+                    TempData["Success"] = "Update successful.";
+
+                return RedirectToAction("UserProfile", "Account", new { id = UserIDX, a = "a" });
+            }
+            else
+                return View(model);
+        }
 
         //************************************* SETTINGS ************************************************************
         //GET: /Admin/Settings
@@ -449,7 +483,8 @@ namespace EECIP.Controllers
         {
             var model = new vmAdminSysLog
             {
-                T_OE_SYS_LOG = db_Ref.GetT_OE_SYS_LOG(1, 100)
+                T_OE_SYS_LOG = db_Ref.GetT_OE_SYS_LOG(1, 100),
+                T_OE_SYS_EMAIL_LOG = db_Ref.GetT_OE_SYS_EMAIL_LOG(1, 100)
             };
 
             return View(model);
@@ -670,19 +705,34 @@ namespace EECIP.Controllers
         }
 
         [HttpPost]
-        public ActionResult Newsletter(string s)
+        public ActionResult Newsletter(string s, string key)
         {
+            var model = new vmAdminNewsletter();
+
             try
             {
-                App_Logic.NewsletterClass.generateNewsletter();
-                TempData["Success"] = "Done.";
+                //authenticate
+                int UserIDX = db_Accounts.GetUserIDX();
+                T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+                if (u != null && u.PWD_HASH == key)
+                {
+                    List<string> _results = App_Logic.NewsletterClass.generateNewsletter(String.IsNullOrEmpty(s) ? null : s);
+                    model.results = _results;
+                    TempData["Success"] = "Done.";
+                    return View(model);
+                }
+                else {
+                    TempData["Error"] = "Invalid key";
+                    return RedirectToAction("Newsletter", "Admin");
+                }
+
             }
             catch (Exception ex)
             {
                 TempData["Error"] = ex.ToString().SubStringPlus(0, 100);
+                return RedirectToAction("Newsletter", "Admin");
             }
 
-            return RedirectToAction("Newsletter", "Admin");
         }
 
 

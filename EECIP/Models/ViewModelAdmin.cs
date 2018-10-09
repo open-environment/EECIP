@@ -3,6 +3,7 @@ using EECIP.App_Logic.DataAccessLayer;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.ComponentModel;
+using System;
 
 namespace EECIP.Models
 {
@@ -51,6 +52,11 @@ namespace EECIP.Models
         public int userCount { get; set; }
         public int? currPage { get; set; }
         public string strSort { get; set; }
+
+        public Guid? selAgency { get; set; }
+        public string selAgencyName { get; set; }
+        public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
+
     }
 
 
@@ -117,6 +123,7 @@ namespace EECIP.Models
     public class vmAdminSysLog
     {
         public List<T_OE_SYS_LOG> T_OE_SYS_LOG { get; set; }
+        public List<T_OE_SYS_EMAIL_LOG> T_OE_SYS_EMAIL_LOG { get; set; }
     }
 
     public class vmAdminEmail
@@ -136,4 +143,8 @@ namespace EECIP.Models
         public List<ProjectImportType> projects { get; set; }   //in-memory storage of array of projects to import
     }
 
+    public class vmAdminNewsletter
+    {
+        public List<string> results { get; set; }
+    }
 }

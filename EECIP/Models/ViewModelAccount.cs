@@ -81,6 +81,13 @@ namespace EECIP.Models
 
         public string uListInd { get; set; }
         public bool ExcludeBadges { get; set; }
+
+        //role editing
+        public IEnumerable<SelectListItem> Roles_In_User { get; set; }
+        public IEnumerable<string> Roles_In_User_Selected { get; set; }
+        public IEnumerable<SelectListItem> Roles_Not_In_User { get; set; }
+        public IEnumerable<string> Roles_Not_In_User_Selected { get; set; }
+
         //initialize
         public vmAccountUserProfile()
         {

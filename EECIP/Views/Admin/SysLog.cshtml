@@ -4,39 +4,105 @@
     ViewBag.SubTitle = "View a log of system logging errors or messages (only most recent 500 messages listed).";
 }
 
+<div class="panel-group accordion-custom accordion-teal" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false">
+                    System Log
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false" style="">
+            <div class="panel-body">
 
-<!-- render the main content -->
-<div class="row">
-    <div class="col-sm-12">
-        <section class="panel panel-default">
-            <div class="table-responsive">
-                <table class="table table-striped m-b-none" data-ride="datatables">
-                    <tr>
-                        <th>Log ID</th>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Message</th>
-                    </tr>
+                <!-- render the main content -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <section class="panel panel-default">
+                            <div class="table-responsive">
+                                <table class="table table-striped m-b-none" data-ride="datatables">
+                                    <tr>
+                                        <th>Log ID</th>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Message</th>
+                                    </tr>
 
-                    @foreach (var item in Model.T_OE_SYS_LOG)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.SYS_LOG_ID)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.LOG_DT)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.LOG_TYPE)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.LOG_MSG)
-                            </td>
-                        </tr>
-                    }
-                </table>
+                                    @foreach (var item in Model.T_OE_SYS_LOG)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.SYS_LOG_ID)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LOG_DT)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LOG_TYPE)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LOG_MSG)
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
             </div>
-        </section>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false">
+                    Email Log
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false" style="">
+            <div class="panel-body">
+
+                <!-- render the main content -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <section class="panel panel-default">
+                            <div class="table-responsive">
+                                <table class="table table-striped m-b-none" data-ride="datatables">
+                                    <tr>
+                                        <th>Email Date</th>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Subject</th>
+                                    </tr>
+
+                                    @foreach (var item in Model.T_OE_SYS_EMAIL_LOG)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LOG_DT)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LOG_FROM)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LOG_TO)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LOG_SUBJ)
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>

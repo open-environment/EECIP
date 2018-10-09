@@ -1371,7 +1371,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterest(int UserIDX, int daysSince, bool fallbackAny, int recCount)
+        public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterest(int UserIDX, int daysSince, bool fallbackAny, int recCount, string tagFilter)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -1392,8 +1392,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
                                join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
                                where user_tags.Contains(d.TopicTag)
+                               && (tagFilter == null ? true : d.TopicTag == tagFilter)
                                && b.IsTopicStarter == true
-                               //&& (a.CreateDate > begDt || b.DateCreated > begDt)
                                orderby a.CreateDate descending
                                select new TopicOverviewDisplay
                                {

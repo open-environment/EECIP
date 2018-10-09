@@ -1092,6 +1092,53 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
+        //*****************SYS_LOG**********************************
+        public static int InsertT_OE_SYS_EMAIL_LOG(string from, string _to, string cc, string subj, string msg, string email_type)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_SYS_EMAIL_LOG e = new T_OE_SYS_EMAIL_LOG();
+                    e.LOG_DT = System.DateTime.Now;
+                    e.LOG_FROM = from;
+                    e.LOG_TO = _to;
+                    e.LOG_CC = cc;
+                    e.LOG_SUBJ = subj;
+                    e.LOG_MSG = msg.SubStringPlus(0, 2000);
+                    e.EMAIL_TYPE = email_type;
+
+                    ctx.T_OE_SYS_EMAIL_LOG.Add(e);
+                    ctx.SaveChanges();
+                    return e.EMAIL_LOG_ID;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
+
+        public static List<T_OE_SYS_EMAIL_LOG> GetT_OE_SYS_EMAIL_LOG(int pageCount, int recCount)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_SYS_EMAIL_LOG
+                            orderby a.LOG_DT descending
+                            select a).Skip((pageCount - 1) * recCount).Take(recCount).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+
         //*****************SYS_SEARCH_LOG**********************************
         public static int InsertT_OE_SYS_SEARCH_LOG(string searchTerm)
         {

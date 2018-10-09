@@ -1,4 +1,44 @@
-﻿@using (Html.BeginForm("Newsletter", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
+﻿@model EECIP.Models.vmAdminNewsletter
+@{
+    ViewBag.Title = "Manual Newsletter Generation";
+    ViewBag.SubTitle = "Use this page to manually generate and distribute the monthly EECIP newsletter.";
+}
+
+
+@using (Html.BeginForm("Newsletter", "Admin", FormMethod.Post, new { @class = "", @id = "norepostform", style = "display: inline; padding-right:10px" }))
 {
+    <div class="form-group">
+        <table>
+            <tr>
+                <td style="padding:5px;">Send to Dummy Email</td>
+                <td style="padding:5px;">
+                    <input type="text" name="s" value="" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">API Key</td>
+                <td style="padding:5px;">
+                    <input type="text" name="key" value="" />
+                </td>
+            </tr>
+        </table>
+    </div>
     <button type="submit" name="submitButton" class="btn btn-danger">Run Newsletter</button>
 }
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label>Recipients</label>
+            @if (Model != null && Model.results != null)
+            {
+                foreach (var item in Model.results)
+                {
+                    <p>
+                        @item
+                    </p>
+                }
+            }
+        </div>
+    </div>
+</div>

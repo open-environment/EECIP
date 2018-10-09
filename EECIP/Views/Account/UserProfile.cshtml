@@ -213,6 +213,63 @@
 
 }
 
+@if (Model.uListInd == "a")
+{
+    <br/>
+    <!-- start: USER ROLE ASSIGNMENT -->
+    <div class="row ">
+        <div class="col-md-12 ">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    User Role Assignment
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("UserRoleEdit", "Admin", FormMethod.Post, new { @class = "" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.UserIDX)
+
+                        <div class="row" style="padding-left: 15px">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label>Users Not In Role</label>
+                                    @Html.ListBoxFor(model => model.Roles_Not_In_User_Selected, Model.Roles_Not_In_User, new { @class = "form-control", size = 10 })
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <br /><br />
+                                    <button type="submit" name="submitButton" value="Add" class="btn btn-success btn-sm btn-block">
+                                        Add to User  <i class="clip-arrow-right-2"></i>
+                                    </button>
+                                    <br />
+                                    <button type="submit" name="submitButton" value="Remove" class="btn btn-success btn-sm  btn-block">
+                                        <i class="clip-arrow-left-2"></i> Remove from User
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label>Users In Role</label>
+                                    @Html.ListBoxFor(model => model.Roles_In_User_Selected, Model.Roles_In_User, new { @class = "form-control", size = 10 })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end: USER ROLE ASSIGNMENT -->
+}
+
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/select2")

@@ -848,6 +848,7 @@
     <Content Include="Views\Dashboard\Metrics.cshtml" />
     <Content Include="Views\Dashboard\AddProjectOrg.cshtml" />
     <Content Include="Views\Admin\Newsletter.cshtml" />
+    <Content Include="Views\Home\Unsubscribe.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

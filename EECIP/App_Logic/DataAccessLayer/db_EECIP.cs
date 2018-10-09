@@ -110,6 +110,14 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<string> GetT_OE_USER_EXPERTISE_ByUserIDX_withDefault(int id)
+        {
+            List<string> _xxx = GetT_OE_USER_EXPERTISE_ByUserIDX(id);
+            _xxx.Add("Default View");
+            return _xxx;
+
+        }
+
         public static List<string> GetT_OE_USER_EXPERTISE_ByUserIDX_All(int id)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -723,7 +731,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
-        public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(int UserIDX, int daysSince, bool fallbackAny, int recCount)
+        public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(int UserIDX, int daysSince, bool fallbackAny, int recCount, string tagFilter)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -744,6 +752,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                join c in ctx.T_OE_PROJECT_TAGS on a.PROJECT_IDX equals c.PROJECT_IDX
                                where user_tags.Contains(c.PROJECT_TAG_NAME)
                                && (a.CREATE_DT > begDt || a.MODIFY_DT > begDt)
+                               && (tagFilter == null ? true : c.PROJECT_TAG_NAME == tagFilter)
                                orderby a.MODIFY_DT ?? a.CREATE_DT descending
                                select new ProjectShortDisplayType
                                {
@@ -1352,6 +1361,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
         //***************************PROJECT TAGS****************************************
         public static List<string> GetT_OE_PROJECT_TAGS_ByAttributeSelected(Guid ProjectIDX, string aTTRIBUTE)
         {
@@ -1822,7 +1832,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
 
 
-        //*******************************8 REPORTS ***************************************************
+        //*******************************REPORTS/METRICS ***************************************************
         public static int InsertUpdateT_OE_RPT_FRESHNESS(int yR, int mON, int cAT, int cOUNT)
         {
             using (EECIPEntities ctx = new EECIPEntities())
