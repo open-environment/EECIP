@@ -193,7 +193,7 @@ ul.main-navigation-menu > li.active > a {
 }
 
 
-/**********btnTour    */
+/**********btnTour ************   */
 .btntour {
     position: fixed;
     left: 20px;
@@ -224,7 +224,6 @@ ul.main-navigation-menu > li.active > a {
     }
 }
 
-
 @media (max-width: 979px) and (min-width: 768px) {
     .main-navigation > .btntour {
         left: 0px !important;
@@ -245,12 +244,12 @@ ul.main-navigation-menu > li.active > a {
         }
 }
 
-/***************     FACET STYLING     ******************/
+/***************    SEARCH FACET STYLING     ******************/
 .facetHead {
     background-color: #ccc;
     padding: 4px 4px;
     margin-top: 16px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-size: 14px;
     line-height: 1.75em;
     color: #2C5987;
@@ -264,6 +263,18 @@ ul.main-navigation-menu > li.active > a {
     font-size: 11px;
     padding: 0 0 0 2px;
     background-color: #f1f1f1;
+}
+
+.collapse-chevron {
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: #ccc;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #ccc;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #ccc;
 }
 
 .collapse-chevron .glyphicon {
@@ -286,7 +297,7 @@ ul.main-navigation-menu > li.active > a {
 
 .facetItem {
     display: block;
-    margin-left: 6px;
+    margin-left: 4px;
     font-size: 12px;
 }
 
@@ -296,6 +307,14 @@ ul.main-navigation-menu > li.active > a {
     }
 
 
+/*******SEARCH TABS ********************/
+#myTab > li > a, #myTab > li > a:focus {
+    border-radius: 8px 8px 0 0 !important;
+    padding: 8px 10px;
+}
+    #myTab > li.active > a {
+        font-weight: 600;
+    }
 
 /***************     BREADCRUMB STYLING     ******************/
 .breadcrumb {
@@ -307,6 +326,7 @@ ul.main-navigation-menu > li.active > a {
     .breadcrumb a, .breadcrumb a:visited {
         color: #636267;
     }
+
 
 /***************     FOOTER STYLING     ******************/
 .footer-inner > a > img {
@@ -455,6 +475,7 @@ ul.main-navigation-menu > li.active > a {
     padding-right: 10px;
 }
 
+
 /**********************ENT SVC CARD STYLING *********************/
 /* flip >> card >> face / front / back  >> flipinner */
 
@@ -599,7 +620,6 @@ ul.main-navigation-menu > li.active > a {
         display: block;
     }
 
-
 .circle-tile {
     margin-bottom: 15px;
     text-align: center;
@@ -733,8 +753,7 @@ ul.main-navigation-menu > li.active > a {
 
 
 
-
-
+/********* Carousel used on dashboard ************/
 
 .carousel-control {
     width: 40px;

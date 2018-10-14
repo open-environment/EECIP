@@ -57,7 +57,9 @@
         <!-- ******************************* LEFT PANEL FACETS **********************************-->
         @if (Model.searchResults != null)
         {
-            <div id="leftFacets" class="col-sm-2" style="border-right-width:1px; border-right-style:solid; border-color:#ccc; min-height:500px; ">
+            
+            <button id="btnDataFilter" class="col-sm-2 btn btn-primary btn-xs visible-xs" style="margin-left:20px;margin-bottom:5px;">Show Data Filters</button>
+            <div id="leftFacets" class="col-sm-2 hidden-xs">
                 <div>
                     <h3 style="margin-top:0px;">Data Filters</h3>
                     @{
@@ -135,7 +137,7 @@
 
 
 
-        <div id="job_details_div" class="@(Model.searchResults != null ? @Html.Raw("col-sm-10") : @Html.Raw("col-sm-12"))">
+        <div id="job_details_div" class="@(Model.searchResults != null ? @Html.Raw("col-sm-10") : @Html.Raw("col-sm-12"))" style="border-left-width:2px; border-left-style:solid; border-color:#ccc;">
 
             <!-- *********************** START TABS ****************************************** -->
             <div id="tabs" class="tabbable">
@@ -223,7 +225,7 @@
                 {
 
                     <div class="table-responsive">
-                        <table class="table table-striped m-b-none" data-ride="datatables">
+                        <table class="table table-striped table-hover m-b-none" data-ride="datatables">
                             <thead class="thead-inverse">
                                 <tr>
                                     <th>Type</th>
@@ -334,34 +336,34 @@
                                         <td>
                                             @if (item.Document.DataType == "Project")
                                             {
-                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID.SubStringPlus(0,36) })" class="label label-success btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;"><i class="clip-info"></i> Project</a>
+                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID.SubStringPlus(0,36) })" class="label label-success btn-lg" style="padding-top:12px !important; padding-bottom: 12px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; "><i class="clip-info hidden-xs"></i> Project</a>
                                             }
                                             @if (item.Document.DataType == "Agency")
                                             {
-                                                <a href="@Url.Action("AgencyCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-primary btn-lg" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;"><i class="clip-users-3"></i> Agency</a>
+                                                <a href="@Url.Action("AgencyCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-primary btn-lg" style="padding-top:12px !important; padding-bottom: 12px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block;"><i class="clip-users-3"></i> Agency</a>
                                             }
                                             @if (item.Document.DataType == "Enterprise Service")
                                             {
-                                                <a href="@Url.Action("EnterpriseSvcCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-danger" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Enterprise <br />Service</a>
+                                                <a href="@Url.Action("EnterpriseSvcCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-danger" style="padding-top:12px !important; padding-bottom: 12px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block;">Enterprise <br />Service</a>
                                             }
                                             @if (item.Document.DataType == "User")
                                             {
-                                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-yellow" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;"><i class="clip-user"></i> Person</a>
+                                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.Document.KeyID })" class="label label-yellow" style="padding-top:12px !important; padding-bottom: 12px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; "><i class="clip-user"></i> Person</a>
                                             }
                                             @if (item.Document.DataType == "Discussion")
                                             {
-                                                <a href="@Url.Action("ShowTopic", "Forum", new { p_id = item.Document.KeyID })" class="label label-purple" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:65px;">Discussion</a>
+                                                <a href="@Url.Action("ShowTopic", "Forum", new { p_id = item.Document.KeyID })" class="label label-purple" style="padding-top:12px !important; padding-bottom: 12px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; ">Discussion</a>
                                             }
                                             @if (item.Document.DataType == "Governance")
                                             {
-                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID.SubStringPlus(0,36) })" class="label label-beige" style="padding-top:15px !important; padding-bottom: 15px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; width:70px;">Governance <br />Project</a>
+                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.Document.KeyID.SubStringPlus(0,36) })" class="label label-beige" style="padding-top:12px !important; padding-bottom: 12px !important; padding-left: 5px !important; padding-right: 5px !important; display:inline-block; ">Governance <br />Project</a>
                                             }
                                             @if (User.IsInRole("Admins"))
                                             {
                                                 <span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>
                                             }
                                         </td>
-                                        <td>
+                                        <td style="white-space:normal;">
                                             @Html.DisplayFor(modelItem => item.Document.Agency)
                                         </td>
                                         @if (Model.activeTab != "5")
@@ -523,6 +525,10 @@
         });
 
 
+        $(document).on('click', '#btnDataFilter', function (event) {
+            $('#leftFacets').toggleClass('hidden-xs');
+            return false;
+        });
 
         $(document).ready(function () {
             //focus on search bar
