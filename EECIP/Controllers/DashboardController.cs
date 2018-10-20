@@ -76,13 +76,11 @@ namespace EECIP.Controllers
             return View(model);
         }
 
-        public ActionResult Leaderboard()
+        public ActionResult Leaderboard(DateTime? startDt, DateTime? endDt)
         {
-            int UserIDX = db_Accounts.GetUserIDX();
-
             var model = new vmDashboardLeaderboard
             {
-                UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(100)
+                UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(100, startDt, endDt)
             };
 
             return View(model);

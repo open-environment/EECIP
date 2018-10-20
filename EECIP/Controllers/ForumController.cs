@@ -466,6 +466,9 @@ namespace EECIP.Controllers
                 // Success send any notifications
                 NotifyTopics(model.Topic.Id, UserIDX, "Post");
 
+                // 4. Update the users points score for posting
+                db_Forum.InsertUpdateMembershipUserPoints(null, 1, System.DateTime.UtcNow, 0, _postID, null, UserIDX);
+
                 // Update Azure search
                 AzureSearch.PopulateSearchIndexForumPost(_postID);
             }

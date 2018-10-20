@@ -1559,7 +1559,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    DataType = "Discussion",
                                    Record_Source = "User supplied",
                                    Name = a.Name,
-                                   Description = b.PostContent,
+                                   Description = u.FNAME + " " + u.LNAME + ": " + b.PostContent,
                                    LastUpdated = b.DateEdited
                                }).Take(250).ToList();
 
@@ -2664,15 +2664,31 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<UserMostPointsDisplay> GetMembershipUserPoints_MostPoints(int recCount)
+        public static List<UserMostPointsDisplay> GetMembershipUserPoints_MostPoints(int recCount, DateTime? startDt = null, DateTime? endDt = null)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
+                    if (startDt != null && endDt == null)
+                        endDt = System.DateTime.Today.AddDays(1);
+                    if (startDt == null && endDt != null)
+                        startDt = System.DateTime.Today.AddDays(-1000);
+
+
                     var tags = ctx.MembershipUserPoints
                         .GroupBy(x => x.MembershipUser_Id)
                         .Select(g => new { g.Key, Sum = g.Sum(_ => _.Points) });
+
+                    if (startDt != null)
+                    {
+                        tags = ctx.MembershipUserPoints
+                            .Where(x => x.DateAdded >= startDt)
+                            .Where(x => x.DateAdded <= endDt)
+                            .GroupBy(x => x.MembershipUser_Id)
+                            .Select(g => new { g.Key, Sum = g.Sum(_ => _.Points) });
+                    }
+
 
                     var yyy = (from a in ctx.T_OE_USERS
                                join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX into sr1 from x1 in sr1.DefaultIfEmpty() //left join
