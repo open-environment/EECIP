@@ -3,6 +3,11 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
+**Version 1.5 (October 2018)**
+- Can now search discussion topics by user who posted it
+- Added ability to view points leaderboard based on specific time-range
+- Now awards points if responding to a discussion topic
+
 **Version 1.4 (September 2018)**
 - Site redirect upon login to original page requested
 - Dashboard now allows switching between different subscriptions
