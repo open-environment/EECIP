@@ -183,6 +183,7 @@
                     <li>
                         <a href="#tab6" data-toggle="tab">
                             Governance
+                            <i id="govHelp" class="clip-question-2 help-icon tooltips" data-original-title="Projects and materials created by E-Enterprise Governance or other active workgroups" data-placement="top" style="float:left; margin-right:5px;"></i>
                             @if (Model.searchResults != null && Model.searchResults.Facets != null && Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Governance") != null)
                             {
                                 <span class="badge badge-eecip-bluegreen">@Model.searchResults.Facets.FirstOrDefault(c => c.Key == "DataType").Value.FirstOrDefault(d => d.Value.ToString() == "Governance").Count</span>
@@ -628,7 +629,8 @@
 
             $('a[href="#tab6"]').on('shown.bs.tab', function (e) {
                 $('#facetDataType').val('');
-                $('#facetState').val('Governance');
+                $('#facetState').val('');
+                $('#facetDataType').val('Governance');
                 $('#activeTab').val('6');
                 $('#currentPage').val(1);
                 $('#norepostform').submit();
