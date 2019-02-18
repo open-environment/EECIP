@@ -30,6 +30,7 @@
 
 </head>
 <body class="@ViewBag.LeftMenuExpand">
+
     <!-- start: HEADER -->
     <div class="navbar navbar-inverse navbar-fixed-top">
         <!-- start: TOP NAVIGATION CONTAINER -->
@@ -54,7 +55,7 @@
                     {
                         @Html.Action("_PartialHeadNotification", "Shared")
                         <li>
-                            <a title="Invite others to join the EECIP and make it a better community!" href="mailto:?subject=Join the E-Enterprise Community Information Platform&body=@User.Identity.Name has invited you to the E-Enterprise Community Information Platform at http://13.82.106.55/">
+                            <a title="Invite others to join the EECIP and make it a better community!" href="mailto:?subject=Join the E-Enterprise Community Information Platform&body=@User.Identity.Name has invited you to the E-Enterprise Community Information Platform at https://www.eecip.net/">
                                 <i class="clip-user-plus"></i>
                             </a>
                         </li>
@@ -109,6 +110,9 @@
     <!-- end: HEADER -->
     <!-- start: MAIN CONTAINER -->
     <div class="main-container">
+
+
+
         @if (Request.IsAuthenticated)
         {
             <div class="navbar-content">
@@ -119,6 +123,16 @@
         }
         <div class="main-content">
             <div class="container" style="min-height: 760px;">
+
+                @*<!-- PRELOADER START-->
+                <div id="preloader">
+                    <div id="spinner">
+                        <img class="floating ml-5" src="~/Content/Images/loading.gif" alt="">
+                        <h5 class="line-height-50 font-18">Loading...</h5>
+                    </div>
+                    <div id="disable-preloader" class="btn btn-default btn-sm">Disable Preloader</div>
+                </div>
+                <!-- PRELOADER END -->*@
 
                 @if (!(ViewBag.HideTitle ?? false))
                 {
@@ -184,6 +198,15 @@
             Main.init();
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+        $(window).on('load', function () {
+            // Animate loader
+            var $preloader = $('#preloader');
+            if ($preloader.length > 0) {
+                $preloader.delay(100).fadeOut('slow');
+            }
+        });
+
     </script>
     @Html.Partial("_Alerts")
     @RenderSection("scripts", required: false)

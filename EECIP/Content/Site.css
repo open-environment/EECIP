@@ -120,6 +120,37 @@ html {
         border-color: #178c88;
     }
 
+
+
+/**************       PRELOADER  *************************************/
+#preloader {
+    background-color: rgba(255, 255, 255, 0.9);
+    display: table;
+    height: 100%;
+    position: fixed;
+    top: 47px;
+    width: 100%;
+    z-index: 9999;
+}
+
+#spinner {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+    #spinner img {
+        max-width: 72px;
+    }
+
+#preloader #disable-preloader {
+    display: block;
+    position: absolute;
+    right: 30px;
+    bottom: 30px;
+}
+
+
 /***************     TOP AND LEFT MENU STYLING     ******************/
 .navbar-inverse {
     background-color: #393939;

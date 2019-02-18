@@ -2,7 +2,6 @@
 @model EECIP.Models.vmDashboardProjectDetails
 @{
     ViewBag.Title = "Project Details";
-    //ViewBag.SubTitle = "for " + Model.orgName;
 }
 
 @using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id = "norepostform", enctype = "multipart/form-data" }))
@@ -24,8 +23,6 @@
                     </div>
                 </div>
                 <div class="panel-body">
-
-
 
                     @*@if (User.IsInRole("Admins"))
         {
