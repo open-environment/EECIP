@@ -306,6 +306,20 @@ namespace EECIP.Controllers
         }
 
 
+        public ActionResult ProjectReview2(Guid id)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            List<T_OE_ORGANIZATION> _ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(id);
+
+
+            //CHECK PERMISSIONS
+            if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(UserIDX, _ProjectOrgs))
+                db_EECIP.InsertUpdatetT_OE_PROJECTS(id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+                    null, null, null, true, null, UserIDX, null, true);
+
+                return RedirectToAction("ProjectReview", "Dashboard");
+        }
+        
         // GET: /Dashboard/ProjectDetails/1
         /// <param name="id">Only supply for existing case</param>
         /// <param name="orgIDX">Only supply for new case</param>
@@ -707,12 +721,13 @@ namespace EECIP.Controllers
             T_OE_DOCUMENTS doc = db_EECIP.GetT_OE_DOCUMENTS_ByID(id.ConvertOrDefault<Guid>());
             if (doc != null)
             {
-
                 T_OE_PROJECTS _project = db_EECIP.GetT_OE_PROJECTS_ByIDX(doc.PROJECT_IDX);
                 if (_project != null)
                 {
+                    List<T_OE_ORGANIZATION> _projOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(_project.PROJECT_IDX);
+
                     //actual permissions check
-                    if (db_Accounts.UserCanEditOrgIDX(UserIDX, _project.ORG_IDX.ConvertOrDefault<Guid>()) || User.IsInRole("Admins"))
+                    if (db_Accounts.UserCanEditOrgList(UserIDX, _projOrgs) || User.IsInRole("Admins"))
                     {
                         int SuccID = db_EECIP.DeleteT_OE_DOCUMENTS(id.ConvertOrDefault<Guid>());
                         if (SuccID > 0)
@@ -721,8 +736,11 @@ namespace EECIP.Controllers
                             return RedirectToAction("ProjectDetails", "Dashboard", new { id = _project.PROJECT_IDX });
                         }
                     }
-                    TempData["Error"] = "Unable to delete document.";
-                    return RedirectToAction("ProjectDetails", "Dashboard", new { id = _project.PROJECT_IDX });
+                    else
+                    {
+                        TempData["Error"] = "No permission to delete document.";
+                        return RedirectToAction("ProjectDetails", "Dashboard", new { id = _project.PROJECT_IDX });
+                    }
                 }
             }
 

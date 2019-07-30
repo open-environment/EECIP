@@ -237,7 +237,7 @@
                         <div class="row" style="padding-left: 15px">
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label>Users Not In Role</label>
+                                    <label>Available Roles</label>
                                     @Html.ListBoxFor(model => model.Roles_Not_In_User_Selected, Model.Roles_Not_In_User, new { @class = "form-control", size = 10 })
                                 </div>
                             </div>
@@ -255,7 +255,7 @@
                             </div>
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <label>Users In Role</label>
+                                    <label>Users Roles</label>
                                     @Html.ListBoxFor(model => model.Roles_In_User_Selected, Model.Roles_In_User, new { @class = "form-control", size = 10 })
                                 </div>
                             </div>

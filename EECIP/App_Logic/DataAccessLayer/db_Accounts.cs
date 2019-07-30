@@ -279,6 +279,10 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     foreach (T_OE_ORGANIZATION org in orgs)
                     {
+                        //if governance, anyone can edit
+                        if (org.ORG_TYPE == "Governance")
+                            canEdit = true;
+
                         //otherwise, check if user belongs
                         int c = (from a in ctx.T_OE_USERS
                                  where a.ORG_IDX == org.ORG_IDX
@@ -721,6 +725,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
         public static List<T_OE_ROLES> GetT_OE_ROLESInUserIDX(int userIDX)
         {
             using (EECIPEntities ctx = new EECIPEntities())

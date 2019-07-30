@@ -33,12 +33,15 @@
                         {
                             <tr>
                                 <td>
-                                    <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX, returnURL="ProjectReview" })" class="btn btn-rounded btn-xs btn-info btn-block" style="margin-bottom:6px"><i class="glyphicon glyphicon-pencil"></i> Review</a>
+                                    <a href="@Url.Action("ProjectDetails", "Dashboard", new { id = item.PROJECT_IDX, returnURL="ProjectReview" })" class="btn btn-rounded btn-xs btn-info btn-block" style="margin-bottom:6px"><i class="glyphicon glyphicon-eye-open"></i> Review</a>
                                     <div class="delete-section" style="display:inline">
-                                        <a class=" btn btn-rounded btn-xs btn-danger delete-link  btn-block"><i class="glyphicon glyphicon-remove"></i> Delete Project</a>
+                                        <a class=" btn btn-rounded btn-xs btn-danger delete-link  btn-block" style="margin-bottom:6px"><i class="glyphicon glyphicon-remove"></i> Delete Project</a>
                                         <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
                                     </div>
-
+                                    @if (item.PROJECT_CONTACT_IDX != null)
+                                    {
+                                    <a href="@Url.Action("ProjectReview2", "Dashboard", new { id = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-success btn-block"><i class="glyphicon glyphicon-check"></i> Mark Reviewed</a>
+                                    }
                                 </td>
                                 <td style="color:#dc3545; font-weight:bold">
                                     @if (item.PROJECT_CONTACT_IDX == null)

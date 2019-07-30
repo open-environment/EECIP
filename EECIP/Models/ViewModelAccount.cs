@@ -91,7 +91,7 @@ namespace EECIP.Models
         //initialize
         public vmAccountUserProfile()
         {
-            ddl_Agencies = ddlHelpers.get_ddl_organizations(true, true);
+            ddl_Agencies = ddlHelpers.get_ddl_organizations(true, false);
         }
     }
 

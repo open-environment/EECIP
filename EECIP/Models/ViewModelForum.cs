@@ -11,15 +11,6 @@ namespace EECIP.Models
 {
     public static class ddlForumHelpers
     {   
-        //public static IEnumerable<SelectListItem> get_ddl_categories()
-        //{
-        //    return db_Forum.GetCategory().Select(x => new SelectListItem
-        //    {
-        //        Value = x.Id.ToString(),
-        //        Text = x.Name
-        //    });
-        //}
-
         public static IEnumerable<SelectListItem> get_ddl_categories_tree()
         {
             return db_Forum.GetCategory2().Select(x => new SelectListItem
