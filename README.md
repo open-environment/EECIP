@@ -3,6 +3,10 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 
 
 ## Change Log
+**Version 1.6 (July 2019)**
+- Fix bug on editing project files on governance projects
+- Add button to more quickly review projects that haven't been reviewed in 6+ months
+
 **Version 1.5 (October 2018)**
 - Can now search discussion topics by user who posted it
 - Added ability to view points leaderboard based on specific time-range
