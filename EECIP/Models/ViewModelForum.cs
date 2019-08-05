@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-using EECIP.App_Logic.DataAccessLayer;
-using System.Collections.Generic;
-using System.Web.Mvc;
-using System.Web;
+﻿using EECIP.App_Logic.DataAccessLayer;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 
 namespace EECIP.Models
 {
@@ -43,7 +43,6 @@ namespace EECIP.Models
         public string Description { get; set; }
 
         [DisplayName("Category Color")]
-        [UIHint("colourpicker"), AllowHtml]
         public string CategoryColour { get; set; }
 
         [DisplayName("Lock The Category")]

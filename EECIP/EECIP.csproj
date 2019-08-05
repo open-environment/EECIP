@@ -804,7 +804,6 @@
     <Content Include="Views\ForumAdmin\GetMainCategories.cshtml" />
     <Content Include="Views\ForumAdmin\_CategoryFields.cshtml" />
     <Content Include="Views\ForumAdmin\_CategoryTopNav.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\colourpicker.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\forumeditor.cshtml" />
     <Content Include="Views\Forum\Index.cshtml" />
     <Content Include="Views\Shared\_CommonSideNav.cshtml" />
