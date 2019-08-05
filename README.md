@@ -1,8 +1,12 @@
 # EECIP
-The E-Enterprise Community Inventory Platform is an online community and living project inventory for E-Enterprise State and Tribal participant members across the US. This site houses the source code for EECIP. To use EECIP to connect with other States or Tribes, visit http://www.eecip.net.
+The E-Enterprise Community Inventory Platform is an online community and living project inventory for E-Enterprise State and Tribal participant members across the US. This site houses the source code for EECIP. To use EECIP to connect with other States or Tribes, visit https://www.eecip.net.
 
 
 ## Change Log
+**Version 1.6 (July 2019)**
+- Fix bug on editing project files on governance projects
+- Add button to more quickly review projects that haven't been reviewed in 6+ months
+
 **Version 1.5 (October 2018)**
 - Can now search discussion topics by user who posted it
 - Added ability to view points leaderboard based on specific time-range
