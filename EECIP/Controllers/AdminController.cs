@@ -823,6 +823,13 @@ namespace EECIP.Controllers
                         Guid? ProjectOrgIDX = db_EECIP.InsertUpdateT_OE_PROJECT_ORGS(ProjectIDX.ConvertOrDefault<Guid>(), x.ORG_IDX.ConvertOrDefault<Guid>(), UserIDX);
                     }
 
+                    //import project url
+                    if (!string.IsNullOrEmpty(x.PROJECT_URL))
+                    {
+                        db_EECIP.DeleteT_OE_PROJECTS_URL(ProjectIDX.ConvertOrDefault<Guid>());
+                        db_EECIP.InsertT_OE_PROJECTS_URL(ProjectIDX.ConvertOrDefault<Guid>(), x.PROJECT_URL, null);
+                    }
+
                     //import features
                     if (ps.FEATURES != null)
                     {
