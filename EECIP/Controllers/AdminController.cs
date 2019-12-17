@@ -875,10 +875,61 @@ namespace EECIP.Controllers
             }
             //***end validation ***********
 
+            DataTable dtUsers = new DataTable("Users");
+            DataTable dtAgency = new DataTable("Agencies");
             DataTable dtProject = new DataTable("Project");
             DataTable dtServices = new DataTable("Service");
+            DataTable dtSearch = new DataTable("Search");
 
             List<T_OE_ORGANIZATION> oOrgList = db_Ref.GetT_OE_ORGANIZATION(true, false, null);
+
+
+
+            //******************************USERS ******************************
+            if (exportdata.Contains("Users"))
+            {
+                dtUsers.Columns.AddRange(new DataColumn[10] {
+                                            new DataColumn("User IDX"),
+                                            new DataColumn("Agency"),
+                                            new DataColumn("Email"),
+                                            new DataColumn("First"),
+                                            new DataColumn("Last"),
+                                            new DataColumn("Last Login"),
+                                            new DataColumn("Phone"),
+                                            new DataColumn("Title"),
+                                            new DataColumn("Create Date"),
+                                            new DataColumn("Last Modify Date")
+                                           });
+
+                List<UserDisplayType> _users = db_Accounts.GetT_OE_USERS();
+                foreach (var item in _users)
+                    dtUsers.Rows.Add(item.users.USER_IDX, item.ORG_NAME, item.users.EMAIL, item.users.FNAME, item.users.LNAME, item.users.LASTLOGIN_DT, item.users.PHONE,
+                        item.users.JOB_TITLE, item.users.CREATE_DT, item.users.MODIFY_DT);
+            }
+
+
+
+            //******************************AGENCIES ******************************
+            if (exportdata.Contains("Agencies")) {
+                dtAgency.Columns.AddRange(new DataColumn[9] {
+                                            new DataColumn("Agency ID"),
+                                            new DataColumn("Agency Name"),
+                                            new DataColumn("State Code"),
+                                            new DataColumn("EPA Region"),
+                                            new DataColumn("Cloud"),
+                                            new DataColumn("API"),
+                                            new DataColumn("Org Type"),
+                                            new DataColumn("Create Date"),
+                                            new DataColumn("Last Modify Date")
+                                           });
+
+
+                foreach (var item in oOrgList)
+                    dtAgency.Rows.Add(item.ORG_IDX, item.ORG_NAME, item.STATE_CD, item.EPA_REGION, item.CLOUD, item.API, item.ORG_TYPE, item.CREATE_DT, item.MODIFY_DT);
+            }
+
+
+            //******************************PROJECTS ******************************
             if (exportdata.Contains("Projects"))
             {
                 dtProject.Columns.AddRange(new DataColumn[24] {
@@ -1010,6 +1061,8 @@ namespace EECIP.Controllers
                     }
                 }
             }
+
+            //******************************SERVICES******************************
             if (exportdata.Contains("Services"))
             {
                 dtServices.Columns.AddRange(new DataColumn[15] {
@@ -1058,15 +1111,33 @@ namespace EECIP.Controllers
                 }
             }
 
+            //******************************USERS ******************************
+            if (exportdata.Contains("Search"))
+            {
+                dtSearch.Columns.AddRange(new DataColumn[2] {
+                                            new DataColumn("Date"),
+                                            new DataColumn("Search Term")
+                                           });
+
+                List<T_OE_SYS_SEARCH_LOG> _logs = db_Ref.GetT_OE_SYS_SEARCH();
+                foreach (var item in _logs)
+                    dtSearch.Rows.Add(item.LOG_DT, item.LOG_TERM);
+            }
+
+
             DataSet dsExport = new DataSet();
+
+            if (dtUsers.Rows.Count > 0)
+                dsExport.Tables.Add(dtUsers);
+            if (dtAgency.Rows.Count > 0)
+                dsExport.Tables.Add(dtAgency);
             if (dtProject.Rows.Count > 0)
-            {
                 dsExport.Tables.Add(dtProject);
-            }
             if (dtServices.Rows.Count > 0)
-            {
                 dsExport.Tables.Add(dtServices);
-            }
+            if (dtSearch.Rows.Count > 0)
+                dsExport.Tables.Add(dtSearch);
+
             using (XLWorkbook wb = new XLWorkbook())
             {
                 wb.Worksheets.Add(dsExport);
@@ -1077,7 +1148,7 @@ namespace EECIP.Controllers
                 Response.Buffer = true;
                 Response.Charset = "";
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment;filename= ProjectsAndServicesReport.xlsx");
+                Response.AddHeader("content-disposition", "attachment;filename= EECIP_DataExport.xlsx");
 
                 using (MemoryStream MyMemoryStream = new MemoryStream())
                 {

@@ -1162,6 +1162,26 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<T_OE_SYS_SEARCH_LOG> GetT_OE_SYS_SEARCH()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_SYS_SEARCH_LOG
+                            orderby a.LOG_DT
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
+
         public static List<SearchTermCountDisplayType> GetT_OE_SYS_SEARCH_LOG_Popular(int days)
         {
             using (EECIPEntities ctx = new EECIPEntities())
