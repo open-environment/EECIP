@@ -846,6 +846,16 @@ namespace EECIP.Controllers
         }
 
 
+        public ActionResult EnterpriseSvcAgencies(int id)
+        {
+            var model = new vmDashboardEntSvcAgencies {
+                ENT_PLATFORM_IDX = id,
+                Organizations = db_EECIP.GetT_OE_ORGANIZATION_ENT_SVCS_ByEnt_Platform_ID(id)
+            };
+
+            return View(model);
+        }
+
         public ActionResult EnterpriseSvcCard(string strid)
         {
             int UserIDX = strid.ConvertOrDefault<int>();

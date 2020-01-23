@@ -10,6 +10,7 @@ namespace EECIP.App_Logic.DataAccessLayer
     {
         public int? ORG_ENT_SVCS_IDX { get; set; }
         public Guid? ORG_IDX { get; set; }
+        public string ORG_NAME { get; set; }
         public int ENT_PLATFORM_IDX { get; set; }
         public string ENT_PLATFORM_NAME { get; set; }
         public string RECORD_SOURCE { get; set; }
@@ -365,6 +366,46 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+        public static List<OrganizationEntServicesDisplayType> GetT_OE_ORGANIZATION_ENT_SVCS_ByEnt_Platform_ID(int eNT_PLATFORM_IDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_REF_ENTERPRISE_PLATFORM
+                            join b in ctx.T_OE_ORGANIZATION_ENT_SVCS on a.ENT_PLATFORM_IDX equals b.ENT_PLATFORM_IDX
+                            join o in ctx.T_OE_ORGANIZATION on b.ORG_IDX equals o.ORG_IDX
+                            where b.ENT_PLATFORM_IDX == eNT_PLATFORM_IDX
+                            select new OrganizationEntServicesDisplayType
+                            {
+                                ORG_ENT_SVCS_IDX = b.ORG_ENT_SVCS_IDX,
+                                ORG_IDX = b.ORG_IDX,
+                                ORG_NAME = o.ORG_NAME,
+                                ENT_PLATFORM_IDX = a.ENT_PLATFORM_IDX,
+                                ENT_PLATFORM_NAME = a.ENT_PLATFORM_NAME,
+                                ENT_PLATFORM_DESC = a.ENT_PLATFORM_DESC,
+                                PROJECT_NAME = b.PROJECT_NAME,
+                                VENDOR = b.VENDOR,
+                                IMPLEMENT_STATUS = b.IMPLEMENT_STATUS,
+                                COMMENTS = b.COMMENTS,
+                                PROJECT_CONTACT = b.PROJECT_CONTACT,
+                                ACTIVE_INTEREST_IND = b.ACTIVE_INTEREST_IND ?? false,
+                                CREATE_USERIDX = b.CREATE_USERIDX,
+                                CREATE_DT = b.CREATE_DT,
+                                MODIFY_USERIDX = b.MODIFY_USERIDX,
+                                MODIFY_DT = b.MODIFY_DT
+                            }).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
 
         public static int InsertUpdatetT_OE_ORGANIZATION_ENT_SVCS(int? oRG_ENT_SVCS_IDX, Guid? oRG_IDX, int? eNT_PLATFORM_IDX, string pROJECT_NAME, 
             string vENDOR, string iMPLEMENT_STATUS, string cOMMENTS, string pROJECT_CONTACT, bool? aCTIVE_INTEREST_IND, bool? syncInd, int? cREATE_USER = 0, bool markUpdated = false)

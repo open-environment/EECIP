@@ -1,0 +1,57 @@
+﻿@model EECIP.Models.vmDashboardEntSvcAgencies
+@{
+    if (Model.Organizations != null && Model.Organizations.Count > 0)
+    {
+        ViewBag.Title = "Agencies Interested in " + Model.Organizations[0].ENT_PLATFORM_NAME;
+    }
+}
+<div class="row">
+    <div class="col-xs-12">
+        <section class="panel panel-default">
+            <div class="panel-heading">
+                Agencies
+                <div class="panel-tools">
+                    <a class="btn btn-xs panel-collapse collapses" href="#">
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive" >
+                    <table class="table table-hover table-striped m-b-none" data-ride="datatables">
+                        <tr>
+                            <th>Agency</th>
+                            <th>Implementation Status</th>
+                            <th>Vendor</th>
+                            <th>Project Contact</th>
+                            <th>Comments</th>
+                        </tr>
+                        @foreach (var item in Model.Organizations)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ORG_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IMPLEMENT_STATUS)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.VENDOR)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJECT_CONTACT)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.COMMENTS)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+
+            </div>
+        </section>
+    </div>
+</div>
+
+<a href="@Url.Action("EnterpriseSvcOverview", "Dashboard")" class="btn btn-default">Go Back</a>

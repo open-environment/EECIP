@@ -12,7 +12,7 @@
         <div class="col-md-12">
             @foreach (SP_ENT_SVC_COUNT_DISPLAY_Result entSvc in Model.EntSvcOverviewDisplay)
             {
-                <a href="#">
+                <a href="@Url.Action("EnterpriseSvcAgencies", new { id = entSvc.ENT_PLATFORM_IDX })">
                     <div class="col-sm-6 col-lg-3 col-md-6">
                         <div class="flip">
                             <div class="card">

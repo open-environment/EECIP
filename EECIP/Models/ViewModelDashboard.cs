@@ -192,6 +192,13 @@ namespace EECIP.Models
         public List<SP_ENT_SVC_COUNT_DISPLAY_Result> EntSvcOverviewDisplay { get; set; }
     }
 
+    public class vmDashboardEntSvcAgencies
+    {
+        public int ENT_PLATFORM_IDX { get; set; }
+        public List<OrganizationEntServicesDisplayType> Organizations { get; set; }
+    }
+
+
     public class vmDashboardEntSvcCard
     {
         public OrganizationEntServicesDisplayType entsvc { get; set; }
