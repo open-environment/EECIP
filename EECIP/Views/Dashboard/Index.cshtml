@@ -183,7 +183,7 @@
     <div class="col-md-12">
         <section class="panel panel-default ">
             <div class="panel-heading">
-                Most Active Users
+                Most Active Users (all time)
                 <div class="panel-tools">
                     <a href="@Url.Action("Leaderboard", "Dashboard")" class="btn  btn-xs btn-eecip"><i class="glyphicon glyphicon-star-empty"></i> Full Leaderboard</a>
                 </div>
@@ -207,6 +207,43 @@
                                             </p>
                                             <p class="publicbadgeawards">
                                                 @Model.UserPointLeaders[i].UserPoints points
+                                            </p>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <section class="panel panel-default ">
+            <div class="panel-heading">
+                Most Active Users (past month)
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="badgeholder">
+                            <div class="publicbadgeline" style="width:100%">
+                                @for (int i = 0; i < 6; i++)
+                                {
+                                    if (@Model.UserPointLeadersMonth.Count > i)
+                                    {
+                                        <div class="publicbadge col-md-2 col-sm-4 tooltips col-xs-6" data-original-title="@(Model.UserPointLeadersMonth[i]._User.FNAME + " " + Model.UserPointLeadersMonth[i]._User.LNAME)">
+                                            <a href="/Dashboard/UserCard?strid=@Model.UserPointLeadersMonth[i]._User.USER_IDX" style="height:82px;display:block;">
+                                                <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(Model.UserPointLeadersMonth[i]._User.USER_IDX).png)">
+                                                </div>
+                                            </a>
+                                            <p class="publicbadgenamedesc">
+                                                @Model.UserPointLeadersMonth[i]._User.FNAME @Model.UserPointLeadersMonth[i]._User.LNAME
+                                            </p>
+                                            <p class="publicbadgeawards">
+                                                @Model.UserPointLeadersMonth[i].UserPoints points
                                             </p>
                                         </div>
                                     }
@@ -303,7 +340,7 @@
                         intro: "<h4>Subscriptions</h4>Subscribe to topics and you will be notified (both on this dashboard and via email newsletter) when other agencies add content for that topic."
                     }
 
-                ], 
+                ],
                 showStepNumbers: false
             });
 

@@ -112,7 +112,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static int InsertUpdateT_OE_APP_SETTING_CUSTOM(string tERMS_AND_CONDITIONS, string aNNOUNCEMENTS)
+        public static int InsertUpdateT_OE_APP_SETTING_CUSTOM(string tERMS_AND_CONDITIONS, string aNNOUNCEMENTS, string wELCOME_EMAIL)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -131,6 +131,8 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     if (tERMS_AND_CONDITIONS != null) e.TERMS_AND_CONDITIONS = Utils.GetSafeHtml(tERMS_AND_CONDITIONS);
                     if (aNNOUNCEMENTS != null) e.ANNOUNCEMENTS = Utils.GetSafeHtml(aNNOUNCEMENTS);
+                    if (wELCOME_EMAIL != null) e.WELCOME_EMAIL = Utils.GetSafeHtml(wELCOME_EMAIL);
+
 
                     if (insInd)
                         ctx.T_OE_APP_SETTINGS_CUSTOM.Add(e);
@@ -1092,7 +1094,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         }
 
 
-        //*****************SYS_LOG**********************************
+        //*****************SYS_EMAIL_LOG**********************************
         public static int InsertT_OE_SYS_EMAIL_LOG(string from, string _to, string cc, string subj, string msg, string email_type)
         {
             using (EECIPEntities ctx = new EECIPEntities())

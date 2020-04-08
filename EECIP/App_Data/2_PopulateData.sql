@@ -12,6 +12,7 @@ INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MO
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[ENCRYPT_IND],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('AZURE_SEARCH_SVC_NAME','eenterprisepartnerprofile','The name of the Azure Search service.',0,0,GetDate());
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[ENCRYPT_IND],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('AZURE_SEARCH_ADMIN_KEY','change.me','The Admin Key for the Azure Search service.',1,0,GetDate());
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[ENCRYPT_IND],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('AZURE_SEARCH_QUERY_KEY','change.me','The Query Key for the Azure Search service.',1,0,GetDate());
+INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('EMAIL_WELCOME_CC','dougtimms@yahoo.com','Emai lthat gets cc when sending welcome email.',0,GetDate());
 
 INSERT INTO T_OE_APP_SETTINGS_CUSTOM ([TERMS_AND_CONDITIONS],[ANNOUNCEMENTS]) values ('<p>The access and use of e-Enterprise Community Inventory Platform (EECIP) requires the creation of a user ID and password that I must maintain and keep confidential.</p>	
 <p>By proceeding, you acknowledge that you fully understand and consent to all of the following:</p>	
@@ -21,6 +22,21 @@ INSERT INTO T_OE_APP_SETTINGS_CUSTOM ([TERMS_AND_CONDITIONS],[ANNOUNCEMENTS]) va
 <p><strong>Privacy Statement</strong><br> Personal identifying information you provide will be used for the expressed purpose of registration to this site and for updating and correcting agency information as necessary. This information will not be made available for other purposes unless required by law. Your information will not be sold or otherwise transferred to an outside third party.</p>	
 <p>&nbsp;</p>','');
 
+update T_OE_APP_SETTINGS_CUSTOM set WELCOME_EMAIL = 'Dear [Name],
+
+I see that you recently registered to join the E-Enterprise Community Inventory Platform - welcome! My name is Owen, and I serve as the community manager for the EECIP. You may already have had the chance to explore the site and its wide array of discussions and project information, but if you have any questions about content or navigation please don’t hesitate to contact me.
+
+As with any online community, the EECIP becomes a more valuable tool the more its users contribute to and participate in it, so please don''t hesitate to refer your colleagues to the site and add any modernization or process improvement efforts your agency has undertaken to the project database https://www.eecip.net/Dashboard/Projects. 
+
+Thank you for your interest in EECIP, and I hope you enjoy your experience!
+
+
+Owen McAleer
+The Environmental Council of the States
+1250 H Street NW, Suite 850
+Washington, DC 20005
+202-266-4922
+omcaleer@ecos.org';
 
 --****************APP ROLES *****************************************************************************************
 insert into T_OE_ROLES (ROLE_NAME, ROLE_DESC, CREATE_USERIDX, CREATE_DT) values ('Admins', 'Application Administrator can access administrative functions', 0, GetDate());

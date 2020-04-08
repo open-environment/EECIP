@@ -17,5 +17,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public int SETTING_CUSTOM_IDX { get; set; }
         public string TERMS_AND_CONDITIONS { get; set; }
         public string ANNOUNCEMENTS { get; set; }
+        public string WELCOME_EMAIL { get; set; }
     }
 }

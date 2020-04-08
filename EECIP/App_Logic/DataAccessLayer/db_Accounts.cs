@@ -542,9 +542,60 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static List<UserDisplayType> GetT_OE_USERS_ForWelcomeEmail()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    DateTime twoDaysAgo = System.DateTime.Now.AddDays(-2);
+
+                    var xxx = (from a in ctx.T_OE_USERS
+                               join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1
+                               from x1 in sr1.DefaultIfEmpty() //left join
+                               where a.ACT_IND == true                              
+                               && a.NEW_USER_EMAIL_IND == false
+                               && a.CREATE_DT < twoDaysAgo
+                               select new UserDisplayType
+                               {
+                                   users = a,
+                                   ORG_NAME = x1.ORG_NAME
+                               }).ToList();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    throw ex;
+                }
+            }
+        }
+
+        public static int UpdateT_OE_USERS_WelcomeEmailSent(int idx)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_USERS row = (from c in ctx.T_OE_USERS where c.USER_IDX == idx select c).First();
+                    row.NEW_USER_EMAIL_IND = true;
+                    ctx.SaveChanges();
+                    return row.USER_IDX;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
+
+
 
         //*****************ROLES **********************************
-        public static int CreateT_OE_ROLES(global::System.String rOLE_NAME, global::System.String rOLE_DESC, int? cREATE_USER = 0)
+        public static int CreateT_OE_ROLES(string    rOLE_NAME, string rOLE_DESC, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -775,8 +826,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
-        public static int CreateT_OE_USER_ROLE(global::System.Int32 rOLE_IDX, global::System.Int32 uSER_IDX, int? cREATE_USER = 0)
+        public static int CreateT_OE_USER_ROLE(int rOLE_IDX, int uSER_IDX, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {

@@ -388,17 +388,13 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                         {
                             // Prepend children to parent node in reverse order
                             foreach (var node in item.ChildNodes.Reverse())
-                            {
                                 item.ParentNode.PrependChild(node);
-                            }
                         }
                         else
                         {
                             // Insert children after previous sibling
                             foreach (var node in item.ChildNodes)
-                            {
                                 item.ParentNode.InsertAfter(node, item.PreviousSibling);
-                            }
                         }
 
                         // remove from tree
@@ -422,11 +418,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 nc = doc.DocumentNode.SelectNodes("//a[starts-with(translate(@href, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'javascript')]|//a[starts-with(translate(@href, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'jscript')]|//a[starts-with(translate(@href, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'vbscript')]");
                 if (nc != null)
                 {
-
                     foreach (var node in nc)
-                    {
                         node.SetAttributeValue("href", "#");
-                    }
                 }
 
                 //remove img with refs to java/j/vbscript URLs
@@ -434,9 +427,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 if (nc != null)
                 {
                     foreach (var node in nc)
-                    {
                         node.SetAttributeValue("src", "#");
-                    }
                 }
 
                 //remove on<Event> handlers from all tags
@@ -462,9 +453,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 if (nc != null)
                 {
                     foreach (var node in nc)
-                    {
                         node.Attributes.Remove("stYle");
-                    }
                 }
 
                 // build a list of nodes ordered by stream position

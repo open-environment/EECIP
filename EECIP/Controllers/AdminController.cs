@@ -192,7 +192,8 @@ namespace EECIP.Controllers
             {
                 app_settings = db_Ref.GetT_OE_APP_SETTING_List(),
                 TermsAndConditions = custSettings.TERMS_AND_CONDITIONS,
-                Announcements = custSettings.ANNOUNCEMENTS
+                Announcements = custSettings.ANNOUNCEMENTS,
+                WelcomeEmail = custSettings.WELCOME_EMAIL
             };
             return View(model);
         }
@@ -217,7 +218,7 @@ namespace EECIP.Controllers
         {
             if (ModelState.IsValid)
             {
-                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(model.TermsAndConditions, null);
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(model.TermsAndConditions, null, null);
                 if (SuccID > 0)
                     TempData["Success"] = "Data Saved.";
                 else
@@ -232,7 +233,7 @@ namespace EECIP.Controllers
         {
             if (ModelState.IsValid)
             {
-                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, model.Announcements ?? "");
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, model.Announcements ?? "", null);
                 if (SuccID > 0)
                     TempData["Success"] = "Data Saved.";
                 else
@@ -242,6 +243,20 @@ namespace EECIP.Controllers
             return RedirectToAction("Settings");
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult CustomSettingsWelcomeEmail(vmAdminSettings model)
+        {
+            if (ModelState.IsValid)
+            {
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, null, model.WelcomeEmail ?? "");
+                if (SuccID > 0)
+                    TempData["Success"] = "Data Saved.";
+                else
+                    TempData["Error"] = "Data Not Saved.";
+            }
+
+            return RedirectToAction("Settings");
+        }
 
         //*************************************** AGENCIES **********************************************************
         // GET: /Admin/Agencies

@@ -24,6 +24,7 @@
           <Property Name="SETTING_CUSTOM_IDX" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TERMS_AND_CONDITIONS" Type="varchar(max)" />
           <Property Name="ANNOUNCEMENTS" Type="varchar(max)" />
+          <Property Name="WELCOME_EMAIL" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="T_OE_DOCUMENTS">
           <Key>
@@ -395,6 +396,7 @@
           <Property Name="NOTIFY_DISCUSSION_IND" Type="bit" Nullable="false" />
           <Property Name="NOTIFY_BADGE_IND" Type="bit" Nullable="false" />
           <Property Name="NOTIFY_NEWSLETTER" Type="bit" Nullable="false" />
+          <Property Name="NEW_USER_EMAIL_IND" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Badge">
           <Key>
@@ -1761,6 +1763,7 @@
           <Property Name="SETTING_CUSTOM_IDX" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TERMS_AND_CONDITIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="ANNOUNCEMENTS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="WELCOME_EMAIL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="T_OE_DOCUMENTS">
           <Key>
@@ -2145,6 +2148,7 @@
           <Property Name="NOTIFY_DISCUSSION_IND" Type="Boolean" Nullable="false" />
           <Property Name="NOTIFY_BADGE_IND" Type="Boolean" Nullable="false" />
           <Property Name="NOTIFY_NEWSLETTER" Type="Boolean" Nullable="false" />
+          <Property Name="NEW_USER_EMAIL_IND" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
           <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
@@ -3107,6 +3111,7 @@
           <EntitySetMapping Name="T_OE_APP_SETTINGS_CUSTOM">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_APP_SETTINGS_CUSTOM">
               <MappingFragment StoreEntitySet="T_OE_APP_SETTINGS_CUSTOM">
+                <ScalarProperty Name="WELCOME_EMAIL" ColumnName="WELCOME_EMAIL" />
                 <ScalarProperty Name="ANNOUNCEMENTS" ColumnName="ANNOUNCEMENTS" />
                 <ScalarProperty Name="TERMS_AND_CONDITIONS" ColumnName="TERMS_AND_CONDITIONS" />
                 <ScalarProperty Name="SETTING_CUSTOM_IDX" ColumnName="SETTING_CUSTOM_IDX" />
@@ -3420,6 +3425,7 @@
           <EntitySetMapping Name="T_OE_USERS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_USERS">
               <MappingFragment StoreEntitySet="T_OE_USERS">
+                <ScalarProperty Name="NEW_USER_EMAIL_IND" ColumnName="NEW_USER_EMAIL_IND" />
                 <ScalarProperty Name="NOTIFY_NEWSLETTER" ColumnName="NOTIFY_NEWSLETTER" />
                 <ScalarProperty Name="NOTIFY_BADGE_IND" ColumnName="NOTIFY_BADGE_IND" />
                 <ScalarProperty Name="NOTIFY_DISCUSSION_IND" ColumnName="NOTIFY_DISCUSSION_IND" />

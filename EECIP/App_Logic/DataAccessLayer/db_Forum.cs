@@ -2126,8 +2126,10 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     if (orderBy == "votes")
                         return xxx.OrderByDescending(x => x.UpVoteCount).ToList();
-                    else
-                        return xxx.OrderBy(x => x.Post.DateCreated).ToList(); 
+                    else if (orderBy == "newest")
+                        return xxx.OrderByDescending(x => x.Post.DateCreated).ToList();
+                    else 
+                        return xxx.OrderBy(x => x.Post.DateCreated).ToList();
 
                 }
                 catch (Exception ex)
@@ -2670,25 +2672,19 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
-                    if (startDt != null && endDt == null)
-                        endDt = System.DateTime.Today.AddDays(1);
-                    if (startDt == null && endDt != null)
-                        startDt = System.DateTime.Today.AddDays(-1000);
 
+                    if (endDt == null)
+                        endDt = System.DateTime.Today.AddDays(1);
+                    if (startDt == null)
+                        startDt = System.DateTime.Today.AddDays(-1200);
 
                     var tags = ctx.MembershipUserPoints
+                        .Where(x => x.DateAdded >= startDt)
+                        .Where(x => x.DateAdded <= endDt)
                         .GroupBy(x => x.MembershipUser_Id)
                         .Select(g => new { g.Key, Sum = g.Sum(_ => _.Points) });
 
-                    if (startDt != null)
-                    {
-                        tags = ctx.MembershipUserPoints
-                            .Where(x => x.DateAdded >= startDt)
-                            .Where(x => x.DateAdded <= endDt)
-                            .GroupBy(x => x.MembershipUser_Id)
-                            .Select(g => new { g.Key, Sum = g.Sum(_ => _.Points) });
-                    }
-
+                    var ddd = tags.ToList();
 
                     var yyy = (from a in ctx.T_OE_USERS
                                join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX into sr1 from x1 in sr1.DefaultIfEmpty() //left join

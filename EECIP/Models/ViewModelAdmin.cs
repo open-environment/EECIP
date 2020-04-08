@@ -32,6 +32,10 @@ namespace EECIP.Models
         [StringLength(6000)]
         public string Announcements { get; set; }
 
+        [DisplayName("Welcome Email")]
+        [UIHint("forumeditor"), AllowHtml]
+        [StringLength(6000)]
+        public string WelcomeEmail { get; set; }
     }
 
 

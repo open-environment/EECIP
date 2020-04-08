@@ -25,6 +25,7 @@ namespace EECIP.Controllers
                 UserBadges = db_Forum.GetBadgesForUser(UserIDX),  //badge progress
                 ProjectsNeedingReviewCount = db_EECIP.GetT_OE_PROJECTS_NeedingReviewCount(UserIDX),  //projects needing review
                 UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(6),  //user point leaders
+                UserPointLeadersMonth = db_Forum.GetMembershipUserPoints_MostPoints(6, System.DateTime.Today.AddDays(-30), System.DateTime.Now.AddDays(1)),
                 LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX, 900, true, 6, (selSub == "Default View" ? null : selSub)),  //latest projects matching interest
                 LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX, 900, true, 6, (selSub == "Default View" ? null : selSub)), //latest topics matching interest
                 ProjectCount = db_EECIP.GetT_OE_PROJECTS_CountNonGovernance(),

@@ -15,6 +15,7 @@ namespace EECIP.Models
         public string UserName { get; set; }
         public int ProjectsNeedingReviewCount { get; set; }
         public List<UserMostPointsDisplay> UserPointLeaders { get; set; }
+        public List<UserMostPointsDisplay> UserPointLeadersMonth { get; set; }
         public List<ProjectShortDisplayType> LatestProjects { get; set; }
         public List<TopicOverviewDisplay> LatestTopics { get; set; }
         public int ProjectCount { get; set; }
