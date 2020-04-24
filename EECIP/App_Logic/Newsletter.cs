@@ -29,7 +29,7 @@ namespace EECIP.App_Logic
                                                     E-Enterprise Community Inventory Platform (EECIP)
                                                 </a>
                                             </div>
-                                        <br/><p style='font-family: Helvetica, Arial, sans-serif; margin-left:6px; '>Hello " + user.users.FNAME + " " + user.users.LNAME + @", here are recent updates from the E-Enterprise Community</p>";
+                                        <br/><p style='font-family: Helvetica, Arial, sans-serif; margin-left:6px; '>Hello " + user.users.FNAME + @", here are recent updates from the E-Enterprise Community:</p>";
                 string projectSnippet = "";
                 string discussionSnippet = "";
                 string emailFooter = @"<div style='width:100%; padding-top: 20px; padding-bottom: 20px; background-color: #393939; font-family: Helvetica, Arial, sans-serif; text-align:center; color: #D9D9D9'>

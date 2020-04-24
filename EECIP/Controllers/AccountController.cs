@@ -324,7 +324,7 @@ namespace EECIP.Controllers
                     if (model.OrgIDX == null && model.uListInd == "a")
                         model.OrgIDX = Guid.Empty;
 
-                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt, null, null, model.OrgIDX, model.JobTitle, model.LinkedIn, model.NodeAdmin, model.ExcludeBadges, null, null, null);
+                    int SuccID = db_Accounts.UpdateT_OE_USERS(model.UserIDX, null, null, model.FName, model.LName, model.Email, model.ActInd, null, null, null, strippedPhone, model.PhoneExt ?? "", null, null, model.OrgIDX, model.JobTitle ?? "", model.LinkedIn ?? "", model.NodeAdmin, model.ExcludeBadges, null, null, null);
 
                     //update user expertise
                     db_EECIP.DeleteT_OE_USER_EXPERTISE(model.UserIDX);
