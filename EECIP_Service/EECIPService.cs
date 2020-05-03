@@ -60,6 +60,9 @@ namespace EECIP_Service
         {
             try
             {
+                //**********************************************************************************************
+                //***************************SEND WELCOME EMAIL ************************************************
+                //**********************************************************************************************
                 string emailTemplate = "";
                 List<UserDisplayType> _users = db_Accounts.GetT_OE_USERS_ForWelcomeEmail();
                 if (_users != null)
@@ -96,6 +99,31 @@ namespace EECIP_Service
                 }
                 else
                     General.WriteToFile("No New Users");
+
+
+                //**********************************************************************************************
+                //***************************NEWSLETTER ************************************************
+                //**********************************************************************************************
+                string _nextstr = db_Ref.GetT_OE_APP_SETTING("NEWSLETTER_NEXT_RUN") ?? "1/1/2030 8:00";
+                DateTime? _next = _nextstr.ConvertOrDefault<DateTime?>();
+                if (_next != null & _next < System.DateTime.Now)
+                {
+                    General.WriteToFile("Time to generate newsletter");
+
+                    //update next run time
+                    string _newnext =System.DateTime.Now.AddMonths(1).ToString("MM/dd/yyyy HH:mm");
+                    //db_Ref.InsertUpdateT_OE_APP_SETTING(null, "NEWSLETTER_NEXT_RUN", _newnext, false, null);
+
+                    string _tooverride = db_Ref.GetT_OE_APP_SETTING("NEWSLETTER_OVERRIDE") ?? "";
+
+                    //generate and email newsletter
+                    //List<string> _results = EECIP.App_Logic.NewsletterClass.generateNewsletter(_tooverride.Length > 0 ? _tooverride : null);
+                    //foreach (string _res in _results)
+                    //{
+                    //    General.WriteToFile("Newsletter email sent to " + _res);
+                    //}
+                }
+
 
                 General.WriteToFile("EECIP task ran.");
             }

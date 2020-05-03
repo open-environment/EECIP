@@ -127,6 +127,8 @@ else
                 </label>
                 @Html.ValidationMessageFor(m => m.SubscribeToTopic)
             </div>
+            if (User.IsInRole("Admins"))
+            {
             <div class="checkbox createsticky">
                 <label>
                     @Html.CheckBoxFor(m => m.IsSticky)
@@ -134,6 +136,7 @@ else
                 </label>
                 @Html.ValidationMessageFor(m => m.IsSticky)
             </div>
+            }
             <div class="checkbox createlocked">
                 <label>
                     @Html.CheckBoxFor(m => m.IsLocked)

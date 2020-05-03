@@ -54,7 +54,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static int InsertUpdateT_OE_APP_SETTING(int sETTING_IDX, string sETTING_NAME, string sETTING_VALUE, bool? eNCRYPT_IND, string sETTING_VALUE_SALT, int? cREATE_USER = 0)
+        public static int InsertUpdateT_OE_APP_SETTING(int? sETTING_IDX, string sETTING_NAME, string sETTING_VALUE, bool? eNCRYPT_IND, string sETTING_VALUE_SALT, int? cREATE_USER = 0)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -68,11 +68,18 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     if (e == null)
                     {
-                        insInd = true;
-                        e = new T_OE_APP_SETTINGS();
+                        e = (from c in ctx.T_OE_APP_SETTINGS
+                             where c.SETTING_NAME == sETTING_NAME
+                             select c).FirstOrDefault();
                     }
 
-                    if (sETTING_NAME != null) e.SETTING_NAME = sETTING_NAME;
+                    if (e == null)
+                    {
+                        insInd = true;
+                        e = new T_OE_APP_SETTINGS();
+                        if (sETTING_NAME != null) e.SETTING_NAME = sETTING_NAME;
+                    }
+
                     if (sETTING_VALUE != null) e.SETTING_VALUE = sETTING_VALUE;
 
                     e.MODIFY_DT = System.DateTime.Now;

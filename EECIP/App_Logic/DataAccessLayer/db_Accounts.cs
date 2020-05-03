@@ -548,7 +548,8 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
-                    DateTime twoDaysAgo = System.DateTime.Now.AddDays(-2);
+                    int delayHrs = (db_Ref.GetT_OE_APP_SETTING("WELCOME_DELAY_HR").ConvertOrDefault<int?>() ?? 24) * -1;
+                    DateTime twoDaysAgo = System.DateTime.Now.AddHours(delayHrs);
 
                     var xxx = (from a in ctx.T_OE_USERS
                                join s in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals s.ORG_IDX into sr1

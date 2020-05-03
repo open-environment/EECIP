@@ -13,6 +13,10 @@ INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[EN
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[ENCRYPT_IND],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('AZURE_SEARCH_ADMIN_KEY','change.me','The Admin Key for the Azure Search service.',1,0,GetDate());
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[ENCRYPT_IND],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('AZURE_SEARCH_QUERY_KEY','change.me','The Query Key for the Azure Search service.',1,0,GetDate());
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('EMAIL_WELCOME_CC','dougtimms@yahoo.com','Emai lthat gets cc when sending welcome email.',0,GetDate());
+INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('WELCOME_DELAY_HR','24','Number of hours after user creates account that welcome email is sent.',0,GetDate());
+INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('NEWSLETTER_NEXT_RUN','5/1/2020 8:00','Next time newsletter will run.',0,GetDate());
+INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('NEWSLETTER_OVERRIDE','doug.timms@open-environment.org','Override who all newsletters get sent to for testing purposes.',0,GetDate());
+
 
 INSERT INTO T_OE_APP_SETTINGS_CUSTOM ([TERMS_AND_CONDITIONS],[ANNOUNCEMENTS]) values ('<p>The access and use of e-Enterprise Community Inventory Platform (EECIP) requires the creation of a user ID and password that I must maintain and keep confidential.</p>	
 <p>By proceeding, you acknowledge that you fully understand and consent to all of the following:</p>	

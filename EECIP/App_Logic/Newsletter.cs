@@ -29,7 +29,7 @@ namespace EECIP.App_Logic
                                                     E-Enterprise Community Inventory Platform (EECIP)
                                                 </a>
                                             </div>
-                                        <br/><p style='font-family: Helvetica, Arial, sans-serif; margin-left:6px; '>Hello " + user.users.FNAME + @", here are recent updates from the E-Enterprise Community:</p>";
+                                        <br/><p style='font-family: Helvetica, Arial, sans-serif; margin-left:6px; '>Hello " + user.users.FNAME + @", here are recent updates from the E-Enterprise Community. These news items are matched to your topic subscriptions. You can add or change subscriptions on your <a href='" + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + @"/Account/UserProfile'>EECIP Profile</a></p>";
                 string projectSnippet = "";
                 string discussionSnippet = "";
                 string emailFooter = @"<div style='width:100%; padding-top: 20px; padding-bottom: 20px; background-color: #393939; font-family: Helvetica, Arial, sans-serif; text-align:center; color: #D9D9D9'>
@@ -53,6 +53,7 @@ namespace EECIP.App_Logic
                 if (projectSnippet.Length > 0 || discussionSnippet.Length > 0)
                 {
                     string htmlemail = emailHeader + projectSnippet + " <br/><br/>" + discussionSnippet + "<br/><br/>" + emailFooter;
+
                     Utils.SendEmail(null, emailOverride ?? user.users.EMAIL, null, null, "EECIP Newsletter", htmlemail, null, null, htmlemail);
 
                     db_Ref.InsertT_OE_SYS_EMAIL_LOG(null, user.users.EMAIL, null, "EECIP Newsletter", htmlemail, "Newsletter");

@@ -182,6 +182,8 @@ namespace EECIP.Controllers
                 return View(model);
         }
 
+
+
         //************************************* SETTINGS ************************************************************
         //GET: /Admin/Settings
         public ActionResult Settings()
@@ -257,6 +259,8 @@ namespace EECIP.Controllers
 
             return RedirectToAction("Settings");
         }
+
+
 
         //*************************************** AGENCIES **********************************************************
         // GET: /Admin/Agencies
@@ -410,6 +414,7 @@ namespace EECIP.Controllers
         }
 
 
+
         //*************************************** REF TAGS **********************************************************
         // GET: /Admin/RefTags
         public ActionResult RefTags(string selTag)
@@ -461,6 +466,7 @@ namespace EECIP.Controllers
         }
 
 
+
         //*************************************** REF BADGES **********************************************************
         // GET: /Admin/RefBadge
         public ActionResult RefBadge()
@@ -490,6 +496,7 @@ namespace EECIP.Controllers
             return RedirectToAction("RefBadge");
 
         }
+
 
 
         //*************************************** SYS LOG **********************************************************
@@ -732,6 +739,14 @@ namespace EECIP.Controllers
                 if (u != null && u.PWD_HASH == key)
                 {
                     List<string> _results = App_Logic.NewsletterClass.generateNewsletter(String.IsNullOrEmpty(s) ? null : s);
+
+                    //update the next run time if no override email set
+                    if (String.IsNullOrEmpty(s))
+                    {
+                        string _newnext = System.DateTime.Now.AddMonths(1).ToString("MM/dd/yyyy HH:mm");
+                        db_Ref.InsertUpdateT_OE_APP_SETTING(null, "NEWSLETTER_NEXT_RUN", _newnext, false, null);
+                    }
+
                     model.results = _results;
                     TempData["Success"] = "Done.";
                     return View(model);
