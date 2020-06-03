@@ -80,8 +80,10 @@
 
                 <div class="row">
                     <div class="col-md-6">
+                        @if (Model.LatestProjects != null && Model.LatestProjects.Count > 0)
+                        {
                         <h3 style="margin-top:0px;">Recent Projects <span style="font-size:75%; color:#6d6d6d">@(Model.LatestProjects[0].TagMatch == true ? "(matching your subscriptions)" : "")</span></h3>
-
+                        }
                         <!--  **************  MOST RECENT PROJECTS **************************************-->
                         <div class="table-responsive">
                             <table class="table table-hover table-striped m-b-none table-bordered" data-ride="datatables">
@@ -94,7 +96,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.LatestProjects)
+                                    @if (Model.LatestProjects != null)
+                                    {
+                                    foreach (var item in Model.LatestProjects)
                                     {
                                         <tr>
                                             <td>
@@ -102,9 +106,12 @@
                                             </td>
                                             <td>
                                                 @Html.DisplayFor(modelItem => item.PROJ_NAME)
-                                                @if (item.Tag != null)
+                                                @if (item.Tags != null)
                                                 {
-                                                    <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => item.Tag)</span>
+                                                    foreach (var subitem in item.Tags)
+                                                    {
+                                                    <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => subitem)</span>
+                                                    }
                                                 }
                                             </td>
                                             <td>
@@ -114,7 +121,7 @@
                                                 @Html.DisplayFor(modelItem => item.LAST_ACTIVITY_DATE)
                                             </td>
                                         </tr>
-                                    }
+                                    }}
                                 </tbody>
                             </table>
                         </div>
@@ -123,7 +130,7 @@
                     </div>
                     <div class="col-md-6">
                         <h3 style="margin-top:0px;">
-                            Recent Discussion Topics <span style="font-size:75%; color:#6d6d6d">@(Model.LatestTopics[0].postCount == 999 ? "(matching your subscriptions)" : "")</span>
+                            Recent Discussion Topics <span style="font-size:75%; color:#6d6d6d">@(Model.TopicMatchInd == true ? "(matching your subscriptions)" : "")</span>
                         </h3>
 
                         <!--  **************  LATEST DISCUSSIONS **************************************-->
@@ -135,28 +142,30 @@
                                     {
                                         <div class="topicrow" style="padding: 5px;">
                                             <div class="rowcreater hidden-xs">
-                                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._topic.MembershipUser_Id })">
-                                                    <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(item._topic.MembershipUser_Id).png)">
+                                                <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.SP_RECENT_FORUM_BY_USER_TAG_Result.TopicUserIDX })">
+                                                    <div class="circle-tile-heading" style="display:inline-grid; background-image:url(/Content/Images/Users/@(item.SP_RECENT_FORUM_BY_USER_TAG_Result.TopicUserIDX).png)">
                                                     </div>
                                                 </a>
                                             </div>
                                             <div class="rowdetails" style="margin-left:90px;">
                                                 <h3>
-                                                    <a title="#" href="@Url.Action("ShowTopic", "Forum", new { slug = item._topic.Slug })" style="font-size:18px;">
-                                                        @Html.Raw(item._topic.Name)
+                                                    <a title="#" href="@Url.Action("ShowTopic", "Forum", new { slug = item.SP_RECENT_FORUM_BY_USER_TAG_Result.Slug })" style="font-size:18px;">
+                                                        @Html.Raw(item.SP_RECENT_FORUM_BY_USER_TAG_Result.Name)
                                                     </a>
                                                 </h3>
 
-                                                @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item._postStart.PostContent), 50)
-                                                @if (item.CategorySlug != null)
+                                                @Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item.SP_RECENT_FORUM_BY_USER_TAG_Result.PostContent), 50)
+                                                @if (item.tags != null)
                                                 {
-                                                    <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => item.CategorySlug)</span>
+                                                    foreach (var _tag in item.tags)
+                                                    {
+                                                    <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => _tag)</span>
+                                                    }
                                                 }
-
                                                 <p class="topicrowfooterinfo">
                                                     Latest By
-                                                    <a href="@Url.Action("UserCard", "Dashboard", new { strid = item._postLatest.Post.MembershipUser_Id })">@item._postLatest.PosterDisplayName</a>
-                                                    @EECIP.App_Logic.BusinessLogicLayer.Utils.GetPrettyDate(item._postLatest.Post.DateCreated.ToString())
+                                                    <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.SP_RECENT_FORUM_BY_USER_TAG_Result.LatestPostUserIDX })">@item.SP_RECENT_FORUM_BY_USER_TAG_Result.LatestPostUser</a>
+                                                    @EECIP.App_Logic.BusinessLogicLayer.Utils.GetPrettyDate(item.SP_RECENT_FORUM_BY_USER_TAG_Result.LatestPostDate.ToString())
                                                 </p>
 
                                             </div>

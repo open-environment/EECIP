@@ -17,7 +17,8 @@ namespace EECIP.Models
         public List<UserMostPointsDisplay> UserPointLeaders { get; set; }
         public List<UserMostPointsDisplay> UserPointLeadersMonth { get; set; }
         public List<ProjectShortDisplayType> LatestProjects { get; set; }
-        public List<TopicOverviewDisplay> LatestTopics { get; set; }
+        public List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded> LatestTopics { get; set; }
+        public bool TopicMatchInd { get; set; }
         public int ProjectCount { get; set; }
         public int DiscussionCount { get; set; }
         public int AgencyCount { get; set; }

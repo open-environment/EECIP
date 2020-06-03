@@ -233,6 +233,12 @@
     <Compile Include="App_Logic\DataAccessLayer\SP_PROJECT_CREATE_COUNT_Result.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\SP_RECENT_FORUM_BY_USER_TAG_Result.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\SP_RECENT_FORUM_FALLBACK_Result.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\Topic.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -359,6 +365,7 @@
     <Content Include="App_Data\1b_CreateDatabaseForum.sql" />
     <Content Include="App_Data\1_CreateDatabase.sql" />
     <Content Include="App_Data\20180828_MigrateProjectOrg.sql" />
+    <Content Include="App_Data\20200602_Migrate.sql" />
     <Content Include="App_Data\2_PopulateData.sql" />
     <Content Include="App_Data\20180509_MigrateProjectURL.sql" />
     <Content Include="App_Docs\ImportColumnsConfig.xml">

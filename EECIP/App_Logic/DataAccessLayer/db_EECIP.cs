@@ -54,6 +54,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public DateTime LAST_ACTIVITY_DATE { get; set; }
         public bool? TagMatch { get; set; }
         public string Tag { get; set; }
+        public List<string> Tags { get; set; }
     }
 
 
@@ -790,8 +791,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                join b in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals b.ORG_IDX
                                join c in ctx.T_OE_PROJECT_TAGS on a.PROJECT_IDX equals c.PROJECT_IDX
                                where user_tags.Contains(c.PROJECT_TAG_NAME)
-                               && (a.CREATE_DT > begDt || a.MODIFY_DT > begDt)
                                && (tagFilter == null ? true : c.PROJECT_TAG_NAME == tagFilter)
+                               && (a.CREATE_DT > begDt || a.MODIFY_DT > begDt)
                                orderby a.MODIFY_DT ?? a.CREATE_DT descending
                                select new ProjectShortDisplayType
                                {
@@ -801,13 +802,22 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    ORG_NAME = b.ORG_NAME,
                                    LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
                                    TagMatch = true,
-                                   Tag = c.PROJECT_TAG_NAME
-                               }).Take(recCount).ToList();
+                                   Tags = (from v1 in ctx.T_OE_USER_EXPERTISE join v2 in ctx.T_OE_PROJECT_TAGS on v1.EXPERTISE_TAG equals v2.PROJECT_TAG_NAME
+                                           where v1.USER_IDX == UserIDX 
+                                           && v2.PROJECT_IDX == a.PROJECT_IDX
+                                           && (tagFilter == null ? true : v2.PROJECT_TAG_NAME == tagFilter)
+                                           select v2.PROJECT_TAG_NAME).ToList()
+                                           
+                               }).Take(20).ToList();
+
+
+                        var yyy = xxx.GroupBy(i => i.PROJECT_IDX).Select(i => i.FirstOrDefault()).ToList();
+                        xxx = yyy.Take(recCount).ToList();
                     }
 
                     if (fallbackAny)
                     {
-                        if (xxx == null || xxx.Count() == 0)
+                        if ((xxx == null || xxx.Count() == 0) && string.IsNullOrEmpty(tagFilter))
                         {
                             xxx = (from a in ctx.T_OE_PROJECTS
                                    join po in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals po.PROJECT_IDX
@@ -929,7 +939,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         e.CREATE_USERIDX = cREATE_USER;
 
                         //set project contact to person who created it
-                        if (e.PROJECT_CONTACT_IDX == null)
+                        if (pROJECT_CONTACT_IDX == null)
                             e.PROJECT_CONTACT_IDX = cREATE_USER;
                     }
                     else

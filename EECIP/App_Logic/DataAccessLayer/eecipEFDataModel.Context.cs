@@ -95,5 +95,31 @@ namespace EECIP.App_Logic.DataAccessLayer
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_RPT_FRESHNESS_RECORD");
         }
+    
+        public virtual ObjectResult<SP_RECENT_FORUM_BY_USER_TAG_Result> SP_RECENT_FORUM_BY_USER_TAG(Nullable<int> useridx, Nullable<int> daysSince, string tagFilter)
+        {
+            var useridxParameter = useridx.HasValue ?
+                new ObjectParameter("useridx", useridx) :
+                new ObjectParameter("useridx", typeof(int));
+    
+            var daysSinceParameter = daysSince.HasValue ?
+                new ObjectParameter("daysSince", daysSince) :
+                new ObjectParameter("daysSince", typeof(int));
+    
+            var tagFilterParameter = tagFilter != null ?
+                new ObjectParameter("tagFilter", tagFilter) :
+                new ObjectParameter("tagFilter", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_RECENT_FORUM_BY_USER_TAG_Result>("SP_RECENT_FORUM_BY_USER_TAG", useridxParameter, daysSinceParameter, tagFilterParameter);
+        }
+    
+        public virtual ObjectResult<SP_RECENT_FORUM_BY_USER_TAG_Result> SP_RECENT_FORUM_FALLBACK(Nullable<int> daysSince)
+        {
+            var daysSinceParameter = daysSince.HasValue ?
+                new ObjectParameter("daysSince", daysSince) :
+                new ObjectParameter("daysSince", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_RECENT_FORUM_BY_USER_TAG_Result>("SP_RECENT_FORUM_FALLBACK", daysSinceParameter);
+        }
     }
 }

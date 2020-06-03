@@ -1229,6 +1229,14 @@
         <Function Name="SP_ENT_SVC_COUNT_DISPLAY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_NEW_CONTENT_USER_AGE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_PROJECT_CREATE_COUNT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SP_RECENT_FORUM_BY_USER_TAG" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="useridx" Type="int" Mode="In" />
+          <Parameter Name="daysSince" Type="int" Mode="In" />
+          <Parameter Name="tagFilter" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="SP_RECENT_FORUM_FALLBACK" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="daysSince" Type="int" Mode="In" />
+        </Function>
         <Function Name="SP_RPT_FRESHNESS_RECORD" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="EECIPModelStoreContainer">
           <EntitySet Name="T_OE_APP_SETTINGS" EntityType="Self.T_OE_APP_SETTINGS" Schema="dbo" store:Type="Tables" />
@@ -1736,6 +1744,14 @@
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
             <End Role="T_OE_PROJECT_ORGS" EntitySet="T_OE_PROJECT_ORGS" />
           </AssociationSet>
+          <FunctionImport Name="SP_RECENT_FORUM_BY_USER_TAG" ReturnType="Collection(EECIPModel.SP_RECENT_FORUM_BY_USER_TAG_Result)">
+            <Parameter Name="useridx" Mode="In" Type="Int32" />
+            <Parameter Name="daysSince" Mode="In" Type="Int32" />
+            <Parameter Name="tagFilter" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SP_RECENT_FORUM_FALLBACK" ReturnType="Collection(EECIPModel.SP_RECENT_FORUM_BY_USER_TAG_Result)">
+            <Parameter Name="daysSince" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
           <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
@@ -3078,6 +3094,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="SP_RECENT_FORUM_BY_USER_TAG_Result">
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="450" />
+          <Property Type="String" Name="Slug" Nullable="false" MaxLength="450" />
+          <Property Type="String" Name="PostContent" Nullable="false" />
+          <Property Type="String" Name="FNAME" Nullable="false" MaxLength="40" />
+          <Property Type="String" Name="LNAME" Nullable="false" MaxLength="40" />
+          <Property Type="Int32" Name="TopicUserIDX" Nullable="false" />
+          <Property Type="DateTime" Name="LatestPostDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="LatestPostUser" Nullable="true" MaxLength="81" />
+          <Property Type="Int32" Name="LatestPostUserIDX" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="SP_RECENT_FORUM_FALLBACK_Result">
+          <Property Type="Guid" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="false" MaxLength="450" />
+          <Property Type="String" Name="Slug" Nullable="false" MaxLength="450" />
+          <Property Type="String" Name="PostContent" Nullable="false" />
+          <Property Type="String" Name="FNAME" Nullable="false" MaxLength="40" />
+          <Property Type="String" Name="LNAME" Nullable="false" MaxLength="40" />
+          <Property Type="Int32" Name="TopicUserIDX" Nullable="false" />
+          <Property Type="DateTime" Name="LatestPostDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="LatestPostUser" Nullable="true" MaxLength="81" />
+          <Property Type="Int32" Name="LatestPostUserIDX" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3720,6 +3760,38 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_RECENT_FORUM_BY_USER_TAG" FunctionName="EECIPModel.Store.SP_RECENT_FORUM_BY_USER_TAG">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EECIPModel.SP_RECENT_FORUM_BY_USER_TAG_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Slug" ColumnName="Slug" />
+                <ScalarProperty Name="PostContent" ColumnName="PostContent" />
+                <ScalarProperty Name="FNAME" ColumnName="FNAME" />
+                <ScalarProperty Name="LNAME" ColumnName="LNAME" />
+                <ScalarProperty Name="TopicUserIDX" ColumnName="TopicUserIDX" />
+                <ScalarProperty Name="LatestPostDate" ColumnName="LatestPostDate" />
+                <ScalarProperty Name="LatestPostUser" ColumnName="LatestPostUser" />
+                <ScalarProperty Name="LatestPostUserIDX" ColumnName="LatestPostUserIDX" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_RECENT_FORUM_FALLBACK" FunctionName="EECIPModel.Store.SP_RECENT_FORUM_FALLBACK">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="EECIPModel.SP_RECENT_FORUM_BY_USER_TAG_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Slug" ColumnName="Slug" />
+                <ScalarProperty Name="PostContent" ColumnName="PostContent" />
+                <ScalarProperty Name="FNAME" ColumnName="FNAME" />
+                <ScalarProperty Name="LNAME" ColumnName="LNAME" />
+                <ScalarProperty Name="TopicUserIDX" ColumnName="TopicUserIDX" />
+                <ScalarProperty Name="LatestPostDate" ColumnName="LatestPostDate" />
+                <ScalarProperty Name="LatestPostUser" ColumnName="LatestPostUser" />
+                <ScalarProperty Name="LatestPostUserIDX" ColumnName="LatestPostUserIDX" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

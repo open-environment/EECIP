@@ -444,6 +444,10 @@ namespace EECIP.Controllers
                             if (Membership.Provider.ChangePassword(u.USER_ID, model.OldPassword, model.Password))
                             {
                                 FormsAuthentication.SetAuthCookie(u.USER_ID, true);
+
+                                //set last login time and reset failed login attempts
+                                db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, System.DateTime.Now, null, null, null, 0, null, null, null, null, null, null, null, null);
+
                                 return RedirectToAction("Index", "Dashboard");
                             }
                         }

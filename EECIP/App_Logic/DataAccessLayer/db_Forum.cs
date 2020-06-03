@@ -73,6 +73,13 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string Image { get; set; }
     }
 
+
+    public partial class SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded
+    {
+        public SP_RECENT_FORUM_BY_USER_TAG_Result SP_RECENT_FORUM_BY_USER_TAG_Result { get; set; }
+        public List<string> tags { get; set; }
+    }
+
     public class db_Forum
     {
 
@@ -1371,63 +1378,33 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterest(int UserIDX, int daysSince, bool fallbackAny, int recCount, string tagFilter)
+
+        public static List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded> GetLatestTopicPostsMatchingInterestNew(int UserIDX, int daysSince, int recCount, string tagFilter)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
-                    List<TopicOverviewDisplay> xxx = null;
+                    if (tagFilter == "") tagFilter = null;
 
-                    //get interest tags
-                    List<string> user_tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
+                    var x = (from a in ctx.SP_RECENT_FORUM_BY_USER_TAG(UserIDX, daysSince, tagFilter)
+                             orderby a.LatestPostDate descending
+                             select a).Take(recCount).ToList();
+                    
+                    List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded> _topicsExpandList = new List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded>();
 
-                    DateTime begDt = System.DateTime.Now.AddDays(daysSince * -1);
-
-                    if (user_tags != null)
+                    foreach (SP_RECENT_FORUM_BY_USER_TAG_Result _topic in x)
                     {
+                        List<string> _tags = db_Forum.GetTopicTags_MatchingUserAndTopic(_topic.Id, UserIDX);
 
-                        xxx = (from a in ctx.Topics.AsNoTracking()
-                               join b in ctx.Posts on a.Id equals b.Topic_Id
-                               join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
-                               join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
-                               where user_tags.Contains(d.TopicTag)
-                               && (tagFilter == null ? true : d.TopicTag == tagFilter)
-                               && b.IsTopicStarter == true
-                               orderby a.CreateDate descending
-                               select new TopicOverviewDisplay
-                               {
-                                   _topic = a,
-                                   _postStart = b,
-                                   _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
-                                   topicCreator = c.FNAME + " " + c.LNAME,
-                                   postCount = 999 //hack to indicate tag match
-                                   ,CategorySlug = d.TopicTag  //hack to display the matched tag
-                               }).Take(recCount).ToList();
-
-                    }
-
-                    if (fallbackAny)
-                    {
-                        if (xxx == null || xxx.Count() == 0)
+                        _topicsExpandList.Add(new SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded
                         {
-                            xxx = (from a in ctx.Topics.AsNoTracking()
-                                   join b in ctx.Posts on a.Id equals b.Topic_Id
-                                   join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
-                                   where b.IsTopicStarter == true
-                                   orderby a.CreateDate descending
-                                   select new TopicOverviewDisplay
-                                   {
-                                       _topic = a,
-                                       _postStart = b,
-                                       _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
-                                       topicCreator = c.FNAME + " " + c.LNAME,
-                                       postCount = 0 //hack to indicate tag match
-                                   }).Take(recCount).ToList();
-                        }
+                            SP_RECENT_FORUM_BY_USER_TAG_Result = _topic,
+                            tags = _tags
+                        });
                     }
 
-                    return xxx;
+                    return _topicsExpandList;
                 }
                 catch (Exception ex)
                 {
@@ -1437,50 +1414,30 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static List<TopicOverviewDisplay> GetLatestTopicPostsMatchingInterestNewsletter(int UserIDX, int daysSince, int recCount)
+
+        public static List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded> GetLatestTopicPostsFallback(int daysSince, int recCount)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
                 try
                 {
-                    List<TopicOverviewDisplay> xxx = null;
+                    var x = (from a in ctx.SP_RECENT_FORUM_FALLBACK(daysSince)
+                             orderby a.LatestPostDate descending
+                             select a).Take(recCount).ToList();
 
-                    //get interest tags
-                    List<string> user_tags = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
 
-                    DateTime begDt = System.DateTime.Now.AddDays(daysSince * -1);
 
-                    if (user_tags != null)
+                    List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded> _topicsExpandList = new List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded>();
+
+                    foreach (SP_RECENT_FORUM_BY_USER_TAG_Result _topic in x)
                     {
-
-                        xxx = (from a in ctx.Topics.AsNoTracking()
-                               join b in ctx.Posts on a.Id equals b.Topic_Id
-                               join c in ctx.T_OE_USERS on a.MembershipUser_Id equals c.USER_IDX
-                               join d in ctx.Topic_Tags on a.Id equals d.Topic_Id
-                               where user_tags.Contains(d.TopicTag)
-                               && b.IsTopicStarter == true
-                               //&& (a.CreateDate > begDt || b.DateCreated > begDt)
-                               orderby a.CreateDate descending
-                               select new TopicOverviewDisplay
-                               {
-                                   _topic = a,
-                                   _postStart = b,
-                                   _postLatest = (from v1 in ctx.Posts join v2 in ctx.T_OE_USERS on v1.MembershipUser_Id equals v2.USER_IDX where v1.Topic_Id == a.Id orderby v1.DateCreated descending select new vmPostDisplayType { Post = v1, PosterDisplayName = v2.FNAME + " " + v2.LNAME }).FirstOrDefault(),
-                                   topicCreator = c.FNAME + " " + c.LNAME,
-                                   postCount = 999 //hack to indicate tag match
-                                   ,
-                                   CategorySlug = d.TopicTag  //hack to display the matched tag
-                               }).Take(recCount).ToList();
-
-                        var yyy = (from a in xxx
-                                   where a._postLatest.Post.DateCreated > begDt
-                                   select a).ToList();
-
-                        return yyy;
-
+                        _topicsExpandList.Add(new SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded
+                        {
+                            SP_RECENT_FORUM_BY_USER_TAG_Result = _topic,
+                        });
                     }
 
-                    return null;
+                    return _topicsExpandList;
                 }
                 catch (Exception ex)
                 {
@@ -1490,6 +1447,26 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
+        public static List<string> GetTopicTags_MatchingUserAndTopic(Guid TopicID, int UserIDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Topic_Tags
+                            join b in ctx.T_OE_USER_EXPERTISE on a.TopicTag equals b.EXPERTISE_TAG 
+                            where a.Topic_Id == TopicID
+                            && b.USER_IDX == UserIDX
+                            select a.TopicTag.ToString()).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
 
         public static List<EECIP_Index> GetTopic_ReadyToSync(Guid? TopicID)

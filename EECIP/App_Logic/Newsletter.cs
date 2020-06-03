@@ -44,9 +44,9 @@ namespace EECIP.App_Logic
 
 
                 //get updated discussion topics based on tags
-                List<TopicOverviewDisplay> topics = db_Forum.GetLatestTopicPostsMatchingInterestNewsletter(user.users.USER_IDX, 30, 10);
+                List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded> topics = db_Forum.GetLatestTopicPostsMatchingInterestNew(user.users.USER_IDX, 30, 10, null);
                 if (topics != null && topics.Count > 0)
-                    discussionSnippet = popDiscussionSnippet(topics);
+                    discussionSnippet = popDiscussionSnippet(topics, user.users.USER_IDX);
 
 
                 //********* send email (only if matches) ****************
@@ -88,7 +88,13 @@ namespace EECIP.App_Logic
                                         <td style='border-top: 1px solid #ddd;'>
                                             <a href = '" + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Dashboard/ProjectCard?strid=" + item.PROJECT_IDX + @"' style='color: #fff;background-color: #199c98; border-color: #1a8e8a; padding: 1px 5px; font-size: 12px; line-height: 1.5; border-radius: 3px; display: inline-block; border: 1px solid transparent; text-decoration: none;' >Info</a>
                                         </td>
-                                        <td style='border-top: 1px solid #ddd;'>" + item.PROJ_NAME + @"<span style='background-color: #007AFF; font-size: 9.35px;padding: .4em .6em;font-weight: 700; color: #fff;border-radius: .25em;margin-left:10px '>" + item.Tag + @"</span></td>
+                                        <td style='border-top: 1px solid #ddd;'>" + item.PROJ_NAME;
+
+                //adding the tags for the matched topic
+                foreach (string _tag in item.Tags)
+                    projectSnippet += "<span style='background-color: #007AFF; font-size: 9.35px;padding: .4em .6em;font-weight: 700; color: #fff;border-radius: .25em;margin-left:10px '>" + _tag + @"</span>";
+
+                projectSnippet += @"</td>
                                         <td style='border-top: 1px solid #ddd;'>" + item.ORG_NAME + @"</td>
                                         <td style='border-top: 1px solid #ddd;'>" + item.LAST_ACTIVITY_DATE + @"</td>
                                     </tr>";
@@ -100,7 +106,7 @@ namespace EECIP.App_Logic
             return projectSnippet;
         }
 
-        private static string popDiscussionSnippet(List<TopicOverviewDisplay> topics)
+        private static string popDiscussionSnippet(List<SP_RECENT_FORUM_BY_USER_TAG_Result_Expanded> topics, int UserIDX)
         {
             string discussionSnippet = @"<div style='font-family: Helvetica, Arial, sans-serif; font-size: 24px; margin-left:6px; margin-top:0px;'>Recent Discussion Topics (matching your subscriptions)</div>
                             <table style='margin: 6px; border: 1px solid #ddd; width: 90%; border-spacing: 2px; border-collapse: collapse; cellpadding=10px'>
@@ -119,11 +125,19 @@ namespace EECIP.App_Logic
             {
                 discussionSnippet += @"<tr style='background-color: #f9f9f9;'>
                                         <td style='border-top: 1px solid #ddd;'>
-                                            <a href = '" + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Forum/ShowTopic?slug=" + item._topic.Slug + @"' style='color: #fff;background-color: #199c98; border-color: #1a8e8a; padding: 1px 5px; font-size: 12px; line-height: 1.5; border-radius: 3px; display: inline-block; border: 1px solid transparent; text-decoration: none;' >Info</a>
+                                            <a href = '" + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Forum/ShowTopic?slug=" + item.SP_RECENT_FORUM_BY_USER_TAG_Result.Slug + @"' style='color: #fff;background-color: #199c98; border-color: #1a8e8a; padding: 1px 5px; font-size: 12px; line-height: 1.5; border-radius: 3px; display: inline-block; border: 1px solid transparent; text-decoration: none;' >Info</a>
                                         </td>
-                                        <td style='border-top: 1px solid #ddd;'>" + item._topic.Name + @"<span style='background-color: #007AFF; font-size: 9.35px;padding: .4em .6em;font-weight: 700; color: #fff;border-radius: .25em;margin-left:10px '>" + item.CategorySlug + @"</span></td>
-                                        <td style='border-top: 1px solid #ddd;'>" + Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item._postStart.PostContent), 50) + @"</td>
-                                        <td style='border-top: 1px solid #ddd;'>" + item._postLatest.Post.DateCreated + " by " + item._postLatest.PosterDisplayName + @"</td>
+                                        <td style='border-top: 1px solid #ddd;'>" + item.SP_RECENT_FORUM_BY_USER_TAG_Result.Name;
+
+                
+                //adding the tags for the matched topic
+                foreach (string _tag in item.tags)
+                    discussionSnippet += "<span style = 'background-color: #007AFF; font-size: 9.35px;padding: .4em .6em;font-weight: 700; color: #fff;border-radius: .25em;margin-left:10px'>" + _tag + "</span>";
+
+
+                discussionSnippet += @"</td>
+                                        <td style='border-top: 1px solid #ddd;'>" + Utils.ReturnAmountWordsFromString(Utils.StripHtmlFromString(item.SP_RECENT_FORUM_BY_USER_TAG_Result.PostContent), 50) + @"</td>
+                                        <td style='border-top: 1px solid #ddd;'>" + item.SP_RECENT_FORUM_BY_USER_TAG_Result.LatestPostDate + " by " + item.SP_RECENT_FORUM_BY_USER_TAG_Result.LatestPostUser + @"</td>
                                     </tr>";
             }
 
@@ -131,34 +145,6 @@ namespace EECIP.App_Logic
                             </table>";
 
             return discussionSnippet;
-
-
-
-            //string discussionSnippet = @"<div style='font-family: Helvetica, Arial, sans-serif; font-size: 24px; margin-top:0px;'>Recent Discussion Topics (matching your subscription)</div>
-            //                             <section class='panel panel-default'>
-            //                                <div class='panel-body'>";
-
-            //foreach (var item in topics)
-            //{
-            //    discussionSnippet += @"<div class='topicrow' style='padding: 5px; border-bottom: solid #f2f2f2 2px; font-family: Helvetica, Arial, sans-serif; '>
-            //                                <div class='rowdetails' style=''>
-            //                                    <h3 style='margin: 6px 0; padding: 0;'>
-            //                                        <a href='/Forum/ShowTopic?slug=should-the-eecip-be-a-relying-party-onto-the-ee-fim' style='font-size:18px;'>
-            //                                            Should the EECIP be a Relying Party onto the EE-FIM?
-            //                                        </a>
-            //                                    </h3>
-            //                                    If the Inventory were integrated into the EE-Federated Identity Management system a user logged onto the EE-FIM could traverse to the Inventory without logging in (after an initial one-time registration process).&nbsp;
-            //                                        <span style='background-color: #007AFF; font-size: 9.35px;padding: .4em .6em;font-weight: 700; color: #fff;border-radius: .25em;'>Identity Management</span>
-            //                                    <p class='topicrowfooterinfo'>
-            //                                        Latest By Chris Simmers 17 April 2018
-            //                                    </p>
-            //                                </div>
-            //                            </div>";
-            //}
-
-            //discussionSnippet += "</div></section>";
-
-            //return discussionSnippet;
         }
     }
 }

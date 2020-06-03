@@ -27,7 +27,7 @@ namespace EECIP.Controllers
                 UserPointLeaders = db_Forum.GetMembershipUserPoints_MostPoints(6),  //user point leaders
                 UserPointLeadersMonth = db_Forum.GetMembershipUserPoints_MostPoints(6, System.DateTime.Today.AddDays(-30), System.DateTime.Now.AddDays(1)),
                 LatestProjects = db_EECIP.GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(UserIDX, 900, true, 6, (selSub == "Default View" ? null : selSub)),  //latest projects matching interest
-                LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterest(UserIDX, 900, true, 6, (selSub == "Default View" ? null : selSub)), //latest topics matching interest
+                LatestTopics = db_Forum.GetLatestTopicPostsMatchingInterestNew(UserIDX, 900, 6, (selSub == "Default View" ? null : selSub)), //latest topics matching interest
                 ProjectCount = db_EECIP.GetT_OE_PROJECTS_CountNonGovernance(),
                 GovernanceCount = db_EECIP.GetT_OE_PROJECTS_CountGovernance(),
                 DiscussionCount = db_Forum.GetTopicCount(null),
@@ -38,11 +38,15 @@ namespace EECIP.Controllers
                 selSub = (selSub ?? "Default View")
             };
 
+            //fallback on topics
+            model.TopicMatchInd = (model.LatestTopics != null && model.LatestTopics.Count > 0);
+            if (model.TopicMatchInd == false)
+                model.LatestTopics = db_Forum.GetLatestTopicPostsFallback(900, 6);
+
             T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
             if (u != null)
-            {
                 model.UserName = u.FNAME + " " + u.LNAME;
-            }
+
             return View(model);
         }
 
