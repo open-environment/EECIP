@@ -915,6 +915,29 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static Guid? UpdateTopic_SetLastPostDate(Guid topicID, DateTime? overrideDate)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    Topic e = (from c in ctx.Topics
+                              where c.Id == topicID
+                              select c).FirstOrDefault();
+
+                    e.LAST_POST_DT = overrideDate ?? System.DateTime.Now;
+
+                    ctx.SaveChanges();
+                    return e.Id;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static bool UpdateTopic_SetAllUnsynced()
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1197,7 +1220,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 join d in ctx.Categories on a.Category_Id equals d.Id
                                 where b.IsTopicStarter == true
                                 && (cat_id != null ? a.Category_Id == cat_id : true)
-                                orderby a.IsSticky descending, b.DateCreated descending
+                                orderby a.IsSticky descending, a.LAST_POST_DT descending
                                 select new TopicOverviewDisplay
                                 {
                                     _topic = a,
@@ -1211,6 +1234,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                     CategoryName = d.Name,
                                     CategorySlug = d.Slug
                                 }).Skip((pageIndex - 1) * 10).Take(10).ToList();
+
                     }
                     else
                         xxx = (from a in ctx.Topics.AsNoTracking()
@@ -1221,7 +1245,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 where b.IsTopicStarter == true
                                 && (cat_id != null ? a.Category_Id == cat_id : true)
                                 && d.TopicTag == tag
-                                orderby a.IsSticky descending, b.DateCreated descending
+                                orderby a.IsSticky descending, a.LAST_POST_DT descending
                                 select new TopicOverviewDisplay
                                 {
                                     _topic = a,
@@ -1909,6 +1933,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         ctx.Posts.Add(e);
 
                     ctx.SaveChanges();
+
                     return e.Id;
                 }
                 catch (Exception ex)
@@ -2182,7 +2207,6 @@ namespace EECIP.App_Logic.DataAccessLayer
                         }
                     }
 
-
                     //then delete the Post
                     Post rec = (from a in ctx.Posts
                                 where a.Id == PostID
@@ -2202,6 +2226,25 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     db_Ref.LogEFException(ex);
                     return 0;
+                }
+            }
+        }
+
+        public static Post GetPost_LatestOfTopic(Guid topic_id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.Posts.AsNoTracking()
+                               where a.Topic_Id == topic_id
+                               orderby a.DateEdited descending
+                               select a).FirstOrDefault();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
                 }
             }
         }

@@ -81,11 +81,13 @@ CREATE TABLE [forum].[Post](
 	[Topic_Id] [uniqueidentifier] NOT NULL,
 	[MembershipUser_Id] [int] NOT NULL,
 	[SYNC_IND] [bit] NOT NULL DEFAULT 0,
+	[LAST_POST_DT] [datetime],
  CONSTRAINT [forum.PK_Post] PRIMARY KEY CLUSTERED (	[Id] ASC) ON [PRIMARY],
  FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX])
 ) ON [PRIMARY] 
 GO
 --alter table [forum].[Post] add SYNC_IND [bit] NOT NULL DEFAULT 0;
+
 
 CREATE TABLE [forum].[Topic](
 	[Id] [uniqueidentifier] NOT NULL,
@@ -103,6 +105,7 @@ CREATE TABLE [forum].[Topic](
 	[Poll_Id] [uniqueidentifier] NULL,
 	[MembershipUser_Id] [int] NOT NULL,
 	[SYNC_IND] [bit] NOT NULL DEFAULT 0,
+	LAST_POST_DT [datetime],
  CONSTRAINT [forum.PK_Topic] PRIMARY KEY CLUSTERED ([Id] ASC),
  FOREIGN KEY ([Category_Id]) references [forum].[Category] ([Id]),
  FOREIGN KEY ([MembershipUser_Id]) references [dbo].[T_OE_USERS] ([USER_IDX]),
@@ -112,6 +115,12 @@ CREATE TABLE [forum].[Topic](
 GO
 
 --alter table [forum].[Topic] add SYNC_IND [bit] NOT NULL DEFAULT 0;
+--alter table [forum].[Topic] add LAST_POST_DT [datetime];
+--update [forum].[Topic]
+--    set LAST_POST_DT = (select top 1 DateEdited
+--                  from [forum].[Post] c
+--                  where c.Topic_Id = [forum].[Topic].Id
+--                  order by [DateEdited] desc);
 
 ALTER TABLE [forum].[Post]  WITH CHECK ADD  CONSTRAINT [forum.Topic_Post_FK] FOREIGN KEY([Topic_Id]) REFERENCES [forum].[Topic] ([Id]) 
 GO

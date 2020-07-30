@@ -6,21 +6,20 @@
 <div class="row">
 
     <!--  **************  PROJECT FRESHNESS **************************************-->
-    <section class="col-sm-6">
-        <section class="panel panel-default">
-            <div class="panel-heading">
-                Project Freshness
-                <div class="panel-tools">
-                    <a class="btn btn-xs panel-collapse collapses" href="#">
-                    </a>
+    @*<section class="col-sm-6">
+            <section class="panel panel-default">
+                <div class="panel-heading">
+                    Project Freshness
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-body">
-                <canvas id="chartFresh" width="400" height="400"></canvas>
-
-            </div>
-        </section>
-    </section>
+                <div class="panel-body">
+                    <canvas id="chartFresh" width="400" height="400"></canvas>
+                </div>
+            </section>
+        </section>*@
 
 
     <!--  **************  POPULAR SEARCH TERMS **************************************-->
@@ -63,13 +62,10 @@
             </div>
         </section>
     </section>
-</div>
-
-<div class="row">
     <section class="col-sm-6">
         <section class="panel panel-default">
             <div class="panel-heading">
-                New Projects Added Over Time 
+                New Projects Added Over Time
                 <div class="panel-tools">
                     <a class="btn btn-xs panel-collapse collapses" href="#">
                     </a>
@@ -77,11 +73,12 @@
             </div>
             <div class="panel-body">
                 <canvas id="chartProjectNew" width="400" height="400"></canvas>
-
             </div>
         </section>
     </section>
+</div>
 
+<div class="row">
     <section class="col-sm-6">
         <section class="panel panel-default">
             <div class="panel-heading">
@@ -93,7 +90,6 @@
             </div>
             <div class="panel-body">
                 <canvas id="chartNewContentUsers" width="400" height="400"></canvas>
-
             </div>
         </section>
     </section>
@@ -108,7 +104,7 @@
         $(document).ready(function () {
 
             //************ PROJECT FRESHNESS OVER TIME ***************************
-            $(function () {
+            @*$(function () {
                 $.ajax({
                     type: "GET",
                     url: '@Url.Action("MetricChartFreshness", "Dashboard")',
@@ -223,11 +219,7 @@
                         toastr.warning(response || "cannot display chart.");
                     }
                 });
-            });
-
-
-
-
+            });*@
 
 
 

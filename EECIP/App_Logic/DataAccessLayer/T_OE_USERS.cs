@@ -25,13 +25,13 @@ namespace EECIP.App_Logic.DataAccessLayer
             this.MembershipUser_Badge = new HashSet<MembershipUser_Badge>();
             this.Polls = new HashSet<Poll>();
             this.PollVotes = new HashSet<PollVote>();
-            this.Posts = new HashSet<Post>();
             this.PostFiles = new HashSet<PostFile>();
             this.Topics = new HashSet<Topic>();
             this.MembershipUserPoints1 = new HashSet<MembershipUserPoint>();
             this.TopicNotifications = new HashSet<TopicNotification>();
             this.Votes = new HashSet<Vote>();
             this.Votes1 = new HashSet<Vote>();
+            this.Posts = new HashSet<Post>();
         }
     
         public int USER_IDX { get; set; }
@@ -85,8 +85,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PollVote> PollVotes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Post> Posts { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PostFile> PostFiles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Topic> Topics { get; set; }
@@ -98,5 +96,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual ICollection<Vote> Votes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Vote> Votes1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Post> Posts { get; set; }
     }
 }

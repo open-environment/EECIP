@@ -85,6 +85,9 @@ namespace EECIP.Models
         //agency filter for admins
         public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
 
+        //flag user for removal
+        public int? FlagUserIDX { get; set; }
+
         //initialize
         public vmDashboardAgency()
         {

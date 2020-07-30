@@ -60,7 +60,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<Poll> Polls { get; set; }
         public virtual DbSet<PollAnswer> PollAnswers { get; set; }
         public virtual DbSet<PollVote> PollVotes { get; set; }
-        public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<PostFile> PostFiles { get; set; }
         public virtual DbSet<Topic> Topics { get; set; }
         public virtual DbSet<Topic_Tags> Topic_Tags { get; set; }
@@ -70,6 +69,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<T_OE_SYS_SEARCH_LOG> T_OE_SYS_SEARCH_LOG { get; set; }
         public virtual DbSet<T_OE_RPT_FRESHNESS> T_OE_RPT_FRESHNESS { get; set; }
         public virtual DbSet<T_OE_PROJECT_ORGS> T_OE_PROJECT_ORGS { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
     
         public virtual ObjectResult<SP_ENT_SVC_COUNT_DISPLAY_Result> SP_ENT_SVC_COUNT_DISPLAY()
         {

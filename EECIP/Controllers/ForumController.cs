@@ -155,6 +155,9 @@ namespace EECIP.Controllers
                         // 3. Reupdate the topic with post ID
                         db_Forum.InsertUpdateTopic_withPost(_Topic.Id, _postID.ConvertOrDefault<Guid>());
 
+                        //3b. Set last update datetime
+                        db_Forum.UpdateTopic_SetLastPostDate(_Topic.Id, null);
+
 
                         // 4. Update the users points score for posting
                         db_Forum.InsertUpdateMembershipUserPoints(null, 1, System.DateTime.UtcNow, 0, _postID, null, UserIDX);
@@ -283,6 +286,9 @@ namespace EECIP.Controllers
                 db_Forum.InsertUpdateTopic(model, UserIDX);
 
                 Guid? newPostID = db_Forum.InsertUpdatePost(model.Id, model.Content, null, null, null, null, null, null, null, null, null, true);
+
+                //3b. Set last update datetime
+                db_Forum.UpdateTopic_SetLastPostDate(model.TopicId, null);
 
                 // 5. Poll handling
                 if (_topic.Poll_Id != null) {
@@ -463,6 +469,9 @@ namespace EECIP.Controllers
             Guid? _postID = db_Forum.InsertUpdatePost(null, model.NewPostContent, null, null, false, false, false, null, null, model.Topic.Id, UserIDX, false);
             if (_postID != null)
             {
+                //set topic last post date
+                db_Forum.UpdateTopic_SetLastPostDate(model.Topic.Id, null);
+
                 // Success send any notifications
                 NotifyTopics(model.Topic.Id, UserIDX, "Post");
 
@@ -493,6 +502,11 @@ namespace EECIP.Controllers
                     if (post.IsTopicStarter == false)
                     {
                         db_Forum.DeletePost(id);
+
+                        //update the topic to reflect correct "LastEdited Date"
+                        Post _lastPost = db_Forum.GetPost_LatestOfTopic(post.Topic_Id);
+                        if (_lastPost != null)
+                            db_Forum.UpdateTopic_SetLastPostDate(post.Topic_Id, _lastPost.DateEdited);
 
                         //now sync with Azure
                         AzureSearch.DeleteAzureGuid(id);

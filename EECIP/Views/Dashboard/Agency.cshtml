@@ -128,7 +128,9 @@
                                 {
                                     <tr>
                                         <td>
-                                            <img class="img-responsive" id="targetImg" src="~/Content/Images/Users/@(item.USER_IDX).png" />
+                                            <object data="~/Content/Images/Users/@(item.USER_IDX).png" type="image/png" style="width: 50px;">
+                                                <img class="img-responsive" id="targetImg" src="~/Content/Images/profile.png" alt="No image" />
+                                            </object>
                                         </td>
                                         <td>
 
@@ -158,6 +160,14 @@
                                         </td>
                                         <td>
                                             <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.USER_IDX })" class="btn btn-xs btn-info">More Info </a>
+                                            @if (item.ACT_IND == true)
+                                            {
+                                            <a href="#modal-flag" data-toggle="modal" class="btn btn-xs btn-danger modal-flag" data-id="@(item.USER_IDX)">Flag for Removal</a>
+                                            }
+                                            else
+                                            {
+                                                <div class="btn btn-xs btn-light-grey" data-toggle="tooltip" data-placement="top" title="User is no longer active with agency">Inactive</div>
+                                            }
                                         </td>
                                     </tr>
                                 }
@@ -346,6 +356,44 @@
 <!-- END MODAL FORM -->
 
 
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-flag" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("AgencyUserFlagRemoval", "Dashboard", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.agency.ORG_IDX)
+            @Html.HiddenFor(model => model.FlagUserIDX)
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-title">Flag Agency User for Removal</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        <div class="alert alert-block alert-danger">
+                            Click the button below to flag the user for removal from EECIP.
+                            This may be because the user is no longer working at the agency or was added to the agency inadvertently.
+                            <br />
+                            An email will be sent to an EECIP Administrator requesting the user's removal.
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @if (!User.IsInRole("ReadOnly"))
+                    {
+                        <button id="picFlag" type="submit" class="btn btn-sm btn-danger">Confirm Flag for Removal</button>
+                    }
+                    <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- END MODAL FORM -->
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/confirmdelete")
     @Scripts.Render("~/bundles/select2")
@@ -375,7 +423,7 @@
                 tags: true
             });
 
-            //create an event when button is clicked to display modal
+            //event when button is clicked to display modal
             $(".modal-it").click(function () {
                 $('#edit_ent_services_ORG_ENT_SVCS_IDX').val($(this).parent('td').find('#item_ORG_ENT_SVCS_IDX').val());
                 $('#edit_ent_services_ENT_PLATFORM_IDX').val($(this).parent('td').find('#item_ENT_PLATFORM_IDX').val());
@@ -386,8 +434,15 @@
                 $('#edit_ent_services_COMMENTS').val($(this).parent('td').find('#item_COMMENTS').val());
                 $('#edit_ent_services_PROJECT_CONTACT').val($(this).parent('td').find('#item_PROJECT_CONTACT').val());
                 $('#edit_ent_services_ACTIVE_INTEREST_IND').val($(this).parent('td').find('#item_ACTIVE_INTEREST_IND').val());
-
             });
+
+
+            //event when button is clicked to display modal
+            $(".modal-flag").click(function () {
+                console.log($(this).data('id'));
+                $('#FlagUserIDX').val($(this).data('id'));
+            });
+
         });
     </script>
 

@@ -258,11 +258,40 @@ namespace EECIP.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult AgencyUserFlagRemoval(vmDashboardAgency model)
+        {
+            if (model.FlagUserIDX != null && model.agency.ORG_IDX != null)
+            {
+                int UserIDX = db_Accounts.GetUserIDX();
+
+                //get flagging user
+                T_OE_USERS flaggingUser = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+
+                //get flagged user
+                T_OE_USERS flaggedUser = db_Accounts.GetT_OE_USERSByIDX(model.FlagUserIDX.GetValueOrDefault());
+
+
+                //notify Site Admins via email
+                List<T_OE_USERS> Admins = db_Accounts.GetT_OE_USERSInRole(1);
+                foreach (T_OE_USERS Admin in Admins)
+                    Utils.SendEmail(null, Admin.EMAIL, null, null, "EECIP: " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + " flagged for removal", "The user " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + " (" + flaggedUser.EMAIL + ") has been flagged for removal by the EECIP user " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + ". Please log into EECIP and condifer removing or inactivating the user account", null, null, null);
+
+                TempData["Success"] = "Your request has been submitted.";
+            }
+            else
+                TempData["Error"] = "Unable to make request at this time.";
+
+
+            return RedirectToAction("Agency", "Dashboard");
+        }
+
         #endregion
 
 
         #region PROJECT
-        
+
         // GET: /Dashboard/Projects
         public ActionResult Projects(Guid? selAgency)
         {

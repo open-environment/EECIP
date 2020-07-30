@@ -486,6 +486,7 @@
     <Content Include="Content\Images\header_bg.png" />
     <Content Include="Content\Images\loading.gif" />
     <Content Include="Content\Images\menu-white-arrow.png" />
+    <Content Include="Content\Images\profile.png" />
     <Content Include="Content\Images\seal.png" />
     <Content Include="Content\Images\sep-half.png" />
     <Content Include="Content\Images\Users\dummy.txt" />

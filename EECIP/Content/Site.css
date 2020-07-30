@@ -28,6 +28,15 @@ html {
     color: #9d9d9d;
 }
 
+
+th > a {
+    color: #5db8b5;
+}
+
+    th > a:hover {
+        color: #8ae6e3;
+    }
+
 .badge-eecip-bluegreen {
     background-color: #199C98 !important;
     border-color: #199C98 !important;
@@ -660,9 +669,10 @@ ul.main-navigation-menu > li.active > a {
     width: 80px;
     height: 80px;
     margin: 0 auto -40px;
-    border: 3px solid rgba(200,200,200,1);
-    border-radius: 10px;
+    border: 2px solid rgba(200,200,200,1);
+    border-radius: 5px;
     color: #fff;
+    margin: 0;
     transition: all ease-in-out .3s;
     background-size: 75px;
     background-repeat: no-repeat;
