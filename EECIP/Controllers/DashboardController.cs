@@ -276,7 +276,7 @@ namespace EECIP.Controllers
                 //notify Site Admins via email
                 List<T_OE_USERS> Admins = db_Accounts.GetT_OE_USERSInRole(1);
                 foreach (T_OE_USERS Admin in Admins)
-                    Utils.SendEmail(null, Admin.EMAIL, null, null, "EECIP: " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + " flagged for removal", "The user " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + " (" + flaggedUser.EMAIL + ") has been flagged for removal by the EECIP user " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + ". Please log into EECIP and condifer removing or inactivating the user account", null, null, null);
+                    Utils.SendEmail(null, Admin.EMAIL, null, null, "EECIP: " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + " flagged for removal", "The user " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + " (" + flaggedUser.EMAIL + ") has been flagged for removal by the EECIP user " + flaggedUser.FNAME + ' ' + flaggedUser.LNAME + ". Please log into EECIP and consider removing or inactivating the user account", null, null, null);
 
                 TempData["Success"] = "Your request has been submitted.";
             }
