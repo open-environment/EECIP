@@ -61,6 +61,7 @@ namespace EECIP.App_Logic.DataAccessLayer
     public class ProjectImportType
     {
         public T_OE_PROJECTS T_OE_PROJECT { get; set; }
+        public bool DEL_IND { get; set; }
         public bool VALIDATE_CD { get; set; }
         public string VALIDATE_MSG { get; set; }
         public string ORG_NAME { get; set; }
@@ -76,6 +77,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         {
             T_OE_PROJECT = new T_OE_PROJECTS();
             VALIDATE_CD = true;
+            DEL_IND = false;
         }
     }
 
@@ -941,6 +943,10 @@ namespace EECIP.App_Logic.DataAccessLayer
                         //set project contact to person who created it
                         if (pROJECT_CONTACT_IDX == null)
                             e.PROJECT_CONTACT_IDX = cREATE_USER;
+
+                        //set record source
+                        if (string.IsNullOrEmpty(rECORD_SOURCE))
+                            e.RECORD_SOURCE = "Agency supplied";
                     }
                     else
                     {
@@ -960,9 +966,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (pROJ_STATUS != null) e.PROJ_STATUS = pROJ_STATUS;
                     if (dATE_LAST_UPDATE != null) e.DATE_LAST_UPDATE = dATE_LAST_UPDATE;
                     if (dATE_LAST_UPDATE == -1) e.DATE_LAST_UPDATE = null; //handling blanking out
-                    if (rECORD_SOURCE != null) e.RECORD_SOURCE = rECORD_SOURCE;
-                    if (e.RECORD_SOURCE == null)
-                        e.RECORD_SOURCE = "Agency supplied";
+                    if (string.IsNullOrEmpty(rECORD_SOURCE)==false) e.RECORD_SOURCE = rECORD_SOURCE;
                     if (pROJECT_URL != null) e.PROJECT_URL = pROJECT_URL;
                     if (mOBILE_IND != null) e.MOBILE_IND = mOBILE_IND;
                     if (mOBILE_DESC != null) e.MOBILE_DESC = mOBILE_DESC;
@@ -1098,9 +1102,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                     Boolean insInd = true;
 
                     //try to get existing project based on PROJECT_IDX
-                    Guid projIDX;
                     string ProjIDXStr = Utils.GetValueOrDefault(colVals, "PROJECT_IDX");
-                    if (Guid.TryParse(ProjIDXStr, out projIDX))
+                    if (Guid.TryParse(ProjIDXStr, out Guid projIDX))
                     {
                         T_OE_PROJECTS p = db_EECIP.GetT_OE_PROJECTS_ByIDX(projIDX);
                         if (p != null)
@@ -1110,13 +1113,17 @@ namespace EECIP.App_Logic.DataAccessLayer
                         }
                     }
 
-                    //then try to get based on supplied IMPORT_ID 
-                    T_OE_PROJECTS p2 = db_EECIP.GetT_OE_PROJECTS_ByIMPORT_ID(Utils.GetValueOrDefault(colVals, "IMPORT_ID"));
-                    if (p2 != null)
+                    if (e.T_OE_PROJECT.PROJECT_IDX == Guid.Empty)
                     {
-                        insInd = false;
-                        e.T_OE_PROJECT.PROJECT_IDX = p2.PROJECT_IDX;
+                        //then try to get based on supplied IMPORT_ID 
+                        T_OE_PROJECTS p2 = db_EECIP.GetT_OE_PROJECTS_ByIMPORT_ID(Utils.GetValueOrDefault(colVals, "IMPORT_ID"));
+                        if (p2 != null)
+                        {
+                            insInd = false;
+                            e.T_OE_PROJECT.PROJECT_IDX = p2.PROJECT_IDX;
+                        }
                     }
+
 
                     if (insInd)
                     {
@@ -1128,6 +1135,13 @@ namespace EECIP.App_Logic.DataAccessLayer
                     {
                         e.T_OE_PROJECT.MODIFY_DT = System.DateTime.Now;
                         e.T_OE_PROJECT.MODIFY_USERIDX = UserIDX;
+
+                        //check if marked for deletion
+                        if (Utils.GetValueOrDefault(colVals, "DELETE_IND") == "Y")
+                        {
+                            e.DEL_IND = true;
+                            return e;
+                        }
                     }
 
 

@@ -841,39 +841,59 @@ namespace EECIP.Controllers
             {
                 foreach (ProjectImportType ps in model.projects)
                 {
-                    //import projects
-                    T_OE_PROJECTS x = ps.T_OE_PROJECT;
-                    Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, null, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS, 
-                        x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
-                        x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, -1, true, false, UserIDX, x.IMPORT_ID, true);
-
-                    //import orject orgs
-                    if (x.ORG_IDX != null)
+                    if (ps.DEL_IND == false)
                     {
-                        Guid? ProjectOrgIDX = db_EECIP.InsertUpdateT_OE_PROJECT_ORGS(ProjectIDX.ConvertOrDefault<Guid>(), x.ORG_IDX.ConvertOrDefault<Guid>(), UserIDX);
+
+                        //import projects
+                        T_OE_PROJECTS x = ps.T_OE_PROJECT;
+                        Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, null, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS,
+                            x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
+                            x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, -1, true, false, UserIDX, x.IMPORT_ID, true);
+
+                        //import orject orgs
+                        if (x.ORG_IDX != null)
+                        {
+                            Guid? ProjectOrgIDX = db_EECIP.InsertUpdateT_OE_PROJECT_ORGS(ProjectIDX.ConvertOrDefault<Guid>(), x.ORG_IDX.ConvertOrDefault<Guid>(), UserIDX);
+                        }
+
+                        //import project url
+                        if (!string.IsNullOrEmpty(x.PROJECT_URL))
+                        {
+                            db_EECIP.DeleteT_OE_PROJECTS_URL(ProjectIDX.ConvertOrDefault<Guid>());
+                            db_EECIP.InsertT_OE_PROJECTS_URL(ProjectIDX.ConvertOrDefault<Guid>(), x.PROJECT_URL, null);
+                        }
+
+                        //import features
+                        if (ps.FEATURES != null)
+                        {
+                            foreach (string f in ps.FEATURES.Split('|'))
+                                if (f.Trim().Length > 0)
+                                    db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Tags", f, UserIDX);
+                        }
+
+                        //import program areas
+                        if (ps.PROGRAM_AREAS != null)
+                        {
+                            foreach (string f in ps.PROGRAM_AREAS.Split('|'))
+                                if (f.Trim().Length > 0)
+                                    db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Program Area", f, UserIDX);
+                        }
                     }
-
-                    //import project url
-                    if (!string.IsNullOrEmpty(x.PROJECT_URL))
+                    else if (ps.DEL_IND == true && ps.T_OE_PROJECT.PROJECT_IDX != null)
                     {
-                        db_EECIP.DeleteT_OE_PROJECTS_URL(ProjectIDX.ConvertOrDefault<Guid>());
-                        db_EECIP.InsertT_OE_PROJECTS_URL(ProjectIDX.ConvertOrDefault<Guid>(), x.PROJECT_URL, null);
-                    }
-
-                    //import features
-                    if (ps.FEATURES != null)
-                    {
-                        foreach (string f in ps.FEATURES.Split('|'))
-                            if (f.Trim().Length > 0)
-                                db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Tags", f, UserIDX);
-                    }
-
-                    //import program areas
-                    if (ps.PROGRAM_AREAS != null)
-                    {
-                        foreach (string f in ps.PROGRAM_AREAS.Split('|'))
-                            if (f.Trim().Length > 0)
-                                db_EECIP.InsertT_OE_PROJECT_TAGS(ProjectIDX.ConvertOrDefault<Guid>(), "Program Area", f, UserIDX);
+                        //delete project
+                        int SuccID = db_EECIP.DeleteT_OE_PROJECTS(ps.T_OE_PROJECT.PROJECT_IDX);
+                        if (SuccID > 0)
+                        {
+                            //SUCCESS - now delete from Azure
+                            List<T_OE_ORGANIZATION> orgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(ps.T_OE_PROJECT.PROJECT_IDX);
+                            if (orgs != null)
+                            {
+                                foreach (T_OE_ORGANIZATION org in orgs) {
+                                    AzureSearch.DeleteSearchIndexKey(ps.T_OE_PROJECT.PROJECT_IDX.ToString() + "_" + org.ORG_IDX.ToString());
+                                }
+                            }
+                        }
                     }
                 }
 

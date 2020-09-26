@@ -563,8 +563,9 @@ namespace EECIP.Controllers
                                 int SuccID = db_EECIP.DeleteT_OE_PROJECTS(id1);
                                 if (SuccID > 0)
                                 {
-                                    //SUCCESS - now delete from Azure
-                                    AzureSearch.DeleteAzureGuid(id1);
+                                    //SUCCESS - now delete from Azure (need to concat proj and all proj orgs
+                                    foreach (T_OE_ORGANIZATION _org in orgs)
+                                        AzureSearch.DeleteSearchIndexKey(id1.ToString() + "_" + _org.ORG_IDX.ToString());
                                 }
                                 else
                                     return Json("Unable to delete project.");

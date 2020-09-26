@@ -26,6 +26,7 @@
     <Field Level="P" FieldName="PROJECT_CONTACT" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>Project Contact</Alias></Field>
     <Field Level="P" FieldName="PROJECT_IDX" ReqInd="N" Length="100" UniqueInd="N" FKey="" DataType=""><Alias>EECIP Project ID</Alias></Field>
     <Field Level="P" FieldName="IMPORT_ID" ReqInd="N" Length="20" UniqueInd="N" FKey="" DataType=""><Alias>Import ID</Alias></Field>
+    <Field Level="P" FieldName="DELETE_IND" ReqInd="N" Length="1" UniqueInd="N" FKey="" DataType=""><Alias>Delete Ind</Alias></Field>
 
-</Fields>
+  </Fields>
 </FieldConfig>

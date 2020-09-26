@@ -227,7 +227,7 @@
     </section>
 
 
-    <section class="col-sm-3">
+    <section class="@((Model.files_existing != null && Model.files_existing.Count > 3) ? "col-sm-12" : "col-sm-3")">
         <section class="panel panel-default">
             <div class="panel-heading">
                 Project Files
@@ -240,20 +240,19 @@
                 @if (Model.files_existing != null && Model.files_existing.Count > 0)
                 {
                     <div class="postuploadedfilesholder clearfix">
-                        <p>Attached Files</p>
                         <ul>
                             @foreach (var file in Model.files_existing.OrderByDescending(o => o.CREATE_DT))
                             {
                             <li>
                                 <a class="fileupload" href="@Url.Action("ProjectFileDownload", "Dashboard", new { id = file.DOC_IDX })">
                                     @if (Utils.FileIsImage(file.DOC_NAME))
-        {
-                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-}
-else
-{
-                            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-}
+                                    {
+                                <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                                    }
+                                    else
+                                    {
+                                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                                    }
                                 </a>
                                 <div class="postedfilename">@file.DOC_NAME</div>
                                 <div >@file.DOC_COMMENT</div>

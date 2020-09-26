@@ -665,6 +665,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         {
             try
             {
+                //GuidID = Guid.Parse("da5331e1-8e2d-44e5-a880-4c10313b8911");
                 //connect to Azure Search
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
@@ -685,6 +686,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     Console.WriteLine(
                         "Failed to index some of the documents: {0}",
                         String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+
+                    db_Ref.InsertT_OE_SYS_LOG("Search Del1", e.Message.SubStringPlus(0, 2000));
                 }
 
 
