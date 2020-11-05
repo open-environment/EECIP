@@ -328,3 +328,29 @@ BEGIN
 		and (select count(*) from forum.Topic_Tags TT, T_OE_USER_EXPERTISE UE where TT.TopicTag=UE.EXPERTISE_TAG and UE.USER_IDX=@useridx and TT.Topic_Id = T.Id and TT.TopicTag=@tagFilter) > 0;
 	END
 END
+
+
+GO
+
+
+  CREATE VIEW RPT_MON_PROJ_VOTE
+  as
+  select YEAR(V.DATE_VOTED) as YR, MONTH(DATE_VOTED) as MON, P.PROJECT_IDX,   
+  (select top 1 O.ORG_NAME from T_OE_ORGANIZATION O, T_OE_PROJECT_ORGS PO where O.ORG_IDX=PO.ORG_IDX and PO.PROJECT_IDX = P.PROJECT_IDX) as ORG, 
+  P.PROJ_NAME, count(*) as CNT
+  from T_OE_PROJECT_VOTES V ,T_OE_PROJECTS P
+  where V.PROJECT_IDX = P.PROJECT_IDX
+  group by P.PROJECT_IDX, P.PROJ_NAME, YEAR(V.DATE_VOTED), MONTH(DATE_VOTED)
+  --order by YEAR(V.DATE_VOTED), MONTH(DATE_VOTED);
+
+
+  GO
+
+  CREATE VIEW RPT_MON_TOPIC_VOTE 
+  as
+  select YEAR(V.DateVoted) as YR, MONTH(V.DateVoted) as MON, T.Name, count(*) as CNT
+  from forum.Vote V, forum.Post P, forum.Topic T
+  where V.Post_Id = P.Id
+  and P.Topic_Id = T.Id
+  group by T.Name, YEAR(V.DateVoted), MONTH(V.DateVoted)
+  --order by YEAR(V.DateVoted), MONTH(V.DateVoted)

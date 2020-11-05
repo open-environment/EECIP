@@ -10,7 +10,7 @@
 
 @if (!string.IsNullOrEmpty(Model.Announcement))
 {
-    <div class="alert alert-block alert-info fade in">
+    <div class="alert alert-block alert-warning fade in">
         <button data-dismiss="alert" class="close" type="button">×</button>
         @Html.Raw(HttpUtility.HtmlDecode(Model.Announcement))
     </div>

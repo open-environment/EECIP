@@ -70,6 +70,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<T_OE_RPT_FRESHNESS> T_OE_RPT_FRESHNESS { get; set; }
         public virtual DbSet<T_OE_PROJECT_ORGS> T_OE_PROJECT_ORGS { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<RPT_MON_PROJ_VOTE> RPT_MON_PROJ_VOTE { get; set; }
+        public virtual DbSet<RPT_MON_TOPIC_VOTE> RPT_MON_TOPIC_VOTE { get; set; }
     
         public virtual ObjectResult<SP_ENT_SVC_COUNT_DISPLAY_Result> SP_ENT_SVC_COUNT_DISPLAY()
         {

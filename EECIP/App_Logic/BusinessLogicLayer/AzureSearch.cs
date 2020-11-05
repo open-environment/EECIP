@@ -71,6 +71,9 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
         [IsFilterable, IsSortable]
         public DateTime? LastUpdated { get; set; }
+
+        [IsSearchable, IsFilterable, IsFacetable]
+        public string HasProjectFile { get; set; }
     }
 
 
@@ -227,13 +230,6 @@ namespace EECIP.App_Logic.BusinessLogicLayer
             return serviceClient;
         }
 
-        private static SearchServiceClient CreateSearchIndexClient()
-        {
-            string searchServiceName = db_Ref.GetT_OE_APP_SETTING("AZURE_SEARCH_SVC_NAME");
-            string adminApiKey = db_Ref.GetT_OE_APP_SETTING("AZURE_SEARCH_QUERY_KEY");
-            SearchServiceClient serviceClient = new SearchServiceClient(searchServiceName, new SearchCredentials(adminApiKey));
-            return serviceClient;
-        }
 
 
         //******************************** METHODS FOR POPULATE INDEX ******************************************
@@ -716,8 +712,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 {
                     Top = 50,
                     Skip = ((currentPage ?? 1) - 1) * 50,
-                    Facets = new List<string> { "DataType", "State,count:100,sort:value", "OrgType", "Tags,count:30", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
-                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State", "OrgType", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn", "LastUpdated" },
+                    Facets = new List<string> { "DataType", "State,count:100,sort:value", "OrgType", "Tags,count:100", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State", "OrgType", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn", "LastUpdated", "HasProjectFile" },
                     IncludeTotalResultCount = true
                 };
 

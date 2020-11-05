@@ -772,7 +772,6 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-
         public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdatedMatchingInterest(int UserIDX, int daysSince, bool fallbackAny, int recCount, string tagFilter)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -824,6 +823,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                             xxx = (from a in ctx.T_OE_PROJECTS
                                    join po in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals po.PROJECT_IDX
                                    join b in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals b.ORG_IDX
+                                   //where (a.CREATE_DT > begDt || a.MODIFY_DT > begDt)
                                    orderby a.MODIFY_DT ?? a.CREATE_DT descending
                                    select new ProjectShortDisplayType
                                    {
@@ -847,6 +847,42 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+
+        public static List<ProjectShortDisplayType> GetT_OE_PROJECTS_RecentlyUpdated(int daysSince, int recCount)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    DateTime begDt = System.DateTime.Now.AddDays(daysSince * -1);
+
+                    return (from a in ctx.T_OE_PROJECTS
+                            join po in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals po.PROJECT_IDX
+                            join b in ctx.T_OE_ORGANIZATION on po.ORG_IDX equals b.ORG_IDX
+                            where (a.CREATE_DT > begDt || a.MODIFY_DT > begDt)
+                            orderby a.MODIFY_DT ?? a.CREATE_DT descending
+                            select new ProjectShortDisplayType
+                            {
+                                PROJECT_IDX = a.PROJECT_IDX,
+                                ORG_IDX = po.ORG_IDX,
+                                PROJ_NAME = a.PROJ_NAME,
+                                ORG_NAME = b.ORG_NAME,
+                                LAST_ACTIVITY_DATE = a.MODIFY_DT ?? a.CREATE_DT ?? System.DateTime.Now,
+                                TagMatch = false
+                            }).Take(recCount).ToList();
+
+
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+
 
         public static List<EECIP_Index> GetT_OE_PROJECTS_ReadyToSync(Guid? ProjectIDX)
         {
@@ -878,7 +914,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 Population_Density = x1.POP_DENSITY,
                                 EPA_Region = o.EPA_REGION.ToString(),
                                 Status = a.PROJ_STATUS,
-                                LastUpdated = a.MODIFY_DT ?? a.CREATE_DT
+                                LastUpdated = a.MODIFY_DT ?? a.CREATE_DT,
+                                HasProjectFile = (from  pp in ctx.T_OE_DOCUMENTS where pp.PROJECT_IDX == a.PROJECT_IDX select a).Any().ToString()
                             }).Take(50).ToList();
 
                     foreach (EECIP_Index e in xxx)
@@ -2031,6 +2068,43 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     db_Ref.LogEFException(ex);
                     return 0;
+                }
+            }
+        }
+
+
+
+        public static List<RPT_MON_PROJ_VOTE> GetRPT_MON_PROJ_VOTE()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.RPT_MON_PROJ_VOTE
+                            orderby a.YR, a.MON
+                            select a).OrderBy(x => x.YR).ThenBy(x => x.MON).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+        public static List<RPT_MON_TOPIC_VOTE> GetRPT_MON_TOPIC_VOTE()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.RPT_MON_TOPIC_VOTE
+                            orderby a.YR, a.MON
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
                 }
             }
         }

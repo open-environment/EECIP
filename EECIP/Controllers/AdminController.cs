@@ -930,6 +930,8 @@ namespace EECIP.Controllers
             DataTable dtProject = new DataTable("Project");
             DataTable dtServices = new DataTable("Service");
             DataTable dtSearch = new DataTable("Search");
+            DataTable dtLikes = new DataTable("Likes");
+            DataTable dtLikesF = new DataTable("LikesForum");
 
             List<T_OE_ORGANIZATION> oOrgList = db_Ref.GetT_OE_ORGANIZATION(true, false, null);
 
@@ -1161,7 +1163,7 @@ namespace EECIP.Controllers
                 }
             }
 
-            //******************************USERS ******************************
+            //******************************SEARCH ******************************
             if (exportdata.Contains("Search"))
             {
                 dtSearch.Columns.AddRange(new DataColumn[2] {
@@ -1174,6 +1176,33 @@ namespace EECIP.Controllers
                     dtSearch.Rows.Add(item.LOG_DT, item.LOG_TERM);
             }
 
+            //******************************LIKES ******************************
+            if (exportdata.Contains("Likes"))
+            {
+                dtLikes.Columns.AddRange(new DataColumn[5] {
+                                            new DataColumn("Year"),
+                                            new DataColumn("Month"),
+                                            new DataColumn("Org"),
+                                            new DataColumn("Project"),
+                                            new DataColumn("Likes")
+                                           });
+
+                List<RPT_MON_PROJ_VOTE> _logs = db_EECIP.GetRPT_MON_PROJ_VOTE();
+                foreach (var item in _logs)
+                    dtLikes.Rows.Add(item.YR, item.MON, item.ORG, item.PROJ_NAME, item.CNT);
+
+
+                dtLikesF.Columns.AddRange(new DataColumn[4] {
+                                            new DataColumn("Year"),
+                                            new DataColumn("Month"),
+                                            new DataColumn("Topic"),
+                                            new DataColumn("Likes")
+                                           });
+
+                List<RPT_MON_TOPIC_VOTE> _topics = db_EECIP.GetRPT_MON_TOPIC_VOTE();
+                foreach (var item2 in _topics)
+                    dtLikesF.Rows.Add(item2.YR, item2.MON, item2.Name, item2.CNT);
+            }
 
             DataSet dsExport = new DataSet();
 
@@ -1187,6 +1216,11 @@ namespace EECIP.Controllers
                 dsExport.Tables.Add(dtServices);
             if (dtSearch.Rows.Count > 0)
                 dsExport.Tables.Add(dtSearch);
+            if (dtLikes.Rows.Count>0)
+                dsExport.Tables.Add(dtLikes);
+            if (dtLikesF.Rows.Count > 0)
+                dsExport.Tables.Add(dtLikesF);
+
 
             using (XLWorkbook wb = new XLWorkbook())
             {

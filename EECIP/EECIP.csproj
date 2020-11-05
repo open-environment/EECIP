@@ -221,6 +221,12 @@
     <Compile Include="App_Logic\DataAccessLayer\PostFile.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\RPT_MON_PROJ_VOTE.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\RPT_MON_TOPIC_VOTE.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\SP_DISCUSSION_CREATE_COUNT_Result.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>

@@ -99,6 +99,8 @@
         <AssociationConnector Association="EECIPModel.FK__Topic__Post_Id__7167D3BD" />
         <AssociationConnector Association="EECIPModel.FK__Vote__Post_Id__4707859D" />
         <AssociationConnector Association="EECIPModel.forum_Topic_Post_FK" />
+        <EntityTypeShape EntityType="EECIPModel.RPT_MON_PROJ_VOTE" Width="1.5" PointX="11.25" PointY="0.75" />
+        <EntityTypeShape EntityType="EECIPModel.RPT_MON_TOPIC_VOTE" Width="1.5" PointX="9.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -363,6 +363,10 @@
                                             {
                                                 <span style="font-weight: bold; font-size: 11px;display:block;">Score: @Html.DisplayFor(modelItem => item.Score).ToString().SubStringPlus(0, 5)</span>
                                             }
+                                            @if (item.Document.HasProjectFile == "True")
+                                            {
+                                                <span class="clip-file-2 text-success tooltips" style="font-weight: 900; font-size: 16px; color:green" data-original-title="Project has one or more files." data-placement="" ></span>
+                                            }
                                         </td>
                                         <td style="white-space:normal;">
                                             @Html.DisplayFor(modelItem => item.Document.Agency)

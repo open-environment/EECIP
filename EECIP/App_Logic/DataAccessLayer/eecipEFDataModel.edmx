@@ -572,6 +572,34 @@
           <Property Name="MembershipUser_Id" Type="int" Nullable="false" />
           <Property Name="VotedByMembershipUser_Id" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'EECIP.dbo.RPT_MON_PROJ_VOTE' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RPT_MON_PROJ_VOTE">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+            <PropertyRef Name="YR" />
+            <PropertyRef Name="MON" />
+          </Key>
+          <Property Name="YR" Type="int" Nullable="false" />
+          <Property Name="MON" Type="int" Nullable="false" />
+          <Property Name="PROJECT_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ORG" Type="varchar" MaxLength="200" />
+          <Property Name="PROJ_NAME" Type="varchar" MaxLength="150" />
+          <Property Name="CNT" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="RPT_MON_TOPIC_VOTE">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="YR" />
+            <PropertyRef Name="MON" />
+          </Key>
+          <Property Name="YR" Type="int" Nullable="false" />
+          <Property Name="MON" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="CNT" Type="int" />
+        </EntityType>
         <Association Name="FK__Category__Catego__41B8C09B">
           <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
           <End Role="Category1" Type="Self.Category" Multiplicity="*" />
@@ -584,8 +612,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Favourite__Membe__49E3F248">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
+        <Association Name="FK__Favourite__Membe__3AC1AA49">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Favourite" Type="Self.Favourite" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_USERS">
@@ -636,20 +666,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Membershi__Membe__14B10FFA">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
-          <End Role="MembershipUserPoints" Type="Self.MembershipUserPoints" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_USERS">
-              <PropertyRef Name="USER_IDX" />
-            </Principal>
-            <Dependent Role="MembershipUserPoints">
-              <PropertyRef Name="MembershipUser_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__Membershi__Membe__6E565CE8">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
+        <Association Name="FK__Membershi__Membe__3BB5CE82">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="MembershipUser_Badge" Type="Self.MembershipUser_Badge" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_USERS">
@@ -660,8 +680,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Poll__Membership__44952D46">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
+        <Association Name="FK__Poll__Membership__3D9E16F4">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Poll" Type="Self.Poll" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_USERS">
@@ -684,8 +706,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PollVote__Member__10E07F16">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
+        <Association Name="FK__PollVote__Member__3E923B2D">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="PollVote" Type="Self.PollVote" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_USERS">
@@ -720,8 +744,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PostFile__Member__6497E884">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1" />
+        <Association Name="FK__PostFile__Member__3F865F66">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="PostFile" Type="Self.PostFile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_USERS">
@@ -964,8 +990,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__VOTED__2B5F6B28">
-          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="0..1" />
+        <Association Name="FK__T_OE_PROJ__VOTED__407A839F">
+          <End Role="T_OE_USERS" Type="Self.T_OE_USERS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="T_OE_PROJECT_VOTES" Type="Self.T_OE_PROJECT_VOTES" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="T_OE_USERS">
@@ -1283,11 +1311,29 @@
           <EntitySet Name="Topic_Tags" EntityType="Self.Topic_Tags" Schema="forum" store:Type="Tables" />
           <EntitySet Name="TopicNotification" EntityType="Self.TopicNotification" Schema="forum" store:Type="Tables" />
           <EntitySet Name="Vote" EntityType="Self.Vote" Schema="forum" store:Type="Tables" />
+          <EntitySet Name="RPT_MON_PROJ_VOTE" EntityType="Self.RPT_MON_PROJ_VOTE" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [RPT_MON_PROJ_VOTE].[YR] AS [YR], 
+    [RPT_MON_PROJ_VOTE].[MON] AS [MON], 
+    [RPT_MON_PROJ_VOTE].[PROJECT_IDX] AS [PROJECT_IDX], 
+    [RPT_MON_PROJ_VOTE].[ORG] AS [ORG], 
+    [RPT_MON_PROJ_VOTE].[PROJ_NAME] AS [PROJ_NAME], 
+    [RPT_MON_PROJ_VOTE].[CNT] AS [CNT]
+    FROM [dbo].[RPT_MON_PROJ_VOTE] AS [RPT_MON_PROJ_VOTE]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="RPT_MON_TOPIC_VOTE" EntityType="Self.RPT_MON_TOPIC_VOTE" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [RPT_MON_TOPIC_VOTE].[YR] AS [YR], 
+    [RPT_MON_TOPIC_VOTE].[MON] AS [MON], 
+    [RPT_MON_TOPIC_VOTE].[Name] AS [Name], 
+    [RPT_MON_TOPIC_VOTE].[CNT] AS [CNT]
+    FROM [dbo].[RPT_MON_TOPIC_VOTE] AS [RPT_MON_TOPIC_VOTE]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="Self.FK__Category__Catego__41B8C09B">
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
           </AssociationSet>
-          <AssociationSet Name="FK__Favourite__Membe__49E3F248" Association="Self.FK__Favourite__Membe__49E3F248">
+          <AssociationSet Name="FK__Favourite__Membe__3AC1AA49" Association="Self.FK__Favourite__Membe__3AC1AA49">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Favourite" EntitySet="Favourite" />
           </AssociationSet>
@@ -1303,15 +1349,11 @@
             <End Role="Badge" EntitySet="Badge" />
             <End Role="MembershipUser_Badge" EntitySet="MembershipUser_Badge" />
           </AssociationSet>
-          <AssociationSet Name="FK__Membershi__Membe__14B10FFA" Association="Self.FK__Membershi__Membe__14B10FFA">
-            <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
-            <End Role="MembershipUserPoints" EntitySet="MembershipUserPoints" />
-          </AssociationSet>
-          <AssociationSet Name="FK__Membershi__Membe__6E565CE8" Association="Self.FK__Membershi__Membe__6E565CE8">
+          <AssociationSet Name="FK__Membershi__Membe__3BB5CE82" Association="Self.FK__Membershi__Membe__3BB5CE82">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="MembershipUser_Badge" EntitySet="MembershipUser_Badge" />
           </AssociationSet>
-          <AssociationSet Name="FK__Poll__Membership__44952D46" Association="Self.FK__Poll__Membership__44952D46">
+          <AssociationSet Name="FK__Poll__Membership__3D9E16F4" Association="Self.FK__Poll__Membership__3D9E16F4">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Poll" EntitySet="Poll" />
           </AssociationSet>
@@ -1319,7 +1361,7 @@
             <End Role="Poll" EntitySet="Poll" />
             <End Role="PollAnswer" EntitySet="PollAnswer" />
           </AssociationSet>
-          <AssociationSet Name="FK__PollVote__Member__10E07F16" Association="Self.FK__PollVote__Member__10E07F16">
+          <AssociationSet Name="FK__PollVote__Member__3E923B2D" Association="Self.FK__PollVote__Member__3E923B2D">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="PollVote" EntitySet="PollVote" />
           </AssociationSet>
@@ -1331,7 +1373,7 @@
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="Post" EntitySet="Post" />
           </AssociationSet>
-          <AssociationSet Name="FK__PostFile__Member__6497E884" Association="Self.FK__PostFile__Member__6497E884">
+          <AssociationSet Name="FK__PostFile__Member__3F865F66" Association="Self.FK__PostFile__Member__3F865F66">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="PostFile" EntitySet="PostFile" />
           </AssociationSet>
@@ -1407,7 +1449,7 @@
             <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
             <End Role="T_OE_PROJECT_URLS" EntitySet="T_OE_PROJECT_URLS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__VOTED__2B5F6B28" Association="Self.FK__T_OE_PROJ__VOTED__2B5F6B28">
+          <AssociationSet Name="FK__T_OE_PROJ__VOTED__407A839F" Association="Self.FK__T_OE_PROJ__VOTED__407A839F">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
           </AssociationSet>
@@ -1753,6 +1795,8 @@
             <End Role="Topic" EntitySet="Topics" />
             <End Role="Post" EntitySet="Posts" />
           </AssociationSet>
+          <EntitySet Name="RPT_MON_PROJ_VOTE" EntityType="EECIPModel.RPT_MON_PROJ_VOTE" />
+          <EntitySet Name="RPT_MON_TOPIC_VOTE" EntityType="EECIPModel.RPT_MON_TOPIC_VOTE" />
           </EntityContainer>
         <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
           <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
@@ -3120,6 +3164,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="RPT_MON_PROJ_VOTE">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+            <PropertyRef Name="YR" />
+            <PropertyRef Name="MON" />
+          </Key>
+          <Property Name="YR" Type="Int32" Nullable="false" />
+          <Property Name="MON" Type="Int32" Nullable="false" />
+          <Property Name="PROJECT_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ORG" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PROJ_NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="CNT" Type="Int32" />
+        </EntityType>
+        <EntityType Name="RPT_MON_TOPIC_VOTE">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="YR" />
+            <PropertyRef Name="MON" />
+          </Key>
+          <Property Name="YR" Type="Int32" Nullable="false" />
+          <Property Name="MON" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
+          <Property Name="CNT" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3792,6 +3860,28 @@
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="PostContent" ColumnName="PostContent" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RPT_MON_PROJ_VOTE">
+            <EntityTypeMapping TypeName="EECIPModel.RPT_MON_PROJ_VOTE">
+              <MappingFragment StoreEntitySet="RPT_MON_PROJ_VOTE">
+                <ScalarProperty Name="CNT" ColumnName="CNT" />
+                <ScalarProperty Name="PROJ_NAME" ColumnName="PROJ_NAME" />
+                <ScalarProperty Name="ORG" ColumnName="ORG" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+                <ScalarProperty Name="MON" ColumnName="MON" />
+                <ScalarProperty Name="YR" ColumnName="YR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RPT_MON_TOPIC_VOTE">
+            <EntityTypeMapping TypeName="EECIPModel.RPT_MON_TOPIC_VOTE">
+              <MappingFragment StoreEntitySet="RPT_MON_TOPIC_VOTE">
+                <ScalarProperty Name="CNT" ColumnName="CNT" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MON" ColumnName="MON" />
+                <ScalarProperty Name="YR" ColumnName="YR" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
