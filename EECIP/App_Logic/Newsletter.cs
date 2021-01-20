@@ -29,7 +29,7 @@ namespace EECIP.App_Logic
                                                     E-Enterprise Community Inventory Platform (EECIP)
                                                 </a>
                                             </div>
-                                        <br/><p style='font-family: Helvetica, Arial, sans-serif; margin-left:6px; '>Hello " + user.users.FNAME + @", here are recent updates from the E-Enterprise Community.</p>";
+                                        <br/><p style='font-family: Helvetica, Arial, sans-serif; margin-left:6px; '>Hello " + user.users.FNAME + @", here is a sample of recent updates from the E-Enterprise community. This monthly newsletter is individually generated according to the topics you selected in your profile as areas of expertise or interest. The EECIP site is continuously populated with new user-submitted projects and tags, so please log in to see additional new content, update your subscriptions, and add projects you're working on. Thank you for your interest in EECIP, and have a great day!</p>";
                 
                 string projectSnippet = "";
                 string discussionSnippet = "";

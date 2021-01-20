@@ -136,17 +136,29 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                         + "\r\n\r\n Your username is: " + username
                         + "\r\n\r\n You must activate your account by clicking the following link: "
                         + "\r\n\r\n " + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Account/Verify?oauthcrd=" + encryptOauth
-                        + "\r\n\r\n After verifying your account you will be prompted to enter a permanent password.";
+                        + "\r\n\r\n After verifying your account you will be prompted to enter a permanent password."
+                        + "\r\n\r\n "
+                        + "\r\n\r\n ABOUT EECIP"
+                        + "\r\n\r\n ----------"
+                        + "\r\n\r\n The E - Enterprise Community Inventory Platform (EECIP) is an online community and living project inventory for state, local, tribal, and other environmental agencies and their employees across the United States. This tool was developed under the E-Enterprise for the Environment initiative to support state, tribal, and U.S. EPA staff working to modernize the business of environmental protection.";
+
 
                     //send verification email to user
                     string messageHTML = "<p><b>Welcome to EECIP.</b></p>"
                         + "<p>Your username is: " + username + "</p>"
                         + "<p>You must activate your account by clicking the following link: </p>"
                         + "<p><a href='" + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Account/Verify?oauthcrd=" + encryptOauth + "'>Click Verification Link</a></p>"
-                        + "<p>After verifying your account you will be prompted to enter a permanent password.</p>";
+                        + "<p>After verifying your account you will be prompted to enter a permanent password.</p>"
+                        + "<p></p>"
+                        + "<p>ABOUT EECIP</p>"
+                        + "<p>----------</p>"
+                        + "<p>The E - Enterprise Community Inventory Platform (EECIP) is an online community and living project inventory for state, local, tribal, and other environmental agencies and their employees across the United States. This tool was developed under the E-Enterprise for the Environment initiative to support state, tribal, and U.S. EPA staff working to modernize the business of environmental protection.</p>";
+
 
 
                     bool EmailStatus = Utils.SendEmail(null, email, null, null, "Confirm Your EECIP Account", message, null, "", messageHTML);
+                    db_Ref.InsertT_OE_SYS_EMAIL_LOG(null, email, null, "Confirm Your EECIP Account", "", "Register");
+
 
                     //delete user if the email sending failed
                     if (EmailStatus == false)
@@ -221,13 +233,23 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     string msg = "Your EECIP password has been reset."
                         + "\r\n\r\n Your username is: " + username
                         + "\r\n\r\n You must click the following link to set your permanent password: "
-                        + "\r\n\r\n " + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Account/Verify?oauthcrd=" + encryptOauth;
+                        + "\r\n\r\n " + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Account/Verify?oauthcrd=" + encryptOauth
+                        + "\r\n\r\n "
+                        + "\r\n\r\n ABOUT EECIP"
+                        + "\r\n\r\n ----------"
+                        + "\r\n\r\n The E - Enterprise Community Inventory Platform (EECIP) is an online community and living project inventory for state, local, tribal, and other environmental agencies and their employees across the United States. This tool was developed under the E-Enterprise for the Environment initiative to support state, tribal, and U.S. EPA staff working to modernize the business of environmental protection.";
+
 
                     //send verification email to user
-                    string messageHTML = "<p><b>Your EECIP password has been reset.</b></p>"
+                   string messageHTML = "<p><b>Your EECIP password has been reset.</b></p>"
                         + "<p>Your username is: " + username + "</p>"
                         + "<p>You must click the following link to set your permanent password: </p>"
-                        + "<p><a href='" + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Account/Verify?oauthcrd=" + encryptOauth + "'>Click Verification Link</a></p>";
+                        + "<p><a href='" + db_Ref.GetT_OE_APP_SETTING("PUBLIC_APP_PATH") + "/Account/Verify?oauthcrd=" + encryptOauth + "'>Click Verification Link</a></p>"
+                        + "<p></p>"
+                        + "<p>ABOUT EECIP</p>"
+                        + "<p>----------</p>"
+                        + "<p>The E - Enterprise Community Inventory Platform (EECIP) is an online community and living project inventory for state, local, tribal, and other environmental agencies and their employees across the United States. This tool was developed under the E-Enterprise for the Environment initiative to support state, tribal, and U.S. EPA staff working to modernize the business of environmental protection.</p>";
+
 
                     if (Utils.SendEmail(null, u.EMAIL, null, null, "EECIP Password Reset", msg, null, "", messageHTML))
                         return "Success: Please check your email for password reset instructions.";

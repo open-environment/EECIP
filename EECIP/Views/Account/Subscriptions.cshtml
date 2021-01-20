@@ -38,7 +38,7 @@
                     <br />
 
 
-                    <h4 class="btn-eecip" style="padding:10px;">Subscribe to Promoted Communities of Interest</h4>
+                    <h4 class="btn-eecip" style="padding:10px;">Subscribe to Promoted Tags</h4>
                     @foreach (var item in Model.CommunitiesOfInterest)
                     {
                         <a href="@Url.Action("Subscribe", "Account", new { tag = item.TAG_NAME, sub = (item.Subscribe_ind ? "u" : "") })">
