@@ -1055,7 +1055,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static void LogEFException(Exception ex)
+        public static void LogEFException(Exception ex, string src = "")
         {
             string err = "";
 
@@ -1078,7 +1078,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 err = realerror.Message ?? "";
             }
 
-            InsertT_OE_SYS_LOG("ERROR", err.SubStringPlus(0, 2000));
+            InsertT_OE_SYS_LOG("EF ERROR", src + err.SubStringPlus(0, 1900));
 
         }
 

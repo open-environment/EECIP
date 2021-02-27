@@ -644,9 +644,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     // Sometimes when your Search service is under load, indexing will fail for some of the documents in
                     // the batch. Depending on your application, you can take compensating actions like delaying and
                     // retrying. For this simple demo, we just log the failed document keys and continue.
-                    Console.WriteLine(
-                        "Failed to index some of the documents: {0}",
-                        String.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
+                    db_Ref.InsertT_OE_SYS_LOG("ERROR", "Unable to delete azure search key " + strKey);
+                    db_Ref.InsertT_OE_SYS_LOG("ERROR", string.Join(", ", e.IndexingResults.Where(r => !r.Succeeded).Select(r => r.Key)));
                 }
 
 

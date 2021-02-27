@@ -881,15 +881,18 @@ namespace EECIP.Controllers
                     }
                     else if (ps.DEL_IND == true && ps.T_OE_PROJECT.PROJECT_IDX != null)
                     {
+                        //get listing of orgs for project 
+                        List<T_OE_ORGANIZATION> orgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(ps.T_OE_PROJECT.PROJECT_IDX);
+
                         //delete project
                         int SuccID = db_EECIP.DeleteT_OE_PROJECTS(ps.T_OE_PROJECT.PROJECT_IDX);
                         if (SuccID > 0)
                         {
-                            //SUCCESS - now delete from Azure
-                            List<T_OE_ORGANIZATION> orgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(ps.T_OE_PROJECT.PROJECT_IDX);
+                            //SUCCESS - now delete from Azure                            
                             if (orgs != null)
                             {
                                 foreach (T_OE_ORGANIZATION org in orgs) {
+                                    //db_Ref.InsertT_OE_SYS_LOG("DEBUG", ps.T_OE_PROJECT.PROJECT_IDX.ToString() + "_" + org.ORG_IDX.ToString());
                                     AzureSearch.DeleteSearchIndexKey(ps.T_OE_PROJECT.PROJECT_IDX.ToString() + "_" + org.ORG_IDX.ToString());
                                 }
                             }

@@ -595,20 +595,18 @@ namespace EECIP.Controllers
                 if (model.project != null)
                 {
                     model.ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(id.ConvertOrDefault<Guid>());
-
-                    //T_OE_ORGANIZATION _org = db_Ref.GetT_OE_ORGANIZATION_ByID(model.project.ORG_IDX.ConvertOrDefault<Guid>());
-                    //if (_org != null)
-                    //    model.OrgName = _org.ORG_NAME;
-
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
                     model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Tags");
                     model.sProjectUrlList = db_EECIP.GetT_OE_PROJECTS_URL_ByProjIDX(model.project.PROJECT_IDX);
+
                     T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(model.project.MODIFY_USERIDX ?? model.project.CREATE_USERIDX ?? -1);
                     if (u != null)
                         model.LastUpdatedUser = u.FNAME + " " + u.LNAME;
+
                     model.ProjectVotePoints = db_EECIP.GetT_OE_PROJECT_VOTES_TotalByProject(model.project.PROJECT_IDX);
                     model.HasVoted = db_EECIP.GetT_OE_PROJECT_VOTES_HasVoted(model.project.PROJECT_IDX, UserIDX);
                     model.UserBelongsToProjectAgency = db_Accounts.UserCanEditOrgIDX(db_Accounts.GetUserIDX(), model.project.ORG_IDX.ConvertOrDefault<Guid>());
+
                     //project contact
                     if (model.project.PROJECT_CONTACT_IDX != null)
                     {

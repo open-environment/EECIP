@@ -1597,7 +1597,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     //temp
                     if (ex.InnerException != null)
-                        db_Ref.InsertT_OE_SYS_LOG("ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
+                        db_Ref.InsertT_OE_SYS_LOG("Forum ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
 
                     db_Ref.LogEFException(ex);
                     return 0;
@@ -1624,7 +1624,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     //temp
                     if (ex.InnerException != null)
-                        db_Ref.InsertT_OE_SYS_LOG("ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
+                        db_Ref.InsertT_OE_SYS_LOG("Forum ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
 
 
                     db_Ref.LogEFException(ex);
@@ -2221,7 +2221,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     //temp
                     if (ex.InnerException != null)
-                        db_Ref.InsertT_OE_SYS_LOG("ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
+                        db_Ref.InsertT_OE_SYS_LOG("Form ERROR", ex.InnerException.ToString().SubStringPlus(0, 2000));
 
 
                     db_Ref.LogEFException(ex);

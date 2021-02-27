@@ -1164,6 +1164,15 @@ namespace EECIP.App_Logic.DataAccessLayer
 
                     if (insInd)
                     {
+                        //check if marked for deletion
+                        if (Utils.GetValueOrDefault(colVals, "DELETE_IND") == "Y")
+                        {
+                            e.DEL_IND = true;
+                            e.VALIDATE_CD = false;
+                            e.VALIDATE_MSG += "Marked for deletion but no matching rec found.";
+                            //return e;
+                        }
+
                         e.T_OE_PROJECT.PROJECT_IDX = Guid.NewGuid();
                         e.T_OE_PROJECT.CREATE_DT = System.DateTime.Now;
                         e.T_OE_PROJECT.CREATE_USERIDX = UserIDX;
@@ -1583,11 +1592,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     return (from a in ctx.T_OE_PROJECT_VOTES
                             where a.PROJECT_IDX == ProjectIDX
-                            select a.VOTE_AMOUNT).Sum();
+                            select (int?)a.VOTE_AMOUNT).Sum() ?? 0;
                 }
                 catch (Exception ex)
                 {
-                    db_Ref.LogEFException(ex);
+                    db_Ref.LogEFException(ex, "GetT_OE_PROJECT_VOTES_TotalByProject");
                     return 0;
                 }
             }
@@ -1601,11 +1610,11 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     return (from a in ctx.T_OE_PROJECT_VOTES
                             where a.VOTED_BY_USER_IDX == UserIDX
-                            select a.VOTE_AMOUNT).Sum();
+                            select (int?)a.VOTE_AMOUNT).Sum() ?? 0;
                 }
                 catch (Exception ex)
                 {
-                    db_Ref.LogEFException(ex);
+                    db_Ref.LogEFException(ex, "GetT_OE_PROJECT_VOTES_TotalByUser");
                     return 0;
                 }
             }
@@ -1624,7 +1633,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
                 catch (Exception ex)
                 {
-                    db_Ref.LogEFException(ex);
+                    db_Ref.LogEFException(ex, "GetT_OE_PROJECT_VOTES_HasVoted");
                     return true;
                 }
             }
