@@ -349,8 +349,8 @@ namespace EECIP.Controllers
                         }
 
                         //invalid file extension check
-                        var fileExtension = Path.GetExtension(model.imageBrowes.FileName);
-                        List<string> allowedExtensions = new List<string> { ".jpg", ".jpeg", ".png", ".bmp" };
+                        var fileExtension = Path.GetExtension(model.imageBrowes.FileName).ToUpper();
+                        List<string> allowedExtensions = new List<string> { ".JPG", ".JPEG", ".PNG", ".BMP" };
                         if (!allowedExtensions.Contains(fileExtension))
                         {
                             TempData["Error"] = "Invalid file type";
