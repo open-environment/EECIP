@@ -17,6 +17,9 @@ INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MO
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('NEWSLETTER_NEXT_RUN','5/1/2020 8:00','Next time newsletter will run.',0,GetDate());
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('NEWSLETTER_OVERRIDE','doug.timms@open-environment.org','Override who all newsletters get sent to for testing purposes.',0,GetDate());
 
+INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT],[ENCRYPT_IND]) VALUES ('MAILCHIMP_API','','The API Key for accessing MailChimp integration.',0,GetDate(),1);
+INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('MAILCHIMP_LISTID','','The internal list ID for the mailchimp subscriber list.',0,GetDate());
+
 
 INSERT INTO T_OE_APP_SETTINGS_CUSTOM ([TERMS_AND_CONDITIONS],[ANNOUNCEMENTS]) values ('<p>The access and use of e-Enterprise Community Inventory Platform (EECIP) requires the creation of a user ID and password that I must maintain and keep confidential.</p>	
 <p>By proceeding, you acknowledge that you fully understand and consent to all of the following:</p>	

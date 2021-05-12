@@ -9,6 +9,9 @@ using System.Web.Security;
 using System.IO;
 using System.Data;
 using ClosedXML.Excel;
+using MailChimp.Net.Interfaces;
+using MailChimp.Net;
+using System.Net;
 
 namespace EECIP.Controllers
 {
@@ -68,16 +71,24 @@ namespace EECIP.Controllers
         [HttpPost]
         public JsonResult UserDelete(int id)
         {
-
-            int SuccID = db_Accounts.DeleteT_OE_USERS(id);
-            AzureSearch.DeleteSearchIndexUsers(id);
-            if (SuccID>0)
+            T_OE_USERS _user = db_Accounts.GetT_OE_USERSByIDX(id);
+            if (_user != null)
             {
-                //SUCCESS - now delete user from Azure search
-                return Json("Success");
+                int SuccID = db_Accounts.DeleteT_OE_USERS(id);
+
+                //delete from MailChimp
+                MailChimpHelper _mailchimp = new MailChimpHelper();
+                bool succInd = _mailchimp.RemoveMailChimpContant(_user.EMAIL);
+
+                //delete from Azure Search
+                AzureSearch.DeleteSearchIndexUsers(id);
+                if (SuccID > 0)
+                    return Json("Success");
+                else
+                    return Json("User has been made inactive instead of being deleted due to data in the database.");
             }
             else
-                return Json("User has been made inactive instead of being deleted due to data in the database.");
+                return Json("Cannot find user");
         }
 
 
@@ -182,7 +193,18 @@ namespace EECIP.Controllers
                 return View(model);
         }
 
+        public ActionResult UserChimpSync(int? id)
+        {
 
+            T_OE_USERS _user = db_Accounts.GetT_OE_USERSByIDX(id ?? -1);
+            if (_user != null)
+            {
+                MailChimpHelper _mailchimp = new MailChimpHelper();
+                bool succInd = _mailchimp.AddUpdateMailChimpContact(_user.EMAIL, _user.FNAME, _user.LNAME);
+            }
+
+            return RedirectToAction("Users", "Admin");
+        }
 
         //************************************* SETTINGS ************************************************************
         //GET: /Admin/Settings

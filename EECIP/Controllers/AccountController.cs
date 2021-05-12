@@ -198,6 +198,10 @@ namespace EECIP.Controllers
                             //update first name, last name, and agency
                             db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null, false, true, true, true);
 
+                            //subscribe to MailChimp
+                            MailChimpHelper _mailchimp = new MailChimpHelper();
+                            bool succInd = _mailchimp.AddUpdateMailChimpContact(model.UserName, model.FirstName, model.LastName);
+
                             //redirect user to registration success view
                             return RedirectToAction("RegisterSuccess", "Account");
                         }
@@ -379,6 +383,13 @@ namespace EECIP.Controllers
                         AzureSearch.PopulateSearchIndexUsers(model.UserIDX);
                     else
                         AzureSearch.DeleteSearchIndexUsers(model.UserIDX);
+
+                    //update contact in MailChimp
+                    MailChimpHelper _mailchimp = new MailChimpHelper();
+                    if (model.ActInd)
+                        _mailchimp.AddUpdateMailChimpContact(model.Email, model.FName, model.LName);
+                    else
+                        _mailchimp.RemoveMailChimpContant(model.Email);
 
                     if (SuccID > 0)
                         TempData["Success"] = "Update successful.";
