@@ -137,7 +137,7 @@
           </Key>
           <Property Name="PROJECT_URL_IDX" Type="uniqueidentifier" Nullable="false" />
           <Property Name="PROJECT_IDX" Type="uniqueidentifier" />
-          <Property Name="PROJECT_URL" Type="varchar" MaxLength="200" />
+          <Property Name="PROJECT_URL" Type="varchar" MaxLength="300" />
           <Property Name="PROJ_URL_DESC" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="T_OE_PROJECT_VOTES">
@@ -1942,7 +1942,7 @@ warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a prim
           </Key>
           <Property Name="PROJECT_URL_IDX" Type="Guid" Nullable="false" />
           <Property Name="PROJECT_IDX" Type="Guid" />
-          <Property Name="PROJECT_URL" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_URL" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="PROJ_URL_DESC" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__795DFB40" FromRole="T_OE_PROJECT_URLS" ToRole="T_OE_PROJECTS" />
         </EntityType>
