@@ -236,6 +236,7 @@ INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('Use Amount', 'Amount a feature is used on a project', 'c91010', 0, GetDate());
 INSERT into [T_OE_REF_TAG_CATEGORIES] ([TAG_CAT_NAME],[TAG_CAT_DESCRIPTION],[TAG_CAT_COLOR],[CREATE_USERIDX],[CREATE_DT]) values ('COTS', 'Indicate if a project is developed inhouse or not', 'c91010', 0, GetDate());
 
+insert into T_OE_REF_TAG_CATEGORIES values ('Tags - User Defined', 'Tags created by users when defining their expertise, project attributes, or discussion forum topics.', 'c91010',0,GetDate(),1);
 
 --****************REF_SYNONYMS  *****************************************************************************************
 INSERT into [T_OE_REF_SYNONYMS] (SYNONYM_TEXT, [CREATE_USERIDX], [CREATE_DT]) values ('water quality,wqx,storet',0,GetDate());

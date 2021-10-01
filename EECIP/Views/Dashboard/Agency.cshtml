@@ -114,63 +114,19 @@
             <div class="panel-body" style="min-height:270px">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped m-b-none" data-ride="datatables">
-                                <tr>
-                                    <th style="width:80px"></th>
-                                    <th>Name</th>
-                                    <th>Job Title</th>
-                                    <th>Contact</th>
-                                    <th>More Info</th>
-                                </tr>
 
-                                @foreach (var item in Model.users)
-                                {
+
+                        <div class="table-responsive" style="max-height:260px; overflow-x:hidden;">
+                            <table id="gridData" class="table table-striped table-bordered" data-ride="datatables">
+                                <thead class="thead-inverse">
                                     <tr>
-                                        <td>
-                                            <object data="~/Content/Images/Users/@(item.USER_IDX).png" type="image/png" style="width: 50px;">
-                                                <img class="img-responsive" id="targetImg" src="~/Content/Images/profile.png" alt="No image" />
-                                            </object>
-                                        </td>
-                                        <td>
-
-                                            @Html.DisplayFor(modelItem => item.FNAME)
-                                            &nbsp;
-                                            @Html.DisplayFor(modelItem => item.LNAME)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.JOB_TITLE)
-                                        </td>
-                                        <td>
-                                            @if (item.PHONE != null && item.PHONE.Length > 0)
-                                            {
-                                                <a href="tel:@(item.PHONE)" class="btn btn-xs btn-info">
-                                                    <i class="clip-phone"></i>
-                                                </a>
-                                            }
-                                            <a href="mailto:@(item.EMAIL)" class="btn btn-xs btn-info">
-                                                <i class="glyphicon glyphicon-envelope"></i>
-                                            </a>
-                                            @if (item.LINKEDIN != null)
-                                            {
-                                                <a href="https://www.linkedin.com/in/@(item.LINKEDIN)" class="btn btn-xs btn-info" target="_blank">
-                                                    <i class="clip-linkedin"></i>
-                                                </a>
-                                            }
-                                        </td>
-                                        <td>
-                                            <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.USER_IDX })" class="btn btn-xs btn-info">More Info </a>
-                                            @if (item.ACT_IND == true)
-                                            {
-                                            <a href="#modal-flag" data-toggle="modal" class="btn btn-xs btn-danger modal-flag" data-id="@(item.USER_IDX)">Flag for Removal</a>
-                                            }
-                                            else
-                                            {
-                                                <div class="btn btn-xs btn-light-grey" data-toggle="tooltip" data-placement="top" title="User is no longer active with agency">Inactive</div>
-                                            }
-                                        </td>
+                                        <th ></th>
+                                        <th>Name</th>
+                                        <th>Job Title</th>
+                                        <th>Contact</th>
+                                        <th>More Info</th>
                                     </tr>
-                                }
+                                </thead>
                             </table>
                         </div>
                     </div>
@@ -193,15 +149,17 @@
             <div class="panel-body">
                 <div class="table-responsive">
                     <table class="table table-striped m-b-none" data-ride="datatables">
-                        <tr>
-                            <th style="min-width:70px;"></th>
-                            <th>Enterprise Service</th>
-                            <th>Project Name</th>
-                            <th>Description</th>
-                            <th>Vendor</th>
-                            <th>Current Implementation Status</th>
-                            <th>Contact</th>
-                        </tr>
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th style="min-width:70px;"></th>
+                                <th>Enterprise Service</th>
+                                <th>Project Name</th>
+                                <th>Description</th>
+                                <th>Vendor</th>
+                                <th>Current Implementation Status</th>
+                                <th>Contact</th>
+                            </tr>
+                        </thead>
                         @if (Model.org_ent_services != null)
                         {
 
@@ -354,8 +312,6 @@
     </div>
 </div>
 <!-- END MODAL FORM -->
-
-
 <!-- START MODAL FORM  -->
 <div class="modal fade" id="modal-flag" style="display: none;" aria-hidden="true">
     <div class="modal-dialog">
@@ -395,12 +351,93 @@
 
 
 @section Scripts {
+    @Scripts.Render("~/bundles/datatables")
     @Scripts.Render("~/bundles/confirmdelete")
     @Scripts.Render("~/bundles/select2")
     @Scripts.Render("~/bundles/areyousure")
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            // datatable initialization
+            table = $("#gridData").DataTable({
+                "responsive": true,
+                "serverSide": false,
+                "processing": true,
+                "orderMulti": false,                
+                "paging": false,
+                "info": false,
+                "searching": false,
+                "ajax": {
+                    "url": "@Url.Action("AgencyUserListData", "Dashboard")",
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": function (d) {
+                        return $.extend({}, d, {
+                            "agencyid": $('#agency_ORG_IDX').val(),
+                        });
+                    }
+                },
+                "columnDefs":
+                    [{
+                        "targets": [0],
+                        "orderable" : false
+                        },
+                    ],
+                "columns": [
+                    {
+                        "render": function (data, type, row) {
+                            return '<object data="/Content/Images/Users/' + row.USER_IDX + '.png" type="image/png" style="width: 50px;"><img class="img-responsive" id="targetImg" src="/Content/Images/profile.png" alt="No image" /></object>';
+                        }
+                    },
+                    { "data": "NAME", "name": "NAME", "autoWidth": true },
+                    { "data": "JOB_TITLE", "name": "JOB_TITLE", "autoWidth": true },
+                    {
+                        "render": function (data, type, row) {
+                            var xxx = '<a href="mailto:' + row.EMAIL + '" class="btn btn-xs btn-info"><i class="glyphicon glyphicon-envelope"></i></a>';
+
+                            if (row.PHONE) {
+                                xxx = xxx + '<a href="tel:' + row.PHONE + '" class="btn btn-xs btn-info" style="margin-left:5px;"><i class="clip-phone"></i></a>';
+                            }
+                            if (row.LINKEDIN) {
+                                xxx = xxx + '<a href="https://www.linkedin.com/in/' + row.LINKEDIN + '" class="btn btn-xs btn-info" target="_blank" style="margin-left:5px;"><i class="clip-linkedin"></i></a>';
+                            }
+
+                            return xxx;
+                        }
+                    },
+                    {
+                        "render": function (data, type, row) {
+                            var myUrl = '@Url.Action("UserCard", "Dashboard")/?strid=' + row.USER_IDX;
+                            var xxx = '<a href=\"' + myUrl + '\" class="btn btn-xs btn-info">More Info </a>';
+
+                            if (row.ACT_IND == true)
+                            {
+                                xxx = xxx + '<a data-toggle="modal" data-target="#modal-flag" title="Flag User for Removal" class="btn btn-xs btn-danger modal-flagger" style="margin-left:5px;" data-id="' + row.USER_IDX + '"><i class="glyphicon glyphicon-flag"></i></a>';
+                            }
+                            else
+                            {
+                                xxx = xxx + '<div class="btn btn-xs btn-light-grey" data-toggle="tooltip" data-placement="top" title="User is no longer active with agency" style="margin-left:5px;">Inactive</div>';
+                            }
+
+                            return xxx;
+                        }
+                    }
+                ],
+                "createdRow": function (row, data, dataIndex) {
+                    $('td:eq(0)', row).css('width', '90px');
+                    $('td:eq(0)', row).css('min-width', '90px');
+                    $('td:eq(0)', row).css('padding-right', '0px');
+                    $('td:eq(0)', row).css('white-space', 'nowrap');
+                    $('td:eq(3)', row).css('white-space', 'nowrap');
+                },
+                "drawCallback": function (settings) {
+
+                    $('[data-toggle="tooltip"]').tooltip();
+
+                }
+            });
+
 
             //warn user if leaving unsaved page
             $('form').areYouSure();
@@ -437,11 +474,12 @@
             });
 
 
-            //event when button is clicked to display modal
-            $(".modal-flag").click(function () {
-                console.log($(this).data('id'));
+            //event when button is clicked to display flag user modal
+            $(document).on("click", ".modal-flagger", function () {
                 $('#FlagUserIDX').val($(this).data('id'));
             });
+
+
 
         });
     </script>

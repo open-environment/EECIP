@@ -72,6 +72,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<RPT_MON_PROJ_VOTE> RPT_MON_PROJ_VOTE { get; set; }
         public virtual DbSet<RPT_MON_TOPIC_VOTE> RPT_MON_TOPIC_VOTE { get; set; }
+        public virtual DbSet<USER_DEFINED_TAGS> USER_DEFINED_TAGS { get; set; }
+        public virtual DbSet<STALE_PROJECTS_WITH_CONTACTS> STALE_PROJECTS_WITH_CONTACTS { get; set; }
     
         public virtual ObjectResult<SP_ENT_SVC_COUNT_DISPLAY_Result> SP_ENT_SVC_COUNT_DISPLAY()
         {

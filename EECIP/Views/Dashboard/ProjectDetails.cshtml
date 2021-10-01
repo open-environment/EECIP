@@ -51,7 +51,8 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>Project Description</label>
-                                @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "7" })
+                                @Html.EditorFor(model => model.ProjectRichDesc)
+                                @*@Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "7" })*@
                                 @Html.ValidationMessageFor(model => model.project.PROJ_DESC)
                             </div>
                         </div>

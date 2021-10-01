@@ -872,6 +872,26 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
+        public static List<USER_DEFINED_TAGS> GetT_OE_REF_TAGS_USER()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+
+                    return (from a in ctx.USER_DEFINED_TAGS
+                            orderby a.PROJECT_TAG_NAME, a.UserTagType
+                            select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
         public static IEnumerable<SelectListItem> GetT_OE_REF_TAGS_ByCategory_ProjStatus(bool ExcludeNotUnderConsider)
         {
             using (EECIPEntities ctx = new EECIPEntities())
@@ -1030,6 +1050,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+
 
 
         //*****************SYS_LOG**********************************

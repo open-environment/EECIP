@@ -101,6 +101,8 @@
         <AssociationConnector Association="EECIPModel.forum_Topic_Post_FK" />
         <EntityTypeShape EntityType="EECIPModel.RPT_MON_PROJ_VOTE" Width="1.5" PointX="4.375" PointY="6" />
         <EntityTypeShape EntityType="EECIPModel.RPT_MON_TOPIC_VOTE" Width="1.5" PointX="0.5" PointY="7.5" />
+        <EntityTypeShape EntityType="EECIPModel.USER_DEFINED_TAGS" Width="1.5" PointX="3.375" PointY="9.75" />
+        <EntityTypeShape EntityType="EECIPModel.STALE_PROJECTS_WITH_CONTACTS" Width="1.5" PointX="5.375" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

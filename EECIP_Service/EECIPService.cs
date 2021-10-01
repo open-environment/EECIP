@@ -83,7 +83,7 @@ namespace EECIP_Service
                         foreach (UserDisplayType _user in _users)
                         {
                             string emailBody = emailTemplate.Replace("[Name]", _user.users.FNAME + " " + _user.users.LNAME);
-
+                            ;
                             //send email
                             Utils.SendEmail(null, _user.users.EMAIL, cclist, null, "Welcome to EECIP!", emailBody, null, null, emailBody);
                             db_Ref.InsertT_OE_SYS_EMAIL_LOG(null, _user.users.EMAIL, null, "Welcome to EECIP!", emailBody, "Welcome");
@@ -108,21 +108,28 @@ namespace EECIP_Service
                 DateTime? _next = _nextstr.ConvertOrDefault<DateTime?>();
                 if (_next != null & _next < System.DateTime.Now)
                 {
-                    General.WriteToFile("Time to generate newsletter");
-
-                    //update next run time
-                    string _newnext =System.DateTime.Now.AddMonths(1).ToString("MM/dd/yyyy HH:mm");
-                    //db_Ref.InsertUpdateT_OE_APP_SETTING(null, "NEWSLETTER_NEXT_RUN", _newnext, false, null);
+                    General.WriteToFile("Time to generate newsletter, later than: " + _nextstr);
 
                     string _tooverride = db_Ref.GetT_OE_APP_SETTING("NEWSLETTER_OVERRIDE") ?? "";
 
                     //generate and email newsletter
-                    //List<string> _results = EECIP.App_Logic.NewsletterClass.generateNewsletter(_tooverride.Length > 0 ? _tooverride : null);
-                    //foreach (string _res in _results)
-                    //{
-                    //    General.WriteToFile("Newsletter email sent to " + _res);
-                    //}
+                    List<string> _results = EECIP.App_Logic.NewsletterClass.generateNewsletter(String.IsNullOrEmpty(_tooverride) ? null : _tooverride);
+                    foreach (string _res in _results)
+                    {
+                        General.WriteToFile("Newsletter email sent to " + _res); ;
+                    }
+
+                    //update next run time
+                    string _newnext = System.DateTime.Now.AddMonths(1).ToString("MM/dd/yyyy HH:mm");
+                    db_Ref.InsertUpdateT_OE_APP_SETTING(null, "NEWSLETTER_NEXT_RUN", _newnext, false, null);
+             
                 }
+
+
+                //**********************************************************************************************
+                //***************************NUDGE TO UPDATE STALE PROJECTS*************************************
+                //**********************************************************************************************
+
 
 
                 General.WriteToFile("EECIP task ran.");

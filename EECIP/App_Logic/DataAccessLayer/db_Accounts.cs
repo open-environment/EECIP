@@ -11,6 +11,18 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string ORG_NAME { get; set; }
     }
 
+    public class UserDisplayLightType
+    {
+        public int USER_IDX { get; set; }
+        public string USER_ID { get; set; }
+        public string NAME { get; set; }
+        public string EMAIL { get; set; }
+        public string PHONE { get; set; }
+        public string JOB_TITLE { get; set; }
+        public bool ACT_IND { get; set; }
+        public string LINKEDIN { get; set; }
+    }
+
 
     public class db_Accounts
     {
@@ -208,6 +220,34 @@ namespace EECIP.App_Logic.DataAccessLayer
                             where a.ORG_IDX == OrgID
                             orderby a.LNAME
                             select a).ToList();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
+        public static List<UserDisplayLightType> GetT_OE_USERSByAgencyLight(Guid OrgID)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    return (from a in ctx.T_OE_USERS
+                            where a.ORG_IDX == OrgID
+                            orderby a.LNAME
+                            select new UserDisplayLightType {
+                                USER_IDX = a.USER_IDX,
+                                USER_ID = a.USER_ID,
+                                NAME = a.FNAME + " " + a.LNAME,
+                                EMAIL = a.EMAIL,
+                                PHONE = a.PHONE,
+                                JOB_TITLE = a.JOB_TITLE,
+                                ACT_IND = a.ACT_IND,
+                                LINKEDIN = a.LINKEDIN
+                            }).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -455,6 +495,24 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     db_Ref.LogEFException(ex);
                     return null;
+                }
+            }
+        }
+
+        public static int UpdateT_OE_USER_EXPERTISE(string prevTag, string newTag)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    ctx.Database.ExecuteSqlCommand("UPDATE T_OE_USER_EXPERTISE set EXPERTISE_TAG = '" + newTag + "' where EXPERTISE_TAG = '" + prevTag + "'");
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
                 }
             }
         }

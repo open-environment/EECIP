@@ -954,7 +954,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, int? mEDIA_TAG, int? sTART_YEAR,
+        public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, string pROJ_DESC_HTML, int? mEDIA_TAG, int? sTART_YEAR,
             string pROJ_STATUS, int? dATE_LAST_UPDATE, string rECORD_SOURCE, string pROJECT_URL, int? mOBILE_IND, string mOBILE_DESC, int? aDV_MON_IND, 
             string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, string pROJECT_CONTACT, int? pROJECT_CONTACT_IDX, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
             string iMPORT_ID = null, bool markUpdated = false)
@@ -997,6 +997,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     //if (oRG_IDX != null) e.ORG_IDX = oRG_IDX.ConvertOrDefault<Guid>();
                     if (pROJ_NAME != null) e.PROJ_NAME = pROJ_NAME;
                     if (pROJ_DESC != null) e.PROJ_DESC = pROJ_DESC;
+                    if (pROJ_DESC_HTML != null) e.PROJ_DESC_HTML = pROJ_DESC_HTML;
                     if (mEDIA_TAG != null) e.MEDIA_TAG = mEDIA_TAG;
                     if (sTART_YEAR != null) e.START_YEAR = sTART_YEAR;
                     if (sTART_YEAR == -1) e.START_YEAR = null;  //handling blanking out
@@ -1114,6 +1115,26 @@ namespace EECIP.App_Logic.DataAccessLayer
                 {
                     db_Ref.LogEFException(ex);
                     return 0;
+                }
+            }
+        }
+
+        public static List<STALE_PROJECTS_WITH_CONTACTS> GetStaleProjects()
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    var xxx = (from a in ctx.STALE_PROJECTS_WITH_CONTACTS
+                               orderby a.ORG, a.PROJ_NAME
+                               select a).ToList();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
                 }
             }
         }
@@ -1581,6 +1602,24 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+
+        public static int UpdateT_OE_PROJECT_TAGS(string prevTag, string newTag)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    ctx.Database.ExecuteSqlCommand("UPDATE T_OE_PROJECT_TAGS set PROJECT_TAG_NAME = '" + newTag + "' where PROJECT_TAG_NAME = '" + prevTag + "'");
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
 
 
         //***************************PROJECT VOTES****************************************

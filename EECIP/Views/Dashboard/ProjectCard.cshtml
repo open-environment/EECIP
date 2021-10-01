@@ -160,7 +160,8 @@
             </div>
             <div class="panel-body">
                 <div id="desc">
-                    @Html.Raw(Model.project.PROJ_DESC)
+                    @Model.project.PROJECT_CONTACT
+                    @Html.Raw(WebUtility.HtmlDecode(Model.project.PROJ_DESC_HTML))
                 </div>
             </div>
         </section>
@@ -341,7 +342,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         //automatically add links to description
-        $('#desc').html(anchorme($('#desc').text(), {}));
+       // $('#desc').html(anchorme($('#desc').text(), {}));
         $('#projUrl').html(anchorme($('#projUrl').text(), {}));
 
         //upvoting event handling

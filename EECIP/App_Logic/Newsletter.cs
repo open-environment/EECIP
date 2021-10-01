@@ -10,6 +10,8 @@ namespace EECIP.App_Logic
 
         public static List<string> generateNewsletter(string emailOverride)
         {
+            if ((emailOverride ?? "").Length < 3) emailOverride = null;
+
             List<string> results = new List<string>();
 
             

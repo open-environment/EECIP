@@ -1,0 +1,31 @@
+﻿<script src="@Url.Content("~/scripts/tinymce/tinymce.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+
+    tinymce.init({
+        selector: "textarea.rte",
+        browser_spellcheck: true,
+        branding: false,
+        plugins: [ "link lists"],
+        toolbar1: "bold italic underline bullist | link unlink ",
+        remove_linebreaks: false,
+
+        relative_urls: false,
+        remove_script_host: false,
+        convert_urls: true,
+
+        menubar: false,
+        toolbar_items_size: 'small',
+        height: 150,
+        nonbreaking_force_tab: true,
+        setup: function (ed) {
+            ed.on('change', function (e) {
+                $('#norepostform').trigger('dirty.areYouSure');
+            });
+        }
+    });
+
+</script>
+
+<div class="tinymceholder">
+    @Html.TextArea(string.Empty, new { @class = "rte" })
+</div>

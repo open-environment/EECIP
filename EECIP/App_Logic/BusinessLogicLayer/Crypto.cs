@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
@@ -12,7 +13,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
     public class SimpleAES
     {
         //get key value from config file 
-        private static byte[] key = Convert.FromBase64String(WebConfigurationManager.AppSettings["AESEncryptionKey"]);
+        private static byte[] key = Convert.FromBase64String(ConfigurationManager.AppSettings["AESEncryptionKey"]);
         private static byte[] vector = { 146, 64, 191, 111, 23, 3, 113, 119, 231, 121, 221, 112, 79, 32, 114, 156 };
         private ICryptoTransform encryptor, decryptor;
         private UTF8Encoding encoder;

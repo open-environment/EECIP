@@ -7,6 +7,7 @@ using Microsoft.Azure.Search.Models;
 using System.Linq;
 using System.ComponentModel;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace EECIP.Models
 {
@@ -149,6 +150,12 @@ namespace EECIP.Models
         public List<T_OE_DOCUMENTS> files_existing { get; set; }
         public string FileDescription { get; set; }
         public string ReturnURL { get; set; }
+
+        [DisplayName("Project Description")]
+        [UIHint("limitededitor"), AllowHtml]
+        [StringLength(6000)]
+        public string ProjectRichDesc { get; set; }
+
 
         public vmDashboardProjectDetails()
         {

@@ -1754,6 +1754,24 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static int UpdateTopicTagsBulk(string prevTag, string newTag)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    ctx.Database.ExecuteSqlCommand("UPDATE [forum].[Topic_Tags] set TopicTag = '" + newTag + "' where TopicTag = '" + prevTag + "'");
+
+                    return 1;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return 0;
+                }
+            }
+        }
+
 
 
         //************************************TOPIC NOTIFICATION **************************************************

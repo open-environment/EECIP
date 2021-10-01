@@ -260,7 +260,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                             foreach (EECIP_Index p in _ps)
                             {
                                 Guid proj_idx = Guid.Parse(p.KeyID.SubStringPlus(0,36));
-                                db_EECIP.InsertUpdatetT_OE_PROJECTS(proj_idx, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
+                                db_EECIP.InsertUpdatetT_OE_PROJECTS(proj_idx, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
                                     null, null, null, null, null, true, true, null, null, false);
                             }
 

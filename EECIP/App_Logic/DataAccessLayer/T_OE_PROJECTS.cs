@@ -51,6 +51,8 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string IMPORT_ID { get; set; }
         public string PROJECT_CONTACT { get; set; }
         public Nullable<int> PROJECT_CONTACT_IDX { get; set; }
+        public string PROJ_DESC_HTML { get; set; }
+        public Nullable<System.DateTime> LAST_NOTIFY_DT { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_DOCUMENTS> T_OE_DOCUMENTS { get; set; }

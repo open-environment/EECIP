@@ -1,0 +1,135 @@
+﻿@model EECIP.Models.vmAdminRefTagsUser
+@{
+    ViewBag.Title = "User Defined Tags";
+    ViewBag.SubTitle = "Manage tags defined by users that are not part of global tag list.";
+}
+
+<!-- render the main content -->
+@using (Html.BeginForm("RefTags", "Admin", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    <div class="form-group">
+        <label class="col-sm-2 control-label">
+            Tag Category:
+        </label>
+        <div class="col-sm-6">
+            @Html.DropDownListFor(model => model.sel_tag_cat, Model.ddl_tag_cats, "", new { @class = "form-control", @onchange = "document.location.href = '/Admin/RefTags?selTag=' + this.options[this.selectedIndex].value;" })
+            <span class="help-block"><i class="clip-question"></i>Tags created by users when defining their expertise, project attributes, or discussion forum topics.</span>
+        </div>
+    </div>
+}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <section class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table table-striped m-b-none" data-ride="datatables">
+                        <tr>
+                            <th>Tag Name</th>
+                            <th>Tag Area</th>
+                            <th>Count</th>
+                            <th style="min-width: 70px;">Merge</th>
+                        </tr>
+                        @foreach (var item in Model.user_tags)
+                        {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PROJECT_TAG_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UserTagType)
+                            </td>
+                            <td>
+                                <a href="@Html.Raw(Url.Action("Search","Dashboard", new { facetTags= item.PROJECT_TAG_NAME, activeTab = 1, currentPage = 1  }))" target="_blank" >
+                                    @Html.DisplayFor(modelItem => item.CNT)
+                                </a>
+                            </td>
+                            <td>
+                                <a href="#modal-form" class="btn btn-rounded btn-xs btn-info modal-it" data-toggle="modal" data-tag="@item.PROJECT_TAG_NAME" data-cat="@item.UserTagType"><i class="glyphicon glyphicon-pencil"></i> Merge</a>
+                            </td>
+                        </tr>
+                        }
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+
+
+
+<!-- START MODAL FORM  -->
+<div class="modal fade" id="modal-form" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("RefTagUserMerge", "Admin", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-title">Merge Tag</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-block alert-success fade in">
+                        <p>
+                            Change all instances of the user tag below to an already existing standard tag.
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 ">
+                            <div class="panel-body">
+                                <h4>From</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>User Tag Name</label>
+                                            @Html.TextBoxFor(model => model.edit_tag, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Tag Category</label>
+                                            @Html.TextBoxFor(model => model.edit_tag_cat, new { @class = "form-control", @readonly = "readonly" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4>To</h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Standard Tag</label>
+                                            @Html.DropDownListFor(model => model.edit_new_tag, Model.ddl_tags, "", new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="picLoc" type="submit" class="btn btn-sm btn-primary">Save</button>
+                    <button type="submit" class="btn btn-sm btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<!-- END MODAL FORM -->
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".modal-it").click(function () {
+
+                $('#edit_tag').val($(this).data('tag'));
+                $('#edit_tag_cat').val($(this).data('cat'));
+                $('#edit_new_tag').val($(this).data('tag'));
+            });
+
+
+        });
+    </script>
+}

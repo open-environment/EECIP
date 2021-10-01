@@ -117,6 +117,29 @@ namespace EECIP.Models
         }
     }
 
+    public class vmAdminRefTagsUser
+    {
+        public List<USER_DEFINED_TAGS> user_tags { get; set; }
+        public IEnumerable<SelectListItem> ddl_tag_cats { get; set; }
+        public IEnumerable<SelectListItem> ddl_tags { get; set; }
+        public string sel_tag_cat { get; set; }
+
+
+        public string edit_tag { get; set; }
+        public string edit_tag_cat { get; set; }
+        public string edit_new_tag { get; set; }
+
+
+
+        //INITIALIZE
+        public vmAdminRefTagsUser()
+        {
+            ddl_tag_cats = ddlHelpers.get_ddl_tag_cats();
+            ddl_tags = ddlHelpers.get_ddl_tags_by_category_stringy("Tags");
+
+        }
+    }
+
     public class vmAdminRefBadges
     {
         public List<Badge> _badge { get; set; }

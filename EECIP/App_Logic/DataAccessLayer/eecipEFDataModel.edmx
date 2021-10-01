@@ -182,6 +182,8 @@
           <Property Name="IMPORT_ID" Type="varchar" MaxLength="20" />
           <Property Name="PROJECT_CONTACT" Type="varchar" MaxLength="100" />
           <Property Name="PROJECT_CONTACT_IDX" Type="int" />
+          <Property Name="PROJ_DESC_HTML" Type="varchar(max)" />
+          <Property Name="LAST_NOTIFY_DT" Type="datetime2" Precision="0" />
         </EntityType>
         <EntityType Name="T_OE_REF_EMAIL_TEMPLATE">
           <Key>
@@ -598,6 +600,37 @@ warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a prim
           <Property Name="YR" Type="int" Nullable="false" />
           <Property Name="MON" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="450" Nullable="false" />
+          <Property Name="CNT" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'EECIP.dbo.STALE_PROJECTS_WITH_CONTACTS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="STALE_PROJECTS_WITH_CONTACTS">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+            <PropertyRef Name="FNAME" />
+            <PropertyRef Name="LNAME" />
+          </Key>
+          <Property Name="PROJECT_IDX" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PROJ_NAME" Type="varchar" MaxLength="150" />
+          <Property Name="PROJ_STATUS" Type="varchar" MaxLength="100" />
+          <Property Name="ORG" Type="varchar" MaxLength="200" />
+          <Property Name="FNAME" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="LNAME" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="EMAIL" Type="varchar" MaxLength="150" />
+          <Property Name="CREAT_UPDATE_DT" Type="datetime2" Precision="0" />
+          <Property Name="LAST_NOTIFY_DT" Type="datetime2" Precision="0" />
+          <Property Name="TRU_LAST_DT" Type="datetime2" Precision="0" />
+          <Property Name="TRU_NEXT_DT" Type="datetime2" Precision="0" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="USER_DEFINED_TAGS">
+          <Key>
+            <PropertyRef Name="PROJECT_TAG_NAME" />
+            <PropertyRef Name="UserTagType" />
+          </Key>
+          <Property Name="PROJECT_TAG_NAME" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserTagType" Type="varchar" MaxLength="11" Nullable="false" />
           <Property Name="CNT" Type="int" />
         </EntityType>
         <Association Name="FK__Category__Catego__41B8C09B">
@@ -1329,6 +1362,28 @@ warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a prim
     [RPT_MON_TOPIC_VOTE].[CNT] AS [CNT]
     FROM [dbo].[RPT_MON_TOPIC_VOTE] AS [RPT_MON_TOPIC_VOTE]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="STALE_PROJECTS_WITH_CONTACTS" EntityType="Self.STALE_PROJECTS_WITH_CONTACTS" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [STALE_PROJECTS_WITH_CONTACTS].[PROJECT_IDX] AS [PROJECT_IDX], 
+    [STALE_PROJECTS_WITH_CONTACTS].[PROJ_NAME] AS [PROJ_NAME], 
+    [STALE_PROJECTS_WITH_CONTACTS].[PROJ_STATUS] AS [PROJ_STATUS], 
+    [STALE_PROJECTS_WITH_CONTACTS].[ORG] AS [ORG], 
+    [STALE_PROJECTS_WITH_CONTACTS].[FNAME] AS [FNAME], 
+    [STALE_PROJECTS_WITH_CONTACTS].[LNAME] AS [LNAME], 
+    [STALE_PROJECTS_WITH_CONTACTS].[EMAIL] AS [EMAIL], 
+    [STALE_PROJECTS_WITH_CONTACTS].[CREAT_UPDATE_DT] AS [CREAT_UPDATE_DT], 
+    [STALE_PROJECTS_WITH_CONTACTS].[LAST_NOTIFY_DT] AS [LAST_NOTIFY_DT], 
+    [STALE_PROJECTS_WITH_CONTACTS].[TRU_LAST_DT] AS [TRU_LAST_DT], 
+    [STALE_PROJECTS_WITH_CONTACTS].[TRU_NEXT_DT] AS [TRU_NEXT_DT]
+    FROM [dbo].[STALE_PROJECTS_WITH_CONTACTS] AS [STALE_PROJECTS_WITH_CONTACTS]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="USER_DEFINED_TAGS" EntityType="Self.USER_DEFINED_TAGS" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [USER_DEFINED_TAGS].[PROJECT_TAG_NAME] AS [PROJECT_TAG_NAME], 
+    [USER_DEFINED_TAGS].[UserTagType] AS [UserTagType], 
+    [USER_DEFINED_TAGS].[CNT] AS [CNT]
+    FROM [dbo].[USER_DEFINED_TAGS] AS [USER_DEFINED_TAGS]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK__Category__Catego__41B8C09B" Association="Self.FK__Category__Catego__41B8C09B">
             <End Role="Category" EntitySet="Category" />
             <End Role="Category1" EntitySet="Category" />
@@ -1797,6 +1852,8 @@ warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a prim
           </AssociationSet>
           <EntitySet Name="RPT_MON_PROJ_VOTE" EntityType="EECIPModel.RPT_MON_PROJ_VOTE" />
           <EntitySet Name="RPT_MON_TOPIC_VOTE" EntityType="EECIPModel.RPT_MON_TOPIC_VOTE" />
+          <EntitySet Name="USER_DEFINED_TAGS" EntityType="EECIPModel.USER_DEFINED_TAGS" />
+          <EntitySet Name="STALE_PROJECTS_WITH_CONTACTS" EntityType="EECIPModel.STALE_PROJECTS_WITH_CONTACTS" />
           </EntityContainer>
         <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
           <Property Type="Int32" Name="ENT_PLATFORM_IDX" Nullable="false" />
@@ -2001,6 +2058,8 @@ warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a prim
           <NavigationProperty Name="T_OE_REF_TAGS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <NavigationProperty Name="T_OE_REF_TAGS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
           <NavigationProperty Name="T_OE_PROJECT_ORGS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_ORGS" />
+          <Property Name="PROJ_DESC_HTML" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="LAST_NOTIFY_DT" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
           <Key>
@@ -3188,6 +3247,33 @@ warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a prim
           <Property Name="Name" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="true" />
           <Property Name="CNT" Type="Int32" />
         </EntityType>
+        <EntityType Name="USER_DEFINED_TAGS">
+          <Key>
+            <PropertyRef Name="PROJECT_TAG_NAME" />
+            <PropertyRef Name="UserTagType" />
+          </Key>
+          <Property Name="PROJECT_TAG_NAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UserTagType" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+          <Property Name="CNT" Type="Int32" />
+        </EntityType>
+        <EntityType Name="STALE_PROJECTS_WITH_CONTACTS">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+            <PropertyRef Name="FNAME" />
+            <PropertyRef Name="LNAME" />
+          </Key>
+          <Property Name="PROJECT_IDX" Type="Guid" Nullable="false" />
+          <Property Name="PROJ_NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="PROJ_STATUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ORG" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="FNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="LNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="EMAIL" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="CREAT_UPDATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="LAST_NOTIFY_DT" Type="DateTime" Precision="0" />
+          <Property Name="TRU_LAST_DT" Type="DateTime" Precision="0" />
+          <Property Name="TRU_NEXT_DT" Type="DateTime" Precision="0" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3347,6 +3433,8 @@ warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a prim
           <EntitySetMapping Name="T_OE_PROJECTS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECTS">
               <MappingFragment StoreEntitySet="T_OE_PROJECTS">
+                <ScalarProperty Name="LAST_NOTIFY_DT" ColumnName="LAST_NOTIFY_DT" />
+                <ScalarProperty Name="PROJ_DESC_HTML" ColumnName="PROJ_DESC_HTML" />
                 <ScalarProperty Name="PROJECT_CONTACT_IDX" ColumnName="PROJECT_CONTACT_IDX" />
                 <ScalarProperty Name="PROJECT_CONTACT" ColumnName="PROJECT_CONTACT" />
                 <ScalarProperty Name="IMPORT_ID" ColumnName="IMPORT_ID" />
@@ -3882,6 +3970,32 @@ warning 6002: The table/view 'EECIP.dbo.RPT_MON_TOPIC_VOTE' does not have a prim
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="MON" ColumnName="MON" />
                 <ScalarProperty Name="YR" ColumnName="YR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USER_DEFINED_TAGS">
+            <EntityTypeMapping TypeName="EECIPModel.USER_DEFINED_TAGS">
+              <MappingFragment StoreEntitySet="USER_DEFINED_TAGS">
+                <ScalarProperty Name="CNT" ColumnName="CNT" />
+                <ScalarProperty Name="UserTagType" ColumnName="UserTagType" />
+                <ScalarProperty Name="PROJECT_TAG_NAME" ColumnName="PROJECT_TAG_NAME" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="STALE_PROJECTS_WITH_CONTACTS">
+            <EntityTypeMapping TypeName="EECIPModel.STALE_PROJECTS_WITH_CONTACTS">
+              <MappingFragment StoreEntitySet="STALE_PROJECTS_WITH_CONTACTS">
+                <ScalarProperty Name="TRU_NEXT_DT" ColumnName="TRU_NEXT_DT" />
+                <ScalarProperty Name="TRU_LAST_DT" ColumnName="TRU_LAST_DT" />
+                <ScalarProperty Name="LAST_NOTIFY_DT" ColumnName="LAST_NOTIFY_DT" />
+                <ScalarProperty Name="CREAT_UPDATE_DT" ColumnName="CREAT_UPDATE_DT" />
+                <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="LNAME" ColumnName="LNAME" />
+                <ScalarProperty Name="FNAME" ColumnName="FNAME" />
+                <ScalarProperty Name="ORG" ColumnName="ORG" />
+                <ScalarProperty Name="PROJ_STATUS" ColumnName="PROJ_STATUS" />
+                <ScalarProperty Name="PROJ_NAME" ColumnName="PROJ_NAME" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

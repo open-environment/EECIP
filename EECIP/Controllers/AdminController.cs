@@ -441,6 +441,10 @@ namespace EECIP.Controllers
         // GET: /Admin/RefTags
         public ActionResult RefTags(string selTag)
         {
+            //redirect to user tag page if that selected
+            if (selTag == "Tags - User Defined")
+                return RedirectToAction("RefTagsUser");
+
             var model = new vmAdminRefTags
             {
                 tags = db_Ref.GetT_OE_REF_TAGS_ByCategory(selTag),
@@ -455,6 +459,17 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+
+        public ActionResult RefTagsUser()
+        {
+            var model = new vmAdminRefTagsUser
+            {
+                user_tags = db_Ref.GetT_OE_REF_TAGS_USER(),
+                sel_tag_cat = "Tags - User Defined"
+            };
+
+            return View(model);
+        }
 
         // POST: /Admin/RefTagEdit
         [HttpPost, ValidateAntiForgeryToken]
@@ -473,6 +488,32 @@ namespace EECIP.Controllers
             return RedirectToAction("RefTags", new { selTag = model.sel_tag_cat });
 
         }
+
+
+        // POST: /Admin/RefTagEdit
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult RefTagUserMerge(vmAdminRefTagsUser model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+            int SuccID = 0;
+            if (model.edit_tag_cat == "Project")
+                SuccID = db_EECIP.UpdateT_OE_PROJECT_TAGS(model.edit_tag, model.edit_new_tag);
+            else if (model.edit_tag_cat == "Expertise")
+                SuccID = db_Accounts.UpdateT_OE_USER_EXPERTISE(model.edit_tag, model.edit_new_tag);
+            else if (model.edit_tag_cat == "Forum Topic")
+                SuccID = db_Forum.UpdateTopicTagsBulk(model.edit_tag, model.edit_new_tag);
+
+
+            if (SuccID > 0)
+                TempData["Success"] = "Update successful.";
+            else
+                TempData["Error"] = "Error updating data.";
+
+            //return View(model);
+            return RedirectToAction("RefTagsUser");
+
+        }
+
 
 
 
@@ -868,7 +909,7 @@ namespace EECIP.Controllers
 
                         //import projects
                         T_OE_PROJECTS x = ps.T_OE_PROJECT;
-                        Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, null, x.PROJ_NAME, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS,
+                        Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, null, x.PROJ_NAME, x.PROJ_DESC, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS,
                             x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
                             x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, -1, true, false, UserIDX, x.IMPORT_ID, true);
 
@@ -958,6 +999,9 @@ namespace EECIP.Controllers
             DataTable dtLikes = new DataTable("Likes");
             DataTable dtLikesF = new DataTable("LikesForum");
 
+            DataTable dtUserTags = new DataTable("UserTags");
+            DataTable dtStaleProjects = new DataTable("StaleProjects");
+
             List<T_OE_ORGANIZATION> oOrgList = db_Ref.GetT_OE_ORGANIZATION(true, false, null);
 
 
@@ -965,7 +1009,7 @@ namespace EECIP.Controllers
             //******************************USERS ******************************
             if (exportdata.Contains("Users"))
             {
-                dtUsers.Columns.AddRange(new DataColumn[10] {
+                dtUsers.Columns.AddRange(new DataColumn[11] {
                                             new DataColumn("User IDX"),
                                             new DataColumn("Agency"),
                                             new DataColumn("Email"),
@@ -975,13 +1019,14 @@ namespace EECIP.Controllers
                                             new DataColumn("Phone"),
                                             new DataColumn("Title"),
                                             new DataColumn("Create Date"),
-                                            new DataColumn("Last Modify Date")
+                                            new DataColumn("Last Modify Date"),
+                                            new DataColumn("Status")
                                            });
 
                 List<UserDisplayType> _users = db_Accounts.GetT_OE_USERS();
                 foreach (var item in _users)
                     dtUsers.Rows.Add(item.users.USER_IDX, item.ORG_NAME, item.users.EMAIL, item.users.FNAME, item.users.LNAME, item.users.LASTLOGIN_DT, item.users.PHONE,
-                        item.users.JOB_TITLE, item.users.CREATE_DT, item.users.MODIFY_DT);
+                        item.users.JOB_TITLE, item.users.CREATE_DT, item.users.MODIFY_DT, item.users.ACT_IND);
             }
 
 
@@ -1229,6 +1274,40 @@ namespace EECIP.Controllers
                     dtLikesF.Rows.Add(item2.YR, item2.MON, item2.Name, item2.CNT);
             }
 
+
+            //******************************USER DEFINED TAGS ******************************
+            if (exportdata.Contains("UserTags"))
+            {
+                dtUserTags.Columns.AddRange(new DataColumn[3] {
+                                            new DataColumn("Tag"),
+                                            new DataColumn("Tag Type"),
+                                            new DataColumn("Count")
+                                           });
+
+                List<USER_DEFINED_TAGS> _tags = db_Ref.GetT_OE_REF_TAGS_USER();
+                foreach (var item in _tags)
+                    dtUserTags.Rows.Add(item.PROJECT_TAG_NAME, item.UserTagType, item.CNT);
+            }
+
+
+            //******************************STALE PROJECTS ******************************
+            if (exportdata.Contains("StaleProjects"))
+            {
+                dtStaleProjects.Columns.AddRange(new DataColumn[7] {
+                                            new DataColumn("Organization"),
+                                            new DataColumn("Project Name"),
+                                            new DataColumn("Project Status"),
+                                            new DataColumn("Contact First"),
+                                            new DataColumn("Contact Last"),
+                                            new DataColumn("Contact Email"),
+                                            new DataColumn("Last Update or Notification Date")
+                                           });
+
+                List<STALE_PROJECTS_WITH_CONTACTS> _stale = db_EECIP.GetStaleProjects();
+                foreach (var item in _stale)
+                    dtStaleProjects.Rows.Add(item.ORG, item.PROJ_NAME, item.PROJ_STATUS, item.FNAME, item.LNAME, item.EMAIL, item.TRU_LAST_DT);
+            }
+
             DataSet dsExport = new DataSet();
 
             if (dtUsers.Rows.Count > 0)
@@ -1245,31 +1324,41 @@ namespace EECIP.Controllers
                 dsExport.Tables.Add(dtLikes);
             if (dtLikesF.Rows.Count > 0)
                 dsExport.Tables.Add(dtLikesF);
+            if (dtUserTags.Rows.Count > 0)
+                dsExport.Tables.Add(dtUserTags);
+            if (dtStaleProjects.Rows.Count > 0)
+                dsExport.Tables.Add(dtStaleProjects);
 
-
-            using (XLWorkbook wb = new XLWorkbook())
+            if (dsExport.Tables.Count > 0)
             {
-                wb.Worksheets.Add(dsExport);
-                wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                wb.Style.Font.Bold = true;
-
-                Response.Clear();
-                Response.Buffer = true;
-                Response.Charset = "";
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment;filename= EECIP_DataExport.xlsx");
-
-                using (MemoryStream MyMemoryStream = new MemoryStream())
+                using (XLWorkbook wb = new XLWorkbook())
                 {
-                    wb.SaveAs(MyMemoryStream);
-                    MyMemoryStream.WriteTo(Response.OutputStream);
+                    wb.Worksheets.Add(dsExport);
+                    wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    wb.Style.Font.Bold = true;
 
-                    Response.Flush();
-                    Response.End();
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.Charset = "";
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;filename= EECIP_DataExport.xlsx");
+
+                    using (MemoryStream MyMemoryStream = new MemoryStream())
+                    {
+                        wb.SaveAs(MyMemoryStream);
+                        MyMemoryStream.WriteTo(Response.OutputStream);
+
+                        Response.Flush();
+                        Response.End();
+                    }
                 }
+                return View();
             }
-           
-            return View();
+            else
+            {
+                TempData["Error"] = "No data to export.";
+                return RedirectToAction("ExportData");
+            }
         }
 
        

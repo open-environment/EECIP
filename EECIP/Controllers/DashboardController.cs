@@ -137,7 +137,7 @@ namespace EECIP.Controllers
             var model = new vmDashboardAgency
             {
                 agency = db_Ref.GetT_OE_ORGANIZATION_ByID(agency),
-                users = db_Accounts.GetT_OE_USERSByAgency(agency),
+                //users = db_Accounts.GetT_OE_USERSByAgency(agency),
                 //database
                 SelectedDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByOrgAttribute(agency, "Database"),
                 AllDatabase = db_Ref.GetT_OE_ORGANIZATION_TAGS_ByAttributeAll(agency, "Database").Select(x => new SelectListItem { Value = x, Text = x }),
@@ -151,6 +151,20 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public JsonResult AgencyUserListData()
+        {
+            var id = Request.Form.GetValues("agencyid")?.FirstOrDefault();
+            if (id != null)
+            {
+                Guid idg = new Guid(id);
+                var draw = Request.Form.GetValues("draw")?.FirstOrDefault();
+                var data = db_Accounts.GetT_OE_USERSByAgencyLight(idg);
+                return Json(new { draw, recordsFiltered = data.Count(), recordsTotal = data.Count(), data = data });
+            }
+            else
+                return null;
+        }
 
         // POST: /Dashboard/AgencyEdit
         [HttpPost, ValidateAntiForgeryToken]
@@ -264,9 +278,9 @@ namespace EECIP.Controllers
         {
             if (model.FlagUserIDX != null && model.agency.ORG_IDX != null)
             {
-                int UserIDX = db_Accounts.GetUserIDX();
 
                 //get flagging user
+                int UserIDX = db_Accounts.GetUserIDX();
                 T_OE_USERS flaggingUser = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
 
                 //get flagged user
@@ -348,7 +362,7 @@ namespace EECIP.Controllers
 
             //CHECK PERMISSIONS
             if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(UserIDX, _ProjectOrgs))
-                db_EECIP.InsertUpdatetT_OE_PROJECTS(id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+                db_EECIP.InsertUpdatetT_OE_PROJECTS(id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
                     null, null, null, true, null, UserIDX, null, true);
 
                 return RedirectToAction("ProjectReview", "Dashboard");
@@ -396,6 +410,10 @@ namespace EECIP.Controllers
                 }
                 else
                 {
+                    //rich text display
+                    model.ProjectRichDesc = model.project.PROJ_DESC_HTML;
+
+                    //project orgs
                     model.ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(id.ConvertOrDefault<Guid>());
 
                     //should be existing case
@@ -447,9 +465,20 @@ namespace EECIP.Controllers
             //CHECK PERMISSIONS
             if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(UserIDX, model.ProjectOrgs))
             {
+                //plain text version of project description
+                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                doc.LoadHtml(model.ProjectRichDesc);
+                string projDescPlain = "";
+                foreach (HtmlAgilityPack.HtmlNode node in doc.DocumentNode.SelectNodes("//text()"))
+                    projDescPlain += node.InnerText;
+
+                //determine record source 
+                if (db_Accounts.UserCanEditOrgList(UserIDX, model.ProjectOrgs))
+                    model.project.RECORD_SOURCE = "Agency supplied";
+
                 //update project data
                 Guid? newProjID = db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, null, model.project.PROJ_NAME ?? "",
-                    model.project.PROJ_DESC ?? "", model.project.MEDIA_TAG, model.project.START_YEAR ?? -1, model.project.PROJ_STATUS ?? "",
+                    projDescPlain, model.ProjectRichDesc ?? "", model.project.MEDIA_TAG, model.project.START_YEAR ?? -1, model.project.PROJ_STATUS ?? "",
                     model.project.DATE_LAST_UPDATE ?? -1, model.project.RECORD_SOURCE ?? "", model.project.PROJECT_URL ?? "", model.project.MOBILE_IND,
                     model.project.MOBILE_DESC ?? "", model.project.ADV_MON_IND, model.project.ADV_MON_DESC ?? "", model.project.BP_MODERN_IND,
                     model.project.BP_MODERN_DESC ?? "", model.project.COTS ?? "", model.project.VENDOR ?? "", model.project.PROJECT_CONTACT ?? "", model.project.PROJECT_CONTACT_IDX ?? -1, true, false, UserIDX, null, true);
@@ -807,7 +836,7 @@ namespace EECIP.Controllers
                         db_EECIP.InsertUpdateT_OE_PROJECT_ORGS(model.project.PROJECT_IDX, model.selAgency.ConvertOrDefault<Guid>(), UserIDX);
 
                         //now update the Azure search
-                        db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, false);
+                        db_EECIP.InsertUpdatetT_OE_PROJECTS(model.project.PROJECT_IDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, false);
                         AzureSearch.PopulateSearchIndexProject(model.project.PROJECT_IDX);
 
                         TempData["Success"] = "Update successful.";
@@ -852,7 +881,7 @@ namespace EECIP.Controllers
                             {
                                 //SUCCESS - now delete from Azure
                                 //now update the Azure search
-                                db_EECIP.InsertUpdatetT_OE_PROJECTS(projIDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, false);
+                                db_EECIP.InsertUpdatetT_OE_PROJECTS(projIDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, true, false);
                                 AzureSearch.DeleteSearchIndexKey(id2 + "_" + id);
                                 return Json("Success");
                             }

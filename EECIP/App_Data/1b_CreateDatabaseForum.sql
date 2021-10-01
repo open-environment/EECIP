@@ -354,3 +354,24 @@ GO
   and P.Topic_Id = T.Id
   group by T.Name, YEAR(V.DateVoted), MONTH(V.DateVoted)
   --order by YEAR(V.DateVoted), MONTH(V.DateVoted)
+
+  GO
+  
+   CREATE VIEW USER_DEFINED_TAGS AS
+  SELECT Z.PROJECT_TAG_NAME, Z.UserTagType, Z.CNT
+  from 
+  (select PROJECT_TAG_NAME, COUNT(*) as CNT, 'Project' as 'UserTagType'
+  from [T_OE_PROJECT_TAGS] PT left join T_OE_REF_TAGS RT on PT.PROJECT_TAG_NAME=RT.TAG_NAME and RT.TAG_CAT_NAME='Tags'
+  where RT.TAG_IDX is null
+  group by PROJECT_TAG_NAME
+  UNION ALL
+  select [EXPERTISE_TAG], COUNT(*) as CNT, 'Expertise' as 'UserTagType'
+  from [dbo].[T_OE_USER_EXPERTISE] PT left join T_OE_REF_TAGS RT on PT.[EXPERTISE_TAG]=RT.TAG_NAME and RT.TAG_CAT_NAME='Tags'
+  where RT.TAG_IDX is null
+  group by [EXPERTISE_TAG]
+  UNION ALL
+  select [TopicTag], COUNT(*)as CNT, 'Forum Topic'  as 'UserTagType'
+  from [forum].[Topic_Tags] PT left join T_OE_REF_TAGS RT on PT.[TopicTag]=RT.TAG_NAME and RT.TAG_CAT_NAME='Tags'
+  where RT.TAG_IDX is null
+  group by [TopicTag]
+  ) Z

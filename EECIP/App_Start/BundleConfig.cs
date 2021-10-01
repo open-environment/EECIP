@@ -30,8 +30,14 @@ namespace EECIP
             bundles.Add(new ScriptBundle("~/bundles/trunk8").Include("~/Scripts/trunk8.js"));
             bundles.Add(new ScriptBundle("~/bundles/areyousure").Include("~/Scripts/jquery.are-you-sure.js"));
             bundles.Add(new ScriptBundle("~/bundles/chart").Include("~/Scripts/Chart.bundle.js"));
-
             bundles.Add(new ScriptBundle("~/bundles/introjs").Include("~/Scripts/intro.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+                "~/Scripts/dataTables/jquery.dataTables.min.js",
+                "~/Scripts/dataTables/dataTables.bootstrap.min.js",
+                "~/Scripts/dataTables/plugins/dataTables.select.min.js",
+                "~/Scripts/dataTables/plugins/moment.js",
+                "~/Scripts/dataTables/plugins/datetime.js"));
 
 
             //****************** CSS ***********************************

@@ -266,6 +266,9 @@
     <Compile Include="App_Logic\DataAccessLayer\SP_RECENT_FORUM_FALLBACK_Result.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\STALE_PROJECTS_WITH_CONTACTS.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Logic\DataAccessLayer\Topic.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
@@ -360,6 +363,9 @@
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Logic\DataAccessLayer\T_OE_USER_ROLES.cs">
+      <DependentUpon>eecipEFDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Logic\DataAccessLayer\USER_DEFINED_TAGS.cs">
       <DependentUpon>eecipEFDataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Logic\DataAccessLayer\Vote.cs">
@@ -566,6 +572,13 @@
     <Content Include="Scripts\Chart.bundle.min.js" />
     <Content Include="Scripts\clip-main.js" />
     <Content Include="Scripts\confirm_delete.js" />
+    <Content Include="Scripts\dataTables\dataTables.bootstrap.min.css" />
+    <Content Include="Scripts\dataTables\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\dataTables\jquery.dataTables.min.js" />
+    <Content Include="Scripts\dataTables\plugins\dataTables.select.min.js" />
+    <Content Include="Scripts\dataTables\plugins\datetime.js" />
+    <Content Include="Scripts\dataTables\plugins\moment.js" />
+    <Content Include="Scripts\dataTables\plugins\select.bootstrap.min.css" />
     <Content Include="Scripts\i18n\af.js" />
     <Content Include="Scripts\i18n\ar.js" />
     <Content Include="Scripts\i18n\az.js" />
@@ -884,6 +897,8 @@
     <Content Include="Views\Admin\Newsletter.cshtml" />
     <Content Include="Views\Home\Unsubscribe.cshtml" />
     <Content Include="Views\Dashboard\EnterpriseSvcAgencies.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\limitededitor.cshtml" />
+    <Content Include="Views\Admin\RefTagsUser.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
