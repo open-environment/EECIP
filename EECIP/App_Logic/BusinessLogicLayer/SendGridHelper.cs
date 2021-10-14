@@ -51,7 +51,10 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 if (response.StatusCode == HttpStatusCode.Accepted)
                     return true;
                 else
+                {
+                    db_Ref.InsertT_OE_SYS_LOG("SENDGRID", response.StatusCode.ToString() + ":" + response.Body.ToString().SubStringPlus(1,1900));
                     return false;
+                }
                 //************************************************************************************
 
             }

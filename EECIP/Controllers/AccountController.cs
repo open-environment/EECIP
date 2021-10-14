@@ -426,10 +426,14 @@ namespace EECIP.Controllers
                     TempData[SuccInd.Substring(0, 5) != "Error" ? "Success" : "Error"] = SuccInd;
                     return View();
                 }
+                else
+                    db_Ref.InsertT_OE_SYS_LOG("EMAIL ERR", "Unable to retrieve user with email: " + model.Email);
             }
+            else
+                db_Ref.InsertT_OE_SYS_LOG("EMAIL ERR", "Model state not valid sending reset email to: " + model.Email);
 
             //if got this far, error
-            TempData["Error"] = "Error resetting password.";
+            TempData["Error"] = "Error resetting EECIP password.";
             return View();
         }
 

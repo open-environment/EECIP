@@ -899,6 +899,7 @@
     <Content Include="Views\Dashboard\EnterpriseSvcAgencies.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\limitededitor.cshtml" />
     <Content Include="Views\Admin\RefTagsUser.cshtml" />
+    <Content Include="Views\Admin\TestSendEmail.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -588,7 +588,33 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+        public ActionResult TestSendEmail()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public ActionResult TestSendEmail2()
+        {
+            try
+            {
+                int? id = db_Accounts.GetUserIDX();
+                T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(id ?? 0);
+                if (u != null)
+                {
+                    if (Utils.SendEmail(null, u.EMAIL, null, null, "EECIP Test", "test message", null, "", "test message"))
+                        TempData["Success"] = "Success";
+                    else
+                        TempData["Error"] = "Error, view system log for details";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.ToString().SubStringPlus(0, 100);
+            }
+
+            return View("TestSendEmail");
+        }
 
         //*************************************** SEARCH ADMIN **********************************************************
         // GET: /Admin/SearchAdmin
