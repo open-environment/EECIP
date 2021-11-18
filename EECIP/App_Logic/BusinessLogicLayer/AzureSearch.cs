@@ -123,8 +123,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
                 var freshnessFunction = new FreshnessScoringFunction() {
                     FieldName = "LastUpdated",
-                    Boost = 20,
-                    Parameters = new FreshnessScoringParameters(new TimeSpan(180, 0, 0, 0)),
+                    Boost = 5,
+                    Parameters = new FreshnessScoringParameters(new TimeSpan(365, 0, 0, 0)),
                     Interpolation = ScoringFunctionInterpolation.Linear
                 };
                 // Assigns the freshness function to the scoring profile
@@ -137,7 +137,8 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     Name = "eecip",
                     Fields = FieldBuilder.BuildForType<EECIP_Index>(),
                     Suggesters = new List<Suggester> { sg },
-                    ScoringProfiles = new List<ScoringProfile>() { sp }
+                    ScoringProfiles = new List<ScoringProfile>() { sp },
+                    DefaultScoringProfile = "date_scoring"
                 };
 
                 serviceClient.Indexes.Create(definition);
