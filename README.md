@@ -6,8 +6,8 @@ The E-Enterprise Community Inventory Platform is an online community and living 
 **Version 1.8 (December 2021)**
 - Add "likes" to search results
 - Add ability to sort search results by Agency, Type, and # of likes
+- Add admin tools to manage user-defined tags
 
-## Change Log
 **Version 1.7 (November 2020)**
 - Add more data export options
 - Add ability to bulk delete projects
