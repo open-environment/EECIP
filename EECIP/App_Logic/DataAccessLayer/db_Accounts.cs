@@ -482,7 +482,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    PersonLinkedIn = a.LINKEDIN,
                                    Population_Density = x1.POP_DENSITY,
                                    EPA_Region = o.EPA_REGION.ToString(),
-                                   LastUpdated = a.MODIFY_DT ?? a.CREATE_DT
+                                   LastUpdated = null// a.MODIFY_DT ?? a.CREATE_DT
                                }).ToList();
 
                     foreach (EECIP_Index e in xxx)

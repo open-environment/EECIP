@@ -22,12 +22,14 @@
                         <section class="panel panel-default">
                             <div class="table-responsive">
                                 <table class="table table-striped m-b-none" data-ride="datatables">
-                                    <tr>
-                                        <th>Log ID</th>
-                                        <th>Date</th>
-                                        <th>Type</th>
-                                        <th>Message</th>
-                                    </tr>
+                                    <thead class="thead-inverse">
+                                        <tr>
+                                            <th>Log ID</th>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th>Message</th>
+                                        </tr>
+                                    </thead>
 
                                     @foreach (var item in Model.T_OE_SYS_LOG)
                                     {
@@ -72,12 +74,14 @@
                         <section class="panel panel-default">
                             <div class="table-responsive">
                                 <table class="table table-striped m-b-none" data-ride="datatables">
-                                    <tr>
-                                        <th>Email Date</th>
-                                        <th>From</th>
-                                        <th>To</th>
-                                        <th>Subject</th>
-                                    </tr>
+                                    <thead class="thead-inverse">
+                                        <tr>
+                                            <th>Email Date</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Subject</th>
+                                        </tr>
+                                    </thead>
 
                                     @foreach (var item in Model.T_OE_SYS_EMAIL_LOG)
                                     {

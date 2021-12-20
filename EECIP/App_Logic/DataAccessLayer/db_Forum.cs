@@ -1561,7 +1561,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                    Record_Source = "User supplied",
                                    Name = a.Name,
                                    Description = u.FNAME + " " + u.LNAME + ": " + b.PostContent,
-                                   LastUpdated = b.DateEdited
+                                   LastUpdated = b.DateEdited,
+                                   LikeCount = (from vv in ctx.Votes where vv.Post_Id == b.Id select vv).Count()
                                }).Take(250).ToList();
 
                     foreach (EECIP_Index e in xxx)

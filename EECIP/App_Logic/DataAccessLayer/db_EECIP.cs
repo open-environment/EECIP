@@ -915,7 +915,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                                 EPA_Region = o.EPA_REGION.ToString(),
                                 Status = a.PROJ_STATUS,
                                 LastUpdated = a.MODIFY_DT ?? a.CREATE_DT,
-                                HasProjectFile = (from  pp in ctx.T_OE_DOCUMENTS where pp.PROJECT_IDX == a.PROJECT_IDX select a).Any().ToString()
+                                HasProjectFile = (from  pp in ctx.T_OE_DOCUMENTS where pp.PROJECT_IDX == a.PROJECT_IDX select a).Any().ToString(),
+                                LikeCount = (from vv in ctx.T_OE_PROJECT_VOTES where vv.PROJECT_IDX == a.PROJECT_IDX select vv).Count()
                             }).Take(50).ToList();
 
                     foreach (EECIP_Index e in xxx)

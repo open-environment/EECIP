@@ -40,23 +40,25 @@
             <div class="panel-body">
                 <div class="table-responsive" style="max-height:700px;">
                     <table class="table table-hover table-striped m-b-none" data-ride="datatables">
-                        <tr>
-                            <th></th>
-                            @if (!User.IsInRole("ReadOnly"))
-                            {
-                                <th>Delete<input type="checkbox" id="checkAll" /></th>
-                            }
-                            <th>Project Name</th>
-                            <th>Description</th>
-                            <th>Media</th>
-                            <th>Start Year</th>
-                            <th>Status</th>
-                            <th>Record Source</th>
-                            <th>Program Area</th>
-                            <th>Tags</th>
-                            <th>More Info</th>
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th></th>
+                                @if (!User.IsInRole("ReadOnly"))
+                                {
+                                    <th>Delete<input type="checkbox" id="checkAll" /></th>
+                                }
+                                <th>Project Name</th>
+                                <th>Description</th>
+                                <th>Media</th>
+                                <th>Start Year</th>
+                                <th>Status</th>
+                                <th>Record Source</th>
+                                <th>Program Area</th>
+                                <th>Tags</th>
+                                <th>More Info</th>
+                            </tr>
+                        </thead>
 
-                        </tr>
                         @foreach (var item in Model.projects)
                         {
                             <tr>

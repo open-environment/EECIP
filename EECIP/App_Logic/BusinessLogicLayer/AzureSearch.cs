@@ -18,7 +18,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
         [IsFilterable]
         public string KeyID { get; set; }
 
-        [IsFilterable, IsFacetable]
+        [IsFilterable, IsFacetable, IsSortable]
         public string DataType { get; set; }
 
         [IsFilterable, IsFacetable, IsSortable]
@@ -74,6 +74,10 @@ namespace EECIP.App_Logic.BusinessLogicLayer
 
         [IsSearchable, IsFilterable, IsFacetable]
         public string HasProjectFile { get; set; }
+
+        [IsSortable]
+        public int? LikeCount { get; set; }
+
     }
 
 
@@ -713,7 +717,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                     Top = 50,
                     Skip = ((currentPage ?? 1) - 1) * 50,
                     Facets = new List<string> { "DataType", "State,count:100,sort:value", "OrgType", "Tags,count:100", "Status", "Record_Source", "Media", "EPA_Region", "Population_Density" },
-                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State", "OrgType", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn", "LastUpdated", "HasProjectFile" },
+                    Select = new[] { "KeyID", "DataType", "Record_Source", "Agency", "State", "OrgType", "Name", "Description", "Media", "Tags", "Status", "PersonPhone", "PersonEmail", "PersonLinkedIn", "LastUpdated", "HasProjectFile", "LikeCount" },
                     IncludeTotalResultCount = true
                 };
 
@@ -782,7 +786,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 };
 
                 //project/discussion toggle
-                parameters.Filter = "DataType eq '" + dataTypeFacet + "' and LastUpdated ge 2018-01-01";
+                parameters.Filter = "DataType eq '" + dataTypeFacet + "' and LastUpdated ge 2021-01-01";
 
                 //sort handling
                 parameters.OrderBy = new List<string>() { "LastUpdated desc" };

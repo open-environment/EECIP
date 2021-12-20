@@ -53,7 +53,10 @@ namespace EECIP
                 "~/Content/auto-complete.css",
                 "~/Content/toastr.css",
                 "~/Content/introjs.min.css",
-                "~/Content/site.css"));
+                "~/Content/site.css",
+                "~/Scripts/dataTables/plugins/select.bootstrap.min.css",
+                "~/Scripts/dataTables/dataTables.bootstrap.min.css"
+                ));
         }
     }
 }

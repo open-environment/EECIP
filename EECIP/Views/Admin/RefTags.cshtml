@@ -28,12 +28,14 @@
             <section class="panel panel-default">
                 <div class="table-responsive">
                     <table class="table table-striped m-b-none" data-ride="datatables">
-                        <tr>
-                            <th style="min-width: 70px;">Edit</th>
-                            <th>Tag Name</th>
-                            <th>Description</th>
-                            <th>Tag Category</th>
-                        </tr>
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th style="min-width: 70px;">Edit</th>
+                                <th>Tag Name</th>
+                                <th>Description</th>
+                                <th>Tag Category</th>
+                            </tr>
+                        </thead>
                         @foreach (var item in Model.tags)
                         {
                         <tr>

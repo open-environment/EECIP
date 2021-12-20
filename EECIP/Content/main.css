@@ -1558,7 +1558,7 @@ span.star:before {
 /*	Tabs
  /* ---------------------------------------------------------------------- */
 .tabbable {
-	margin-bottom: 15px;
+	margin-bottom: 0px;
 }
 .nav-tabs {
 	border-color: #DDDDDD;

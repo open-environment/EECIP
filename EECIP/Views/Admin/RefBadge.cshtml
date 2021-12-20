@@ -10,15 +10,17 @@
         <section class="panel panel-default">
             <div class="table-responsive">
                 <table class="table table-striped m-b-none" data-ride="datatables">
-                    <tr>
-                        <th style="min-width: 70px;">Edit</th>
-                        <th>Image</th>
-                        <th>Type</th>
-                        <th>Name</th>
-                        <th>Display Name</th>
-                        <th>Description</th>
-                        <th>Awards Points</th>
-                    </tr>
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th style="min-width: 70px;">Edit</th>
+                            <th>Image</th>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Display Name</th>
+                            <th>Description</th>
+                            <th>Awards Points</th>
+                        </tr>
+                    </thead>
 
                     @foreach (var item in Model._badge)
                     {

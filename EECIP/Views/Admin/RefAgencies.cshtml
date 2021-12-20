@@ -10,14 +10,16 @@
         <section class="panel panel-default">
             <div class="table-responsive">
                 <table class="table table-striped m-b-none" data-ride="datatables">
-                    <tr>
-                        <th>Edit</th>
-                        <th>Agency Name</th>
-                        <th>Agency Abbreviation</th>
-                        <th>Type</th>
-                        <th>State</th>
-                        <th>Region</th>
-                    </tr>
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Edit</th>
+                            <th>Agency Name</th>
+                            <th>Agency Abbreviation</th>
+                            <th>Type</th>
+                            <th>State</th>
+                            <th>Region</th>
+                        </tr>
+                    </thead>
 
                     @foreach (var item in Model.agencies)
                     {

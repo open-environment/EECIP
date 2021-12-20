@@ -11,12 +11,14 @@
         <section class="panel panel-default">
             <div class="table-responsive">
                 <table class="table table-striped m-b-none" data-ride="datatables">
-                    <tr>
-                        <th></th>
-                        <th>Role ID</th>
-                        <th>Role Name</th>
-                        <th>Role Desc</th>
-                    </tr>
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th></th>
+                            <th>Role ID</th>
+                            <th>Role Name</th>
+                            <th>Role Desc</th>
+                        </tr>
+                    </thead>
 
                     @foreach (var item in Model)
                     {

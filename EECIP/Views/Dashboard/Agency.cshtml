@@ -7,6 +7,7 @@
     ViewBag.SubTitle = "";
     ViewBag.ShowTour = true;
 }
+
 @if (User.IsInRole("Admins"))
 {
     <div class="row">
@@ -120,7 +121,7 @@
                             <table id="gridData" class="table table-striped table-bordered" data-ride="datatables">
                                 <thead class="thead-inverse">
                                     <tr>
-                                        <th ></th>
+                                        <th></th>
                                         <th>Name</th>
                                         <th>Job Title</th>
                                         <th>Contact</th>
@@ -364,9 +365,10 @@
                 "responsive": true,
                 "serverSide": false,
                 "processing": true,
-                "orderMulti": false,                
+                "orderMulti": false,
                 "paging": false,
                 "info": false,
+                "order": [[1, "asc"]],
                 "searching": false,
                 "ajax": {
                     "url": "@Url.Action("AgencyUserListData", "Dashboard")",
@@ -404,7 +406,7 @@
                             }
 
                             return xxx;
-                        }
+                        }, "orderable": false
                     },
                     {
                         "render": function (data, type, row) {
@@ -421,7 +423,7 @@
                             }
 
                             return xxx;
-                        }
+                        }, "orderable": false
                     }
                 ],
                 "createdRow": function (row, data, dataIndex) {

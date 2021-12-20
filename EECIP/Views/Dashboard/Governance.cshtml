@@ -69,19 +69,20 @@ else
                     <div class="panel-body">
                         <div class="table-responsive" style="max-height:700px;">
                             <table class="table table-striped m-b-none" data-ride="datatables">
-                                <tr>
-                                    <th></th>
-                                    <th>Project Name</th>
-                                    <th>Description</th>
-                                    <th>Media</th>
-                                    <th>Start Year</th>
-                                    <th>Status</th>
-                                    <th>Record Source</th>
-                                    <th>Program Area</th>
-                                    <th>Tags</th>
-                                    <th>More Info</th>
-                                </tr>
-
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th></th>
+                                        <th>Project Name</th>
+                                        <th>Description</th>
+                                        <th>Media</th>
+                                        <th>Start Year</th>
+                                        <th>Status</th>
+                                        <th>Record Source</th>
+                                        <th>Program Area</th>
+                                        <th>Tags</th>
+                                        <th>More Info</th>
+                                    </tr>
+                                </thead>
 
                                 @foreach (var item in Model.projects)
                                 {

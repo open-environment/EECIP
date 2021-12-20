@@ -23,12 +23,14 @@
                         <section class="panel panel-default">
                             <div class="table-responsive">
                                 <table class="table table-striped m-b-none" data-ride="datatables">
-                                    <tr>
-                                        <th>Edit</th>
-                                        <th>Setting Name</th>
-                                        <th>Setting Description</th>
-                                        <th>Setting Value</th>
-                                    </tr>
+                                    <thead class="thead-inverse">
+                                        <tr>
+                                            <th>Edit</th>
+                                            <th>Setting Name</th>
+                                            <th>Setting Description</th>
+                                            <th>Setting Value</th>
+                                        </tr>
+                                    </thead>
 
                                     @foreach (var item in Model.app_settings)
                                     {

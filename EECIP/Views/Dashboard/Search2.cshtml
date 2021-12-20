@@ -9,7 +9,7 @@
     ViewBag.ShowTour = true;
 }
 
-@using (Html.BeginForm("Search", "Dashboard", FormMethod.Get, new { @id = "norepostform" }))
+@using (Html.BeginForm("Search2", "Dashboard", FormMethod.Get, new { @id = "norepostform" }))
 {
     <!-- start: PAGE TITLE AND SEARCH BAR -->
     <div class="row">
@@ -57,7 +57,7 @@
         <!-- ******************************* LEFT PANEL FACETS **********************************-->
         @if (Model.searchResults != null)
         {
-            
+
             <button id="btnDataFilter" class="col-sm-2 btn btn-primary btn-xs visible-xs" style="margin-left:20px;margin-bottom:5px;">Show Data Filters</button>
             <div id="leftFacets" class="col-sm-2 hidden-xs">
                 <div>
@@ -226,43 +226,31 @@
                 {
 
                     <div class="table-responsive">
+                        @*<table id="gridData" class="table table-striped table-bordered" data-ride="datatables">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Agency</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Record Source</th>
+                                    <th>Media</th>
+                                    <th>Status</th>
+                                    <th>Tags</th>
+                                    <th>Likes</th>
+                                    <th>Last Updated</th>
+                                </tr>
+                            </thead>
+                        </table>*@
                         <table class="table table-striped table-hover m-b-none" data-ride="datatables">
                             <thead class="thead-inverse">
                                 <tr>
-                                    <th>
-                                        <a href="#" class="col-header" data-id="DataType" data-default-sort-dir="0">
-                                            Type @if (Model.sortType == "DataType")
-                                            {
-                                                if (Model.sortDir == "1")
-                                                {
-                                                    <i class="clip-arrow-up"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="clip-arrow-down"></i>
-                                                }
-                                            }
-                                        </a>
-                                    </th>
-                                    <th>
-                                        <a href="#" class="col-header" data-id="Agency" data-default-sort-dir="0">
-                                            Agency @if (Model.sortType == "Agency")
-                                            {
-                                                if (Model.sortDir == "1")
-                                                {
-                                                    <i class="clip-arrow-up"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="clip-arrow-down"></i>
-                                                }
-                                            }
-                                        </a>
-                                    </th>
+                                    <th>Type</th>
+                                    <th>Agency</th>
                                     @if (Model.activeTab != "5")
                                     {
                                         <th>
-                                            <a href="#" class="col-header" data-id="Name" data-default-sort-dir="0">
+                                            <a href="#" class="col-header" data-id="Name">
                                                 Name @if (Model.sortType == "Name")
                                                 {
                                                     if (Model.sortDir == "1")
@@ -278,7 +266,7 @@
                                         </th>
                                     }
                                     <th>
-                                        <a href="#" class="col-header" data-id="Description" data-default-sort-dir="0">
+                                        <a href="#" class="col-header" data-id="Description">
                                             Description @if (Model.sortType == "Description")
                                             {
                                                 if (Model.sortDir == "1")
@@ -295,7 +283,7 @@
                                     @if (Model.activeTab != "5" && Model.activeTab != "7")
                                     {
                                         <th>
-                                            <a href="#" class="col-header" data-id="Record_Source" data-default-sort-dir="0">
+                                            <a href="#" class="col-header" data-id="Record_Source">
                                                 Record Source @if (Model.sortType == "Record_Source")
                                                 {
                                                     if (Model.sortDir == "1")
@@ -310,7 +298,7 @@
                                             </a>
                                         </th>
                                         <th>
-                                            <a href="#" class="col-header" data-id="Media" data-default-sort-dir="0">
+                                            <a href="#" class="col-header" data-id="Media">
                                                 Media @if (Model.sortType == "Media")
                                                 {
                                                     if (Model.sortDir == "1")
@@ -325,7 +313,7 @@
                                             </a>
                                         </th>
                                         <th>
-                                            <a href="#" class="col-header" data-id="Status" data-default-sort-dir="0">
+                                            <a href="#" class="col-header" data-id="Status">
                                                 Status @if (Model.sortType == "Status")
                                                 {
                                                     if (Model.sortDir == "1")
@@ -341,21 +329,6 @@
                                         </th>
                                     }
                                     <th>Tags</th>
-                                    <th>
-                                        <a href="#" class="col-header" data-id="LikeCount" data-default-sort-dir="1">
-                                            Likes @if (Model.sortType == "LikeCount")
-                                            {
-                                                if (Model.sortDir == "1")
-                                                {
-                                                    <i class="clip-arrow-up"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="clip-arrow-down"></i>
-                                                }
-                                            }
-                                        </a>
-                                    </th>
                                     <th>
                                         <a href="#" class="col-header" data-id="LastUpdated" data-default-sort-dir="1">
                                             Last Updated @if (Model.sortType == "LastUpdated")
@@ -408,7 +381,7 @@
                                             }
                                             @if (item.Document.HasProjectFile == "True")
                                             {
-                                                <span class="clip-file-2 text-success tooltips" style="font-weight: 900; font-size: 16px; color:green" data-original-title="Project has one or more files." data-placement="" ></span>
+                                                <span class="clip-file-2 text-success tooltips" style="font-weight: 900; font-size: 16px; color:green" data-original-title="Project has one or more files." data-placement=""></span>
                                             }
                                         </td>
                                         <td style="white-space:normal;">
@@ -453,11 +426,9 @@
                                             }
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Document.LikeCount)
-                                        </td>
-                                        <td>
                                             <span style="font-size: 11px;display:block;">@Html.DisplayFor(modelItem => item.Document.LastUpdated).ToString()</span>
                                         </td>
+
                                     </tr>
 
                                 }
@@ -475,47 +446,22 @@
                 {
                     <!-- ************** PEOPLE ****************************-->
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover m-b-none" data-ride="datatables">
+                        <table class="table table-striped m-b-none" data-ride="datatables">
                             <thead class="thead-inverse">
                                 <tr>
                                     <th></th>
                                     <th>Contact</th>
                                     <th>
-                                        <a href="#" class="col-header" data-id="Name" data-default-sort-dir="0">
+                                        <a href="#" class="col-header" data-id="Name">
                                             Name @if (Model.sortType == "Name")
-                                            {
-                                                if (Model.sortDir == "1")
-                                                {
-                                                    <i class="clip-arrow-up"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="clip-arrow-down"></i>
-                                                }
-                                            }
+                                            {<i class="clip-arrow-down"></i>}
                                         </a>
                                     </th>
-                                    <th>
-                                        <a href="#" class="col-header" data-id="Agency" data-default-sort-dir="0">
-                                            Agency @if (Model.sortType == "Agency")
-                                            {
-                                                if (Model.sortDir == "1")
-                                                {
-                                                    <i class="clip-arrow-up"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="clip-arrow-down"></i>
-                                                }
-                                            }
-                                        </a>
-                                    </th>
+                                    <th>Agency</th>
                                     <th>Title</th>
                                     <th>Expertise/Interest</th>
                                 </tr>
                             </thead>
-
-
                             @foreach (var item in Model.searchResults.Results)
                             {
                                 <tr>
@@ -607,7 +553,6 @@
         });
 
         $(document).ready(function () {
-
             //focus on search bar
             $('#txtSearch').focus();
 
@@ -799,7 +744,10 @@
                 //handling reverse default sort
                 var _tempSortDir = $('#sortDir').val();
                 if (_tempSortDir == '') {
-                    $('#sortDir').val($(this).attr('data-default-sort-dir'));
+                    var _sortDirDefault = $(this).attr('data-default-sort-dir');
+                    if (_sortDirDefault == "1") {
+                        $('#sortDir').val('1');
+                    }
                 }
 
                 //handling same sort click again (inverse it)
@@ -816,7 +764,7 @@
 
         });
 
-        //set location in grid (for use in case hitting back button to return to page)
+
         $(document).scroll(function () {
             localStorage['page'] = document.URL;
             localStorage['scrollTop'] = $(document).scrollTop();

@@ -81,6 +81,36 @@ namespace EECIP.Controllers
             return View(model);
         }
 
+        public ActionResult Search2(string q, string facetDataType, string facetMedia, string facetRecordSource, string facetAgency, string facetState, string facetOrgType, string facetTags, string facetPopDensity, string facetRegion, string facetStatus, string activeTab, string currentPage, string sortType, string sortDir)
+        {
+            ;
+            var model = new vmDashboardSearch
+            {
+                q = q,
+                facetDataType = facetDataType,
+                facetMedia = facetMedia,
+                facetRecordSource = facetRecordSource,
+                facetAgency = facetAgency,
+                facetState = facetState,
+                facetOrgType = facetOrgType,
+                facetTags = facetTags,
+                facetPopDensity = facetPopDensity,
+                facetRegion = facetRegion,
+                facetStatus = facetStatus,
+                activeTab = activeTab ?? "1",
+                currentPage = currentPage.ConvertOrDefault<int?>() ?? 1,
+                sortType = sortType,
+                sortDir = sortDir,
+                searchResults = AzureSearch.QuerySearchIndex(q, facetDataType, facetMedia, facetRecordSource, facetAgency, facetState, facetOrgType, facetTags, facetPopDensity, facetRegion, facetStatus, currentPage.ConvertOrDefault<int?>() ?? 1, sortType, sortDir)
+            };
+
+            //log search
+            //if (!string.IsNullOrEmpty(q))
+            //    db_Ref.InsertT_OE_SYS_SEARCH_LOG(q.ToUpper().Trim());
+
+            return View(model);
+        }
+
         public ActionResult Leaderboard(DateTime? startDt, DateTime? endDt)
         {
             var model = new vmDashboardLeaderboard
@@ -963,6 +993,8 @@ namespace EECIP.Controllers
         }
 
 
+        #region GOVERNANCE
+
         public ActionResult Governance(Guid? selAgency)
         {
             int UserIDX = db_Accounts.GetUserIDX();
@@ -1016,6 +1048,10 @@ namespace EECIP.Controllers
             return RedirectToAction("Governance");
         }
 
+        #endregion
+
+
+        #region METRICS
 
         public ActionResult Metrics()
         {
@@ -1078,5 +1114,6 @@ namespace EECIP.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        #endregion
     }
 }
