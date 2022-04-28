@@ -193,10 +193,17 @@ namespace EECIP.Controllers
                                 List<T_OE_USERS> Admins = db_Accounts.GetT_OE_USERSInRole(1);
                                 foreach (T_OE_USERS Admin in Admins)
                                     Utils.SendEmail(null, Admin.EMAIL, null, null, model.UserName + " has registered a new Agency", "The user " + model.UserName + " has registered the following new agency: " + model.suggestAgency, null, "", "The user " + model.UserName + " has registered the following new agency: " + model.suggestAgency);
+
+                                //update newly created organization in Azure
+                                AzureSearch.PopulateSearchIndexOrganization(NewOrgIDX);
+
                             }
 
                             //update first name, last name, and agency
                             db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.FirstName, model.LastName, model.UserName, null, null, null, null, null, null, null, null, model.intSelOrgIDX ?? NewOrgIDX, null, null, null, false, true, true, true);
+
+                            //update newly created user in Azure
+                            AzureSearch.PopulateSearchIndexUsers(UserIDX);
 
                             //subscribe to MailChimp
                             MailChimpHelper _mailchimp = new MailChimpHelper();

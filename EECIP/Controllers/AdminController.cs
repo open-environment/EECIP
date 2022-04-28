@@ -1387,6 +1387,12 @@ namespace EECIP.Controllers
             }
         }
 
+
+
+        public ActionResult ProjectUpdates()
+        {
+            return View();
+        }
        
     }
 }

@@ -24,17 +24,17 @@ namespace EECIP.Models
 
         [DisplayName("Terms & Conditions")]
         [UIHint("forumeditor"), AllowHtml]
-        [StringLength(6000)]
+        [StringLength(10000)]
         public string TermsAndConditions { get; set; }
 
         [DisplayName("Announcements")]
         [UIHint("forumeditor"), AllowHtml]
-        [StringLength(6000)]
+        [StringLength(10000)]
         public string Announcements { get; set; }
 
         [DisplayName("Welcome Email")]
         [UIHint("forumeditor"), AllowHtml]
-        [StringLength(6000)]
+        [StringLength(10000)]
         public string WelcomeEmail { get; set; }
     }
 

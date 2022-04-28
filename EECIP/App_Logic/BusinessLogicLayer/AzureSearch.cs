@@ -305,7 +305,7 @@ namespace EECIP.App_Logic.BusinessLogicLayer
                 //connect to Azure Search
                 SearchServiceClient serviceClient = CreateSearchServiceClient();
 
-                //get all projects needing to sync
+                //get all organizations needing to sync
                 List<EECIP_Index> _ps = db_Ref.GetT_OE_ORGANIZATION_ReadyToSync(OrgIDX);
                 if (_ps != null && _ps.Count > 0)
                 {
