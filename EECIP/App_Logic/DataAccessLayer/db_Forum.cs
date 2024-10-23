@@ -2715,7 +2715,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (endDt == null)
                         endDt = System.DateTime.Today.AddDays(1);
                     if (startDt == null)
-                        startDt = System.DateTime.Today.AddDays(-1200);
+                        startDt = System.DateTime.Today.AddDays(-3650);
 
                     var tags = ctx.MembershipUserPoints
                         .Where(x => x.DateAdded >= startDt)
@@ -2723,7 +2723,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                         .GroupBy(x => x.MembershipUser_Id)
                         .Select(g => new { g.Key, Sum = g.Sum(_ => _.Points) });
 
-                    var ddd = tags.ToList();
+                    //var ddd = tags.ToList();
 
                     var yyy = (from a in ctx.T_OE_USERS
                                join o in ctx.T_OE_ORGANIZATION on a.ORG_IDX equals o.ORG_IDX into sr1 from x1 in sr1.DefaultIfEmpty() //left join

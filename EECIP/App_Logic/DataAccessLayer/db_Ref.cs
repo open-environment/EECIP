@@ -119,7 +119,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
-        public static int InsertUpdateT_OE_APP_SETTING_CUSTOM(string tERMS_AND_CONDITIONS, string aNNOUNCEMENTS, string wELCOME_EMAIL)
+        public static int InsertUpdateT_OE_APP_SETTING_CUSTOM(string tERMS_AND_CONDITIONS, string aNNOUNCEMENTS, string wELCOME_EMAIL, string rEMINDER_EMAIL)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -139,6 +139,8 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (tERMS_AND_CONDITIONS != null) e.TERMS_AND_CONDITIONS = Utils.GetSafeHtml(tERMS_AND_CONDITIONS);
                     if (aNNOUNCEMENTS != null) e.ANNOUNCEMENTS = Utils.GetSafeHtml(aNNOUNCEMENTS);
                     if (wELCOME_EMAIL != null) e.WELCOME_EMAIL = Utils.GetSafeHtml(wELCOME_EMAIL);
+                    if (rEMINDER_EMAIL != null) e.REMINDER_EMAIL = Utils.GetSafeHtml(rEMINDER_EMAIL);
+
 
 
                     if (insInd)

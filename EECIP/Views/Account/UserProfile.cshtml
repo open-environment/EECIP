@@ -105,7 +105,7 @@
                         @if (User.IsInRole("Admins"))
                         {
 
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="form-field-select-4">User is Active?</label>
                                     @Html.CheckBox("ActInd", Model.ActInd, new { @class = "checkbox" })
@@ -116,12 +116,19 @@
                         {
                             @Html.HiddenFor(model => model.ActInd)
                         }
-                        <div class="col-md-9">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="form-field-select-4">Exclude from points/badges</label>
                                 @Html.CheckBox("ExcludeBadges", Model.ExcludeBadges, new { @class = "checkbox" })
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="form-field-select-4">Opt out of all Project update reminders for my projects</label>
+                                @Html.CheckBox("ProjectUpdateOptoutInd", Model.ProjectUpdateOptoutInd, new { @class = "checkbox" })
+                            </div>
+                        </div>
+
                     </div>
 
 

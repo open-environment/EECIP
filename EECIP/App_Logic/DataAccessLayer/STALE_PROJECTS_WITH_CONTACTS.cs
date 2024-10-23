@@ -22,7 +22,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string LNAME { get; set; }
         public string EMAIL { get; set; }
         public Nullable<System.DateTime> CREAT_UPDATE_DT { get; set; }
-        public Nullable<System.DateTime> LAST_NOTIFY_DT { get; set; }
+        public Nullable<System.DateTime> PROJECT_REMIND_DT { get; set; }
         public Nullable<System.DateTime> TRU_LAST_DT { get; set; }
         public Nullable<System.DateTime> TRU_NEXT_DT { get; set; }
     }

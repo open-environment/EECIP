@@ -7,7 +7,12 @@
     ViewBag.BadgeCount = Model.UserBadgeEarnedCount;
     ViewBag.ShowTour = true;
 }
-
+<style>
+    .select2-container {
+        width: 100% !important;
+        padding: 0;
+    }
+</style>
 @if (!string.IsNullOrEmpty(Model.Announcement))
 {
     <div class="alert alert-block alert-warning fade in">
@@ -82,7 +87,7 @@
                     <div class="col-md-6">
                         @if (Model.LatestProjects != null && Model.LatestProjects.Count > 0)
                         {
-                        <h3 style="margin-top:0px;">Recent Projects <span style="font-size:75%; color:#6d6d6d">@(Model.LatestProjects[0].TagMatch == true ? "(matching your subscriptions)" : "")</span></h3>
+                            <h3 style="margin-top:0px;">Recent Projects <span style="font-size:75%; color:#6d6d6d">@(Model.LatestProjects[0].TagMatch == true ? "(matching your subscriptions)" : "")</span></h3>
                         }
                         <!--  **************  MOST RECENT PROJECTS **************************************-->
                         <div class="table-responsive">
@@ -98,30 +103,31 @@
                                 <tbody>
                                     @if (Model.LatestProjects != null)
                                     {
-                                    foreach (var item in Model.LatestProjects)
-                                    {
-                                        <tr>
-                                            <td>
-                                                <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-eecip"><i class="glyphicon glyphicon-info-sign"></i> Info</a>
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.PROJ_NAME)
-                                                @if (item.Tags != null)
-                                                {
-                                                    foreach (var subitem in item.Tags)
+                                        foreach (var item in Model.LatestProjects)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <a href="@Url.Action("ProjectCard", "Dashboard", new { strid = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-eecip"><i class="glyphicon glyphicon-info-sign"></i> Info</a>
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.PROJ_NAME)
+                                                    @if (item.Tags != null)
                                                     {
-                                                    <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => subitem)</span>
+                                                        foreach (var subitem in item.Tags)
+                                                        {
+                                                            <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => subitem)</span>
+                                                        }
                                                     }
-                                                }
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.ORG_NAME)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.LAST_ACTIVITY_DATE)
-                                            </td>
-                                        </tr>
-                                    }}
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.ORG_NAME)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.LAST_ACTIVITY_DATE)
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
                                 </tbody>
                             </table>
                         </div>
@@ -159,7 +165,7 @@
                                                 {
                                                     foreach (var _tag in item.tags)
                                                     {
-                                                    <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => _tag)</span>
+                                                        <span class="label label-default" style="background-color: #007AFF !important; font-size: 9.35px !important;"> @Html.DisplayFor(modelItem => _tag)</span>
                                                     }
                                                 }
                                                 <p class="topicrowfooterinfo">
@@ -309,11 +315,77 @@
     </div>
 </div>
 <!-- END MODAL FORM -->
+<!-- START MODAL FORM  -->
+@if (Model.UpdatedExpertiseInd == false)
+{
+<div class="modal fade" id="modal-form-exp" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("UpdateExpertise", "Dashboard", FormMethod.Post, new { @class = "" }))
+        {
+            @Html.AntiForgeryToken()
 
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-title">Update Your Expertise</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body">
+                        @if (Model.SelectedExpertise != null && Model.SelectedExpertise.Count > 0)
+                        {
+                            <div class="alert alert-danger">
+                                You haven't updated your interests or expertise in over 6 months. Please take a moment to review and save your interests or expertise. As a reminder, your interests and expertise are used to populate your personalized monthly EECIP newsletter and to help other EECIP users learn more about you and connect. Thanks!
+                            </div>
+                        }
+                        else
+                        {
+                    <div class="alert alert-danger">
+                        <h4 class="alert-heading"><i class="clip-notification-2"></i> Share your interests!</h4>
+                        <p>
+                            Please take a moment to review and save your interests or expertise. As a reminder, your interests and expertise are used to populate your personalized monthly EECIP newsletter and to help other EECIP users learn more about you and connect. Thanks!
+                        </p>
+                    </div>
+                        }
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="form-field-select-4">Expertise and/or Interests</label>
+                                    @Html.ListBoxFor(model => model.SelectedExpertise, Model.AllExpertise, new { multiple = "multiple", @id = "form-field-select-4", @class = "form-control search-select" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnExpertiseSave" type="submit" class="btn btn-sm btn-primary">Save Expertise</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+}
+<!-- END MODAL FORM -->
 
 @section Scripts {
     @Scripts.Render("~/bundles/introjs")
+    @Scripts.Render("~/bundles/select2")
+    @if (Model.UpdatedExpertiseInd == false)
+    {
+        <script>
+            $(document).ready(function () {
 
+                //function to initiate Select2
+                $(".search-select").select2({
+                    placeholder: "Select expertise (or type in your own)",
+                    allowClear: true,
+                    tags: true
+                });
+
+
+                $('#modal-form-exp').modal('show');
+            });
+        </script>
+    }
     <script>
         function startIntro() {
             var intro = introJs();

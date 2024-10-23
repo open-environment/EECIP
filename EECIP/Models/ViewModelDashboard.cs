@@ -28,6 +28,10 @@ namespace EECIP.Models
         public string Announcement { get; set; }
         public IEnumerable<SelectListItem> ddl_Subscriptions { get; set; }
         public string selSub { get; set; }
+
+        public bool UpdatedExpertiseInd { get; set; }
+        public IEnumerable<SelectListItem> AllExpertise { get; set; }
+        public List<string> SelectedExpertise { get; set; }
     }
 
 
@@ -137,6 +141,7 @@ namespace EECIP.Models
         public IEnumerable<SelectListItem> ddl_COTS { get; set; }
         //public IEnumerable<SelectListItem> ddl_Agencies { get; set; }
         public IEnumerable<SelectListItem> ddl_AgencyUsers { get; set; }
+        public IEnumerable<SelectListItem> ddl_ProjectUpdateFreq { get; set; }
 
         public IEnumerable<SelectListItem> AllProgramAreas { get; set; }
         public List<string> SelectedProgramAreas { get; set; }
@@ -151,6 +156,7 @@ namespace EECIP.Models
         public string FileDescription { get; set; }
         public string ReturnURL { get; set; }
 
+
         [DisplayName("Project Description")]
         [UIHint("limitededitor"), AllowHtml]
         [StringLength(6000)]
@@ -163,6 +169,7 @@ namespace EECIP.Models
             ddl_Status = db_Ref.GetT_OE_REF_TAGS_ByCategory_ProjStatus(true);
             ddl_UseAmount = ddlHelpers.get_ddl_tags_by_category("Use Amount");
             ddl_COTS = ddlHelpers.get_ddl_tags_by_category_stringy("COTS");
+            ddl_ProjectUpdateFreq = ddlHelpers.get_ddl_ProjectUpdateFreq();
             governanceInd = false;
             NewProjInd = false;
             NewProjOrgIDX = null;

@@ -110,6 +110,17 @@ namespace EECIP.Models
             });
         }
 
+        public static IEnumerable<SelectListItem> get_ddl_ProjectUpdateFreq()
+        {
+            List<SelectListItem> _list = new List<SelectListItem>();
+            _list.Add(new SelectListItem() { Value = "N", Text = "None" });
+            //_list.Add(new SelectListItem() { Value = "M", Text = "Monthly" });
+            _list.Add(new SelectListItem() { Value = "Q", Text = "Quarterly" });
+            _list.Add(new SelectListItem() { Value = "S", Text = "Semi-annual" });
+            _list.Add(new SelectListItem() { Value = "Y", Text = "Yearly" });
+            return _list;
+        }
+
 
     }
 

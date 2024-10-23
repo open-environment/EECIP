@@ -34,7 +34,7 @@ namespace EECIP_Service
             try
             {
                 // Set up a timer that triggers every minute.
-                timer.Interval = 600000; // 1 minutes
+                timer.Interval = 600000; // 10 minutes
                 timer.Elapsed += new ElapsedEventHandler(OnTimer);
                 timer.AutoReset = true;
                 timer.Enabled = true;
@@ -71,7 +71,6 @@ namespace EECIP_Service
                     T_OE_APP_SETTINGS_CUSTOM _cust = db_Ref.GetT_OE_APP_SETTING_CUSTOM();
                     if (_cust != null && _cust.WELCOME_EMAIL != null)
                     {
-
                         emailTemplate = _cust.WELCOME_EMAIL;
 
                         //get cc email addressee
@@ -127,7 +126,7 @@ namespace EECIP_Service
 
 
                 //**********************************************************************************************
-                //***************************NUDGE TO UPDATE STALE PROJECTS*************************************
+                //***************************REMINDER TO UPDATE STALE PROJECTS*************************************
                 //**********************************************************************************************
 
 

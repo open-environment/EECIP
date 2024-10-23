@@ -19,6 +19,7 @@ INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MO
 
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT],[ENCRYPT_IND]) VALUES ('MAILCHIMP_API','','The API Key for accessing MailChimp integration.',0,GetDate(),1);
 INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('MAILCHIMP_LISTID','','The internal list ID for the mailchimp subscriber list.',0,GetDate());
+INSERT INTO T_OE_APP_SETTINGS ([SETTING_NAME],[SETTING_VALUE],[SETTING_DESC],[MODIFY_USERIDX],[MODIFY_DT]) VALUES ('REMINDER_NEXT_RUN','8/1/2022 8:00','Next time project reminder task will run.',0,GetDate());
 
 
 INSERT INTO T_OE_APP_SETTINGS_CUSTOM ([TERMS_AND_CONDITIONS],[ANNOUNCEMENTS]) values ('<p>The access and use of e-Enterprise Community Inventory Platform (EECIP) requires the creation of a user ID and password that I must maintain and keep confidential.</p>	
@@ -44,6 +45,15 @@ The Environmental Council of the States
 Washington, DC 20005
 202-266-4922
 omcaleer@ecos.org';
+
+
+update T_OE_APP_SETTINGS_CUSTOM set REMINDER_EMAIL = 'Dear [Name],
+
+This email serves as a reminder to update the following E-Enterprise Community Inventory Platform (EECIP) projects: 
+
+[ProjectList]
+
+Thank you for your participation in EECIP.';
 
 --****************APP ROLES *****************************************************************************************
 insert into T_OE_ROLES (ROLE_NAME, ROLE_DESC, CREATE_USERIDX, CREATE_DT) values ('Admins', 'Application Administrator can access administrative functions', 0, GetDate());

@@ -7,6 +7,9 @@ using EECIP.App_Logic.BusinessLogicLayer;
 using EECIP.App_Logic.DataAccessLayer;
 using System.Web;
 using System.IO;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Drawing.Imaging;
+using System.Text.RegularExpressions;
 
 namespace EECIP.Controllers
 {
@@ -35,8 +38,15 @@ namespace EECIP.Controllers
                 UserBadgeEarnedCount = db_Forum.GetBadgesForUserCount(UserIDX),
                 Announcement = db_Ref.GetT_OE_APP_SETTING_CUSTOM().ANNOUNCEMENTS,
                 ddl_Subscriptions = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX_withDefault(UserIDX).Select(x => new SelectListItem { Value = x, Text = x }),
-                selSub = (selSub ?? "Default View")
+                selSub = (selSub ?? "Default View"),
+                //expertise
+                UpdatedExpertiseInd = db_EECIP.GetT_OE_USER_EXPERTISE_UpdatedLast6Months(UserIDX)
             };
+            if (model.UpdatedExpertiseInd == false)
+            {
+                model.SelectedExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX(UserIDX);
+                model.AllExpertise = db_EECIP.GetT_OE_USER_EXPERTISE_ByUserIDX_All(UserIDX).Select(x => new SelectListItem { Value = x, Text = x });
+            }
 
             //fallback on topics
             model.TopicMatchInd = (model.LatestTopics != null && model.LatestTopics.Count > 0);
@@ -48,6 +58,20 @@ namespace EECIP.Controllers
                 model.UserName = u.FNAME + " " + u.LNAME;
 
             return View(model);
+        }
+
+        // POST: /Account/UserProfile
+        [HttpPost]
+        public ActionResult UpdateExpertise(vmDashboardIndex model)
+        {
+            int UserIDX = db_Accounts.GetUserIDX();
+
+            //update user expertise
+            db_EECIP.DeleteT_OE_USER_EXPERTISE(UserIDX);
+            foreach (string expertise in model.SelectedExpertise ?? new List<string>())
+                db_EECIP.InsertT_OE_USER_EXPERTISE(UserIDX, expertise);
+
+            return RedirectToAction("Index");
         }
 
         // GET: Dashboard/Search
@@ -384,7 +408,7 @@ namespace EECIP.Controllers
         }
 
 
-        public ActionResult ProjectReview2(Guid id)
+        public ActionResult ProjectReview2(Guid id, string editProj)
         {
             int UserIDX = db_Accounts.GetUserIDX();
             List<T_OE_ORGANIZATION> _ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(id);
@@ -393,9 +417,12 @@ namespace EECIP.Controllers
             //CHECK PERMISSIONS
             if (User.IsInRole("Admins") || db_Accounts.UserCanEditOrgList(UserIDX, _ProjectOrgs))
                 db_EECIP.InsertUpdatetT_OE_PROJECTS(id, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-                    null, null, null, true, null, UserIDX, null, true);
+                    null, null, null, true, null, UserIDX, null, true, null);
 
-                return RedirectToAction("ProjectReview", "Dashboard");
+            if (editProj == "y")
+                return RedirectToAction("ProjectDetails", "Dashboard", new { id = id });
+
+            return RedirectToAction("ProjectReview", "Dashboard");
         }
         
         // GET: /Dashboard/ProjectDetails/1
@@ -420,6 +447,7 @@ namespace EECIP.Controllers
                 model.project = new T_OE_PROJECTS
                 {
                     PROJECT_IDX = Guid.NewGuid(),
+                    PROJECT_REMIND_FREQ = "S"
                 };
 
                 //populate org for new project
@@ -457,6 +485,8 @@ namespace EECIP.Controllers
                     model.SelectedProgramAreas = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Program Area");
                     model.SelectedFeatures = db_EECIP.GetT_OE_PROJECT_TAGS_ByAttributeSelected(model.project.PROJECT_IDX, "Tags");
                     model.files_existing = db_EECIP.GetT_OE_DOCUMENTS_ByProjectID(model.project.PROJECT_IDX);
+                    model.project.PROJECT_REMIND_FREQ = model.project.PROJECT_REMIND_FREQ ?? "N";
+
                 }
             }
 
@@ -483,7 +513,6 @@ namespace EECIP.Controllers
         {
             int UserIDX = db_Accounts.GetUserIDX();
 
-
             model.ProjectOrgs = db_EECIP.GetT_OE_PROJECT_ORGS_ByProject(model.project.PROJECT_IDX);
 
             //for insert case, project orgs will not have org yet
@@ -497,10 +526,12 @@ namespace EECIP.Controllers
             {
                 //plain text version of project description
                 HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-                doc.LoadHtml(model.ProjectRichDesc);
+                doc.LoadHtml(model.ProjectRichDesc ?? "");
                 string projDescPlain = "";
-                foreach (HtmlAgilityPack.HtmlNode node in doc.DocumentNode.SelectNodes("//text()"))
-                    projDescPlain += node.InnerText;
+                var nodes = doc.DocumentNode.SelectNodes("//text()");
+                if (nodes != null)
+                    foreach (HtmlAgilityPack.HtmlNode node in nodes)
+                        projDescPlain += node.InnerText;
 
                 //determine record source 
                 if (db_Accounts.UserCanEditOrgList(UserIDX, model.ProjectOrgs))
@@ -511,7 +542,8 @@ namespace EECIP.Controllers
                     projDescPlain, model.ProjectRichDesc ?? "", model.project.MEDIA_TAG, model.project.START_YEAR ?? -1, model.project.PROJ_STATUS ?? "",
                     model.project.DATE_LAST_UPDATE ?? -1, model.project.RECORD_SOURCE ?? "", model.project.PROJECT_URL ?? "", model.project.MOBILE_IND,
                     model.project.MOBILE_DESC ?? "", model.project.ADV_MON_IND, model.project.ADV_MON_DESC ?? "", model.project.BP_MODERN_IND,
-                    model.project.BP_MODERN_DESC ?? "", model.project.COTS ?? "", model.project.VENDOR ?? "", model.project.PROJECT_CONTACT ?? "", model.project.PROJECT_CONTACT_IDX ?? -1, true, false, UserIDX, null, true);
+                    model.project.BP_MODERN_DESC ?? "", model.project.COTS ?? "", model.project.VENDOR ?? "", model.project.PROJECT_CONTACT ?? "", model.project.PROJECT_CONTACT_IDX ?? -1, 
+                    true, false, UserIDX, null, true, model.project.PROJECT_REMIND_FREQ);
 
                 if (newProjID != null)
                 {
@@ -574,10 +606,8 @@ namespace EECIP.Controllers
 
                             }
                         }
-
-
-
                     }
+
 
                     //award badges for new project
                     if (newProjID2 != model.project.PROJECT_IDX)//new case

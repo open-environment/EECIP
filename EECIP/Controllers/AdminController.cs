@@ -47,7 +47,7 @@ namespace EECIP.Controllers
                 {
                     int UserIDX = _u.ProviderUserKey.ConvertOrDefault<int>();
                     //update first name and last name
-                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false, true, true, true);
+                    db_Accounts.UpdateT_OE_USERS(UserIDX, null, null, model.newUserFName, model.newUserLName, null, null, null, null, null, null, null, null, null, null, null, null, null, false, true, true, true, false);
                     TempData["Success"] = "User created and verification email sent to user.";
                 }
                 else
@@ -217,7 +217,8 @@ namespace EECIP.Controllers
                 app_settings = db_Ref.GetT_OE_APP_SETTING_List(),
                 TermsAndConditions = custSettings.TERMS_AND_CONDITIONS,
                 Announcements = custSettings.ANNOUNCEMENTS,
-                WelcomeEmail = custSettings.WELCOME_EMAIL
+                WelcomeEmail = custSettings.WELCOME_EMAIL,
+                ReminderEmail = custSettings.REMINDER_EMAIL
             };
             return View(model);
         }
@@ -242,7 +243,7 @@ namespace EECIP.Controllers
         {
             if (ModelState.IsValid)
             {
-                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(model.TermsAndConditions, null, null);
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(model.TermsAndConditions, null, null, null);
                 if (SuccID > 0)
                     TempData["Success"] = "Data Saved.";
                 else
@@ -257,7 +258,7 @@ namespace EECIP.Controllers
         {
             if (ModelState.IsValid)
             {
-                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, model.Announcements ?? "", null);
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, model.Announcements ?? "", null, null);
                 if (SuccID > 0)
                     TempData["Success"] = "Data Saved.";
                 else
@@ -272,7 +273,7 @@ namespace EECIP.Controllers
         {
             if (ModelState.IsValid)
             {
-                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, null, model.WelcomeEmail ?? "");
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, null, model.WelcomeEmail ?? "", null);
                 if (SuccID > 0)
                     TempData["Success"] = "Data Saved.";
                 else
@@ -281,6 +282,22 @@ namespace EECIP.Controllers
 
             return RedirectToAction("Settings");
         }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult CustomSettingsReminderEmail(vmAdminSettings model)
+        {
+            if (ModelState.IsValid)
+            {
+                int SuccID = db_Ref.InsertUpdateT_OE_APP_SETTING_CUSTOM(null, null, null, model.ReminderEmail ?? "");
+                if (SuccID > 0)
+                    TempData["Success"] = "Data Saved.";
+                else
+                    TempData["Error"] = "Data Not Saved.";
+            }
+
+            return RedirectToAction("Settings");
+        }
+
 
 
 
@@ -855,6 +872,46 @@ namespace EECIP.Controllers
         }
 
 
+        //*************************************** REMINDERS TESTING **********************************************************
+        public ActionResult Reminder()
+        {
+            var model = new vmAdminReminder {
+                projects = db_EECIP.GetProjectReminders()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Reminder(string s, string key)
+        {
+            var model = new vmAdminNewsletter();
+
+            try
+            {
+                //authenticate
+                int UserIDX = db_Accounts.GetUserIDX();
+                T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
+                if (u != null && u.PWD_HASH == key)
+                {
+                    bool SuccInd = App_Logic.ReminderClass.generateReminder(String.IsNullOrEmpty(s) ? null : s);
+                    TempData["Success"] = "Done.";
+                    return View(model);
+                }
+                else
+                {
+                    TempData["Error"] = "Invalid key";
+                    return RedirectToAction("Reminder", "Admin");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.ToString().SubStringPlus(0, 100);
+                return RedirectToAction("Reminder", "Admin");
+            }
+
+        }
+
 
         // ***************************************** IMPORT DATA *************************************************************
         public ActionResult ImportData()
@@ -937,7 +994,7 @@ namespace EECIP.Controllers
                         T_OE_PROJECTS x = ps.T_OE_PROJECT;
                         Guid? ProjectIDX = db_EECIP.InsertUpdatetT_OE_PROJECTS(x.PROJECT_IDX, null, x.PROJ_NAME, x.PROJ_DESC, x.PROJ_DESC, x.MEDIA_TAG, x.START_YEAR, x.PROJ_STATUS,
                             x.DATE_LAST_UPDATE, x.RECORD_SOURCE, x.PROJECT_URL, x.MOBILE_IND, x.MOBILE_DESC, x.ADV_MON_IND, x.ADV_MON_DESC, x.BP_MODERN_IND,
-                            x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, -1, true, false, UserIDX, x.IMPORT_ID, true);
+                            x.BP_MODERN_DESC, x.COTS, x.VENDOR, x.PROJECT_CONTACT, -1, true, false, UserIDX, x.IMPORT_ID, true, "Q");
 
                         //import orject orgs
                         if (x.ORG_IDX != null)
@@ -1319,19 +1376,20 @@ namespace EECIP.Controllers
             //******************************STALE PROJECTS ******************************
             if (exportdata.Contains("StaleProjects"))
             {
-                dtStaleProjects.Columns.AddRange(new DataColumn[7] {
+                dtStaleProjects.Columns.AddRange(new DataColumn[8] {
                                             new DataColumn("Organization"),
                                             new DataColumn("Project Name"),
                                             new DataColumn("Project Status"),
                                             new DataColumn("Contact First"),
                                             new DataColumn("Contact Last"),
                                             new DataColumn("Contact Email"),
-                                            new DataColumn("Last Update or Notification Date")
+                                            new DataColumn("Last Update Date"),
+                                            new DataColumn("Next Reminder Date")
                                            });
 
                 List<STALE_PROJECTS_WITH_CONTACTS> _stale = db_EECIP.GetStaleProjects();
                 foreach (var item in _stale)
-                    dtStaleProjects.Rows.Add(item.ORG, item.PROJ_NAME, item.PROJ_STATUS, item.FNAME, item.LNAME, item.EMAIL, item.TRU_LAST_DT);
+                    dtStaleProjects.Rows.Add(item.ORG, item.PROJ_NAME, item.PROJ_STATUS, item.FNAME, item.LNAME, item.EMAIL, item.CREAT_UPDATE_DT, item.PROJECT_REMIND_DT);
             }
 
             DataSet dsExport = new DataSet();

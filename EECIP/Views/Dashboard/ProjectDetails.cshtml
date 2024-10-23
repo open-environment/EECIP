@@ -3,7 +3,24 @@
 @{
     ViewBag.Title = "Project Details";
 }
+<style>
+    hr {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
 
+    .popover {
+        min-width: 350px !important; /* the minimum width */
+        background-color: #fbfbfb;
+        color: #000000;
+    }
+
+    .panel-default.epa > .panel-heading {
+        /*color: #dc3545 !important;
+        border-bottom-color: #dc3545 !important;*/
+        background-image: linear-gradient(to bottom, #cadcdb 0%, #fbf0f0 100%);
+    }
+</style>
 @using (Html.BeginForm("ProjectEdit", "Dashboard", FormMethod.Post, new { @id = "norepostform", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
@@ -23,26 +40,13 @@
                     </div>
                 </div>
                 <div class="panel-body">
-
-                    @*@if (User.IsInRole("Admins"))
-        {
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Organization</label>
-                        @Html.DropDownListFor(model => model.project.ORG_IDX, Model.ddl_Agencies, "", new { @class = "form-control" })
-                    </div>
-                </div>
-            </div>
-        }
-        else
-        {
-            @Html.HiddenFor(model => model.project.ORG_IDX)
-        }*@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Project Name</label>
+                                <label>
+                                    Project Name
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Be illustrative in selecting your title</b><br/><hr> What is the work about? Avoid unexplained acronyms and internal lingo. Keep it short and sweet. (150 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
                                 @Html.TextBoxFor(model => model.project.PROJ_NAME, new { @class = "form-control", @maxlength = "150" })
                             </div>
                         </div>
@@ -50,7 +54,10 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Project Description</label>
+                                <label>
+                                    Project Description
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Help us Understand Your Project Thoroughly</b><br/><hr> Go into <b>detail</b> about your project. Include information on the problem you were trying to solve, project outcomes, process, challenges, lessons learned, reusable components, and more. <br/><br/>The more you share, the greater the EECIP user experience. (6,000 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
                                 @Html.EditorFor(model => model.ProjectRichDesc)
                                 @*@Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "7" })*@
                                 @Html.ValidationMessageFor(model => model.project.PROJ_DESC)
@@ -66,10 +73,11 @@
                                 {
                                     <th></th>
                                 }
-                                <th>Agency 
-                                @if (!Model.NewProjInd && !User.IsInRole("ReadOnly"))
-                                {
-                                <a id="btnAddAgency" href="@Url.Action("AddProjectOrg", "Dashboard", new { id = Model.project.PROJECT_IDX })" class="btn btn-primary btn-xs pull-right">Add Other Agencies</a>}
+                                <th>
+                                    Agency
+                                    @if (!Model.NewProjInd && !User.IsInRole("ReadOnly"))
+                                    {
+                                        <a id="btnAddAgency" href="@Url.Action("AddProjectOrg", "Dashboard", new { id = Model.project.PROJECT_IDX })" class="btn btn-primary btn-xs pull-right">Add Other Agencies</a>}
                                 </th>
                             </tr>
                             @foreach (var item in Model.ProjectOrgs)
@@ -95,14 +103,20 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Media</label>
+                                <label>
+                                    Media
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Select The Media that Best Fits</b><br/><hr> Selection of <b>media options</b> include Air, Water, Waste, Cross Program, or Other. Select the best fit for your project" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
                                 @Html.DropDownListFor(model => model.project.MEDIA_TAG, Model.ddl_Media, "", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.project.MEDIA_TAG)
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Program Area(s)</label>
+                                <label>
+                                    Program Area(s)
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Select the Program Area(s)</b><br/><hr> Select from the dropdown menu for the <b>program area</b> that your project covers. You may select multiple areas. For example, “administrative” and “water quality.”" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
                                 @Html.ListBoxFor(model => model.SelectedProgramAreas, Model.AllProgramAreas, new { multiple = "multiple", @class = "form-control search-select" })
                             </div>
                         </div>
@@ -110,28 +124,78 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Start Year</label>
+                                <label>
+                                    Start Year
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Select the Start Year</b><br/><hr> When did this project begin? List the year when <b>planning started</b> - you will include additional details in the Year Most Recently Active and Current Implementation Status sections." data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
                                 @Html.TextBoxFor(model => model.project.START_YEAR, new { @class = "form-control", @maxlength = "4" })
                                 @Html.ValidationMessageFor(model => model.project.START_YEAR)
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Year Most Recently Active</label>
+                                <label>
+                                    Year Most Recently Active
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Select the Year Most Recently Active</b><br/><hr>Include the <b>current year</b> for any active projects, otherwise include the year when the project was last active." data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
                                 @Html.TextBoxFor(model => model.project.DATE_LAST_UPDATE, new { @class = "form-control", @maxlength = "4" })
                                 @Html.ValidationMessageFor(model => model.project.DATE_LAST_UPDATE)
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Current Implementation Status</label>
+                                <label>
+                                    Current Implementation Status
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Current Implementation Status</b><br/><hr>Select one of the four <b>implementation status</b> options so other users may better understand where you are in the process. You can come back to update this section as the project progresses." data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
                                 @Html.DropDownListFor(model => model.project.PROJ_STATUS, Model.ddl_Status, "", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.project.PROJ_STATUS)
                             </div>
                         </div>
                     </div>
-                    <span class="help-inline col-sm-12"> <i class="clip-info"></i> Record source:  @Model.project.RECORD_SOURCE</span>
-                    <span class="help-inline col-sm-12"> <i class="clip-info"></i> Data last updated: @(Model.project.MODIFY_DT ?? @Model.project.CREATE_DT)</span>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Project Reminder Frequency
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="You can receive an email reminder to periodically update this project record" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.DropDownListFor(model => model.project.PROJECT_REMIND_FREQ, Model.ddl_ProjectUpdateFreq, "", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @if (!User.IsInRole("ReadOnly") && Model.project.PROJ_NAME != null)
+                        {
+                            var ModDt = (Model.project.MODIFY_DT ?? System.DateTime.Today.AddDays(-365));
+                            var CurDt = System.DateTime.Today;
+                            <div class="col-md-6">
+                                <span style="color: #737373;"> <i class="clip-chevron-right"></i> Record source:  @Model.project.RECORD_SOURCE</span>
+                                <br />
+                                <span style="color: #737373;"> <i class="clip-chevron-right"></i> Data last updated: @(Model.project.MODIFY_DT ?? @Model.project.CREATE_DT)</span>
+                                @if (Model.project?.PROJECT_REMIND_DT != null)
+                                {
+                                    DateTime remindDt = Model.project?.PROJECT_REMIND_DT ?? System.DateTime.Today;
+                                    DateTime remindDtStartMonth = new DateTime(remindDt.AddMonths(1).Year, remindDt.AddMonths(1).Month, 1);
+                                    <br />
+                                    <span style="color: #737373;"> <i class="clip-chevron-right"></i> Reminder date: @(remindDtStartMonth.ToShortDateString())</span>
+                                }
+
+                            </div>
+                            <div class="col-md-6">
+                                @if ((CurDt - ModDt).TotalDays > 7)
+                                {
+                                    <button id="btnReview" type="button" value="Review" class="btn btn-success pull-right" style="line-height: 1.14; padding-top: 1px; padding-bottom: 1px;"
+                                            onclick="location.href='@Url.Action("ProjectReview2", new { id = Model.project.PROJECT_IDX, editProj = "y" })';">
+                                        Mark Project as Reviewed
+                                        <br /><span style="font-size:9px">(Last reviewed: @(Model.project.MODIFY_DT.HasValue ? Model.project.MODIFY_DT.Value.ToString("MM/dd/yyyy") + ")" : "never)")</span>
+                                    </button>
+                                }
+                                    <a href="#" class="btn btn-sm btn-danger btn-info pull-right"><i class="fa fa-pdf"></i></a>
+                            </div>
+                        }
+                    </div>
+
                 </div>
             </section>
         </div>
@@ -148,7 +212,10 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Tags (what aspects of this project would be of most interest to your peers in other agencies)</label>
+                                <label>
+                                    Tags
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Tags</b><br/><hr>Select <b>one or more</b> tags that best describe what aspects of this project would be of most interest to your peers in other agencies. You can also create your own tag if you do not find a good fit." data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
                                 @Html.ListBoxFor(model => model.SelectedFeatures, Model.AllFeatures, new { multiple = "multiple", @class = "form-control search-select", @style = "display: block;" })
                             </div>
                         </div>
@@ -220,14 +287,16 @@
                                     @if (!User.IsInRole("ReadOnly"))
                                     {
                                         <input id="btnAdd" type="button" value="Add Project URL(s)" class="btn btn-sm" onclick="AddProjectURL();" />
-                                        <i class="clip-question-2 input-tooltip popovers" data-content="Provide a link to the project's website or documentation" data-placement="left" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                        <i class="clip-question-2 input-tooltip popovers" data-content="<b>Project URLs</b><br/><hr>Link to <b>relevant project pages</b> but avoid posting internal web pages that are not publicly accessible." data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
                                     }
                                     <br /><br />
                                     @for (var i = 0; i < Model.sProjectUrlList.Count(); i++)
                                     {
                                         <div class="row urlrow">
                                             <div class="col-md-5">
-                                                <label>Project URL</label>
+                                                <label>
+                                                    Project URL
+                                                </label>
                                                 @Html.TextBoxFor(modelItem => Model.sProjectUrlList[i].PROJECT_URL, new { @class = "form-control projurl", @maxlength = "200" })
                                             </div>
                                             <div class="col-md-5">
@@ -253,7 +322,9 @@
         <section class="col-md-6 ">
             <section class="panel panel-default @(Model.NewProjInd == false && (Model.project.PROJECT_CONTACT_IDX == null && String.IsNullOrEmpty(Model.project.PROJECT_CONTACT)) && !Model.governanceInd ? "danger" : "") ">
                 <div class="panel-heading">
-                    Project Contact
+                    <i style="" class="clip-question-2 input-tooltip popovers" data-content="<b>Project Contact</b><br/><hr>This <b>contact information</b> helps users quickly get in touch with the right project expert. The contact is not required to be an EECIP user, but you may want to let them know they are listed (or encourage them to sign up!)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                    <span style="position:absolute; left:50px">Project Contact</span>
+
                     <div class="panel-tools">
                         <a class="btn btn-xs panel-collapse collapses" href="#">
                         </a>
@@ -301,10 +372,11 @@
                 </div>
             </section>
         </section>
-        <section class="col-md-6 aligned-row">
+        <section class="col-md-6">
             <section class="panel panel-default">
                 <div class="panel-heading">
-                    Project Files
+                    <i style="" class="clip-question-2 input-tooltip popovers" data-content="<b>Project Files</b><br/><hr>Accepts all file formats. 20MB is the file size restriction." data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                    <span style="position:absolute; left:50px">Project Files</span>
                     <div class="panel-tools">
                         <a class="btn btn-xs panel-collapse collapses" href="#">
                         </a>
@@ -389,6 +461,120 @@
 
     </div>
 
+    <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+    <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+    <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+    <div class="row">
+        <div class="col-sm-12 ">
+            <section class="panel panel-default epa">
+                <div class="panel-heading">
+
+                    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+                    <label for="vehicle1" style="font-weight: bold;    font-size: 18px;"> Supply EPA Grant Information</label><br>
+                    <div class="panel-tools">
+                        <a class="btn btn-xs panel-collapse collapses" href="#">
+                        </a>
+                    </div>
+                </div>
+                <div class="panel-body" style="    background-color: #cadcdb;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>
+                                    Grant ID
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Be illustrative in selecting your title</b><br/><hr> What is the work about? Avoid unexplained acronyms and internal lingo. Keep it short and sweet. (150 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.TextBoxFor(model => model.project.PROJ_NAME, new { @class = "form-control", @maxlength = "150" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>
+                                    Grant Fiscal Year/Issued Date
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Be illustrative in selecting your title</b><br/><hr> What is the work about? Avoid unexplained acronyms and internal lingo. Keep it short and sweet. (150 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.TextBoxFor(model => model.project.PROJ_NAME, new { @class = "form-control", @maxlength = "4" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>
+                                    EN Funding Area(s)
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Be illustrative in selecting your title</b><br/><hr> What is the work about? Avoid unexplained acronyms and internal lingo. Keep it short and sweet. (150 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.ListBoxFor(model => model.SelectedFeatures, Model.AllFeatures, new { multiple = "multiple", @class = "form-control search-select2", @style = "display: block;" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>
+                                    EN Funding Opportunit(ies)
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Be illustrative in selecting your title</b><br/><hr> What is the work about? Avoid unexplained acronyms and internal lingo. Keep it short and sweet. (150 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.ListBoxFor(model => model.SelectedFeatures, Model.AllFeatures, new { multiple = "multiple", @class = "form-control search-select2", @style = "display: block;" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Project Goals
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Help us Understand Your Project Thoroughly</b><br/><hr> Go into <b>detail</b> about your project. Include information on the problem you were trying to solve, project outcomes, process, challenges, lessons learned, reusable components, and more. <br/><br/>The more you share, the greater the EECIP user experience. (6,000 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "5" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Project Outcomes
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Help us Understand Your Project Thoroughly</b><br/><hr> Go into <b>detail</b> about your project. Include information on the problem you were trying to solve, project outcomes, process, challenges, lessons learned, reusable components, and more. <br/><br/>The more you share, the greater the EECIP user experience. (6,000 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "5" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Project Outputs
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Help us Understand Your Project Thoroughly</b><br/><hr> Go into <b>detail</b> about your project. Include information on the problem you were trying to solve, project outcomes, process, challenges, lessons learned, reusable components, and more. <br/><br/>The more you share, the greater the EECIP user experience. (6,000 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "5" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>
+                                    Project Beneficiaries
+                                    <i class="clip-question-2 input-tooltip popovers" data-content="<b>Help us Understand Your Project Thoroughly</b><br/><hr> Go into <b>detail</b> about your project. Include information on the problem you were trying to solve, project outcomes, process, challenges, lessons learned, reusable components, and more. <br/><br/>The more you share, the greater the EECIP user experience. (6,000 character limit)" data-html="true" data-trigger="hover" data-rel="popover" data-original-title=""></i>
+                                </label>
+                                @Html.TextAreaFor(model => model.project.PROJ_DESC, new { @class = "form-control", @rows = "5" })
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button id="btnReview" type="button" value="Review" class="btn btn-blue" style="line-height: 1.14; padding-top: 1px; padding-bottom: 1px;"
+                                    onclick="location.href='@Url.Action("ProjectReview2", new { id = Model.project.PROJECT_IDX, editProj = "y" })';">
+                                Lock EPA Grant Information
+                                <br /><span style="font-size:9px">(This will submit to EPA and lock in grant information)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+    <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+    <!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+
     <div class="row">
         <div class="col-md-12">
             @if (!User.IsInRole("ReadOnly"))
@@ -397,15 +583,12 @@
             }
             <a href="@Url.Action(Model.ReturnURL, "Dashboard")" class="btn btn-default">Close</a>
 
-            @if (!User.IsInRole("ReadOnly"))
+            @if (!User.IsInRole("ReadOnly") && Model.project.PROJ_NAME != null)
             {
-                if (Model.project.PROJ_NAME != null)
-                {
-                    <div class="delete-section" style="display:inline">
-                        <a class=" btn btn-danger delete-link">Delete Project</a>
-                        <div class="btn btn-warning delete-confirm" style="display:none" data-delete-id="@Model.project.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Index"><b>Confirm Delete</b></div>
-                    </div>
-                }
+                <div class="delete-section" style="display:inline">
+                    <a class=" btn btn-danger delete-link">Delete Project</a>
+                    <div class="btn btn-warning delete-confirm" style="display:none" data-delete-id="@Model.project.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete" data-success-url="/Dashboard/Index"><b>Confirm Delete</b></div>
+                </div>
             }
         </div>
     </div>
@@ -421,14 +604,16 @@
         $(document).ready(function () {
 
             //warn user if leaving unsaved page
-            $('form').areYouSure();
-            $('form').on('dirty.areYouSure', function () {
+            $('#norepostform').areYouSure();
+            $('#norepostform').on('dirty.areYouSure', function () {
                 $("#btnSave").prop("disabled", false);
-                $("#btnAddAgency").fadeOut(400);
+                $("#btnAddAgency").hide();
+                $("#btnReview").hide();
             });
-            $('form').on('clean.areYouSure', function () {
+            $('#norepostform').on('clean.areYouSure', function () {
                 $("#btnSave").prop("disabled", true);
                 $("#btnAddAgency").show();
+                $("#btnReview").show();
             });
 
 
@@ -442,6 +627,12 @@
             //function to initiate Select2
             $(".search-select").select2({
                 placeholder: "Select from list (or type in your own)",
+                allowClear: true,
+                tags: true,
+                width: ''
+            });
+            $(".search-select2").select2({
+                placeholder: "Select from list",
                 allowClear: true,
                 tags: true,
                 width: ''

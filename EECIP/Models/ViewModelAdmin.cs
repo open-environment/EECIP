@@ -36,6 +36,11 @@ namespace EECIP.Models
         [UIHint("forumeditor"), AllowHtml]
         [StringLength(10000)]
         public string WelcomeEmail { get; set; }
+
+        [DisplayName("Reminder Email")]
+        [UIHint("forumeditor"), AllowHtml]
+        [StringLength(10000)]
+        public string ReminderEmail { get; set; }
     }
 
 
@@ -174,4 +179,10 @@ namespace EECIP.Models
     {
         public List<string> results { get; set; }
     }
+
+    public class vmAdminReminder
+    {
+        public List<T_OE_PROJECTS> projects { get; set; }
+    }
+
 }

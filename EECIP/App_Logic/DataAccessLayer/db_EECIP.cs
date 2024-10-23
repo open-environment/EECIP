@@ -112,6 +112,26 @@ namespace EECIP.App_Logic.DataAccessLayer
             }
         }
 
+        public static bool GetT_OE_USER_EXPERTISE_UpdatedLast6Months(int id)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    DateTime evalDate = System.DateTime.Now.AddMonths(-6);
+                    return (from a in ctx.T_OE_USER_EXPERTISE
+                            where a.USER_IDX == id
+                            && a.CREATE_DT >= evalDate
+                            select a).Any();
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return false;
+                }
+            }
+        }
+
         public static List<string> GetT_OE_USER_EXPERTISE_ByUserIDX_withDefault(int id)
         {
             List<string> _xxx = GetT_OE_USER_EXPERTISE_ByUserIDX(id);
@@ -720,6 +740,7 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
+                    DateTime currDate = System.DateTime.Now;
                     DateTime staleDate = System.DateTime.Now.AddMonths(-6);
                     T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
                     if (u != null)
@@ -727,8 +748,15 @@ namespace EECIP.App_Logic.DataAccessLayer
                         return (from a in ctx.T_OE_PROJECTS
                                 join b in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals b.PROJECT_IDX
                                 where b.ORG_IDX == u.ORG_IDX
-                                && ((a.MODIFY_DT != null ? a.MODIFY_DT < staleDate : a.CREATE_DT < staleDate)
-                                || (a.PROJECT_CONTACT_IDX == null && (a.PROJECT_CONTACT == null || a.PROJECT_CONTACT == "")))
+                                && (
+                                    (a.PROJECT_REMIND_DT != null && a.PROJECT_REMIND_DT < currDate)
+                                    ||
+                                    (a.PROJECT_REMIND_DT == null && a.MODIFY_DT != null && a.MODIFY_DT < staleDate)
+                                    ||
+                                    (a.PROJECT_REMIND_DT == null && a.MODIFY_DT == null && a.CREATE_DT < staleDate)
+                                    ||
+                                    (a.PROJECT_CONTACT_IDX == null && (a.PROJECT_CONTACT == null || a.PROJECT_CONTACT == ""))
+                                    )
                                 select a).Distinct().ToList();
                     }
                     else
@@ -749,15 +777,24 @@ namespace EECIP.App_Logic.DataAccessLayer
             {
                 try
                 {
+                    DateTime currDate = System.DateTime.Now;
                     DateTime staleDate = System.DateTime.Now.AddMonths(-6);
+
                     T_OE_USERS u = db_Accounts.GetT_OE_USERSByIDX(UserIDX);
                     if (u != null)
                     {
                         return (from a in ctx.T_OE_PROJECTS
                                 join b in ctx.T_OE_PROJECT_ORGS on a.PROJECT_IDX equals b.PROJECT_IDX
                                 where b.ORG_IDX == u.ORG_IDX
-                                && ((a.MODIFY_DT != null ? a.MODIFY_DT < staleDate : a.CREATE_DT < staleDate)
-                                || (a.PROJECT_CONTACT_IDX == null && (a.PROJECT_CONTACT == null || a.PROJECT_CONTACT == "")))
+                                && (
+                                    (a.PROJECT_REMIND_DT != null && a.PROJECT_REMIND_DT < currDate) 
+                                    || 
+                                    (a.PROJECT_REMIND_DT == null && a.MODIFY_DT != null && a.MODIFY_DT < staleDate)
+                                    ||
+                                    (a.PROJECT_REMIND_DT == null && a.MODIFY_DT == null && a.CREATE_DT < staleDate)
+                                    || 
+                                    (a.PROJECT_CONTACT_IDX == null && (a.PROJECT_CONTACT == null || a.PROJECT_CONTACT == ""))
+                                    )
                                 select a).Distinct().ToList().Count();
                     }
                     else
@@ -958,7 +995,7 @@ namespace EECIP.App_Logic.DataAccessLayer
         public static Guid? InsertUpdatetT_OE_PROJECTS(Guid? pROJECT_IDX, Guid? oRG_IDX, string pROJ_NAME, string pROJ_DESC, string pROJ_DESC_HTML, int? mEDIA_TAG, int? sTART_YEAR,
             string pROJ_STATUS, int? dATE_LAST_UPDATE, string rECORD_SOURCE, string pROJECT_URL, int? mOBILE_IND, string mOBILE_DESC, int? aDV_MON_IND, 
             string aDV_MON_DESC, int? bP_MODERN_IND, string bP_MODERN_DESC, string cOTS, string vENDOR, string pROJECT_CONTACT, int? pROJECT_CONTACT_IDX, bool aCT_IND, bool? sYNC_IND, int? cREATE_USER = 0,
-            string iMPORT_ID = null, bool markUpdated = false)
+            string iMPORT_ID = null, bool markUpdated = false, string pROJECT_REMIND_FREQ = null)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -986,13 +1023,27 @@ namespace EECIP.App_Logic.DataAccessLayer
                         if (string.IsNullOrEmpty(rECORD_SOURCE))
                             e.RECORD_SOURCE = "Agency supplied";
                     }
-                    else
+                    else if (markUpdated)
                     {
-                        if (markUpdated)
-                        {
-                            e.MODIFY_DT = System.DateTime.Now;
-                            e.MODIFY_USERIDX = cREATE_USER;
-                        }
+                        e.MODIFY_DT = System.DateTime.Now;
+                        e.MODIFY_USERIDX = cREATE_USER;
+                    }
+
+                    //truly updating the project and therefore resetting project reminder dates and counter
+                    if (markUpdated || insInd == true)
+                    {
+                        if ((pROJECT_REMIND_FREQ ?? e.PROJECT_REMIND_FREQ) == "Q")  //quarterly reminder
+                            e.PROJECT_REMIND_DT = System.DateTime.Today.AddMonths(3);
+                        if ((pROJECT_REMIND_FREQ ?? e.PROJECT_REMIND_FREQ) == "Y")  //yearly reminder
+                            e.PROJECT_REMIND_DT = System.DateTime.Today.AddMonths(12);
+                        if ((pROJECT_REMIND_FREQ ?? e.PROJECT_REMIND_FREQ) == "S")  //semi-annual reminder
+                            e.PROJECT_REMIND_DT = System.DateTime.Today.AddMonths(6);
+                        if ((pROJECT_REMIND_FREQ ?? e.PROJECT_REMIND_FREQ) == "M")  //monthly reminder
+                            e.PROJECT_REMIND_DT = System.DateTime.Today.AddMonths(1);
+                        if ((pROJECT_REMIND_FREQ ?? e.PROJECT_REMIND_FREQ) == "N")  //no reminder
+                            e.PROJECT_REMIND_DT = null;
+
+                        e.PROJECT_REMIND_CNT = 0;
                     }
 
                     //if (oRG_IDX != null) e.ORG_IDX = oRG_IDX.ConvertOrDefault<Guid>();
@@ -1022,6 +1073,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     e.ACT_IND = aCT_IND;
                     if (sYNC_IND != null) e.SYNC_IND = sYNC_IND ?? false;
                     if (iMPORT_ID != null) e.IMPORT_ID = iMPORT_ID;
+                    if (pROJECT_REMIND_FREQ != null) e.PROJECT_REMIND_FREQ = pROJECT_REMIND_FREQ;
 
                     if (insInd)
                         ctx.T_OE_PROJECTS.Add(e);
@@ -1036,6 +1088,43 @@ namespace EECIP.App_Logic.DataAccessLayer
                 }
             }
         }
+
+        public static int? UpdatetT_OE_PROJECTS_IncrementReminderCount(Guid? pROJECT_IDX)
+        {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    T_OE_PROJECTS e = (from c in ctx.T_OE_PROJECTS
+                                       where c.PROJECT_IDX == pROJECT_IDX
+                                       select c).FirstOrDefault();
+
+                    if (e != null)
+                    {
+                        if (e.PROJECT_REMIND_CNT > 1)
+                        {
+                            //if 2 reminders already sent, then reset
+                            e.PROJECT_REMIND_CNT = 0;
+                            e.PROJECT_REMIND_FREQ = "N";
+                            e.PROJECT_REMIND_DT = null;
+                        }
+                        else
+                        {
+                            e.PROJECT_REMIND_CNT += 1;
+                        }
+                    }
+
+                    ctx.SaveChanges();
+                    return e.PROJECT_REMIND_CNT;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
+
 
         public static int DeleteT_OE_PROJECTS(Guid id)
         {
@@ -1138,8 +1227,33 @@ namespace EECIP.App_Logic.DataAccessLayer
                     return null;
                 }
             }
-        }
+        
+}
 
+
+        public static List<T_OE_PROJECTS> GetProjectReminders() {
+            using (EECIPEntities ctx = new EECIPEntities())
+            {
+                try
+                {
+                    DateTime now1 = System.DateTime.Now;
+
+                    var xxx = (from a in ctx.T_OE_PROJECTS
+                               join b in ctx.T_OE_USERS on (a.MODIFY_USERIDX ?? a.CREATE_USERIDX) equals b.USER_IDX
+                               where a.PROJECT_REMIND_DT < now1
+                               && b.ACT_IND == true
+                               orderby b.USER_ID, a.PROJ_NAME
+                               select a).ToList();
+
+                    return xxx;
+                }
+                catch (Exception ex)
+                {
+                    db_Ref.LogEFException(ex);
+                    return null;
+                }
+            }
+        }
 
 
         //***************************project local (temp when importing)****************************************

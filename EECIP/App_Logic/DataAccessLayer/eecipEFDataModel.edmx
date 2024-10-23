@@ -25,6 +25,7 @@
           <Property Name="TERMS_AND_CONDITIONS" Type="varchar(max)" />
           <Property Name="ANNOUNCEMENTS" Type="varchar(max)" />
           <Property Name="WELCOME_EMAIL" Type="varchar(max)" />
+          <Property Name="REMINDER_EMAIL" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="T_OE_DOCUMENTS">
           <Key>
@@ -183,7 +184,9 @@
           <Property Name="PROJECT_CONTACT" Type="varchar" MaxLength="100" />
           <Property Name="PROJECT_CONTACT_IDX" Type="int" />
           <Property Name="PROJ_DESC_HTML" Type="varchar(max)" />
-          <Property Name="LAST_NOTIFY_DT" Type="datetime2" Precision="0" />
+          <Property Name="PROJECT_REMIND_DT" Type="datetime2" Precision="0" />
+          <Property Name="PROJECT_REMIND_FREQ" Type="varchar" MaxLength="1" />
+          <Property Name="PROJECT_REMIND_CNT" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="T_OE_REF_EMAIL_TEMPLATE">
           <Key>
@@ -399,6 +402,7 @@
           <Property Name="NOTIFY_BADGE_IND" Type="bit" Nullable="false" />
           <Property Name="NOTIFY_NEWSLETTER" Type="bit" Nullable="false" />
           <Property Name="NEW_USER_EMAIL_IND" Type="bit" Nullable="false" />
+          <Property Name="PROJECT_UPDATE_OPTOUT_IND" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Badge">
           <Key>
@@ -607,18 +611,16 @@ warning 6002: The table/view 'EECIP.dbo.STALE_PROJECTS_WITH_CONTACTS' does not h
         <EntityType Name="STALE_PROJECTS_WITH_CONTACTS">
           <Key>
             <PropertyRef Name="PROJECT_IDX" />
-            <PropertyRef Name="FNAME" />
-            <PropertyRef Name="LNAME" />
           </Key>
           <Property Name="PROJECT_IDX" Type="uniqueidentifier" Nullable="false" />
           <Property Name="PROJ_NAME" Type="varchar" MaxLength="150" />
           <Property Name="PROJ_STATUS" Type="varchar" MaxLength="100" />
           <Property Name="ORG" Type="varchar" MaxLength="200" />
-          <Property Name="FNAME" Type="varchar" MaxLength="40" Nullable="false" />
-          <Property Name="LNAME" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="FNAME" Type="varchar" MaxLength="40" />
+          <Property Name="LNAME" Type="varchar" MaxLength="40" />
           <Property Name="EMAIL" Type="varchar" MaxLength="150" />
           <Property Name="CREAT_UPDATE_DT" Type="datetime2" Precision="0" />
-          <Property Name="LAST_NOTIFY_DT" Type="datetime2" Precision="0" />
+          <Property Name="PROJECT_REMIND_DT" Type="date" />
           <Property Name="TRU_LAST_DT" Type="datetime2" Precision="0" />
           <Property Name="TRU_NEXT_DT" Type="datetime2" Precision="0" />
         </EntityType>
@@ -1372,7 +1374,7 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
     [STALE_PROJECTS_WITH_CONTACTS].[LNAME] AS [LNAME], 
     [STALE_PROJECTS_WITH_CONTACTS].[EMAIL] AS [EMAIL], 
     [STALE_PROJECTS_WITH_CONTACTS].[CREAT_UPDATE_DT] AS [CREAT_UPDATE_DT], 
-    [STALE_PROJECTS_WITH_CONTACTS].[LAST_NOTIFY_DT] AS [LAST_NOTIFY_DT], 
+    [STALE_PROJECTS_WITH_CONTACTS].[PROJECT_REMIND_DT] AS [PROJECT_REMIND_DT], 
     [STALE_PROJECTS_WITH_CONTACTS].[TRU_LAST_DT] AS [TRU_LAST_DT], 
     [STALE_PROJECTS_WITH_CONTACTS].[TRU_NEXT_DT] AS [TRU_NEXT_DT]
     FROM [dbo].[STALE_PROJECTS_WITH_CONTACTS] AS [STALE_PROJECTS_WITH_CONTACTS]</DefiningQuery>
@@ -1601,7 +1603,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <EntitySet Name="T_OE_PROJECT_TAGS" EntityType="EECIPModel.T_OE_PROJECT_TAGS" />
           <EntitySet Name="T_OE_PROJECT_URLS" EntityType="EECIPModel.T_OE_PROJECT_URLS" />
           <EntitySet Name="T_OE_PROJECT_VOTES" EntityType="EECIPModel.T_OE_PROJECT_VOTES" />
-          <EntitySet Name="T_OE_PROJECTS" EntityType="EECIPModel.T_OE_PROJECTS" />
           <EntitySet Name="T_OE_REF_ENTERPRISE_PLATFORM" EntityType="EECIPModel.T_OE_REF_ENTERPRISE_PLATFORM" />
           <EntitySet Name="T_OE_REF_ORG_TYPE" EntityType="EECIPModel.T_OE_REF_ORG_TYPE" />
           <EntitySet Name="T_OE_REF_REGION" EntityType="EECIPModel.T_OE_REF_REGION" />
@@ -1618,10 +1619,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <EntitySet Name="T_OE_USERS" EntityType="EECIPModel.T_OE_USERS" />
           <AssociationSet Name="FK__T_OE_DOCU__ORG_E__19FFD4FC" Association="EECIPModel.FK__T_OE_DOCU__ORG_E__19FFD4FC">
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
-            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_DOCU__PROJE__190BB0C3" Association="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
             <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_ORGA__EPA_R__1DB06A4F" Association="EECIPModel.FK__T_OE_ORGA__EPA_R__1DB06A4F">
@@ -1644,10 +1641,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
             <End Role="T_OE_REF_STATE" EntitySet="T_OE_REF_STATE" />
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6BE40491" Association="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491">
-            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-          </AssociationSet>
           <AssociationSet Name="FK__T_OE_USER__ORG_I__2CF2ADDF" Association="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF">
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
@@ -1660,37 +1653,9 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
             <End Role="T_OE_ORGANIZATION_ENT_SVCS" EntitySet="T_OE_ORGANIZATION_ENT_SVCS" />
             <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
           </AssociationSet>
-          <AssociationSet Name="FK_ProjectTag_Project" Association="EECIPModel.FK_ProjectTag_Project">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_PROJECT_TAGS" EntitySet="T_OE_PROJECT_TAGS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__PROJE__795DFB40" Association="EECIPModel.FK__T_OE_PROJ__PROJE__795DFB40">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_PROJECT_URLS" EntitySet="T_OE_PROJECT_URLS" />
-          </AssociationSet>
           <AssociationSet Name="FK__T_OE_PROJ__VOTED__2B5F6B28" Association="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28">
             <End Role="T_OE_USERS" EntitySet="T_OE_USERS" />
             <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ProjectVote_Project" Association="EECIPModel.FK_ProjectVote_Project">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__ADV_M__6EC0713C" Association="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C">
-            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__BP_MO__6FB49575" Association="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575">
-            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__MEDIA__6CD828CA" Association="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA">
-            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-          </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__MOBIL__6DCC4D03" Association="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03">
-            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
           </AssociationSet>
           <AssociationSet Name="FK__T_OE_REF___TAG_C__6B24EA82" Association="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82">
             <End Role="T_OE_REF_TAG_CATEGORIES" EntitySet="T_OE_REF_TAG_CATEGORIES" />
@@ -1813,10 +1778,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
             <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
             <End Role="T_OE_PROJECT_ORGS" EntitySet="T_OE_PROJECT_ORGS" />
           </AssociationSet>
-          <AssociationSet Name="FK__T_OE_PROJ__PROJE__5F3414E9" Association="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9">
-            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
-            <End Role="T_OE_PROJECT_ORGS" EntitySet="T_OE_PROJECT_ORGS" />
-          </AssociationSet>
           <FunctionImport Name="SP_RECENT_FORUM_BY_USER_TAG" ReturnType="Collection(EECIPModel.SP_RECENT_FORUM_BY_USER_TAG_Result)">
             <Parameter Name="useridx" Mode="In" Type="Int32" />
             <Parameter Name="daysSince" Mode="In" Type="Int32" />
@@ -1853,6 +1814,47 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <EntitySet Name="RPT_MON_PROJ_VOTE" EntityType="EECIPModel.RPT_MON_PROJ_VOTE" />
           <EntitySet Name="RPT_MON_TOPIC_VOTE" EntityType="EECIPModel.RPT_MON_TOPIC_VOTE" />
           <EntitySet Name="USER_DEFINED_TAGS" EntityType="EECIPModel.USER_DEFINED_TAGS" />
+          <EntitySet Name="T_OE_PROJECTS" EntityType="EECIPModel.T_OE_PROJECTS" />
+          <AssociationSet Name="FK__T_OE_DOCU__PROJE__190BB0C3" Association="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_DOCUMENTS" EntitySet="T_OE_DOCUMENTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__ORG_I__6BE40491" Association="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491">
+            <End Role="T_OE_ORGANIZATION" EntitySet="T_OE_ORGANIZATION" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__5F3414E9" Association="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_ORGS" EntitySet="T_OE_PROJECT_ORGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectTag_Project" Association="EECIPModel.FK_ProjectTag_Project">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_TAGS" EntitySet="T_OE_PROJECT_TAGS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__PROJE__795DFB40" Association="EECIPModel.FK__T_OE_PROJ__PROJE__795DFB40">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_URLS" EntitySet="T_OE_PROJECT_URLS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectVote_Project" Association="EECIPModel.FK_ProjectVote_Project">
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+            <End Role="T_OE_PROJECT_VOTES" EntitySet="T_OE_PROJECT_VOTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__ADV_M__6EC0713C" Association="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__BP_MO__6FB49575" Association="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__MEDIA__6CD828CA" Association="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
+          <AssociationSet Name="FK__T_OE_PROJ__MOBIL__6DCC4D03" Association="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03">
+            <End Role="T_OE_REF_TAGS" EntitySet="T_OE_REF_TAGS" />
+            <End Role="T_OE_PROJECTS" EntitySet="T_OE_PROJECTS" />
+          </AssociationSet>
           <EntitySet Name="STALE_PROJECTS_WITH_CONTACTS" EntityType="EECIPModel.STALE_PROJECTS_WITH_CONTACTS" />
           </EntityContainer>
         <ComplexType Name="SP_ENT_SVC_COUNT_DISPLAY_Result">
@@ -1882,6 +1884,7 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <Property Name="TERMS_AND_CONDITIONS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="ANNOUNCEMENTS" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="WELCOME_EMAIL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="REMINDER_EMAIL" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="T_OE_DOCUMENTS">
           <Key>
@@ -1928,9 +1931,9 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <NavigationProperty Name="T_OE_ORGANIZATION_TAGS" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__1F63A897" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_TAGS" />
           <NavigationProperty Name="T_OE_ORGANIZATION_EMAIL_RULE" Relationship="EECIPModel.FK__T_OE_ORGA__ORG_I__54CB950F" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_ORGANIZATION_EMAIL_RULE" />
           <NavigationProperty Name="T_OE_REF_STATE" Relationship="EECIPModel.FK__T_OE_ORGA__STATE__1CBC4616" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_REF_STATE" />
-          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_USER__ORG_I__2CF2ADDF" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_USERS" />
           <NavigationProperty Name="T_OE_PROJECT_ORGS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__5E3FF0B0" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECT_ORGS" />
+          <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_ORGANIZATION" ToRole="T_OE_PROJECTS" />
         </EntityType>
         <EntityType Name="T_OE_ORGANIZATION_EMAIL_RULE">
           <Key>
@@ -2017,50 +2020,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <NavigationProperty Name="T_OE_USERS" Relationship="EECIPModel.FK__T_OE_PROJ__VOTED__2B5F6B28" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_USERS" />
           <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK_ProjectVote_Project" FromRole="T_OE_PROJECT_VOTES" ToRole="T_OE_PROJECTS" />
         </EntityType>
-        <EntityType Name="T_OE_PROJECTS">
-          <Key>
-            <PropertyRef Name="PROJECT_IDX" />
-          </Key>
-          <Property Name="PROJECT_IDX" Type="Guid" Nullable="false" />
-          <Property Name="ORG_IDX" Type="Guid" />
-          <Property Name="PROJ_NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="PROJ_DESC" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="MEDIA_TAG" Type="Int32" />
-          <Property Name="START_YEAR" Type="Int32" />
-          <Property Name="PROJ_STATUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="DATE_LAST_UPDATE" Type="Int32" />
-          <Property Name="RECORD_SOURCE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PROJECT_URL" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="MOBILE_IND" Type="Int32" />
-          <Property Name="MOBILE_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ADV_MON_IND" Type="Int32" />
-          <Property Name="ADV_MON_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="BP_MODERN_IND" Type="Int32" />
-          <Property Name="BP_MODERN_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="COTS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="VENDOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
-          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
-          <Property Name="CREATE_USERIDX" Type="Int32" />
-          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
-          <Property Name="MODIFY_USERIDX" Type="Int32" />
-          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
-          <Property Name="IMPORT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PROJECT_CONTACT_IDX" Type="Int32" />
-          <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_PROJECTS" ToRole="T_OE_DOCUMENTS" />
-          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_PROJECTS" ToRole="T_OE_ORGANIZATION" />
-          <NavigationProperty Name="T_OE_PROJECT_TAGS" Relationship="EECIPModel.FK_ProjectTag_Project" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_TAGS" />
-          <NavigationProperty Name="T_OE_PROJECT_URLS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__795DFB40" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_URLS" />
-          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK_ProjectVote_Project" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_VOTES" />
-          <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
-          <NavigationProperty Name="T_OE_REF_TAGS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
-          <NavigationProperty Name="T_OE_REF_TAGS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
-          <NavigationProperty Name="T_OE_REF_TAGS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
-          <NavigationProperty Name="T_OE_PROJECT_ORGS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_ORGS" />
-          <Property Name="PROJ_DESC_HTML" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="LAST_NOTIFY_DT" Type="DateTime" Precision="0" />
-        </EntityType>
         <EntityType Name="T_OE_REF_ENTERPRISE_PLATFORM">
           <Key>
             <PropertyRef Name="ENT_PLATFORM_IDX" />
@@ -2133,13 +2092,13 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <Property Name="USER_CREATE_IND" Type="Boolean" Nullable="false" />
           <Property Name="CREATE_USERIDX" Type="Int32" />
           <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_REF_TAG_CATEGORIES" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAGS" ToRole="T_OE_REF_TAG_CATEGORIES" />
+          <Property Name="PROMOTE_IND" Type="Boolean" Nullable="false" />
+          <Property Name="TAG_DESC" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="T_OE_PROJECTS" Relationship="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_PROJECTS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_PROJECTS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
           <NavigationProperty Name="T_OE_PROJECTS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_REF_TAGS" ToRole="T_OE_PROJECTS" />
-          <NavigationProperty Name="T_OE_REF_TAG_CATEGORIES" Relationship="EECIPModel.FK__T_OE_REF___TAG_C__6B24EA82" FromRole="T_OE_REF_TAGS" ToRole="T_OE_REF_TAG_CATEGORIES" />
-          <Property Name="PROMOTE_IND" Type="Boolean" Nullable="false" />
-          <Property Name="TAG_DESC" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="T_OE_ROLES">
           <Key>
@@ -2269,6 +2228,7 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <Property Name="NOTIFY_NEWSLETTER" Type="Boolean" Nullable="false" />
           <Property Name="NEW_USER_EMAIL_IND" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Posts" Relationship="EECIPModel.FK__Post__Membership__67DE6983" FromRole="T_OE_USERS" ToRole="Post" />
+          <Property Name="PROJECT_UPDATE_OPTOUT_IND" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK__T_OE_DOCU__ORG_E__19FFD4FC">
           <End Type="EECIPModel.T_OE_ORGANIZATION_ENT_SVCS" Role="T_OE_ORGANIZATION_ENT_SVCS" Multiplicity="0..1">
@@ -2281,20 +2241,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
             </Principal>
             <Dependent Role="T_OE_DOCUMENTS">
               <PropertyRef Name="ORG_ENT_SVCS_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_DOCU__PROJE__190BB0C3">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_DOCUMENTS" Role="T_OE_DOCUMENTS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_DOCUMENTS">
-              <PropertyRef Name="PROJECT_IDX" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2364,18 +2310,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
-          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_ORGANIZATION">
-              <PropertyRef Name="ORG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECTS">
-              <PropertyRef Name="ORG_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__T_OE_USER__ORG_I__2CF2ADDF">
           <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="*" />
@@ -2414,34 +2348,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ProjectTag_Project">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_PROJECT_TAGS" Role="T_OE_PROJECT_TAGS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_TAGS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_PROJ__PROJE__795DFB40">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_PROJECT_URLS" Role="T_OE_PROJECT_URLS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_URLS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK__T_OE_PROJ__VOTED__2B5F6B28">
           <End Type="EECIPModel.T_OE_USERS" Role="T_OE_USERS" Multiplicity="0..1" />
           <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
@@ -2451,68 +2357,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
             </Principal>
             <Dependent Role="T_OE_PROJECT_VOTES">
               <PropertyRef Name="VOTED_BY_USER_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ProjectVote_Project">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_VOTES">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_PROJ__ADV_M__6EC0713C">
-          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_REF_TAGS">
-              <PropertyRef Name="TAG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECTS">
-              <PropertyRef Name="ADV_MON_IND" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_PROJ__BP_MO__6FB49575">
-          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_REF_TAGS">
-              <PropertyRef Name="TAG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECTS">
-              <PropertyRef Name="BP_MODERN_IND" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_PROJ__MEDIA__6CD828CA">
-          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_REF_TAGS">
-              <PropertyRef Name="TAG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECTS">
-              <PropertyRef Name="MEDIA_TAG" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK__T_OE_PROJ__MOBIL__6DCC4D03">
-          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_REF_TAGS">
-              <PropertyRef Name="TAG_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECTS">
-              <PropertyRef Name="MOBILE_IND" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -3085,18 +2929,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__T_OE_PROJ__PROJE__5F3414E9">
-          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="1" />
-          <End Type="EECIPModel.T_OE_PROJECT_ORGS" Role="T_OE_PROJECT_ORGS" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="T_OE_PROJECTS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Principal>
-            <Dependent Role="T_OE_PROJECT_ORGS">
-              <PropertyRef Name="PROJECT_IDX" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <ComplexType Name="SP_RECENT_FORUM_BY_USER_TAG_Result">
           <Property Type="Guid" Name="Id" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="450" />
@@ -3256,21 +3088,195 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <Property Name="UserTagType" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
           <Property Name="CNT" Type="Int32" />
         </EntityType>
+        <EntityType Name="T_OE_PROJECTS">
+          <Key>
+            <PropertyRef Name="PROJECT_IDX" />
+          </Key>
+          <Property Name="PROJECT_IDX" Type="Guid" Nullable="false" />
+          <Property Name="ORG_IDX" Type="Guid" />
+          <Property Name="PROJ_NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="PROJ_DESC" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="MEDIA_TAG" Type="Int32" />
+          <Property Name="START_YEAR" Type="Int32" />
+          <Property Name="PROJ_STATUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DATE_LAST_UPDATE" Type="Int32" />
+          <Property Name="RECORD_SOURCE" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_URL" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="MOBILE_IND" Type="Int32" />
+          <Property Name="MOBILE_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ADV_MON_IND" Type="Int32" />
+          <Property Name="ADV_MON_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BP_MODERN_IND" Type="Int32" />
+          <Property Name="BP_MODERN_DESC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="COTS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="VENDOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ACT_IND" Type="Boolean" Nullable="false" />
+          <Property Name="SYNC_IND" Type="Boolean" Nullable="false" />
+          <Property Name="CREATE_USERIDX" Type="Int32" />
+          <Property Name="CREATE_DT" Type="DateTime" Precision="0" />
+          <Property Name="MODIFY_USERIDX" Type="Int32" />
+          <Property Name="MODIFY_DT" Type="DateTime" Precision="0" />
+          <Property Name="IMPORT_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_CONTACT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_CONTACT_IDX" Type="Int32" />
+          <Property Name="PROJ_DESC_HTML" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_REMIND_DT" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="T_OE_DOCUMENTS" Relationship="EECIPModel.FK__T_OE_DOCU__PROJE__190BB0C3" FromRole="T_OE_PROJECTS" ToRole="T_OE_DOCUMENTS" />
+          <NavigationProperty Name="T_OE_ORGANIZATION" Relationship="EECIPModel.FK__T_OE_PROJ__ORG_I__6BE40491" FromRole="T_OE_PROJECTS" ToRole="T_OE_ORGANIZATION" />
+          <NavigationProperty Name="T_OE_PROJECT_ORGS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__5F3414E9" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_ORGS" />
+          <NavigationProperty Name="T_OE_PROJECT_TAGS" Relationship="EECIPModel.FK_ProjectTag_Project" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_TAGS" />
+          <NavigationProperty Name="T_OE_PROJECT_URLS" Relationship="EECIPModel.FK__T_OE_PROJ__PROJE__795DFB40" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_URLS" />
+          <NavigationProperty Name="T_OE_PROJECT_VOTES" Relationship="EECIPModel.FK_ProjectVote_Project" FromRole="T_OE_PROJECTS" ToRole="T_OE_PROJECT_VOTES" />
+          <NavigationProperty Name="T_OE_REF_TAGS" Relationship="EECIPModel.FK__T_OE_PROJ__ADV_M__6EC0713C" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_REF_TAGS1" Relationship="EECIPModel.FK__T_OE_PROJ__BP_MO__6FB49575" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_REF_TAGS2" Relationship="EECIPModel.FK__T_OE_PROJ__MEDIA__6CD828CA" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+          <NavigationProperty Name="T_OE_REF_TAGS3" Relationship="EECIPModel.FK__T_OE_PROJ__MOBIL__6DCC4D03" FromRole="T_OE_PROJECTS" ToRole="T_OE_REF_TAGS" />
+          <Property Name="PROJECT_REMIND_FREQ" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="PROJECT_REMIND_CNT" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__T_OE_DOCU__PROJE__190BB0C3">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_DOCUMENTS" Role="T_OE_DOCUMENTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_DOCUMENTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__ORG_I__6BE40491">
+          <End Type="EECIPModel.T_OE_ORGANIZATION" Role="T_OE_ORGANIZATION" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_ORGANIZATION">
+              <PropertyRef Name="ORG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="ORG_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__5F3414E9">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_PROJECT_ORGS" Role="T_OE_PROJECT_ORGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_ORGS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectTag_Project">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_PROJECT_TAGS" Role="T_OE_PROJECT_TAGS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_TAGS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__PROJE__795DFB40">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_PROJECT_URLS" Role="T_OE_PROJECT_URLS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_URLS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectVote_Project">
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="EECIPModel.T_OE_PROJECT_VOTES" Role="T_OE_PROJECT_VOTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_PROJECTS">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECT_VOTES">
+              <PropertyRef Name="PROJECT_IDX" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__ADV_M__6EC0713C">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="ADV_MON_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__BP_MO__6FB49575">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="BP_MODERN_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__MEDIA__6CD828CA">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="MEDIA_TAG" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__T_OE_PROJ__MOBIL__6DCC4D03">
+          <End Type="EECIPModel.T_OE_REF_TAGS" Role="T_OE_REF_TAGS" Multiplicity="0..1" />
+          <End Type="EECIPModel.T_OE_PROJECTS" Role="T_OE_PROJECTS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="T_OE_REF_TAGS">
+              <PropertyRef Name="TAG_IDX" />
+            </Principal>
+            <Dependent Role="T_OE_PROJECTS">
+              <PropertyRef Name="MOBILE_IND" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="STALE_PROJECTS_WITH_CONTACTS">
           <Key>
             <PropertyRef Name="PROJECT_IDX" />
-            <PropertyRef Name="FNAME" />
-            <PropertyRef Name="LNAME" />
           </Key>
           <Property Name="PROJECT_IDX" Type="Guid" Nullable="false" />
           <Property Name="PROJ_NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="PROJ_STATUS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ORG" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="FNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="LNAME" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="FNAME" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="LNAME" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
           <Property Name="EMAIL" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="CREAT_UPDATE_DT" Type="DateTime" Precision="0" />
-          <Property Name="LAST_NOTIFY_DT" Type="DateTime" Precision="0" />
+          <Property Name="PROJECT_REMIND_DT" Type="DateTime" Precision="0" />
           <Property Name="TRU_LAST_DT" Type="DateTime" Precision="0" />
           <Property Name="TRU_NEXT_DT" Type="DateTime" Precision="0" />
         </EntityType>
@@ -3307,6 +3313,7 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <EntitySetMapping Name="T_OE_APP_SETTINGS_CUSTOM">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_APP_SETTINGS_CUSTOM">
               <MappingFragment StoreEntitySet="T_OE_APP_SETTINGS_CUSTOM">
+                <ScalarProperty Name="REMINDER_EMAIL" ColumnName="REMINDER_EMAIL" />
                 <ScalarProperty Name="WELCOME_EMAIL" ColumnName="WELCOME_EMAIL" />
                 <ScalarProperty Name="ANNOUNCEMENTS" ColumnName="ANNOUNCEMENTS" />
                 <ScalarProperty Name="TERMS_AND_CONDITIONS" ColumnName="TERMS_AND_CONDITIONS" />
@@ -3427,41 +3434,6 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
                 <ScalarProperty Name="DATE_VOTED" ColumnName="DATE_VOTED" />
                 <ScalarProperty Name="VOTE_AMOUNT" ColumnName="VOTE_AMOUNT" />
                 <ScalarProperty Name="PROJECT_VOTE_IDX" ColumnName="PROJECT_VOTE_IDX" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="T_OE_PROJECTS">
-            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECTS">
-              <MappingFragment StoreEntitySet="T_OE_PROJECTS">
-                <ScalarProperty Name="LAST_NOTIFY_DT" ColumnName="LAST_NOTIFY_DT" />
-                <ScalarProperty Name="PROJ_DESC_HTML" ColumnName="PROJ_DESC_HTML" />
-                <ScalarProperty Name="PROJECT_CONTACT_IDX" ColumnName="PROJECT_CONTACT_IDX" />
-                <ScalarProperty Name="PROJECT_CONTACT" ColumnName="PROJECT_CONTACT" />
-                <ScalarProperty Name="IMPORT_ID" ColumnName="IMPORT_ID" />
-                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
-                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
-                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
-                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
-                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
-                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
-                <ScalarProperty Name="VENDOR" ColumnName="VENDOR" />
-                <ScalarProperty Name="COTS" ColumnName="COTS" />
-                <ScalarProperty Name="BP_MODERN_DESC" ColumnName="BP_MODERN_DESC" />
-                <ScalarProperty Name="BP_MODERN_IND" ColumnName="BP_MODERN_IND" />
-                <ScalarProperty Name="ADV_MON_DESC" ColumnName="ADV_MON_DESC" />
-                <ScalarProperty Name="ADV_MON_IND" ColumnName="ADV_MON_IND" />
-                <ScalarProperty Name="MOBILE_DESC" ColumnName="MOBILE_DESC" />
-                <ScalarProperty Name="MOBILE_IND" ColumnName="MOBILE_IND" />
-                <ScalarProperty Name="PROJECT_URL" ColumnName="PROJECT_URL" />
-                <ScalarProperty Name="RECORD_SOURCE" ColumnName="RECORD_SOURCE" />
-                <ScalarProperty Name="DATE_LAST_UPDATE" ColumnName="DATE_LAST_UPDATE" />
-                <ScalarProperty Name="PROJ_STATUS" ColumnName="PROJ_STATUS" />
-                <ScalarProperty Name="START_YEAR" ColumnName="START_YEAR" />
-                <ScalarProperty Name="MEDIA_TAG" ColumnName="MEDIA_TAG" />
-                <ScalarProperty Name="PROJ_DESC" ColumnName="PROJ_DESC" />
-                <ScalarProperty Name="PROJ_NAME" ColumnName="PROJ_NAME" />
-                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
-                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3623,6 +3595,7 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
           <EntitySetMapping Name="T_OE_USERS">
             <EntityTypeMapping TypeName="EECIPModel.T_OE_USERS">
               <MappingFragment StoreEntitySet="T_OE_USERS">
+                <ScalarProperty Name="PROJECT_UPDATE_OPTOUT_IND" ColumnName="PROJECT_UPDATE_OPTOUT_IND" />
                 <ScalarProperty Name="NEW_USER_EMAIL_IND" ColumnName="NEW_USER_EMAIL_IND" />
                 <ScalarProperty Name="NOTIFY_NEWSLETTER" ColumnName="NOTIFY_NEWSLETTER" />
                 <ScalarProperty Name="NOTIFY_BADGE_IND" ColumnName="NOTIFY_BADGE_IND" />
@@ -3982,12 +3955,49 @@ warning 6002: The table/view 'EECIP.dbo.USER_DEFINED_TAGS' does not have a prima
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="T_OE_PROJECTS">
+            <EntityTypeMapping TypeName="EECIPModel.T_OE_PROJECTS">
+              <MappingFragment StoreEntitySet="T_OE_PROJECTS">
+                <ScalarProperty Name="PROJECT_REMIND_CNT" ColumnName="PROJECT_REMIND_CNT" />
+                <ScalarProperty Name="PROJECT_REMIND_FREQ" ColumnName="PROJECT_REMIND_FREQ" />
+                <ScalarProperty Name="PROJECT_REMIND_DT" ColumnName="PROJECT_REMIND_DT" />
+                <ScalarProperty Name="PROJ_DESC_HTML" ColumnName="PROJ_DESC_HTML" />
+                <ScalarProperty Name="PROJECT_CONTACT_IDX" ColumnName="PROJECT_CONTACT_IDX" />
+                <ScalarProperty Name="PROJECT_CONTACT" ColumnName="PROJECT_CONTACT" />
+                <ScalarProperty Name="IMPORT_ID" ColumnName="IMPORT_ID" />
+                <ScalarProperty Name="MODIFY_DT" ColumnName="MODIFY_DT" />
+                <ScalarProperty Name="MODIFY_USERIDX" ColumnName="MODIFY_USERIDX" />
+                <ScalarProperty Name="CREATE_DT" ColumnName="CREATE_DT" />
+                <ScalarProperty Name="CREATE_USERIDX" ColumnName="CREATE_USERIDX" />
+                <ScalarProperty Name="SYNC_IND" ColumnName="SYNC_IND" />
+                <ScalarProperty Name="ACT_IND" ColumnName="ACT_IND" />
+                <ScalarProperty Name="VENDOR" ColumnName="VENDOR" />
+                <ScalarProperty Name="COTS" ColumnName="COTS" />
+                <ScalarProperty Name="BP_MODERN_DESC" ColumnName="BP_MODERN_DESC" />
+                <ScalarProperty Name="BP_MODERN_IND" ColumnName="BP_MODERN_IND" />
+                <ScalarProperty Name="ADV_MON_DESC" ColumnName="ADV_MON_DESC" />
+                <ScalarProperty Name="ADV_MON_IND" ColumnName="ADV_MON_IND" />
+                <ScalarProperty Name="MOBILE_DESC" ColumnName="MOBILE_DESC" />
+                <ScalarProperty Name="MOBILE_IND" ColumnName="MOBILE_IND" />
+                <ScalarProperty Name="PROJECT_URL" ColumnName="PROJECT_URL" />
+                <ScalarProperty Name="RECORD_SOURCE" ColumnName="RECORD_SOURCE" />
+                <ScalarProperty Name="DATE_LAST_UPDATE" ColumnName="DATE_LAST_UPDATE" />
+                <ScalarProperty Name="PROJ_STATUS" ColumnName="PROJ_STATUS" />
+                <ScalarProperty Name="START_YEAR" ColumnName="START_YEAR" />
+                <ScalarProperty Name="MEDIA_TAG" ColumnName="MEDIA_TAG" />
+                <ScalarProperty Name="PROJ_DESC" ColumnName="PROJ_DESC" />
+                <ScalarProperty Name="PROJ_NAME" ColumnName="PROJ_NAME" />
+                <ScalarProperty Name="ORG_IDX" ColumnName="ORG_IDX" />
+                <ScalarProperty Name="PROJECT_IDX" ColumnName="PROJECT_IDX" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="STALE_PROJECTS_WITH_CONTACTS">
             <EntityTypeMapping TypeName="EECIPModel.STALE_PROJECTS_WITH_CONTACTS">
               <MappingFragment StoreEntitySet="STALE_PROJECTS_WITH_CONTACTS">
                 <ScalarProperty Name="TRU_NEXT_DT" ColumnName="TRU_NEXT_DT" />
                 <ScalarProperty Name="TRU_LAST_DT" ColumnName="TRU_LAST_DT" />
-                <ScalarProperty Name="LAST_NOTIFY_DT" ColumnName="LAST_NOTIFY_DT" />
+                <ScalarProperty Name="PROJECT_REMIND_DT" ColumnName="PROJECT_REMIND_DT" />
                 <ScalarProperty Name="CREAT_UPDATE_DT" ColumnName="CREAT_UPDATE_DT" />
                 <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
                 <ScalarProperty Name="LNAME" ColumnName="LNAME" />

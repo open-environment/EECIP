@@ -41,7 +41,7 @@ namespace EECIP.Controllers
                 {
                     //unsubscribe from newsletter
                     db_Accounts.UpdateT_OE_USERS(u.USER_IDX, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                        null, null, null, null, false);
+                        null, null, null, null, false, null);
 
                     TempData["Success"] = "You have successfully unsubscribed.";
                 }

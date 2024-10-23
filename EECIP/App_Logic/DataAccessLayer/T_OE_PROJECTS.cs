@@ -18,10 +18,10 @@ namespace EECIP.App_Logic.DataAccessLayer
         public T_OE_PROJECTS()
         {
             this.T_OE_DOCUMENTS = new HashSet<T_OE_DOCUMENTS>();
+            this.T_OE_PROJECT_ORGS = new HashSet<T_OE_PROJECT_ORGS>();
             this.T_OE_PROJECT_TAGS = new HashSet<T_OE_PROJECT_TAGS>();
             this.T_OE_PROJECT_URLS = new HashSet<T_OE_PROJECT_URLS>();
             this.T_OE_PROJECT_VOTES = new HashSet<T_OE_PROJECT_VOTES>();
-            this.T_OE_PROJECT_ORGS = new HashSet<T_OE_PROJECT_ORGS>();
         }
     
         public System.Guid PROJECT_IDX { get; set; }
@@ -52,11 +52,15 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string PROJECT_CONTACT { get; set; }
         public Nullable<int> PROJECT_CONTACT_IDX { get; set; }
         public string PROJ_DESC_HTML { get; set; }
-        public Nullable<System.DateTime> LAST_NOTIFY_DT { get; set; }
+        public Nullable<System.DateTime> PROJECT_REMIND_DT { get; set; }
+        public string PROJECT_REMIND_FREQ { get; set; }
+        public int PROJECT_REMIND_CNT { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_DOCUMENTS> T_OE_DOCUMENTS { get; set; }
         public virtual T_OE_ORGANIZATION T_OE_ORGANIZATION { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<T_OE_PROJECT_ORGS> T_OE_PROJECT_ORGS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<T_OE_PROJECT_TAGS> T_OE_PROJECT_TAGS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -67,7 +71,5 @@ namespace EECIP.App_Logic.DataAccessLayer
         public virtual T_OE_REF_TAGS T_OE_REF_TAGS1 { get; set; }
         public virtual T_OE_REF_TAGS T_OE_REF_TAGS2 { get; set; }
         public virtual T_OE_REF_TAGS T_OE_REF_TAGS3 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<T_OE_PROJECT_ORGS> T_OE_PROJECT_ORGS { get; set; }
     }
 }

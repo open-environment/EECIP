@@ -344,7 +344,7 @@ namespace EECIP.App_Logic.DataAccessLayer
 
         public static int UpdateT_OE_USERS(int idx, string pWD_HASH, string pWD_SALT, string fNAME, string lNAME, string eMAIL, bool? aCT_IND, bool? iNIT_PWD_FLG, 
             DateTime? eFF_DATE, DateTime? lAST_LOGIN_DT, string pHONE, string pHONE_EXT, int? mODIFY_USR, int? LogAtmpt, Guid? oRG_IDX, string jOB_TITLE, 
-            string lINKED_IN, bool? NodeAdmin, bool? ExcludeBadges, bool? nOTIFY_DISCUSSION_IND, bool? nOTIFY_BADGE_IND, bool? nOTIFY_NEWSLETTER)
+            string lINKED_IN, bool? NodeAdmin, bool? ExcludeBadges, bool? nOTIFY_DISCUSSION_IND, bool? nOTIFY_BADGE_IND, bool? nOTIFY_NEWSLETTER, bool? pROJECT_UPDATE_OPTOUT_IND)
         {
             using (EECIPEntities ctx = new EECIPEntities())
             {
@@ -375,7 +375,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                     if (nOTIFY_DISCUSSION_IND != null) row.NOTIFY_DISCUSSION_IND = (bool)nOTIFY_DISCUSSION_IND;
                     if (nOTIFY_BADGE_IND != null) row.NOTIFY_BADGE_IND = (bool)nOTIFY_BADGE_IND;
                     if (nOTIFY_NEWSLETTER != null) row.NOTIFY_NEWSLETTER = (bool)nOTIFY_NEWSLETTER;
-
+                    if (pROJECT_UPDATE_OPTOUT_IND != null) row.PROJECT_UPDATE_OPTOUT_IND = (bool)pROJECT_UPDATE_OPTOUT_IND;
 
                     row.MODIFY_DT = System.DateTime.Now;
 
@@ -424,7 +424,7 @@ namespace EECIP.App_Logic.DataAccessLayer
                 catch (Exception ex)
                 {
                     //set to inactive if cannot delete
-                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+                    UpdateT_OE_USERS(idx, null, null, null, null, null, false, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
                     db_Ref.LogEFException(ex);
                     return 0;
                 }

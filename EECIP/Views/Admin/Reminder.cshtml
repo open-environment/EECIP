@@ -1,0 +1,52 @@
+﻿@model EECIP.Models.vmAdminReminder
+@{
+    ViewBag.Title = "Manual Project Reminder Generation";
+    ViewBag.SubTitle = "Use this page to manually generate and distribute the monthly EECIP Project Reminder email.";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <section class="panel panel-default">
+            <div class="table-responsive">
+                <table class="table table-striped m-b-none" data-ride="datatables">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>User</th>
+                            <th>Project</th>
+                            <th>Reminder Date</th>
+                            <th>Reminder Frequency</th>
+                            <th>Reminder Count</th>
+                        </tr>
+                    </thead>
+                    @if (Model.projects != null)
+                    {
+                        foreach (var item in Model.projects)
+                        {
+                            <tr>
+                                <td>
+                                    @{ 
+                                        int? mod1 = item.MODIFY_USERIDX ?? item.CREATE_USERIDX;
+                                    }
+                                    @mod1
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJ_NAME)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJECT_REMIND_DT)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJECT_REMIND_FREQ)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PROJECT_REMIND_CNT)
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </table>
+            </div>
+        </section>
+    </div>
+</div>

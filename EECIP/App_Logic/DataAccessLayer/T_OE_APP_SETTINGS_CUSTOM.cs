@@ -18,5 +18,6 @@ namespace EECIP.App_Logic.DataAccessLayer
         public string TERMS_AND_CONDITIONS { get; set; }
         public string ANNOUNCEMENTS { get; set; }
         public string WELCOME_EMAIL { get; set; }
+        public string REMINDER_EMAIL { get; set; }
     }
 }

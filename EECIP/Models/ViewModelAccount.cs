@@ -81,6 +81,7 @@ namespace EECIP.Models
 
         public string uListInd { get; set; }
         public bool ExcludeBadges { get; set; }
+        public bool ProjectUpdateOptoutInd { get; set; }
 
         //role editing
         public IEnumerable<SelectListItem> Roles_In_User { get; set; }

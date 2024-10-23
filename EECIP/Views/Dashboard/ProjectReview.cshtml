@@ -38,19 +38,23 @@
                                         <a class=" btn btn-rounded btn-xs btn-danger delete-link  btn-block" style="margin-bottom:6px"><i class="glyphicon glyphicon-remove"></i> Delete Project</a>
                                         <div class="btn btn-rounded btn-xs btn-warning delete-confirm" style="display:none" data-delete-id="@item.PROJECT_IDX" data-delete-p="/Dashboard/ProjectsDelete"><b>Confirm Delete</b></div>
                                     </div>
-                                    @if (item.PROJECT_CONTACT_IDX != null)
+                                    @if (!(item.PROJECT_CONTACT_IDX == null && (string.IsNullOrEmpty(item.PROJECT_CONTACT))))
                                     {
                                     <a href="@Url.Action("ProjectReview2", "Dashboard", new { id = item.PROJECT_IDX })" class="btn btn-rounded btn-xs btn-success btn-block"><i class="glyphicon glyphicon-check"></i> Mark Reviewed</a>
                                     }
                                 </td>
                                 <td style="color:#dc3545; font-weight:bold">
-                                    @if (item.PROJECT_CONTACT_IDX == null)
+                                    @if (item.PROJECT_CONTACT_IDX == null && (string.IsNullOrEmpty(item.PROJECT_CONTACT)))
                                     {
                                         <text>Project is unclaimed</text>
                                     }
-                                    else
+                                    else if (item.PROJECT_REMIND_DT == null)
                                     {
                                         <text>Project hasn't been updated in 6 months</text>
+                                    }
+                                    else if (item.PROJECT_REMIND_DT != null)
+                                    {
+                                        <text>Project reminder date (@item.PROJECT_REMIND_DT.Value.ToShortDateString()) has passed</text>
                                     }
                                 </td>
                                 <td>
