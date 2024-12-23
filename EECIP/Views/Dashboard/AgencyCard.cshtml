@@ -87,11 +87,11 @@
             <div class="panel-body">
                 @foreach (var item in Model.users)
                 {
+                    var img1 = "~/Content/Images/Users/" + item.USER_IDX + ".png";
                     <div class="col-lg-3 col-sm-6">
                         <div class="circle-tile">
                             <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.USER_IDX })">
-                                <div class="circle-tile-heading" style="background-image:url(/Content/Images/Users/@(item.USER_IDX).png)">
-                                </div>
+                                <img class="circle-tile-heading" src="@Url.Content(String.Format(img1))" alt="pic" onerror="this.src='../Content/Images/Agencies/0.png'" style="width:80px" />
                             </a>
                             <div class="circle-tile-content dark-blue">
                                 <div class="circle-tile-number text-faded">
@@ -111,16 +111,6 @@
                                         <i class="clip-linkedin"></i>
                                     </a>
                                 </div>
-                                @*@if (item.Document.Tags != null)
-                                {
-                                    <div style="padding-bottom:10px; ">
-                                        @foreach (string tag in item.Document.Tags)
-                                        {
-                                            <span class="select2-selection__choice" style="font-size:12px !important">@Html.DisplayFor(modelItem => tag)</span>
-                                        }
-
-                                    </div>
-                                }*@
                                 <a href="@Url.Action("UserCard", "Dashboard", new { strid = item.USER_IDX })" class="circle-tile-footer">More Info <i class="clip-arrow-right-2"></i></a>
                             </div>
                         </div>

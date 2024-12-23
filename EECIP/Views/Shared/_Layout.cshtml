@@ -28,16 +28,6 @@
 
         gtag('config', 'G-S32ZVZYVLD');
     </script>
-
-    <!-- Google Analytics (OLD)-->
-<!--    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108934202-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'UA-108934202-1');
-    </script>
--->
 </head>
 <body class="@ViewBag.LeftMenuExpand">
 
@@ -121,8 +111,6 @@
     <!-- start: MAIN CONTAINER -->
     <div class="main-container">
 
-
-
         @if (Request.IsAuthenticated)
         {
             <div class="navbar-content">
@@ -146,7 +134,7 @@
 
                 @if (!(ViewBag.HideTitle ?? false))
                 {
-                    <div class="row">
+                    <div class="row" style="margin-left:0; margin-right:0">
                         <div class="col-sm-12">
                             @if (ViewBag.ShowBack == true)
                             {

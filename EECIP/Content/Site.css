@@ -668,7 +668,7 @@ ul.main-navigation-menu > li.active > a {
     position: relative;
     width: 80px;
     height: 80px;
-    margin: 0 auto -40px;
+    margin: 0 auto -40px !important;
     border: 2px solid rgba(200,200,200,1);
     border-radius: 5px;
     color: #fff;

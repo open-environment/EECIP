@@ -3,19 +3,18 @@
 
     tinymce.init({
         selector: "textarea.rte",
-        browser_spellcheck: true,
         branding: false,
-        plugins: [ "link lists"],
-        toolbar1: "bold italic underline bullist | link unlink ",
-        remove_linebreaks: false,
+        skin: 'tinymce-5',
+        plugins: ["link lists"],
+        toolbar: "bold italic underline bullist | link unlink ",
 
+        remove_linebreaks: false,
         relative_urls: false,
         remove_script_host: false,
         convert_urls: true,
 
         menubar: false,
-        toolbar_items_size: 'small',
-        height: 150,
+        height: 250,
         nonbreaking_force_tab: true,
         setup: function (ed) {
             ed.on('change', function (e) {

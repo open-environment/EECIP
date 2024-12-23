@@ -3,6 +3,9 @@ using EECIP.Models;
 using EECIP.App_Logic.DataAccessLayer;
 using EECIP.App_Logic.BusinessLogicLayer;
 using System.Web;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace EECIP.Controllers
 {
@@ -54,6 +57,36 @@ namespace EECIP.Controllers
 
             return View();
 
+        }
+
+        public async Task<ActionResult> TestDocSummary()
+        {
+            try
+            {
+                var _doc = db_EECIP.GetT_OE_DOCUMENTS_ByID(new Guid("DAEA1A7B-D211-4D6E-8DE3-165B9F36618F"));
+
+                var _aiClient = new AzureAIFormRecognizerHelper();
+                string summaryText = await _aiClient.SummarizeDocumentAsync(_doc.DOC_CONTENT);
+                
+                //string extractedText = await _aiClient.ExtractTextAsync(_doc.DOC_CONTENT, "", "");
+
+                // Step 2: Split Text
+                //var chunks = _aiClient.SplitText(extractedText, 1024);
+
+                // Step 3: Summarize Each Chunk
+                //var summaries = new List<string>();
+                //foreach (var chunk in chunks)
+                //{
+                //    var summary = await SummarizeTextAsync(chunk, openAiKeyOrCredential, useApiKey);
+                //    summaries.Add(summary);
+                //}
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return View("Error", model: ex.Message);
+            }
         }
     }
 }

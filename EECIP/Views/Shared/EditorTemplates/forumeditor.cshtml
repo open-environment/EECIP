@@ -3,24 +3,20 @@
 
     tinymce.init({
         selector: "textarea.rte",
-        browser_spellcheck: true,
         branding: false,
-        plugins: [ "link lists hr code wordcount emoticons textcolor"],
-        //plugins: [
-        //    "autosave image anchor forumimageinsert",
-        //    "visualblocks visualchars code fullscreen media nonbreaking"
-        //],
-        toolbar1: "emoticons bold italic underline strikethrough bullist hr | link unlink code blockquote | formatselect | forecolor backcolor",
-        remove_linebreaks: false,
+        skin: 'tinymce-5',
+        plugins: [ 'link', 'lists', 'hr', 'code', 'wordcount', 'emoticons', 'textcolor'],
+        //toolbar1: "emoticons bold italic underline strikethrough bullist numlist hr | link unlink code blockquote | formatselect | forecolor backcolor",
+        toolbar: "emoticons bold italic underline strikethrough bullist numlist hr | link unlink code blockquote | blocks | forecolor backcolor removeformat",
 
+        remove_linebreaks: false,
         relative_urls: false,
         remove_script_host: false,
         convert_urls: true,
-
         menubar: false,
-        toolbar_items_size: 'small',
+
        // content_css: app_base + "content/tinymce.css",
-        height: 175,
+        height: 275,
         nonbreaking_force_tab: true
     });
 
